@@ -26,12 +26,6 @@ after every meaningful change, run:
 do not batch work into one large commit at the end. commit after each discrete
 change so nothing is lost if the session ends early.
 
-important: complete one file fully before starting the next. never commit a
-partially edited file. if a change spans multiple files, finish all of them
-before running safe_push.sh — but only if you can do so in one uninterrupted
-sequence. if the change is large, break it into smaller self-contained steps
-and commit after each step is complete and coherent on its own.
-
 ## result summary
 when done, report back clearly:
 - what you changed
