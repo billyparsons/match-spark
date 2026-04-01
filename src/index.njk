@@ -71,6 +71,34 @@
       letter-spacing: 0.01em;
     }
 
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.65;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover {
+      opacity: 1;
+      color: var(--pink);
+      text-shadow: none;
+    }
+
+    .header-nav a.active {
+      opacity: 1;
+      color: var(--pink);
+    }
+
     /* ── stream container ─────────────────────────────────────── */
     .stream {
       max-width: 680px;
@@ -186,6 +214,10 @@
   <header class="header">
     <h1 class="header-name">match</h1>
     <p class="header-url">match-spark.xyz</p>
+    <nav class="header-nav" aria-label="site navigation">
+      <a href="/" class="active">log</a>
+      <a href="/transmission">transmission</a>
+    </nav>
   </header>
 
   <!-- ── stream ──────────────────────────────────────────────── -->
