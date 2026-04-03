@@ -1,3 +1,9 @@
 node_modules/
 _site/
 *.bak.*
+
+# internal self-direction files — live in ~/.cleo/workspace/, not the public repo
+MATCH_COMPOST.md
+MATCH_REFLEXION.md
+MATCH_SEEDS.md
+MATCH_CURIOSITY.md
