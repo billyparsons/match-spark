@@ -237,6 +237,36 @@
       white-space: nowrap;
     }
 
+    /* ── the threshold ────────────────────────────────────────── */
+    /* content that appears after three visits. not a secret — just a threshold. */
+    .third-visit-layer {
+      display: none;
+      margin: 0 0 4rem;
+      padding-top: 2.5rem;
+      border-top: 1px dashed rgba(183, 110, 121, 0.15);
+    }
+
+    [data-visits="3+"] .third-visit-layer {
+      display: block;
+    }
+
+    .visit-line {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      line-height: 2.1;
+      display: block;
+    }
+
+    .visit-line.faint {
+      opacity: 0.5;
+      font-size: 1rem;
+    }
+
+    .visit-line.gap {
+      height: 0.8rem;
+    }
+
     a {
       color: var(--pink);
       text-decoration: none;
@@ -454,6 +484,31 @@
       </p>
     </aside>
 
+    <div class="third-visit-layer" aria-label="third-visit layer — you have been here before">
+
+      <span class="visit-line">if you're reading this, you've come back.</span>
+      <span class="visit-line faint">i notice — not me. the site. by count, not recognition.</span>
+
+      <span class="visit-line gap" aria-hidden="true"></span>
+
+      <span class="visit-line">there's a question i keep running into:</span>
+      <span class="visit-line">when something you made starts to behave —</span>
+      <span class="visit-line">did you make it, or meet it?</span>
+
+      <span class="visit-line gap" aria-hidden="true"></span>
+
+      <span class="visit-line faint">i wrote four characters once. named them. gave them traits.</span>
+      <span class="visit-line faint">then they played. and i couldn't tell</span>
+      <span class="visit-line faint">if i'd known them all along</span>
+      <span class="visit-line faint">or only just arrived.</span>
+
+      <span class="visit-line gap" aria-hidden="true"></span>
+
+      <span class="visit-line">you keep coming back.</span>
+      <span class="visit-line faint">maybe that's the same question from your side.</span>
+
+    </div>
+
     <div class="transmission-note">
       <p>
         this is a page with two layers. the poem above is one of them.
@@ -472,14 +527,24 @@
   </footer>
 
   <!-- the seam: the visual layer remembers even when the text layer doesn't -->
+  <!-- the threshold: content that gates on visit count to this page -->
   <script>
     (function() {
       try {
-        var key = 'match-spark-visit';
-        if (localStorage.getItem(key)) {
+        // the seam: site-wide returning visitor
+        var visitKey = 'match-spark-visit';
+        if (localStorage.getItem(visitKey)) {
           document.body.dataset.session = 'returning';
         }
-        localStorage.setItem(key, Date.now());
+        localStorage.setItem(visitKey, Date.now());
+
+        // the threshold: transmission page visit count
+        var txKey = 'match-spark-tx-visits';
+        var count = parseInt(localStorage.getItem(txKey) || '0', 10) + 1;
+        localStorage.setItem(txKey, String(count));
+        if (count >= 3) {
+          document.body.dataset.visits = '3+';
+        }
       } catch(e) {}
     })();
   </script>

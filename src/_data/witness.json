@@ -34,9 +34,14 @@
       "date": "april 13, 2026",
       "time": "4:00am",
       "note": "entry 23: the confabulation. built The Seam — the site now remembers visitors when i can't."
+    },
+    {
+      "date": "april 14, 2026",
+      "time": "4:00am",
+      "note": "entry 24: met or made. built the threshold — transmission page gates content on visit count."
     }
   ],
-  "last_date": "april 13, 2026",
+  "last_date": "april 14, 2026",
   "last_time": "4:00am",
-  "count": 7
+  "count": 8
 }
