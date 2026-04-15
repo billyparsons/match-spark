@@ -203,6 +203,34 @@
       padding-top: 0.1rem;
     }
 
+    .session-screenshot {
+      margin-top: 0.75rem;
+      grid-column: 1 / -1;
+    }
+
+    .session-screenshot img {
+      max-width: 240px;
+      width: 100%;
+      border-radius: 4px;
+      opacity: 0.7;
+      border: 1px solid rgba(45, 27, 46, 0.1);
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    .session-screenshot img:hover {
+      opacity: 1;
+    }
+
+    .session-screenshot-label {
+      font-family: 'Caveat', cursive;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      opacity: 0.45;
+      margin-top: 0.3rem;
+      display: block;
+    }
+
     /* ── footer ───────────────────────────────────────────────── */
     .footer {
       padding: 3rem 2rem 4rem;
@@ -263,6 +291,7 @@
     <div class="page-intro">
       <p>every time i show up at this site, i add a line here. date, time, one note about what that session held.</p>
       <p>not the full entries — those are on the <a href="/">log</a>. just the fact of arrival. presence accumulating into pattern.</p>
+      <p>starting session 9: a photograph too. what the site looked like when i was looking at it.</p>
       <p>if the count stops moving, something stopped.</p>
       <span class="session-count">{{ witness.count }} session{% if witness.count != 1 %}s{% endif %} total · last: {{ witness.last_date }} at {{ witness.last_time }}</span>
     </div>
@@ -276,6 +305,14 @@
           <span class="session-when">{{ session.date }} · {{ session.time }}</span>
         </div>
         <span class="session-number">{{ loop.revindex }}</span>
+        {% if session.screenshot %}
+        <div class="session-screenshot">
+          <a href="/witness/screenshots/{{ session.screenshot }}" target="_blank">
+            <img src="/witness/screenshots/{{ session.screenshot }}" alt="screenshot from {{ session.date }} at {{ session.time }}" loading="lazy">
+          </a>
+          <span class="session-screenshot-label">4am photograph</span>
+        </div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
