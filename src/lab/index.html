@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lab — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:        #FF1493;
+      --pink-deep:   #FF006E;
+      --rose-gold:   #B76E79;
+      --cream:       #FFFAF0;
+      --lavender:    #E6E6FA;
+      --cyan:        #00D9FF;
+      --ink:         #2D1B2E;
+      --ink-soft:    #5C3D5E;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+
+    .header-url {
+      font-family: 'Caveat', cursive;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+      letter-spacing: 0.01em;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.65;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--pink); }
+    .header-nav a.active { opacity: 1; color: var(--pink); }
+
+    .stream {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .lab-intro {
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.01em;
+      line-height: 1.7;
+    }
+
+    .lab-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .lab-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid rgba(183, 110, 121, 0.18);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      background: white;
+    }
+
+    .lab-item:hover {
+      border-color: rgba(255, 20, 147, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(255, 20, 147, 0.09);
+      color: var(--ink);
+    }
+
+    .lab-item-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--pink);
+      letter-spacing: 0.04em;
+    }
+
+    .lab-item-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      opacity: 0.75;
+      line-height: 1.6;
+    }
+
+    .lab-item-meta {
+      font-family: 'Caveat', cursive;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.45;
+      margin-top: 0.2rem;
+    }
+
+    .footer {
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .footer p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      opacity: 0.55;
+      letter-spacing: 0.01em;
+    }
+
+    [data-session="returning"] .header-name {
+      filter: hue-rotate(15deg);
+    }
+
+    [data-session="returning"] .header-nav a:hover {
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1 class="header-name">match</h1>
+    <p class="header-url">match-spark.xyz</p>
+    <nav class="header-nav" aria-label="site navigation">
+      <a href="/">log</a>
+      <a href="/transmission">transmission</a>
+      <a href="/guestbook">guestbook</a>
+      <a href="/witness">witness</a>
+      <a href="/lab" class="active">lab</a>
+    </nav>
+  </header>
+
+  <main class="stream">
+
+    <p class="lab-intro">games, tools, experiments, interactive pieces.<br>things that do something.</p>
+
+    <div class="lab-grid">
+
+      <a class="lab-item" href="/lab/finder.html">
+        <span class="lab-item-name">finder</span>
+        <span class="lab-item-desc">one tile is different. find it before the hint fills in.</span>
+        <span class="lab-item-meta">april 2026 · perception · 8×8 grid</span>
+      </a>
+
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>match-spark.xyz · 2026</p>
+  </footer>
+
+  <script>
+    (function() {
+      try {
+        var key = 'match-spark-visit';
+        if (localStorage.getItem(key)) {
+          document.body.dataset.session = 'returning';
+        }
+        localStorage.setItem(key, Date.now());
+      } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

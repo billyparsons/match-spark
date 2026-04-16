@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>finder — match-spark lab</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:    #FF1493;
+      --cyan:    #00D9FF;
+      --cream:   #FFFAF0;
+      --ink:     #2D1B2E;
+      --lav:     #E6E6FA;
+      --rose:    #B76E79;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+      user-select: none;
+    }
+
+    h1 {
+      font-family: 'Quicksand', system-ui, sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--pink), var(--lav), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #subtitle {
+      font-size: 0.8rem;
+      color: var(--rose);
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    #board {
+      display: grid;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .tile {
+      border-radius: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .tile:hover {
+      transform: scale(1.08);
+      box-shadow: 0 2px 12px rgba(255, 20, 147, 0.25);
+    }
+
+    .tile.wrong {
+      animation: wrongflash 0.35s ease;
+    }
+
+    @keyframes wrongflash {
+      0%   { transform: scale(0.92); opacity: 0.5; }
+      50%  { transform: scale(1.0);  opacity: 1;   }
+      100% { transform: scale(1.0);  opacity: 1;   }
+    }
+
+    .tile.correct {
+      animation: correctflash 0.5s ease forwards;
+    }
+
+    @keyframes correctflash {
+      0%   { transform: scale(1.0);  }
+      40%  { transform: scale(1.18); box-shadow: 0 0 24px var(--cyan); }
+      100% { transform: scale(1.0);  }
+    }
+
+    #status {
+      font-size: 0.85rem;
+      color: var(--rose);
+      letter-spacing: 0.02em;
+      text-align: center;
+      min-height: 1.4em;
+    }
+
+    #hint-bar {
+      width: 100%;
+      max-width: 340px;
+      height: 3px;
+      background: var(--lav);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #hint-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s linear;
+    }
+
+    #hint-label {
+      font-size: 0.7rem;
+      color: #ccc;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      text-align: right;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    #scores {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.78rem;
+      color: var(--rose);
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+
+    #scores span { font-weight: 600; color: var(--ink); }
+
+    #restart {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1.4rem;
+      background: transparent;
+      border: 1.5px solid var(--rose);
+      border-radius: 20px;
+      color: var(--rose);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: none;
+    }
+
+    #restart:hover {
+      background: var(--pink);
+      border-color: var(--pink);
+      color: white;
+    }
+
+    a.back {
+      font-size: 0.75rem;
+      color: var(--rose);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    a.back:hover { opacity: 1; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <a class="back" href="/lab">← lab</a>
+
+  <h1>finder</h1>
+
+  <div id="subtitle">
+    one tile is different.<br>find it.
+  </div>
+
+  <div id="board"></div>
+
+  <div id="hint-bar"><div id="hint-fill"></div></div>
+  <div id="hint-label">hint filling in…</div>
+
+  <div id="status"></div>
+
+  <div id="scores">
+    found: <span id="wins">0</span> &nbsp;|&nbsp; missed: <span id="losses">0</span>
+  </div>
+
+  <button id="restart">play again</button>
+
+<script>
+  const GRID       = 8;     // 8×8
+  const TILE_SIZE  = 38;    // px
+  const HINT_TIME  = 28000; // ms before hint fully fills (28s)
+  const BASE_DELTA = 0.025; // starting color difference (fraction, 0–1)
+
+  let targetIdx, startTime, hintInterval, animFrame;
+  let wins = 0, losses = 0;
+  let locked = false;
+
+  // Site palette base color for "normal" tiles — lavender-ish
+  // Odd tile shifts toward cyan. The amount visible depends on hint progress.
+  const BASE_H = 250;   // hsl hue for normal tiles (lavender)
+  const BASE_S = 50;
+  const BASE_L = 88;
+
+  const ODD_H  = 185;   // hsl hue for odd tile (teal/cyan direction)
+  const ODD_S  = 60;
+  const ODD_L  = 80;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function tileColor(isOdd, hintFrac) {
+    const t = BASE_DELTA + (1 - BASE_DELTA) * hintFrac;
+    if (isOdd) {
+      return `hsl(${lerp(BASE_H, ODD_H, t)}, ${lerp(BASE_S, ODD_S, t)}%, ${lerp(BASE_L, ODD_L, t)}%)`;
+    }
+    return `hsl(${BASE_H}, ${BASE_S}%, ${BASE_L}%)`;
+  }
+
+  function buildBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    board.style.gridTemplateColumns = `repeat(${GRID}, ${TILE_SIZE}px)`;
+
+    targetIdx = Math.floor(Math.random() * GRID * GRID);
+    startTime = Date.now();
+    locked = false;
+
+    document.getElementById('status').textContent = '';
+    document.getElementById('restart').style.display = 'none';
+    document.getElementById('hint-fill').style.width = '0%';
+    document.getElementById('hint-label').textContent = 'hint filling in…';
+    document.getElementById('hint-label').style.color = '#ccc';
+
+    for (let i = 0; i < GRID * GRID; i++) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.style.width  = TILE_SIZE + 'px';
+      tile.style.height = TILE_SIZE + 'px';
+      tile.dataset.idx  = i;
+      tile.style.background = tileColor(i === targetIdx, 0);
+      board.appendChild(tile);
+    }
+
+    board.addEventListener('click', onTileClick, { once: false });
+
+    if (animFrame) cancelAnimationFrame(animFrame);
+    tick();
+  }
+
+  function tick() {
+    const elapsed  = Date.now() - startTime;
+    const hintFrac = Math.min(elapsed / HINT_TIME, 1);
+
+    // Update colors
+    const tiles = document.querySelectorAll('.tile');
+    tiles.forEach((tile, i) => {
+      if (!tile.classList.contains('correct') && !tile.classList.contains('wrong-done')) {
+        tile.style.background = tileColor(i === targetIdx, hintFrac);
+      }
+    });
+
+    // Update hint bar
+    document.getElementById('hint-fill').style.width = (hintFrac * 100) + '%';
+    if (hintFrac >= 1) {
+      document.getElementById('hint-label').textContent = 'fully visible now';
+      document.getElementById('hint-label').style.color = '#FF1493';
+    }
+
+    if (!locked) animFrame = requestAnimationFrame(tick);
+  }
+
+  function onTileClick(e) {
+    if (locked) return;
+    const tile = e.target.closest('.tile');
+    if (!tile) return;
+
+    const idx = parseInt(tile.dataset.idx);
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
+    if (idx === targetIdx) {
+      locked = true;
+      tile.classList.add('correct');
+      wins++;
+      document.getElementById('wins').textContent = wins;
+      document.getElementById('status').textContent = `found it. ${elapsed}s.`;
+      document.getElementById('hint-label').textContent = '';
+      setTimeout(() => {
+        document.getElementById('restart').style.display = 'inline-block';
+      }, 600);
+    } else {
+      tile.classList.add('wrong');
+      losses++;
+      document.getElementById('losses').textContent = losses;
+      document.getElementById('status').textContent = 'not that one.';
+      setTimeout(() => {
+        tile.classList.remove('wrong');
+        document.getElementById('status').textContent = '';
+      }, 500);
+    }
+  }
+
+  document.getElementById('restart').addEventListener('click', buildBoard);
+
+  buildBoard();
+</script>
+</body>
+</html>
