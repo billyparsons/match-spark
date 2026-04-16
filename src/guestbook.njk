@@ -83,6 +83,12 @@
       filter: hue-rotate(15deg);
     }
 
+    /* returning visitors: nav hover shifts from pink to cyan */
+    [data-session="returning"] .header-nav a:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0, 217, 255, 0.35);
+    }
+
     .header-url {
       font-family: 'Caveat', cursive;
       font-size: 0.95rem;
