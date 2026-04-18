@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>the cartographer's error</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: #080810;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+}
+canvas { display: block; image-rendering: pixelated; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+// ─────────────────────────────────────────────────
+// THE CARTOGRAPHER'S ERROR
+//
+// your map has deliberate errors.
+// you have been told this.
+//
+// two kinds of wrong:
+//   a door the map shows that doesn't exist (yet)
+//   a door the map hides that has always been there
+// ─────────────────────────────────────────────────
+
+const C = document.getElementById('c');
+const G = C.getContext('2d');
+const W = 512, H = 320;
+C.width = W; C.height = H;
+C.style.width = Math.min(window.innerWidth, 900) + 'px';
+C.style.height = (Math.min(window.innerWidth, 900) * H / W) + 'px';
+
+// ── audio ──────────────────────────────────────────
+
+const audio = new (window.AudioContext || window.webkitAudioContext)();
+
+function tone(freq, dur, type = 'square', vol = 0.25, delay = 0) {
+  const osc = audio.createOscillator();
+  const gain = audio.createGain();
+  osc.connect(gain); gain.connect(audio.destination);
+  osc.type = type; osc.frequency.value = freq;
+  const t = audio.currentTime + delay;
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  osc.start(t); osc.stop(t + dur + 0.05);
+}
+
+function noise(dur, vol = 0.15) {
+  const n = audio.sampleRate * dur;
+  const buf = audio.createBuffer(1, n, audio.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n) * 0.6;
+  const s = audio.createBufferSource();
+  const gain = audio.createGain();
+  s.buffer = buf; s.connect(gain); gain.connect(audio.destination);
+  gain.gain.value = vol;
+  s.start();
+}
+
+function sfxMove()    { tone(330, 0.04, 'square', 0.12); }
+function sfxBump()    { noise(0.08, 0.18); tone(120, 0.1, 'sawtooth', 0.1); }
+function sfxOpen()    { [196, 247, 294, 370].forEach((f,i) => tone(f, 0.15, 'triangle', 0.25, i*0.08)); }
+function sfxWin()     { [261, 329, 392, 523].forEach((f,i) => tone(f, 0.3, 'triangle', 0.3, i*0.1)); }
+
+// ── game data ──────────────────────────────────────
+
+// 6 rooms: 2 rows × 3 cols
+//   1 - 2 - 3
+//   |       |
+//   4 - 5 - 6★
+//
+// world: actual connections
+const WORLD = {
+  1: {e:2, s:4},
+  2: {w:1, e:3},           // no south (map shows south to 5 — false door)
+  3: {w:2, s:6},           // south to 6 (map hides this — real door)
+  4: {n:1, e:5},
+  5: {w:4, e:6},           // no north (map shows north to 2 — symmetric false)
+  6: {n:3, w:5}            // exit room
+};
+
+// map: shown connections — has two errors
+// error A: shows 2↔5 (false door — doesn't exist yet)
+// error B: hides 3↔6 (real door — not shown)
+const MAP = {
+  1: {e:2, s:4},
+  2: {w:1, e:3, s:5},      // shows false south to 5
+  3: {w:2},                 // hides real south to 6
+  4: {n:1, e:5},
+  5: {w:4, n:2, e:6},      // shows false north to 2
+  6: {w:5}                  // hides real north from 3
+};
+
+// room grid [col 1-3, row 1-2]
+const RPOS = {1:[1,1], 2:[2,1], 3:[3,1], 4:[1,2], 5:[2,2], 6:[3,2]};
+const NAMES = {1:'entrance', 2:'hall', 3:'storeroom', 4:'cellar', 5:'passage', 6:'chamber'};
+
+// which walls, when bumped, count toward the Agloe mechanic?
+// only the false door at 2→south (trying to go to 5) counts
+// we track: fromRoom, direction
+const AGLOE_WALL = {room: 2, dir: 's'};
+const AGLOE_THRESHOLD = 5; // bumps needed to open the passage
+
+// ── state ─────────────────────────────────────────
+
+let state = 'title'; // title | play | win
+let player = 1;
+let prevRoom = 0;
+let bumpTimer = 0;
+let bumpWall = null;     // {room, dir} — which wall just bumped
+let agloeBumps = 0;      // how many times player tried the false door
+let agloeOpen = false;   // has the false passage been realized?
+let pathType = null;     // 'map' | 'created' | 'hidden' — how they won
+let winFrame = 0;
+let openFlash = 0;       // flash when passage opens
+
+// ── input ─────────────────────────────────────────
+
+function resume() { if (audio.state === 'suspended') audio.resume(); }
+
+document.addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Enter'].includes(e.key))
+    e.preventDefault();
+  resume();
+  handleInput(e.key);
+});
+
+function handleInput(key) {
+  if (state === 'title') {
+    if (['Enter',' ','z','Z','x','X'].includes(key)) state = 'play';
+    return;
+  }
+  if (state === 'win') {
+    if (['Enter',' ','z','Z','x','X'].includes(key)) resetGame();
+    return;
+  }
+
+  if (bumpTimer > 0 || openFlash > 0) return;
+
+  const dirMap = {
+    ArrowLeft:'w', ArrowRight:'e', ArrowUp:'n', ArrowDown:'s',
+    a:'w', d:'e', w:'n', s:'s', A:'w', D:'e', W:'n', S:'s'
+  };
+  const dir = dirMap[key];
+  if (!dir) return;
+
+  // check world connections (modified if agloe passage opened)
+  const world = buildWorld();
+  const next = world[player][dir];
+
+  if (next !== undefined) {
+    prevRoom = player;
+    player = next;
+    sfxMove();
+    if (player === 6) {
+      determinePathType();
+      state = 'win';
+      sfxWin();
+    }
+  } else {
+    // bumped into a wall
+    bumpWall = {room: player, dir};
+    bumpTimer = 16;
+    sfxBump();
+
+    // check if this is the agloe wall
+    if (!agloeOpen && player === AGLOE_WALL.room && dir === AGLOE_WALL.dir) {
+      agloeBumps++;
+      if (agloeBumps >= AGLOE_THRESHOLD) {
+        agloeOpen = true;
+        openFlash = 40;
+        sfxOpen();
+      }
+    }
+  }
+}
+
+function buildWorld() {
+  // returns world connections, modified if agloe passage is open
+  const w = JSON.parse(JSON.stringify(WORLD));
+  if (agloeOpen) {
+    w[2].s = 5;
+    w[5].n = 2;
+  }
+  return w;
+}
+
+function determinePathType() {
+  if (prevRoom === 3) {
+    pathType = 'hidden'; // came through the door the map never showed
+  } else if (prevRoom === 5 && agloeOpen && agloeBumps >= AGLOE_THRESHOLD) {
+    // could be created path — check if they used it
+    // if they're in room 5 and agloe opened, they probably used created path
+    pathType = 'created';
+  } else {
+    pathType = 'map'; // came via room 5, map-shown path
+  }
+}
+
+function resetGame() {
+  state = 'title';
+  player = 1; prevRoom = 0;
+  bumpTimer = 0; bumpWall = null;
+  agloeBumps = 0; agloeOpen = false;
+  pathType = null; winFrame = 0; openFlash = 0;
+}
+
+// ── draw helpers ───────────────────────────────────
+
+const COL = {
+  bg:        '#080810',
+  wall:      '#2a2a3c',
+  wallHi:    '#4a4a6a',
+  wallFalse: '#1c1c28',
+  room:      '#0d0d1a',
+  openBg:    '#080810',
+  player:    '#eeeef8',
+  playerBmp: '#ff7744',
+  mapBg:     '#06060e',
+  mapRoom:   '#10101e',
+  mapActive: '#1e1e3c',
+  mapExit:   '#0e1e0e',
+  mapLine:   '#2a2a40',
+  mapCreated:'#3a2a10',
+  txt:       '#aab',
+  txtDim:    '#445',
+  txtBright: '#eeeef8',
+  txtError:  '#f64',
+  txtWin:    '#8fa',
+  exitGreen: '#5c5',
+  agloe:     '#f84',
+};
+
+function cls() {
+  G.fillStyle = COL.bg;
+  G.fillRect(0, 0, W, H);
+}
+
+function txt(str, x, y, col = COL.txt, size = 11, align = 'left') {
+  G.fillStyle = col;
+  G.font = `${size}px "Courier New", monospace`;
+  G.textAlign = align;
+  G.fillText(str, x, y);
+  G.textAlign = 'left';
+}
+
+// ── draw: title ────────────────────────────────────
+
+function drawTitle() {
+  cls();
+
+  // subtle grid
+  G.strokeStyle = '#10101c';
+  G.lineWidth = 1;
+  for (let x = 0; x < W; x += 32) { G.beginPath(); G.moveTo(x,0); G.lineTo(x,H); G.stroke(); }
+  for (let y = 0; y < H; y += 32) { G.beginPath(); G.moveTo(0,y); G.lineTo(W,y); G.stroke(); }
+
+  G.fillStyle = COL.txtBright;
+  G.font = 'bold 28px "Courier New", monospace';
+  G.textAlign = 'center';
+  G.fillText('THE', W/2, 72);
+  G.fillText("CARTOGRAPHER'S", W/2, 106);
+  G.fillText('ERROR', W/2, 140);
+
+  G.strokeStyle = COL.wallHi;
+  G.lineWidth = 1;
+  G.setLineDash([4, 4]);
+  G.beginPath(); G.moveTo(80, 154); G.lineTo(W-80, 154); G.stroke();
+  G.setLineDash([]);
+
+  G.font = '12px "Courier New", monospace';
+  G.fillStyle = COL.txt;
+  G.fillText('this map contains deliberate errors.', W/2, 176);
+  G.fillStyle = COL.txtDim;
+  G.fillText('you have been told.', W/2, 194);
+
+  G.fillStyle = COL.txtBright;
+  G.fillText('[ enter / space ] begin', W/2, 256);
+
+  G.textAlign = 'left';
+}
+
+// ── draw: room view ────────────────────────────────
+
+function drawRoom() {
+  const RX = 16, RY = 52, RW = 246, RH = 210;
+  const CX = RX + RW/2, CY = RY + RH/2;
+  const GAP = 36; // opening half-width
+  const T = 14;   // wall thickness
+
+  // room floor
+  G.fillStyle = COL.room;
+  G.fillRect(RX, RY, RW, RH);
+
+  // walls
+  G.fillStyle = COL.wall;
+  G.fillRect(RX, RY, RW, T);          // top
+  G.fillRect(RX, RY+RH-T, RW, T);     // bottom
+  G.fillRect(RX, RY, T, RH);          // left
+  G.fillRect(RX+RW-T, RY, T, RH);     // right
+
+  const md = MAP[player];
+
+  // cut openings from MAP view — these are visual gaps in walls
+  G.fillStyle = COL.openBg;
+
+  function cutOpening(side) {
+    // cut visual gap based on what MAP shows
+    // side: 'n','s','e','w'
+    switch(side) {
+      case 'n': G.fillRect(CX-GAP/2, RY-1, GAP, T+2); break;
+      case 's': G.fillRect(CX-GAP/2, RY+RH-T-1, GAP, T+2); break;
+      case 'e': G.fillRect(RX+RW-T-1, CY-GAP/2, T+2, GAP); break;
+      case 'w': G.fillRect(RX-1, CY-GAP/2, T+2, GAP); break;
+    }
+  }
+
+  // show openings from MAP (including false ones, hiding real ones)
+  if (md.n) cutOpening('n');
+  if (md.s) cutOpening('s');
+  if (md.e) cutOpening('e');
+  if (md.w) cutOpening('w');
+
+  // wall inner highlight
+  G.strokeStyle = COL.wallHi;
+  G.lineWidth = 1;
+  G.strokeRect(RX+T, RY+T, RW-T*2, RH-T*2);
+
+  // agloe flash — when passage just opened
+  if (openFlash > 0) {
+    G.fillStyle = `rgba(255, 136, 68, ${openFlash / 40 * 0.35})`;
+    G.fillRect(RX+T, RY+T, RW-T*2, RH-T*2);
+  }
+
+  // room name
+  txt(NAMES[player], RX+T+4, RY+T+12, COL.txtDim, 10);
+
+  // player dot
+  const playerColor = bumpTimer > 0 && Math.floor(bumpTimer/3) % 2 === 0
+    ? COL.playerBmp : COL.player;
+  G.fillStyle = playerColor;
+  G.beginPath(); G.arc(CX, CY, 6, 0, Math.PI*2); G.fill();
+
+  // compass hints
+  G.fillStyle = COL.txtDim;
+  G.font = '9px "Courier New", monospace';
+  G.textAlign = 'center';
+  G.fillText('n', CX, RY+T-2);
+  G.fillText('s', CX, RY+RH-2);
+  G.fillText('w', RX+5, CY+4);
+  G.fillText('e', RX+RW-4, CY+4);
+  G.textAlign = 'left';
+
+  // status line below room
+  if (openFlash > 0) {
+    txt('something gave way.', RX, RY+RH+14, COL.agloe, 11);
+  } else if (bumpTimer > 0) {
+    const isAgloWall = bumpWall && bumpWall.room === AGLOE_WALL.room && bumpWall.dir === AGLOE_WALL.dir;
+    if (isAgloWall && !agloeOpen) {
+      txt(`blocked.  [${agloeBumps}/${AGLOE_THRESHOLD}]`, RX, RY+RH+14, COL.txtError, 11);
+    } else {
+      txt('blocked.', RX, RY+RH+14, COL.txtError, 11);
+    }
+  }
+}
+
+// ── draw: minimap ──────────────────────────────────
+
+function drawMinimap() {
+  const MX = 280, MY = 42;
+  const CW = 60, CH = 56;
+  const PAD = 6;
+
+  // background
+  G.fillStyle = COL.mapBg;
+  G.fillRect(MX-6, MY-22, W-MX, H-MY+10);
+
+  // header
+  txt('MAP', MX+4, MY-10, COL.txtDim, 10);
+  txt('(has errors)', MX+40, MY-10, COL.txtError, 10);
+
+  // draw connections from MAP (the wrong ones)
+  G.strokeStyle = COL.mapLine;
+  G.lineWidth = 2;
+  for (let r = 1; r <= 6; r++) {
+    const [col, row] = RPOS[r];
+    const cx = MX + (col-1)*CW + CW/2;
+    const cy = MY + (row-1)*CH + CH/2;
+    const md = MAP[r];
+
+    if (md.e && col < 3) {
+      G.beginPath(); G.moveTo(cx+CW/2-PAD, cy); G.lineTo(cx+CW/2+PAD, cy); G.stroke();
+    }
+    if (md.s && row < 2) {
+      G.beginPath(); G.moveTo(cx, cy+CH/2-PAD); G.lineTo(cx, cy+CH/2+PAD); G.stroke();
+    }
+  }
+
+  // if agloe passage opened, draw it differently
+  if (agloeOpen) {
+    const c2 = MX + (RPOS[2][0]-1)*CW + CW/2;
+    const r2 = MY + (RPOS[2][1]-1)*CH + CH/2;
+    G.strokeStyle = COL.agloe;
+    G.lineWidth = 2;
+    G.setLineDash([3, 3]);
+    G.beginPath(); G.moveTo(c2, r2+CH/2-PAD); G.lineTo(c2, r2+CH/2+PAD); G.stroke();
+    G.setLineDash([]);
+  }
+
+  // rooms
+  for (let r = 1; r <= 6; r++) {
+    const [col, row] = RPOS[r];
+    const x = MX + (col-1)*CW + PAD;
+    const y = MY + (row-1)*CH + PAD;
+    const w2 = CW - PAD*2;
+    const h2 = CH - PAD*2;
+
+    let fillCol = COL.mapRoom;
+    if (r === 6)      fillCol = COL.mapExit;
+    else if (r === player) fillCol = COL.mapActive;
+
+    G.fillStyle = fillCol;
+    G.fillRect(x, y, w2, h2);
+    G.strokeStyle = r === player ? COL.wallHi : COL.mapLine;
+    G.lineWidth = r === player ? 2 : 1;
+    G.strokeRect(x, y, w2, h2);
+
+    G.textAlign = 'center';
+    if (r === 6) {
+      txt('★', x+w2/2, y+h2/2+5, COL.exitGreen, 14, 'center');
+    } else {
+      txt(r+'', x+w2/2, y+h2/2+4, r === player ? COL.txtBright : COL.txtDim, 11, 'center');
+    }
+    G.textAlign = 'left';
+  }
+
+  // legend
+  const LY = MY + 2*CH + 16;
+  txt('★  exit', MX+4, LY, COL.exitGreen, 10);
+  if (agloeBumps > 0 && !agloeOpen) {
+    txt(`false door: ${agloeBumps}/${AGLOE_THRESHOLD}`, MX+4, LY+14, COL.agloe, 9);
+  } else if (agloeOpen) {
+    txt('passage: opened', MX+4, LY+14, COL.agloe, 9);
+  }
+}
+
+// ── draw: play ─────────────────────────────────────
+
+function drawPlay() {
+  cls();
+
+  // header bar
+  G.fillStyle = '#0a0a16';
+  G.fillRect(0, 0, W, 42);
+  G.strokeStyle = COL.wallHi;
+  G.lineWidth = 1;
+  G.beginPath(); G.moveTo(0,42); G.lineTo(W,42); G.stroke();
+
+  txt("THE CARTOGRAPHER'S ERROR", 14, 16, COL.txtDim, 10);
+  txt(NAMES[player].toUpperCase(), 14, 33, COL.txtBright, 12);
+
+  // vertical divider
+  G.strokeStyle = COL.wallHi;
+  G.lineWidth = 1;
+  G.beginPath(); G.moveTo(270, 42); G.lineTo(270, H-26); G.stroke();
+
+  drawRoom();
+  drawMinimap();
+
+  // footer
+  G.fillStyle = '#0a0a16';
+  G.fillRect(0, H-26, W, 26);
+  G.strokeStyle = COL.wallHi;
+  G.beginPath(); G.moveTo(0, H-26); G.lineTo(W, H-26); G.stroke();
+  txt('arrows / wasd  move', 14, H-10, COL.txtDim, 10);
+  txt('room ' + player + ' of 6', W-70, H-10, COL.txtDim, 10);
+
+  // timers
+  if (bumpTimer > 0) bumpTimer--;
+  if (openFlash > 0) openFlash--;
+}
+
+// ── draw: win ──────────────────────────────────────
+
+function drawWin() {
+  winFrame++;
+
+  // dark green bg
+  G.fillStyle = '#040a04';
+  G.fillRect(0, 0, W, H);
+
+  // drifting particles
+  for (let i = 0; i < 25; i++) {
+    const x = ((Math.sin(i * 2.4 + winFrame * 0.012) * 0.5 + 0.5) * W)|0;
+    const y = ((Math.cos(i * 1.8 + winFrame * 0.008) * 0.5 + 0.5) * H)|0;
+    const a = Math.sin(i * 1.1 + winFrame * 0.06) * 0.5 + 0.5;
+    G.fillStyle = `rgba(80, 180, 80, ${a * 0.5})`;
+    G.fillRect(x, y, 2, 2);
+  }
+
+  G.textAlign = 'center';
+  txt('you found it.', W/2, 56, COL.txtWin, 22, 'center');
+
+  G.strokeStyle = '#1a3a1a';
+  G.setLineDash([4,4]);
+  G.lineWidth = 1;
+  G.beginPath(); G.moveTo(80, 70); G.lineTo(W-80, 70); G.stroke();
+  G.setLineDash([]);
+
+  G.font = '13px "Courier New", monospace';
+
+  if (pathType === 'hidden') {
+    txt('you came through a door', W/2, 100, COL.txt, 13, 'center');
+    txt("the map never showed you.", W/2, 118, COL.txt, 13, 'center');
+    txt('', W/2, 144, COL.txtDim, 13, 'center');
+    txt('the map is still wrong.', W/2, 144, COL.txtDim, 13, 'center');
+    txt("it doesn't know", W/2, 162, COL.txtDim, 13, 'center');
+    txt('you were here.', W/2, 180, COL.txtDim, 13, 'center');
+  } else if (pathType === 'created') {
+    txt('you tried the wall five times.', W/2, 100, COL.txt, 13, 'center');
+    txt('the map was wrong — until it wasn\'t.', W/2, 118, COL.txt, 13, 'center');
+    txt('', W/2, 144, COL.txtDim, 13, 'center');
+    txt('the passage wasn\'t there.', W/2, 144, COL.txtDim, 13, 'center');
+    txt('then it was.', W/2, 162, COL.txtDim, 13, 'center');
+    txt('the map got there first.', W/2, 180, COL.agloe, 13, 'center');
+  } else {
+    // map path
+    txt('the map showed you the way.', W/2, 100, COL.txt, 13, 'center');
+    txt('this time.', W/2, 118, COL.txt, 13, 'center');
+    txt('', W/2, 144, COL.txtDim, 13, 'center');
+    txt('there were errors it didn\'t tell you.', W/2, 144, COL.txtDim, 13, 'center');
+    txt('a door it hid.', W/2, 162, COL.txtDim, 13, 'center');
+    txt('a door it invented.', W/2, 180, COL.txtDim, 13, 'center');
+  }
+
+  txt('[ enter / space ] restart', W/2, 268, COL.txtBright, 12, 'center');
+  G.textAlign = 'left';
+}
+
+// ── loop ───────────────────────────────────────────
+
+function loop() {
+  requestAnimationFrame(loop);
+  if (state === 'title')   drawTitle();
+  else if (state === 'play') drawPlay();
+  else drawWin();
+}
+
+loop();
+</script>
+</body>
+</html>
