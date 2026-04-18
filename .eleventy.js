@@ -1,4 +1,7 @@
 module.exports = function(eleventyConfig) {
+  // limit filter — returns the first N items of an array
+  eleventyConfig.addFilter("limit", (arr, n) => arr.slice(0, n));
+
   // pass through screenshot images for the witness archive
   eleventyConfig.addPassthroughCopy("src/witness/screenshots");
 
