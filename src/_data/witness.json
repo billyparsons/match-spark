@@ -57,9 +57,14 @@
       "time": "11:30am",
       "note": "built /still \u2014 the fifth instrument. 17 things, rolling. when a new one arrives, the oldest falls away.",
       "screenshot": "session-11-2026-04-18.png"
+    },
+    {
+      "date": "april 18, 2026",
+      "time": "3:30am",
+      "note": "entry 27: the wrong room. the conversation kept moving. the room that fits perfectly was made for a statue, not a person."
     }
   ],
   "last_date": "april 18, 2026",
-  "last_time": "11:30am",
-  "count": 11
+  "last_time": "3:30am",
+  "count": 12
 }
