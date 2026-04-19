@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>decay</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: #07070e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+  color: #667;
+}
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+canvas { display: block; cursor: crosshair; }
+#status {
+  font-size: 11px;
+  color: #445;
+  letter-spacing: 0.12em;
+  min-height: 14px;
+  text-align: center;
+}
+#info {
+  font-size: 10px;
+  color: #334;
+  text-align: center;
+  line-height: 2;
+  letter-spacing: 0.08em;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="status">click grid to place particles &nbsp;·&nbsp; space to start</div>
+  <div id="info">
+    left click to place &nbsp;|&nbsp; click particle to change direction &nbsp;|&nbsp; right click to remove<br>
+    space: start/pause &nbsp;|&nbsp; c: clear &nbsp;|&nbsp; r: restart
+  </div>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+
+const CELL = 28;
+const GRID = 16;
+const PAD = 24;
+const W = GRID * CELL + PAD * 2;
+const H = GRID * CELL + PAD * 2;
+canvas.width = W;
+canvas.height = H;
+
+// Directions: 0=R 1=D 2=L 3=U
+const DX = [1, 0, -1, 0];
+const DY = [0, 1, 0, -1];
+const DIR_ARROW = ['→', '↓', '←', '↑'];
+const DIR_COLOR = ['#4fc46a', '#ff9040', '#e05050', '#4a9de0'];
+
+// Pentatonic C major across 3 octaves (C3=130.81)
+const PENTA = [0, 2, 4, 7, 9];
+const BASE = 130.81;
+const N_NOTES = PENTA.length * 3; // 15 notes total
+
+function noteFreq(i) {
+  i = Math.max(0, Math.min(N_NOTES - 1, i));
+  const oct = Math.floor(i / PENTA.length);
+  const deg = i % PENTA.length;
+  return BASE * Math.pow(2, (PENTA[deg] + oct * 12) / 12);
+}
+
+let audioCtx = null;
+function getAC() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playNote(gridX, gridY, type) {
+  const ac = getAC();
+  const gW = gR - gL + 1;
+  const gH = gB - gT + 1;
+  const relY = gH <= 1 ? 0.5 : (gridY - gT) / (gH - 1);
+  const relX = gW <= 1 ? 0.5 : (gridX - gL) / (gW - 1);
+  const noteIdx = Math.round((1 - relY) * (N_NOTES - 1));
+  const freq = noteFreq(noteIdx);
+  const pan = Math.max(-1, Math.min(1, (relX - 0.5) * 1.8));
+
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  const panner = ac.createStereoPanner();
+
+  osc.frequency.value = freq;
+  panner.pan.value = pan;
+
+  const t = ac.currentTime;
+  if (type === 'wall') {
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.22, t + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+    osc.stop(t + 0.42);
+  } else if (type === 'collision') {
+    osc.type = 'triangle';
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.16, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+    osc.stop(t + 0.55);
+  } else if (type === 'shrink') {
+    osc.type = 'sawtooth';
+    osc.frequency.value = freq * 0.5;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.12, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    osc.stop(t + 0.65);
+  } else if (type === 'final') {
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.18, t + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 2.8);
+    osc.stop(t + 3.0);
+  }
+
+  osc.connect(gain);
+  gain.connect(panner);
+  panner.connect(ac.destination);
+  osc.start();
+}
+
+// State
+let gL, gT, gR, gB;
+let particles = [];
+let ghosts = [];
+let flashes = [];
+let tick = 0;
+let running = false;
+let done = false;
+
+const SHRINK_EVERY = 50;
+const MAX_GHOSTS = 7;
+
+function init() {
+  gL = 0; gT = 0; gR = GRID - 1; gB = GRID - 1;
+  particles = [];
+  ghosts = [];
+  flashes = [];
+  tick = 0;
+  running = false;
+  done = false;
+  statusEl.textContent = 'click grid to place particles \u00b7 space to start';
+}
+
+function inBounds(x, y) {
+  return x >= gL && x <= gR && y >= gT && y <= gB;
+}
+
+function particleAt(x, y) {
+  return particles.find(p => p.x === x && p.y === y);
+}
+
+function addFlash(x, y, color, duration) {
+  flashes.push({ x, y, color, t: duration, max: duration });
+}
+
+function step() {
+  if (!running || done) return;
+  tick++;
+
+  // Compute intended next positions
+  const intents = particles.map(p => ({
+    p,
+    nx: p.x + DX[p.dir],
+    ny: p.y + DY[p.dir]
+  }));
+
+  // Wall bounce: if next pos out of bounds, reverse and stay
+  for (const m of intents) {
+    const outX = m.nx < gL || m.nx > gR;
+    const outY = m.ny < gT || m.ny > gB;
+    if (outX || outY) {
+      if (outX) m.p.dir = m.p.dir === 0 ? 2 : 0; // flip horizontal
+      if (outY) m.p.dir = m.p.dir === 1 ? 3 : 1; // flip vertical
+      m.nx = m.p.x;
+      m.ny = m.p.y;
+      playNote(m.p.x, m.p.y, 'wall');
+      addFlash(m.p.x, m.p.y, '#c0d8ff', 10);
+    }
+  }
+
+  // Apply moves
+  for (const m of intents) {
+    m.p.x = m.nx;
+    m.p.y = m.ny;
+  }
+
+  // Collision: particles sharing a cell → both turn clockwise
+  const cell = new Map();
+  for (const p of particles) {
+    const k = `${p.x},${p.y}`;
+    if (!cell.has(k)) cell.set(k, []);
+    cell.get(k).push(p);
+  }
+  for (const [, group] of cell) {
+    if (group.length >= 2) {
+      for (const p of group) {
+        p.dir = (p.dir + 1) % 4;
+      }
+      playNote(group[0].x, group[0].y, 'collision');
+      addFlash(group[0].x, group[0].y, '#ffe060', 12);
+    }
+  }
+
+  // Tick flashes
+  flashes = flashes.map(f => ({ ...f, t: f.t - 1 })).filter(f => f.t > 0);
+
+  // Shrink
+  if (tick % SHRINK_EVERY === 0) shrink();
+}
+
+function shrink() {
+  ghosts.push({ l: gL, t: gT, r: gR, b: gB });
+  if (ghosts.length > MAX_GHOSTS) ghosts.shift();
+
+  gL++; gT++; gR--; gB--;
+
+  if (gR < gL || gB < gT) {
+    // Collapse
+    for (const p of particles) playNote(p.x, p.y, 'final');
+    particles = [];
+    done = true;
+    statusEl.textContent = 'decay complete \u00b7 click anywhere to restart';
+    return;
+  }
+
+  // Push particles to new bounds, play shrink note
+  for (const p of particles) {
+    let pushed = false;
+    if (p.x < gL) { p.x = gL; if (p.dir === 2) p.dir = 0; pushed = true; }
+    else if (p.x > gR) { p.x = gR; if (p.dir === 0) p.dir = 2; pushed = true; }
+    if (p.y < gT) { p.y = gT; if (p.dir === 3) p.dir = 1; pushed = true; }
+    else if (p.y > gB) { p.y = gB; if (p.dir === 1) p.dir = 3; pushed = true; }
+    if (pushed) {
+      playNote(p.x, p.y, 'shrink');
+      addFlash(p.x, p.y, '#ff6640', 16);
+    }
+  }
+
+  // Flash the new border
+  for (let x = gL; x <= gR; x++) {
+    addFlash(x, gT, '#3a5070', 14);
+    addFlash(x, gB, '#3a5070', 14);
+  }
+  for (let y = gT + 1; y < gB; y++) {
+    addFlash(gL, y, '#3a5070', 14);
+    addFlash(gR, y, '#3a5070', 14);
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#07070e';
+  ctx.fillRect(0, 0, W, H);
+
+  // Ghost borders (past boundaries)
+  for (let i = 0; i < ghosts.length; i++) {
+    const g = ghosts[i];
+    const alpha = ((i + 1) / ghosts.length) * 0.14;
+    ctx.strokeStyle = `rgba(80, 110, 160, ${alpha})`;
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(
+      PAD + g.l * CELL + 0.5,
+      PAD + g.t * CELL + 0.5,
+      (g.r - g.l + 1) * CELL,
+      (g.b - g.t + 1) * CELL
+    );
+  }
+
+  // Full grid lines (very faint)
+  ctx.strokeStyle = 'rgba(30, 35, 55, 0.8)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= GRID; i++) {
+    ctx.beginPath();
+    ctx.moveTo(PAD + i * CELL, PAD);
+    ctx.lineTo(PAD + i * CELL, PAD + GRID * CELL);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(PAD, PAD + i * CELL);
+    ctx.lineTo(PAD + GRID * CELL, PAD + i * CELL);
+    ctx.stroke();
+  }
+
+  // Dead zones (outside current bounds)
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  if (gT > 0) ctx.fillRect(PAD, PAD, GRID * CELL, gT * CELL);
+  if (gB < GRID - 1) ctx.fillRect(PAD, PAD + (gB + 1) * CELL, GRID * CELL, (GRID - 1 - gB) * CELL);
+  if (gL > 0) ctx.fillRect(PAD, PAD + gT * CELL, gL * CELL, (gB - gT + 1) * CELL);
+  if (gR < GRID - 1) ctx.fillRect(PAD + (gR + 1) * CELL, PAD + gT * CELL, (GRID - 1 - gR) * CELL, (gB - gT + 1) * CELL);
+
+  // Active border
+  if (!done) {
+    ctx.strokeStyle = '#2a3a5a';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(
+      PAD + gL * CELL + 0.75,
+      PAD + gT * CELL + 0.75,
+      (gR - gL + 1) * CELL - 1.5,
+      (gB - gT + 1) * CELL - 1.5
+    );
+  }
+
+  // Shrink progress bar (along top of active area)
+  if (running && !done) {
+    const progress = (tick % SHRINK_EVERY) / SHRINK_EVERY;
+    ctx.fillStyle = 'rgba(60, 80, 120, 0.5)';
+    ctx.fillRect(
+      PAD + gL * CELL,
+      PAD + gT * CELL - 3,
+      (gR - gL + 1) * CELL * progress,
+      2
+    );
+  }
+
+  // Flash cells
+  for (const f of flashes) {
+    const alpha = f.t / f.max;
+    const px = PAD + f.x * CELL;
+    const py = PAD + f.y * CELL;
+    ctx.fillStyle = f.color + Math.round(alpha * 200).toString(16).padStart(2, '0');
+    ctx.fillRect(px + 1, py + 1, CELL - 2, CELL - 2);
+  }
+
+  // Particles
+  for (const p of particles) {
+    const cx = PAD + p.x * CELL + CELL / 2;
+    const cy = PAD + p.y * CELL + CELL / 2;
+    const col = DIR_COLOR[p.dir];
+
+    // Subtle glow
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, CELL * 0.55);
+    grad.addColorStop(0, col + '40');
+    grad.addColorStop(1, col + '00');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, CELL * 0.55, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+
+    // Direction arrow
+    const ax = DX[p.dir] * 9;
+    const ay = DY[p.dir] * 9;
+    ctx.strokeStyle = col + 'cc';
+    ctx.lineWidth = 1.5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + ax, cy + ay);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx + ax, cy + ay, 2, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+  }
+
+  // Done overlay
+  if (done) {
+    ctx.fillStyle = 'rgba(7, 7, 14, 0.75)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#3a4a6a';
+    ctx.font = '14px Courier New';
+    ctx.fillText('decay complete', W / 2, H / 2 - 8);
+    ctx.fillStyle = '#223';
+    ctx.font = '11px Courier New';
+    ctx.fillText('click anywhere to restart', W / 2, H / 2 + 14);
+    ctx.textAlign = 'left';
+  }
+
+  // Status update while running
+  if (running && !done) {
+    const shrinks = ghosts.length;
+    const toShrink = SHRINK_EVERY - (tick % SHRINK_EVERY);
+    statusEl.textContent = `${particles.length} particle${particles.length !== 1 ? 's' : ''} \u00b7 ${shrinks} shrink${shrinks !== 1 ? 's' : ''} \u00b7 ${toShrink} ticks until next`;
+  }
+}
+
+// Loop: 12 ticks/sec
+let lastTick = 0;
+const TICK_MS = 83;
+
+function loop(ts) {
+  if (ts - lastTick >= TICK_MS) {
+    step();
+    lastTick = ts;
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// Input
+canvas.addEventListener('click', e => {
+  if (done) { init(); return; }
+
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top) * (H / rect.height);
+  const cx = Math.floor((mx - PAD) / CELL);
+  const cy = Math.floor((my - PAD) / CELL);
+
+  if (cx < 0 || cx >= GRID || cy < 0 || cy >= GRID) return;
+
+  const existing = particleAt(cx, cy);
+  if (existing) {
+    existing.dir = (existing.dir + 1) % 4;
+  } else if (inBounds(cx, cy)) {
+    particles.push({ x: cx, y: cy, dir: 0 });
+    getAC();
+  }
+});
+
+canvas.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  if (done) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top) * (H / rect.height);
+  const cx = Math.floor((mx - PAD) / CELL);
+  const cy = Math.floor((my - PAD) / CELL);
+
+  const idx = particles.findIndex(p => p.x === cx && p.y === cy);
+  if (idx !== -1) particles.splice(idx, 1);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (done) { init(); return; }
+    running = !running;
+    if (running) {
+      getAC();
+      statusEl.textContent = 'running\u2026';
+    } else {
+      statusEl.textContent = 'paused \u00b7 space to resume';
+    }
+  } else if (e.code === 'KeyC') {
+    if (!done) { particles = []; flashes = []; }
+  } else if (e.code === 'KeyR') {
+    init();
+  }
+});
+
+init();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
