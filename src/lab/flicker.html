@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>flicker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: #07070e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+  color: #667;
+  user-select: none;
+}
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+canvas { display: block; cursor: default; }
+#status {
+  font-size: 11px;
+  color: #445;
+  letter-spacing: 0.12em;
+  min-height: 14px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c" width="660" height="440"></canvas>
+  <div id="status" id="status">click to start audio</div>
+</div>
+
+<script>
+// =====================================================================
+// FLICKER — a playable double-well potential
+//
+// V(x, c) = x^4/4 - x^2/2 - c·x
+// F(x, c) = -x^3 + x + c   (force = -dV/dx)
+//
+// Two stable basins. As c increases, the left basin rises and shrinks.
+// At c ≈ 0.385 it vanishes. The particle must cross. This is irreversible.
+// The flickering you hear before the crossing is the real early warning.
+// =====================================================================
+
+const W = 660, H = 440;
+const BIFURCATION = 2 / (3 * Math.sqrt(3)); // ≈ 0.3849
+
+// ---- Physics state ----
+let px = -1.0;   // position
+let pv = 0.0;    // velocity
+let pc = -0.30;  // bifurcation parameter — starts negative so LEFT well is stable
+
+const GAMMA  = 0.85;   // damping
+const SIGMA  = 0.32;   // noise amplitude
+const DT     = 0.018;
+const STEPS  = 5;      // substeps per frame
+
+// ---- Trail ----
+const TRAIL_MAX = 180;
+let trail = [];  // [{x, age}]
+
+// ---- Status ----
+let statusEl   = document.getElementById('status');
+let statusText = '';
+let prevPhase  = '';
+
+function setStatus(t) {
+  if (t === statusText) return;
+  statusText = t;
+  statusEl.textContent = t;
+}
+
+// ---- Coordinate maps ----
+// x domain: [-2.2, 2.2] → canvas [50, W-50]
+// V range displayed: [-0.7, 0.7] → canvas [H-80, 80] (inverted)
+const CX0 = 50, CXW = W - 100;
+const CV0 = H - 80, CVH = H - 160;
+const XMIN = -2.2, XMAX = 2.2;
+const VMIN = -0.85, VMAX = 0.72;
+
+function toSX(x) { return CX0 + (x - XMIN) / (XMAX - XMIN) * CXW; }
+function toSY(v) { return CV0 - (v - VMIN) / (VMAX - VMIN) * CVH; }
+
+function V(x, c) { return x*x*x*x/4 - x*x/2 - c*x; }
+function F(x, c) { return -x*x*x + x + c; }
+
+// Gaussian noise via Box-Muller
+let _g = null;
+function gauss() {
+  if (_g !== null) { let s = _g; _g = null; return s; }
+  let u, v, s;
+  do { u = Math.random()*2-1; v = Math.random()*2-1; s = u*u+v*v; } while (s >= 1 || s === 0);
+  let f = Math.sqrt(-2 * Math.log(s) / s);
+  _g = v * f;
+  return u * f;
+}
+
+// ---- Audio ----
+let actx = null, audioOn = false;
+let oscL, oscR, oscSub;
+let gainL, gainR, gainSub, masterGain;
+let filterL, filterR;
+
+function startAudio() {
+  if (audioOn) return;
+  audioOn = true;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+
+  masterGain = actx.createGain();
+  masterGain.gain.value = 0.0;
+  masterGain.connect(actx.destination);
+
+  // Left basin oscillator: low, warm tone (G2 = 98 Hz)
+  filterL = actx.createBiquadFilter();
+  filterL.type = 'lowpass';
+  filterL.frequency.value = 600;
+  filterL.Q.value = 1.2;
+
+  gainL = actx.createGain();
+  gainL.gain.value = 0;
+
+  oscL = actx.createOscillator();
+  oscL.type = 'sawtooth';
+  oscL.frequency.value = 98;
+  oscL.connect(filterL);
+  filterL.connect(gainL);
+  gainL.connect(masterGain);
+  oscL.start();
+
+  // Right basin oscillator: higher, cooler tone (D3 = 147 Hz, a fifth up)
+  filterR = actx.createBiquadFilter();
+  filterR.type = 'lowpass';
+  filterR.frequency.value = 900;
+  filterR.Q.value = 1.2;
+
+  gainR = actx.createGain();
+  gainR.gain.value = 0;
+
+  oscR = actx.createOscillator();
+  oscR.type = 'sawtooth';
+  oscR.frequency.value = 147;
+  oscR.connect(filterR);
+  filterR.connect(gainR);
+  gainR.connect(masterGain);
+  oscR.start();
+
+  // Sub bass: sine at G1 (49 Hz), fades as stability decreases
+  gainSub = actx.createGain();
+  gainSub.gain.value = 0;
+  oscSub = actx.createOscillator();
+  oscSub.type = 'sine';
+  oscSub.frequency.value = 49;
+  oscSub.connect(gainSub);
+  gainSub.connect(masterGain);
+  oscSub.start();
+
+  // Fade in master
+  masterGain.gain.setTargetAtTime(1.0, actx.currentTime, 0.5);
+  setStatus('press → to tilt the landscape');
+}
+
+function updateAudio() {
+  if (!audioOn) return;
+  let t = actx.currentTime;
+
+  // How "right" is the particle? 0 = firmly left, 1 = firmly right
+  // Soft sigmoid over x: center at 0, sharp enough to separate basins
+  let rightness = 1 / (1 + Math.exp(-3 * px));
+  let leftness  = 1 - rightness;
+
+  // Brightness tracks kinetic energy: particle going fast over the hill → bright
+  let ke = pv * pv;
+  let filterCutoff = 400 + ke * 3000;
+
+  gainL.gain.setTargetAtTime(leftness  * 0.18, t, 0.025);
+  gainR.gain.setTargetAtTime(rightness * 0.18, t, 0.025);
+  filterL.frequency.setTargetAtTime(filterCutoff, t, 0.08);
+  filterR.frequency.setTargetAtTime(filterCutoff, t, 0.08);
+
+  // Sub bass: full when stable (c << BIFURCATION), silent at edge
+  let stability = Math.max(0, 1 - pc / (BIFURCATION * 1.1));
+  gainSub.gain.setTargetAtTime(stability * 0.09, t, 0.2);
+}
+
+// ---- Physics step ----
+function step() {
+  for (let i = 0; i < STEPS; i++) {
+    let f    = F(px, pc);
+    let noise = gauss() * SIGMA * Math.sqrt(DT);
+    pv += (f - GAMMA * pv) * DT + noise;
+    px += pv * DT;
+    px = Math.max(XMIN + 0.1, Math.min(XMAX - 0.1, px));
+  }
+  trail.push({ x: px, age: 0 });
+  for (let i = 0; i < trail.length; i++) trail[i].age++;
+  if (trail.length > TRAIL_MAX) trail.shift();
+}
+
+// ---- Drawing ----
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+function drawBackground() {
+  // Subtle basin tints
+  let midX = toSX(0);
+  let leftGrad = ctx.createLinearGradient(CX0, 0, midX, 0);
+  leftGrad.addColorStop(0, 'rgba(255,140,60,0.04)');
+  leftGrad.addColorStop(1, 'rgba(255,140,60,0)');
+  ctx.fillStyle = leftGrad;
+  ctx.fillRect(CX0, 0, midX - CX0, H);
+
+  let rightGrad = ctx.createLinearGradient(midX, 0, CX0 + CXW, 0);
+  rightGrad.addColorStop(0, 'rgba(60,180,255,0)');
+  rightGrad.addColorStop(1, 'rgba(60,180,255,0.04)');
+  ctx.fillStyle = rightGrad;
+  ctx.fillRect(midX, 0, CX0 + CXW - midX, H);
+}
+
+function drawCurve() {
+  // Fill area under curve (above actually — wells are low)
+  ctx.beginPath();
+  let first = true;
+  let pts = [];
+  for (let xi = XMIN; xi <= XMAX; xi += 0.025) {
+    let vi = V(xi, pc);
+    if (vi > VMAX) vi = VMAX;
+    if (vi < VMIN) vi = VMIN;
+    let sx = toSX(xi), sy = toSY(vi);
+    pts.push([sx, sy]);
+    if (first) { ctx.moveTo(sx, sy); first = false; }
+    else ctx.lineTo(sx, sy);
+  }
+
+  // Stroke the curve
+  ctx.strokeStyle = '#2a2a42';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Fill below curve as solid dark to create well silhouette
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], H - 40);
+  for (let i = 0; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.lineTo(pts[pts.length-1][0], H - 40);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(12,12,24,0.6)';
+  ctx.fill();
+
+  // Stroke again on top
+  ctx.beginPath();
+  first = true;
+  for (let xi = XMIN; xi <= XMAX; xi += 0.025) {
+    let vi = V(xi, pc);
+    if (vi > VMAX) vi = VMAX;
+    if (vi < VMIN) vi = VMIN;
+    let sx = toSX(xi), sy = toSY(vi);
+    if (first) { ctx.moveTo(sx, sy); first = false; }
+    else ctx.lineTo(sx, sy);
+  }
+  ctx.strokeStyle = '#3a3a5a';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+}
+
+function drawTrail() {
+  for (let {x, age} of trail) {
+    let vi = Math.max(VMIN, Math.min(VMAX, V(x, pc)));
+    let sx = toSX(x), sy = toSY(vi);
+    let alpha = Math.max(0, 1 - age / TRAIL_MAX);
+    let isRight = x > 0;
+    let col = isRight ? `rgba(60,180,255,${alpha * 0.45})` : `rgba(255,140,60,${alpha * 0.45})`;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawParticle() {
+  let vi = Math.max(VMIN, Math.min(VMAX, V(px, pc)));
+  let sx = toSX(px), sy = toSY(vi);
+  let isRight = px > 0;
+  let r = 180, g = 140, b = 60;
+  if (isRight) { r = 60; g = 180; b = 255; }
+
+  // glow rings
+  for (let rad = 18; rad >= 5; rad -= 4) {
+    let a = (1 - rad / 22) * 0.18;
+    ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+    ctx.beginPath();
+    ctx.arc(sx, sy, rad, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // core
+  ctx.fillStyle = `rgb(${r},${g},${b})`;
+  ctx.beginPath();
+  ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // white hot center
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.beginPath();
+  ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawUI() {
+  ctx.fillStyle = '#252535';
+  ctx.font = '10px Courier New';
+
+  // Title (top left)
+  ctx.fillStyle = '#3a3a52';
+  ctx.font = '11px Courier New';
+  ctx.letterSpacing = '0.15em';
+  ctx.fillText('FLICKER', CX0, 26);
+  ctx.letterSpacing = '0em';
+
+  // Controls (top right area)
+  ctx.fillStyle = '#252535';
+  ctx.font = '10px Courier New';
+  ctx.textAlign = 'right';
+  ctx.fillText('← → tilt   R restart', W - CX0, 26);
+  ctx.textAlign = 'left';
+
+  // Tilt bar (bottom)
+  let barY = H - 30;
+  let barX = CX0, barW = CXW;
+  ctx.fillStyle = '#111120';
+  ctx.fillRect(barX, barY, barW, 5);
+
+  // Map c: [-0.6, 0.55] → bar
+  let cRange = 1.15;
+  let cOff   = 0.6;
+  let pos    = (pc + cOff) / cRange;
+  pos = Math.max(0, Math.min(1, pos));
+
+  // Bifurcation marker
+  let bifPos = (BIFURCATION + cOff) / cRange;
+  ctx.fillStyle = '#333348';
+  ctx.fillRect(barX + bifPos * barW - 1, barY - 4, 2, 13);
+
+  // Current position
+  let barColor = pc > BIFURCATION * 0.85 ? '#ff6040' : (px > 0.1 ? '#40b8ff' : '#ff9040');
+  ctx.fillStyle = barColor;
+  ctx.fillRect(barX + pos * barW - 3, barY - 3, 6, 11);
+
+  // Basin labels
+  ctx.fillStyle = '#2a2030';
+  ctx.font = '9px Courier New';
+  ctx.fillText('left basin', CX0, barY - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('right basin', CX0 + CXW, barY - 10);
+  ctx.textAlign = 'left';
+
+  // Bifurcation label
+  ctx.fillStyle = '#2a2a38';
+  ctx.font = '9px Courier New';
+  let bifSX = barX + bifPos * barW;
+  ctx.textAlign = 'center';
+  ctx.fillText('▲', bifSX, barY - 10);
+  ctx.textAlign = 'left';
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#07070e';
+  ctx.fillRect(0, 0, W, H);
+
+  drawBackground();
+  drawCurve();
+  drawTrail();
+  drawParticle();
+  drawUI();
+}
+
+// ---- Phase tracking / status ----
+function detectPhase() {
+  if (!audioOn) return;
+  let phase;
+  if (pc >= BIFURCATION && px > 0.2) {
+    phase = 'tipped';
+  } else {
+    // Count crossings in recent trail (zero-crossings of x)
+    let crossings = 0;
+    for (let i = 1; i < trail.length; i++) {
+      if ((trail[i-1].x < 0) !== (trail[i].x < 0)) crossings++;
+    }
+    if (crossings > 5) {
+      phase = 'flickering';
+    } else if (pc > -0.05) {
+      phase = 'approaching';
+    } else {
+      phase = 'stable-left';
+    }
+  }
+
+  if (phase === prevPhase) return;
+  prevPhase = phase;
+
+  if (phase === 'stable-left')   setStatus('resting in the left basin — press → to tilt');
+  if (phase === 'approaching')   setStatus('the basins are equalizing — listen');
+  if (phase === 'flickering')    setStatus('flickering — the left basin is weakening');
+  if (phase === 'tipped')        setStatus('the left basin is gone — irreversible');
+}
+
+// ---- Controls ----
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (e.key === 'r' || e.key === 'R') resetState();
+  if (!audioOn) startAudio();
+});
+document.addEventListener('keyup', e => { delete keys[e.key]; });
+canvas.addEventListener('click', () => {
+  if (!audioOn) startAudio();
+});
+
+function handleInput() {
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) {
+    pc = Math.min(0.55, pc + 0.0022);
+  }
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) {
+    pc = Math.max(-0.6, pc - 0.0022);
+  }
+}
+
+function resetState() {
+  px = -1.0 + (Math.random() - 0.5) * 0.15;
+  pv = 0;
+  pc = -0.30;
+  trail.length = 0;
+  prevPhase = '';
+  if (audioOn) setStatus('press → to tilt the landscape');
+}
+
+// ---- Main loop ----
+function loop() {
+  handleInput();
+  step();
+  updateAudio();
+  draw();
+  detectPhase();
+  requestAnimationFrame(loop);
+}
+
+resetState();
+loop();
+</script>
+</body>
+</html>
