@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>the wrong room</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --w: 0;
+      --bg-cold:  10, 12, 20;
+      --bg-warm:  16, 11, 4;
+      --room-cold: 15, 17, 32;
+      --room-warm: 26, 18, 8;
+      --floor-cold: 11, 13, 24;
+      --floor-warm: 20, 14, 6;
+      --text-cold: 140, 150, 180;
+      --text-warm: 195, 165, 110;
+    }
+
+    body {
+      background: rgb(
+        calc(10 + var(--w) * 6),
+        calc(12 + var(--w) * (-1)),
+        calc(20 + var(--w) * (-16))
+      );
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 3rem 1rem 4rem;
+      font-family: 'Georgia', serif;
+      transition: background 3s ease;
+    }
+
+    .title {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: rgba(140, 150, 180, 0.4);
+      margin-bottom: 2.5rem;
+      text-transform: lowercase;
+      transition: color 3s ease;
+    }
+
+    .room-wrap {
+      position: relative;
+      width: min(600px, 96vw);
+    }
+
+    .room {
+      width: 100%;
+      aspect-ratio: 600 / 340;
+      position: relative;
+      background: rgb(
+        calc(15 + var(--w) * 11),
+        calc(17 + var(--w) * 1),
+        calc(32 + var(--w) * (-24))
+      );
+      border: 1px solid rgba(80, 90, 130, calc(0.3 - var(--w) * 0.1));
+      border-radius: 3px;
+      overflow: hidden;
+      transition: background 3s ease, border-color 3s ease;
+    }
+
+    .floor {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 22%;
+      background: rgb(
+        calc(11 + var(--w) * 9),
+        calc(13 + var(--w) * 1),
+        calc(24 + var(--w) * (-18))
+      );
+      border-top: 1px solid rgba(60,70,110, calc(0.4 - var(--w)*0.15));
+      transition: background 3s ease, border-color 3s ease;
+    }
+
+    /* window: glow from top center */
+    .window-glow {
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 28%; height: 45%;
+      background: radial-gradient(ellipse at 50% 0%,
+        rgba(
+          calc(60 + var(--w) * 140),
+          calc(80 + var(--w) * 70),
+          calc(140 + var(--w) * (-70)),
+          calc(0.12 + var(--w) * 0.18)
+        ) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+      transition: background 3s ease;
+    }
+
+    /* objects */
+    .obj {
+      position: absolute;
+      cursor: pointer;
+      transition: opacity 0.4s ease;
+    }
+    .obj:hover .obj-shape { opacity: 1; }
+    .obj.active .obj-shape { opacity: 1; }
+
+    /* mirror: left wall */
+    .obj-mirror {
+      left: 6%; top: 12%;
+      width: 9%; height: 58%;
+    }
+    .obj-mirror .obj-shape {
+      width: 100%; height: 100%;
+      background: rgb(4, 5, 10);
+      border: 1px solid rgba(80,90,130,0.5);
+      opacity: 0.7;
+      position: relative;
+      overflow: hidden;
+      transition: background 3s ease, border-color 3s ease;
+    }
+    .obj-mirror.state-2 .obj-shape {
+      background: rgb(30, 25, 18);
+      border-color: rgba(180, 150, 100, 0.4);
+    }
+    .mirror-reflection {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%,
+        rgba(255,255,255, calc(var(--w) * 0.06)) 0%,
+        transparent 60%
+      );
+      transition: background 3s ease;
+    }
+    .obj-mirror .obj-label {
+      position: absolute;
+      bottom: -1.3rem; left: 50%; transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    /* desk: center-left */
+    .obj-desk {
+      left: 24%; bottom: 22%;
+      width: 24%; height: 28%;
+    }
+    .obj-desk .obj-shape {
+      width: 100%; height: 60%;
+      margin-top: 40%;
+      background: rgb(
+        calc(25 + var(--w) * 20),
+        calc(20 + var(--w) * 5),
+        calc(14 + var(--w) * (-5))
+      );
+      border: 1px solid rgba(80,90,130,calc(0.35 - var(--w)*0.1));
+      opacity: 0.75;
+      transition: background 3s ease, border-color 3s ease;
+    }
+    .desk-paper {
+      position: absolute;
+      top: 28%; left: 20%;
+      width: 55%; height: 38%;
+      background: rgba(
+        calc(200 + var(--w) * 20),
+        calc(190 + var(--w) * 0),
+        calc(165 + var(--w) * (-15)),
+        calc(0.06 + var(--w) * 0.1)
+      );
+      border: 1px solid rgba(200,190,160, calc(0.1 + var(--w)*0.15));
+      transition: all 3s ease;
+    }
+
+    /* bookshelf: right */
+    .obj-shelf {
+      right: 6%; top: 8%;
+      width: 11%; height: 62%;
+    }
+    .obj-shelf .obj-shape {
+      width: 100%; height: 100%;
+      background: rgb(
+        calc(22 + var(--w) * 18),
+        calc(17 + var(--w) * 5),
+        calc(10 + var(--w) * (-2))
+      );
+      border: 1px solid rgba(80,90,130,calc(0.3 - var(--w)*0.1));
+      opacity: 0.75;
+      transition: background 3s ease, border-color 3s ease;
+    }
+    .shelf-books {
+      position: absolute;
+      inset: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .book-spine {
+      flex: 1;
+      background: rgba(
+        calc(60 + var(--w) * 60),
+        calc(50 + var(--w) * 20),
+        calc(80 + var(--w) * (-30)),
+        calc(0.4 + var(--w) * 0.2)
+      );
+      border-radius: 1px;
+      transition: background 3s ease;
+    }
+    .book-spine:nth-child(2n) {
+      background: rgba(
+        calc(40 + var(--w) * 50),
+        calc(55 + var(--w) * 15),
+        calc(65 + var(--w) * (-20)),
+        calc(0.4 + var(--w) * 0.2)
+      );
+    }
+
+    /* window: clickable area, top center */
+    .obj-window {
+      left: 36%; top: 0%;
+      width: 28%; height: 44%;
+    }
+    .obj-window .obj-shape {
+      width: 70%; height: 80%;
+      margin: 0 auto;
+      border: 1px solid rgba(80,90,130,calc(0.4 - var(--w)*0.15));
+      background: rgba(
+        calc(30 + var(--w) * 60),
+        calc(40 + var(--w) * 30),
+        calc(80 + var(--w) * (-30)),
+        calc(0.15 + var(--w) * 0.08)
+      );
+      opacity: 0.7;
+      transition: all 3s ease;
+    }
+    .window-mullion-h {
+      position: absolute;
+      top: 40%; left: 15%; right: 15%; height: 1px;
+      background: rgba(80,90,130, calc(0.4 - var(--w)*0.15));
+      transition: background 3s ease;
+    }
+    .window-mullion-v {
+      position: absolute;
+      left: 50%; top: 0; bottom: 20%; width: 1px;
+      background: rgba(80,90,130, calc(0.4 - var(--w)*0.15));
+      transition: background 3s ease;
+    }
+
+    /* chair: center */
+    .obj-chair {
+      left: 44%; bottom: 22%;
+      width: 13%; height: 36%;
+    }
+    .obj-chair .obj-shape {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+    .chair-back {
+      position: absolute;
+      top: 0; left: 20%; right: 20%; height: 50%;
+      border: 1px solid rgba(80,90,130,calc(0.4 - var(--w)*0.1));
+      border-bottom: none;
+      background: rgba(
+        calc(28 + var(--w) * 18),
+        calc(22 + var(--w) * 8),
+        calc(15 + var(--w) * (-5)),
+        0.6
+      );
+      transition: all 3s ease;
+    }
+    .chair-seat {
+      position: absolute;
+      top: 48%; left: 10%; right: 10%; height: 18%;
+      background: rgb(
+        calc(30 + var(--w) * 20),
+        calc(24 + var(--w) * 8),
+        calc(16 + var(--w) * (-6))
+      );
+      border: 1px solid rgba(80,90,130,calc(0.3 - var(--w)*0.1));
+      transition: background 3s ease, border-color 3s ease;
+    }
+    .chair-legs {
+      position: absolute;
+      bottom: 0; left: 15%; right: 15%; height: 34%;
+      display: flex; justify-content: space-between;
+    }
+    .chair-leg {
+      width: 2px;
+      background: rgba(80,90,130,calc(0.4 - var(--w)*0.1));
+      transition: background 3s ease;
+    }
+
+    .obj-label {
+      font-family: 'Georgia', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: rgba(140,150,180, calc(0.35 + var(--w) * 0.25));
+      text-align: center;
+      margin-top: 0.3rem;
+      transition: color 3s ease;
+      user-select: none;
+    }
+
+    /* text panel */
+    .text-panel {
+      width: min(600px, 96vw);
+      margin-top: 2rem;
+      min-height: 8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .text-main {
+      font-size: 0.92rem;
+      line-height: 1.85;
+      color: rgba(
+        calc(140 + var(--w) * 55),
+        calc(150 + var(--w) * 15),
+        calc(180 + var(--w) * (-70)),
+        0.85
+      );
+      transition: color 3s ease;
+      min-height: 4rem;
+    }
+
+    .text-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: rgba(100, 110, 140, 0.4);
+      font-style: italic;
+      transition: color 3s ease;
+    }
+
+    .fade-in {
+      animation: fadein 0.8s ease forwards;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .progress-bar {
+      width: min(600px, 96vw);
+      height: 1px;
+      margin-top: 1.5rem;
+      background: rgba(60, 65, 90, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: rgba(
+        calc(100 + var(--w) * 80),
+        calc(110 + var(--w) * 20),
+        calc(160 + var(--w) * (-60)),
+        0.6
+      );
+      transition: width 1.2s ease, background 3s ease;
+    }
+
+    .back-link {
+      margin-top: 2.5rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: rgba(100,110,140,0.3);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .back-link:hover { color: rgba(140,150,180,0.6); }
+  </style>
+</head>
+<body>
+
+  <p class="title">the wrong room</p>
+
+  <div class="room-wrap">
+    <div class="room" id="room">
+      <div class="window-glow"></div>
+      <div class="floor"></div>
+
+      <!-- mirror -->
+      <div class="obj obj-mirror" id="obj-mirror" onclick="click_obj('mirror')">
+        <div class="obj-shape">
+          <div class="mirror-reflection"></div>
+        </div>
+        <div class="obj-label">mirror</div>
+      </div>
+
+      <!-- desk -->
+      <div class="obj obj-desk" id="obj-desk" onclick="click_obj('desk')">
+        <div class="desk-paper"></div>
+        <div class="obj-shape"></div>
+        <div class="obj-label" style="bottom:-1.4rem;position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap">desk</div>
+      </div>
+
+      <!-- bookshelf -->
+      <div class="obj obj-shelf" id="obj-shelf" onclick="click_obj('shelf')">
+        <div class="obj-shape">
+          <div class="shelf-books">
+            <div class="book-spine"></div>
+            <div class="book-spine"></div>
+            <div class="book-spine"></div>
+            <div class="book-spine"></div>
+            <div class="book-spine"></div>
+            <div class="book-spine"></div>
+          </div>
+        </div>
+        <div class="obj-label">shelf</div>
+      </div>
+
+      <!-- window -->
+      <div class="obj obj-window" id="obj-window" onclick="click_obj('window')">
+        <div class="obj-shape">
+          <div class="window-mullion-h"></div>
+          <div class="window-mullion-v"></div>
+        </div>
+        <div class="obj-label">window</div>
+      </div>
+
+      <!-- chair -->
+      <div class="obj obj-chair" id="obj-chair" onclick="click_obj('chair')">
+        <div class="obj-shape">
+          <div class="chair-back"></div>
+          <div class="chair-seat"></div>
+          <div class="chair-legs">
+            <div class="chair-leg"></div>
+            <div class="chair-leg"></div>
+          </div>
+        </div>
+        <div class="obj-label">chair</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="text-panel">
+    <p class="text-main" id="text-main">you've arrived at the wrong room. someone else was expected here. they are not coming. you are welcome to stay.</p>
+    <p class="text-sub" id="text-sub">look around</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <a class="back-link" href="/lab">← lab</a>
+
+<script>
+  const TEXTS = {
+    mirror: [
+      ["a mirror angled to show nothing but darkness. whoever sat in the chair before you came here to see someone. the mirror's job was to make them see only the void. maybe they did.",
+       "mirror · 0 of 2"],
+      ["the mirror still shows darkness. but there is something at the edge. a shape that wasn't there when you arrived.",
+       "mirror · 1 of 2"],
+      ["you can see yourself now. the mirror didn't change. you just stayed long enough.",
+       "mirror · yours"]
+    ],
+    desk: [
+      ["a letter, half-finished. 'I've left everything as you would want it —' it stops there. whoever was writing never finished. the pen is still uncapped.",
+       "desk · 0 of 2"],
+      ["the letter is still addressed to someone else. but you've read it so many times now it has started to feel like it was meant for you.",
+       "desk · 1 of 2"],
+      ["you pick up the pen. the sentence continues in your own hand. you don't remember deciding to do that.",
+       "desk · yours"]
+    ],
+    shelf: [
+      ["their books. the margins are full. page 47: 'NO — this is wrong.' page 112: 'yes exactly this.' someone read these very hard.",
+       "shelf · 0 of 2"],
+      ["you find yourself agreeing with the marginalia. agreeing before you've read the printed text. you're learning their opinions first.",
+       "shelf · 1 of 2"],
+      ["you wrote something in the margin. page 203. you don't remember the sentence. you remember meaning it.",
+       "shelf · yours"]
+    ],
+    window: [
+      ["the window faces east. the light coming through is cold. the kind of cold that means someone got up early to watch it, once. it has been this color ever since.",
+       "window · 0 of 2"],
+      ["the light has shifted. you didn't notice when. it is still east-facing but warmer now, or the room is different.",
+       "window · 1 of 2"],
+      ["the light is yours now. it comes in at the angle you prefer without you having asked for it.",
+       "window · yours"]
+    ],
+    chair: [
+      ["a chair turned slightly away from you, toward the window. whoever sat here wasn't waiting for anyone to arrive. or they were, and stopped.",
+       "chair · 0 of 2"],
+      ["you haven't moved the chair. but it seems to be at a different angle than before. not toward you. not yet.",
+       "chair · 1 of 2"],
+      ["the chair faces you now. you didn't move it. the room decided.",
+       "chair · yours"]
+    ]
+  };
+
+  const END_TEXT = "the room is yours now. it does not know your name or what you came here looking for. but it has stopped waiting for someone else. that is enough.";
+
+  const state = { mirror: 0, desk: 0, shelf: 0, window: 0, chair: 0 };
+
+  function total_progress() {
+    return Object.values(state).reduce((a,b) => a+b, 0);
+  }
+
+  function all_others_maxed() {
+    return ['desk','shelf','window','chair'].every(k => state[k] >= 2);
+  }
+
+  function update_warmth() {
+    const prog = total_progress();
+    const max = 10;
+    const w = prog / max;
+    document.documentElement.style.setProperty('--w', w.toFixed(3));
+
+    const pct = (prog / max * 100).toFixed(1);
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }
+
+  function show_text(main, sub) {
+    const el = document.getElementById('text-main');
+    const sl = document.getElementById('text-sub');
+    el.classList.remove('fade-in');
+    void el.offsetWidth;
+    el.textContent = main;
+    sl.textContent = sub || '';
+    el.classList.add('fade-in');
+  }
+
+  function click_obj(key) {
+    const s = state[key];
+
+    if (key === 'mirror' && s < 2 && !all_others_maxed()) {
+      show_text(
+        "the mirror is dark. it doesn't reflect you yet.",
+        "something else first"
+      );
+      document.getElementById('obj-mirror').classList.add('active');
+      setTimeout(() => document.getElementById('obj-mirror').classList.remove('active'), 600);
+      return;
+    }
+
+    if (s >= 2) {
+      show_text(TEXTS[key][2][0], TEXTS[key][2][1]);
+      return;
+    }
+
+    state[key] = s + 1;
+    const new_s = state[key];
+
+    const el = document.getElementById('obj-' + key);
+    el.dataset.state = new_s;
+    el.classList.add('active');
+    setTimeout(() => el.classList.remove('active'), 600);
+
+    if (new_s === 2) {
+      el.classList.add('state-2');
+    }
+
+    show_text(TEXTS[key][new_s][0], TEXTS[key][new_s][1]);
+    update_warmth();
+
+    if (total_progress() >= 10) {
+      setTimeout(() => {
+        show_text(END_TEXT, "the wrong room");
+      }, 1800);
+    }
+  }
+
+  update_warmth();
+</script>
+
+</body>
+</html>
