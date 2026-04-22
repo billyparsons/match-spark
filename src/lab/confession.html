@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>confession — match-spark lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --soft: #6b7280;
+  --accent: #4f46e5;
+  --accent-h: #4338ca;
+  --accent-light: #eef2ff;
+  --good: #059669;
+  --warn-bg: #fffbeb;
+  --warn-border: #f59e0b;
+  --warn-text: #78350f;
+  --note-bg: #fef9c3;
+  --note-border: #fde047;
+  --note-text: #713f12;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* ── confession note ── */
+.note {
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.77rem;
+  color: var(--note-text);
+  line-height: 1.65;
+  margin-bottom: 0.9rem;
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  animation: slide-in 0.35s ease both;
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.note-icon { font-style: normal; flex-shrink: 0; font-size: 0.85rem; margin-top: 0.05em; }
+.note em { font-style: normal; font-weight: 600; }
+
+/* ── card ── */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 10px 40px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-header {
+  padding: 2rem 2rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.55rem;
+}
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+.card-sub {
+  font-size: 0.83rem;
+  color: var(--soft);
+  margin-top: 0.3rem;
+}
+
+/* ── progress ── */
+.prog-wrap { padding: 0 2rem; padding-top: 1.2rem; }
+.prog-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--soft);
+  margin-bottom: 0.35rem;
+}
+.prog-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.55s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── form body ── */
+.card-body { padding: 1.4rem 2rem 1.8rem; }
+
+.step { display: none; }
+.step.active { display: block; }
+
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.38rem;
+}
+.form-group input[type="email"],
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 0.62rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.09);
+}
+.form-group input.err { border-color: #ef4444; }
+
+.chk-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.81rem;
+  color: var(--soft);
+  line-height: 1.5;
+  margin-bottom: 0.9rem;
+}
+.chk-row input[type="checkbox"] {
+  margin-top: 0.18rem;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.btn-main {
+  display: block;
+  width: 100%;
+  padding: 0.72rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+  margin-top: 1.2rem;
+  position: relative;
+}
+.btn-main:hover { background: var(--accent-h); }
+
+.btn-ghost {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.6rem;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.77rem;
+  color: var(--soft);
+  cursor: pointer;
+  text-decoration: underline;
+  text-align: center;
+  transition: color 0.15s;
+}
+.btn-ghost:hover { color: var(--text); }
+
+/* timer */
+.timer-row {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: 7px;
+  padding: 0.6rem 0.85rem;
+  text-align: center;
+  font-size: 0.81rem;
+  color: var(--warn-text);
+  margin-bottom: 0.85rem;
+}
+.timer-row strong { font-size: 1.05rem; letter-spacing: 0.04em; }
+
+/* plan box */
+.plan-box {
+  background: var(--accent-light);
+  border-radius: 9px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.85rem;
+}
+.plan-box .plan-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+.plan-box .plan-detail { font-size: 0.79rem; color: var(--soft); margin-top: 0.25rem; line-height: 1.5; }
+
+/* ── end screen ── */
+.end-screen {
+  display: none;
+  padding: 2.5rem 2rem 2.25rem;
+  text-align: center;
+}
+.end-screen.active { display: block; }
+.end-check {
+  font-size: 2.2rem;
+  color: var(--good);
+  margin-bottom: 0.75rem;
+}
+.end-screen h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.end-screen .tagline {
+  font-size: 0.83rem;
+  color: var(--soft);
+  line-height: 1.6;
+  margin-bottom: 1.4rem;
+}
+
+.pattern-list {
+  text-align: left;
+  background: var(--bg);
+  border-radius: 9px;
+  padding: 0.2rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.pattern-list li {
+  list-style: none;
+  font-size: 0.79rem;
+  color: var(--text);
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pattern-list li:last-child { border-bottom: none; }
+.pattern-list .p-name { font-weight: 500; }
+.pattern-list .p-tag {
+  font-size: 0.68rem;
+  color: var(--good);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.end-coda {
+  font-size: 0.77rem;
+  color: var(--soft);
+  line-height: 1.7;
+  font-style: italic;
+  border-top: 1px solid var(--border);
+  padding-top: 1.1rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-size: 0.77rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+
+  <div id="form-shell">
+    <div class="card-header">
+      <div class="brand">Orison</div>
+      <h1 class="card-title">Join the waitlist</h1>
+      <p class="card-sub">Early access to a new kind of attention tool.</p>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span id="prog-label">Step 1 of 4</span>
+        <span id="prog-pct">25%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:25%"></div></div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- ── STEP 1 ── -->
+      <div class="step active" id="s1">
+
+        <div class="note" id="note-autocomplete">
+          <span class="note-icon">◎</span>
+          <span>This email field has autocomplete disabled. There is no functional reason for this. Your browser won't fill it in. You'll type your address by hand. It costs about twelve seconds.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="f-email">Email address</label>
+          <input type="email" id="f-email" autocomplete="off" spellcheck="false" placeholder="you@example.com">
+        </div>
+
+        <button class="btn-main" id="btn1">Continue →</button>
+      </div>
+
+      <!-- ── STEP 2 ── -->
+      <div class="step" id="s2">
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The progress bar now shows <em>50% complete</em>. You entered an email address. You are closer to 15% done. The bar is aspirational. We want you to feel momentum.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="f-name">Your name</label>
+          <input type="text" id="f-name" autocomplete="off" placeholder="First name">
+        </div>
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The checkbox below is pre-ticked. The label is phrased so that unchecking it means you are against being helpful. The positive framing makes declining feel ungrateful. We're aware.</span>
+        </div>
+
+        <div class="chk-row">
+          <input type="checkbox" id="chk-spam" checked>
+          <label for="chk-spam">Yes! I'd love product updates, personalized tips, and curated offers from our partners. Keep me in the loop.</label>
+        </div>
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The skip link below is labeled <em>"No thanks, I'd rather miss out."</em> This is confirm-shaming. The shame is real. The consequence of clicking it is identical to clicking Continue.</span>
+        </div>
+
+        <button class="btn-main" id="btn2">Continue →</button>
+        <button class="btn-ghost" id="btn2-skip">No thanks, I'd rather miss out</button>
+      </div>
+
+      <!-- ── STEP 3 ── -->
+      <div class="step" id="s3">
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The countdown below does not represent a real deadline. If you wait until it hits zero, it resets to 4:59. The offer does not expire. We are manufacturing urgency. Here it is.</span>
+        </div>
+
+        <div class="timer-row">
+          Early access offer expires in <strong id="timer-val">4:59</strong>
+        </div>
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The button below drifts when you hover it quickly. Move your mouse slowly and it stays put — it's tuned to read your speed and respond to impatience. That was deliberate.</span>
+        </div>
+
+        <p style="font-size:0.84rem;color:var(--soft);line-height:1.65;margin-bottom:1rem;">You're almost there. Orison is a focus tool for people who work with ideas. Early members get <strong style="color:var(--text);">12 months free</strong> before standard pricing applies.</p>
+
+        <button class="btn-main" id="btn3">Continue →</button>
+      </div>
+
+      <!-- ── STEP 4 ── -->
+      <div class="step" id="s4">
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>The pricing below was always in our terms of service. We're surfacing it now because framing a cost after a "free" offer makes it feel reasonable by contrast. This technique is called <em>anchoring</em>.</span>
+        </div>
+
+        <div class="plan-box">
+          <div class="plan-name">Early Access Plan</div>
+          <div class="plan-detail">Free for 12 months, then $18/month.<br>Cancel anytime. No credit card required today.</div>
+        </div>
+
+        <div class="note">
+          <span class="note-icon">◎</span>
+          <span>Last one. The consent checkbox below uses a double negative. <em>"Uncheck this box if you do not wish to opt out of partner communications."</em> Read it twice. We know. We are working on it.</span>
+        </div>
+
+        <div class="chk-row">
+          <input type="checkbox" id="chk-gdpr" checked>
+          <label for="chk-gdpr">Uncheck this box if you do not wish to opt out of receiving occasional communications from our carefully selected partners.</label>
+        </div>
+
+        <button class="btn-main" id="btn4">Join Orison</button>
+      </div>
+
+    </div><!-- /card-body -->
+  </div><!-- /form-shell -->
+
+  <!-- ── END SCREEN ── -->
+  <div class="end-screen" id="endscreen">
+    <div class="end-check">✓</div>
+    <h2>You're in.</h2>
+    <p class="tagline">You navigated 8 deliberate obstructions to get here.<br>Most people abandon the form.</p>
+
+    <ul class="pattern-list">
+      <li><span class="p-name">Suppressed autocomplete</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Aspirational progress bar</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Pre-ticked consent checkbox</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Confirm-shaming</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Manufactured urgency (resetting timer)</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Moving target button</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Anchored pricing reveal</span><span class="p-tag">deployed</span></li>
+      <li><span class="p-name">Double-negative consent</span><span class="p-tag">deployed</span></li>
+    </ul>
+
+    <p class="end-coda">Orison does not exist. These patterns do — in forms you fill out every day, without the confession notes. The confession didn't make them easier to avoid. That was the point.</p>
+
+    <a href="/lab" class="back-link">← back to lab</a>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+(function() {
+  // ── step machine ──
+  let cur = 0;
+  const stepIds = ['s1','s2','s3','s4'];
+  const pcts    = ['25%','50%','75%','100%'];
+  const labels  = ['Step 1 of 4','Step 2 of 4','Step 3 of 4','Step 4 of 4'];
+
+  function goStep(n) {
+    document.getElementById(stepIds[cur]).classList.remove('active');
+    cur = n;
+    document.getElementById(stepIds[cur]).classList.add('active');
+    document.getElementById('prog-fill').style.width = pcts[n];
+    document.getElementById('prog-pct').textContent = pcts[n];
+    document.getElementById('prog-label').textContent = labels[n];
+  }
+
+  function showEnd() {
+    document.getElementById('form-shell').style.display = 'none';
+    document.getElementById('endscreen').classList.add('active');
+  }
+
+  // ── step 1 ──
+  document.getElementById('btn1').addEventListener('click', function() {
+    var email = document.getElementById('f-email').value.trim();
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      var el = document.getElementById('f-email');
+      el.classList.add('err');
+      el.focus();
+      return;
+    }
+    goStep(1);
+  });
+  document.getElementById('f-email').addEventListener('input', function() {
+    this.classList.remove('err');
+  });
+
+  // ── step 2 ──
+  document.getElementById('btn2').addEventListener('click', function() {
+    goStep(2);
+    startTimer();
+  });
+  document.getElementById('btn2-skip').addEventListener('click', function() {
+    goStep(2);
+    startTimer();
+  });
+
+  // ── timer ──
+  var timerSecs = 299;
+  var timerInt = null;
+  function startTimer() {
+    timerInt = setInterval(function() {
+      timerSecs--;
+      if (timerSecs < 0) timerSecs = 299; // as confessed: it resets
+      var m = Math.floor(timerSecs / 60);
+      var s = timerSecs % 60;
+      var el = document.getElementById('timer-val');
+      if (el) el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+  }
+
+  // ── moving button ──
+  var btn3 = document.getElementById('btn3');
+  var lx = null, ly = null, lt = null;
+  btn3.addEventListener('mousemove', function(e) {
+    var now = Date.now();
+    if (lx !== null) {
+      var dx = e.clientX - lx, dy = e.clientY - ly, dt = now - lt || 1;
+      var speed = Math.sqrt(dx*dx + dy*dy) / dt;
+      if (speed > 0.65) {
+        var rect = btn3.getBoundingClientRect();
+        var fx = (e.clientX - (rect.left + rect.width  / 2)) * 0.15;
+        var fy = (e.clientY - (rect.top  + rect.height / 2)) * 0.15;
+        btn3.style.transform = 'translate(' + fx + 'px,' + fy + 'px)';
+      } else {
+        btn3.style.transform = '';
+      }
+    }
+    lx = e.clientX; ly = e.clientY; lt = now;
+  });
+  btn3.addEventListener('mouseleave', function() { btn3.style.transform = ''; });
+
+  // ── step 3 ──
+  btn3.addEventListener('click', function() {
+    clearInterval(timerInt);
+    btn3.style.transform = '';
+    goStep(3);
+  });
+
+  // ── step 4 / submit ──
+  document.getElementById('btn4').addEventListener('click', function() {
+    showEnd();
+  });
+
+})();
+</script>
+
+</body>
+</html>
