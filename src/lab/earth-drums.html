@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 HOURS — the earth's seismic record</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #040810;
+  color: #7a8da0;
+  font-family: 'Courier New', monospace;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}
+#header {
+  padding: 14px 20px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+#title-block {}
+#title {
+  color: #b8ccd8;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  font-weight: normal;
+}
+#subtitle {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #354550;
+  margin-top: 3px;
+}
+#stats {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: #4a5e6a;
+  text-align: right;
+  line-height: 1.6;
+  max-width: 280px;
+}
+#map-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+canvas#map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#legend {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: #2a3a46;
+  line-height: 1.8;
+}
+.legend-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+#controls {
+  padding: 10px 20px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid #0b141c;
+  flex-shrink: 0;
+}
+#play-btn {
+  background: none;
+  border: 1px solid #1e2e3c;
+  color: #4a6a80;
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 60px;
+}
+#play-btn:hover { border-color: #3a6a8a; color: #8ab0c8; }
+#play-btn.playing { border-color: #3a6a8a; color: #8ab0c8; }
+#play-btn:disabled { opacity: 0.3; cursor: default; }
+#timeline-track {
+  flex: 1;
+  height: 1px;
+  background: #0c1820;
+  position: relative;
+  cursor: pointer;
+}
+#timeline-fill {
+  height: 100%;
+  background: #1e4060;
+  width: 0%;
+}
+#timeline-head {
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 9px;
+  background: #4a7a9a;
+  left: 0%;
+  transform: translateX(-50%);
+}
+#time-display {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  min-width: 72px;
+  text-align: right;
+  color: #3a5060;
+}
+#source {
+  font-size: 8px;
+  color: #1e2e3a;
+  letter-spacing: 0.08em;
+}
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #2a3e50;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="title-block">
+    <div id="title">24 HOURS</div>
+    <div id="subtitle">the earth's seismic record · last 24 hours · compressed to 3 minutes</div>
+  </div>
+  <div id="stats">loading catalog...</div>
+</div>
+
+<div id="map-container">
+  <canvas id="map"></canvas>
+  <div id="loading">fetching earthquake data...</div>
+  <div id="legend">
+    <div><span class="legend-dot" style="background:#3a6080"></span>M2.5–3.5</div>
+    <div><span class="legend-dot" style="background:#4a9aa0"></span>M3.5–5.0</div>
+    <div><span class="legend-dot" style="background:#c07020"></span>M5.0–6.0</div>
+    <div><span class="legend-dot" style="background:#c03030"></span>M6.0+</div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="play-btn" disabled>PLAY</button>
+  <div id="timeline-track">
+    <div id="timeline-fill"></div>
+    <div id="timeline-head"></div>
+  </div>
+  <div id="time-display">0:00 / 3:00</div>
+  <div id="source">USGS</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────────────────
+const PLAY_DURATION = 180;   // seconds (3 minutes = 24 hours compressed)
+const SCHEDULE_AHEAD = 2.0;  // seconds of audio scheduled in advance
+const GLOW_DECAY = 2.0;      // seconds a quake glows after firing
+const FEED_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson';
+
+// ─────────────────────────────────────────────────────────
+// CANVAS
+// ─────────────────────────────────────────────────────────
+const canvas = document.getElementById('map');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  if (quakes.length) renderFrame(playhead);
+}
+window.addEventListener('resize', resize);
+
+// ─────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────
+let quakes = [];    // sorted by time
+let glows  = {};    // index → glow intensity 0–1
+
+function quakeColor(mag) {
+  if (mag < 3.5) return { r: 58,  g: 96,  b: 128 };
+  if (mag < 5.0) return { r: 74,  g: 154, b: 160 };
+  if (mag < 6.0) return { r: 192, g: 112, b: 32  };
+  return            { r: 200, g: 48,  b: 48  };
+}
+
+function latLonToXY(lat, lon) {
+  const x = (lon + 180) / 360 * canvas.width;
+  const y = (90 - lat) / 180 * canvas.height;
+  return { x, y };
+}
+
+async function loadData() {
+  try {
+    const res  = await fetch(FEED_URL);
+    const json = await res.json();
+
+    const now    = Date.now();
+    const dayAgo = now - 86400000;
+
+    const raw = json.features
+      .filter(f => f.properties.mag >= 2.5 && f.properties.time >= dayAgo)
+      .map(f => ({
+        time  : f.properties.time,
+        mag   : f.properties.mag,
+        depth : f.geometry.coordinates[2],
+        lat   : f.geometry.coordinates[1],
+        lon   : f.geometry.coordinates[0],
+        place : f.properties.place,
+      }))
+      .sort((a, b) => a.time - b.time);
+
+    if (!raw.length) {
+      document.getElementById('stats').textContent = 'no M2.5+ earthquakes found in feed';
+      document.getElementById('loading').textContent = 'no data';
+      return;
+    }
+
+    // Distribute playAt times so first quake fires slightly after t=0
+    // and last quake fires slightly before PLAY_DURATION
+    const t0    = raw[0].time;
+    const t1    = raw[raw.length - 1].time;
+    const tRange = Math.max(t1 - t0, 1);
+    const PAD   = 4; // seconds padding at each end
+
+    quakes = raw.map(q => ({
+      ...q,
+      playAt: PAD + ((q.time - t0) / tRange) * (PLAY_DURATION - PAD * 2),
+      color : quakeColor(q.mag),
+    }));
+
+    // Largest quake for display
+    const largest = [...quakes].sort((a, b) => b.mag - a.mag)[0];
+    document.getElementById('stats').textContent =
+      `${quakes.length} earthquakes M2.5+ · largest M${largest.mag.toFixed(1)} ${largest.place}\n` +
+      `${new Date(raw[0].time).toUTCString().slice(0, 16)} → now`;
+
+    document.getElementById('loading').remove();
+    document.getElementById('play-btn').disabled = false;
+
+    resize();
+    renderFrame(0);
+  } catch (e) {
+    document.getElementById('stats').textContent = 'could not load earthquake data';
+    document.getElementById('loading').textContent = 'connection error';
+    console.error(e);
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────────────────
+function drawGrid() {
+  ctx.lineWidth = 0.5;
+  ctx.strokeStyle = '#080f18';
+  for (let lon = -180; lon <= 180; lon += 30) {
+    const x = (lon + 180) / 360 * canvas.width;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let lat = -60; lat <= 60; lat += 30) {
+    const y = (90 - lat) / 180 * canvas.height;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+  // Equator slightly brighter
+  ctx.strokeStyle = '#0c1820';
+  const eqY = canvas.height / 2;
+  ctx.beginPath(); ctx.moveTo(0, eqY); ctx.lineTo(canvas.width, eqY); ctx.stroke();
+}
+
+let playing = false;
+
+function renderFrame(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#040810';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawGrid();
+
+  quakes.forEach((q, i) => {
+    const { x, y } = latLonToXY(q.lat, q.lon);
+    const glow  = glows[i] || 0;
+    const { r, g, b } = q.color;
+    const dotR  = Math.max(1.5, Math.min((q.mag - 1.8) * 1.2, 6));
+
+    if (glow > 0.02) {
+      // Outer halo
+      const haloR = dotR + glow * 28;
+      const grad  = ctx.createRadialGradient(x, y, dotR * 0.3, x, y, haloR);
+      grad.addColorStop(0,   `rgba(${r+80},${g+80},${b+80},${glow * 0.85})`);
+      grad.addColorStop(0.45,`rgba(${r},${g},${b},${glow * 0.25})`);
+      grad.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, haloR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Core dot
+    const baseAlpha = playing
+      ? (q.playAt <= t ? 0.45 : 0.14)
+      : 0.22;
+    const dotAlpha = baseAlpha + glow * 0.55;
+    ctx.fillStyle = glow > 0.05
+      ? `rgba(${Math.min(r+120,255)},${Math.min(g+120,255)},${Math.min(b+120,255)},${dotAlpha})`
+      : `rgba(${r},${g},${b},${baseAlpha})`;
+    ctx.beginPath();
+    ctx.arc(x, y, dotR + glow * 2, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+// ─────────────────────────────────────────────────────────
+// AUDIO
+// ─────────────────────────────────────────────────────────
+let audioCtx   = null;
+let noiseBuf   = null;  // shared white noise buffer
+
+function initAudio() {
+  audioCtx = new AudioContext();
+
+  // Pre-generate 3s of white noise (reused for all events)
+  const len  = Math.ceil(audioCtx.sampleRate * 3);
+  noiseBuf   = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const data = noiseBuf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+}
+
+function playQuake(q, scheduleAt) {
+  if (!audioCtx || !noiseBuf) return;
+
+  const norm    = Math.max(0, q.mag - 2.5);   // 0 at M2.5, 5 at M7.5
+  const masterV = Math.min(0.4 + norm * 0.25, 1.8);
+
+  const master = audioCtx.createGain();
+  master.gain.value = masterV;
+
+  const panner = audioCtx.createStereoPanner();
+  panner.pan.value = Math.max(-0.95, Math.min(0.95, q.lon / 180));
+
+  master.connect(panner);
+  panner.connect(audioCtx.destination);
+
+  // ── P-wave: sharp high-mid transient ──────────
+  {
+    const src = audioCtx.createBufferSource();
+    src.buffer = noiseBuf;
+
+    const filt = audioCtx.createBiquadFilter();
+    filt.type = 'bandpass';
+    filt.frequency.value = Math.max(120, 280 - q.depth * 0.4);
+    filt.Q.value = 2.5;
+
+    const env  = audioCtx.createGain();
+    const t0   = scheduleAt;
+    const dec  = 0.04 + norm * 0.025;
+    env.gain.setValueAtTime(0, t0);
+    env.gain.linearRampToValueAtTime(1.0, t0 + 0.003);
+    env.gain.exponentialRampToValueAtTime(0.001, t0 + dec);
+
+    src.connect(filt); filt.connect(env); env.connect(master);
+    src.start(t0, Math.random() * 2.5);
+    src.stop(t0 + dec + 0.05);
+  }
+
+  // ── S-wave: lower, rolling, slightly delayed ──
+  if (q.mag >= 3.0) {
+    const src    = audioCtx.createBufferSource();
+    src.buffer   = noiseBuf;
+
+    const filt   = audioCtx.createBiquadFilter();
+    filt.type    = 'lowpass';
+    filt.frequency.value = 70 + norm * 12;
+
+    const env    = audioCtx.createGain();
+    const sDelay = 0.035 + norm * 0.012;
+    const t1     = scheduleAt + sDelay;
+    const dec    = 0.10 + norm * 0.07;
+    env.gain.setValueAtTime(0, t1);
+    env.gain.linearRampToValueAtTime(0.65, t1 + 0.012);
+    env.gain.exponentialRampToValueAtTime(0.001, t1 + dec);
+
+    src.connect(filt); filt.connect(env); env.connect(master);
+    src.start(t1, Math.random() * 2.5);
+    src.stop(t1 + dec + 0.05);
+  }
+
+  // ── Surface waves: sub-bass oscillator, slow decay ──
+  if (q.mag >= 4.0) {
+    const osc    = audioCtx.createOscillator();
+    osc.type     = 'sine';
+    osc.frequency.value = Math.max(22, 52 - norm * 5);
+
+    const env     = audioCtx.createGain();
+    const swDelay = 0.10 + norm * 0.025;
+    const t2      = scheduleAt + swDelay;
+    const dec     = 0.25 + norm * 0.45;
+    env.gain.setValueAtTime(0, t2);
+    env.gain.linearRampToValueAtTime(Math.min(0.6, norm * 0.14), t2 + 0.04);
+    env.gain.exponentialRampToValueAtTime(0.001, t2 + dec);
+
+    osc.connect(env); env.connect(master);
+    osc.start(t2);
+    osc.stop(t2 + dec + 0.05);
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// PLAYBACK ENGINE
+// ─────────────────────────────────────────────────────────
+let isPlaying     = false;
+let startRealTime = null;
+let playhead      = 0;
+let scheduledUpTo = -Infinity;
+let animFrame     = null;
+
+function scheduleUpcoming(elapsed) {
+  const target = elapsed + SCHEDULE_AHEAD;
+  quakes.forEach((q, i) => {
+    if (q.playAt > scheduledUpTo && q.playAt <= target) {
+      const delay    = Math.max(0, q.playAt - elapsed);
+      const schedAt  = audioCtx.currentTime + delay;
+      playQuake(q, schedAt);
+
+      // Kick off glow update to coincide with audio
+      setTimeout(() => {
+        glows[i] = 1.0;
+      }, delay * 1000);
+    }
+  });
+  scheduledUpTo = Math.max(scheduledUpTo, target);
+}
+
+function tick() {
+  if (!isPlaying) return;
+
+  const now     = performance.now();
+  const elapsed = (now - startRealTime) / 1000;
+  playhead      = elapsed;
+
+  if (elapsed >= PLAY_DURATION) {
+    onStop();
+    return;
+  }
+
+  // Schedule audio
+  scheduleUpcoming(elapsed);
+
+  // Decay active glows
+  for (const i in glows) {
+    const q   = quakes[i];
+    const age = elapsed - q.playAt;
+    if (age >= 0) {
+      glows[i] = Math.max(0, 1 - age / GLOW_DECAY);
+      if (glows[i] === 0) delete glows[i];
+    }
+  }
+
+  renderFrame(elapsed);
+  updateUI(elapsed);
+
+  animFrame = requestAnimationFrame(tick);
+}
+
+function updateUI(elapsed) {
+  const pct = (elapsed / PLAY_DURATION * 100).toFixed(2);
+  document.getElementById('timeline-fill').style.width = pct + '%';
+  document.getElementById('timeline-head').style.left  = pct + '%';
+  const min = Math.floor(elapsed / 60);
+  const sec = Math.floor(elapsed % 60).toString().padStart(2, '0');
+  document.getElementById('time-display').textContent = `${min}:${sec} / 3:00`;
+}
+
+function onPlay() {
+  if (!audioCtx) initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  isPlaying     = true;
+  startRealTime = performance.now() - playhead * 1000;
+  scheduledUpTo = playhead - 0.01;
+  glows         = {};
+
+  // Re-trigger glows for already-passed events if resuming mid-play
+  // (only lights up events within the last GLOW_DECAY seconds)
+  quakes.forEach((q, i) => {
+    const age = playhead - q.playAt;
+    if (age >= 0 && age < GLOW_DECAY) glows[i] = 1 - age / GLOW_DECAY;
+  });
+
+  document.getElementById('play-btn').textContent = 'PAUSE';
+  document.getElementById('play-btn').classList.add('playing');
+  animFrame = requestAnimationFrame(tick);
+}
+
+function onPause() {
+  isPlaying = false;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  document.getElementById('play-btn').textContent = 'PLAY';
+  document.getElementById('play-btn').classList.remove('playing');
+}
+
+function onStop() {
+  isPlaying = false;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  playhead  = 0;
+  glows     = {};
+  document.getElementById('play-btn').textContent = 'REPLAY';
+  document.getElementById('play-btn').classList.remove('playing');
+  document.getElementById('timeline-fill').style.width = '0%';
+  document.getElementById('timeline-head').style.left  = '0%';
+  document.getElementById('time-display').textContent  = '0:00 / 3:00';
+  renderFrame(0);
+}
+
+document.getElementById('play-btn').addEventListener('click', () => {
+  if (!quakes.length) return;
+  if (isPlaying) {
+    onPause();
+  } else {
+    if (playhead >= PLAY_DURATION - 0.5) playhead = 0;
+    onPlay();
+  }
+});
+
+// Click timeline to scrub
+document.getElementById('timeline-track').addEventListener('click', e => {
+  if (!quakes.length) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct  = (e.clientX - rect.left) / rect.width;
+  playhead   = pct * PLAY_DURATION;
+  scheduledUpTo = playhead - 0.01;
+  glows = {};
+  if (isPlaying) {
+    startRealTime = performance.now() - playhead * 1000;
+  }
+  renderFrame(playhead);
+  updateUI(playhead);
+});
+
+// ─────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
