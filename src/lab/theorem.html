@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THEOREM</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #070710;
+  color: #a8a8c0;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 28px 16px 24px;
+  gap: 14px;
+}
+canvas { display: block; cursor: pointer; }
+#subtitle {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #2e2e48;
+  text-align: center;
+  line-height: 1.8;
+}
+#controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 10px;
+  color: #2e2e48;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+button {
+  background: none;
+  border: 1px solid #1a1a34;
+  color: #404068;
+  padding: 5px 14px;
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+button:hover { border-color: #4050a0; color: #7080c0; }
+label { display: flex; gap: 8px; align-items: center; }
+input[type=range] { accent-color: #4050a0; width: 80px; cursor: pointer; }
+#step-counter { font-size: 10px; letter-spacing: 0.12em; color: #282844; min-width: 70px; text-align: center; }
+#status { color: #242440; font-size: 10px; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="subtitle">
+  rule 150 &nbsp;·&nbsp; 11 cells &nbsp;·&nbsp; circular &nbsp;·&nbsp; period 31<br>
+  amber and blue are complementary voices &mdash; every position belongs to exactly one &mdash; always
+</div>
+<div id="controls">
+  <button id="btn-new">new seed</button>
+  <label>tempo&nbsp;<input type="range" id="tempo" min="100" value="240" max="600"></label>
+  <span id="step-counter"></span>
+  <span id="status">click canvas to play</span>
+</div>
+
+<script>
+// ── rule ──────────────────────────────────────────────────────────────────────
+// Rule 150 = XOR rule (L XOR C XOR R). Period = 31 for N=11 circular.
+// Complement-preserving: next(~S) = ~next(S) — verified algebraically.
+// So if we run from S and ~S simultaneously, they stay complementary every step.
+
+const CELLS  = 11;
+const RULE   = 150;
+const PERIOD = 31;
+
+// C pentatonic over 2+ octaves — 11 notes, all consonant intervals
+const FREQS = [261.63, 293.66, 329.63, 392.00, 440.00,
+               523.25, 587.33, 659.25, 784.00, 880.00, 1046.50];
+const NOTES = ['C4','D4','E4','G4','A4','C5','D5','E5','G5','A5','C6'];
+
+function nextState(cells) {
+  const n = cells.length;
+  return cells.map((_, i) => {
+    const L = cells[(i - 1 + n) % n], C = cells[i], R = cells[(i + 1) % n];
+    return (RULE >> (L * 4 + C * 2 + R)) & 1;
+  });
+}
+
+// Build the full 31-step cycle from a starting state
+function buildCycle(seed) {
+  const cycle = [seed];
+  let cur = seed;
+  for (let t = 1; t < PERIOD; t++) {
+    cur = nextState(cur);
+    cycle.push(cur);
+  }
+  return cycle;
+}
+
+function randomSeed() {
+  // avoid all-zeros and all-ones (trivial under Rule 150 complement-preservation)
+  let s;
+  do {
+    s = Array.from({length: CELLS}, () => Math.random() < 0.5 ? 0 : 1);
+  } while (s.every(v => v === 0) || s.every(v => v === 1));
+  return s;
+}
+
+// ── canvas layout ─────────────────────────────────────────────────────────────
+const CW   = 800;
+const CX   = 50;              // cell width
+const CY   = 9;               // cell height per step row
+const GW   = CELLS * CX;     // grid width = 550
+const GL   = (CW - GW) / 2;  // left margin = 125
+const GT   = 82;              // grid top
+const GH   = PERIOD * CY;    // grid height = 279
+const CH   = GT + GH + 50;   // canvas height
+
+const canvas = document.getElementById('c');
+const gc = canvas.getContext('2d');
+canvas.width  = CW;
+canvas.height = CH;
+
+// ── colours ───────────────────────────────────────────────────────────────────
+const C_AMBER      = '#b06010';   // voice 1 — S is active here
+const C_AMBER_HEAD = '#ffd060';   // voice 1, playhead row
+const C_BLUE       = '#163888';   // voice 2 — ~S is active here
+const C_BLUE_HEAD  = '#60a8ff';   // voice 2, playhead row
+
+// ── state ─────────────────────────────────────────────────────────────────────
+let cycle   = null;   // array of 31 states
+let step    = 0;
+let bpm     = 240;
+let timer   = null;
+let playing = false;
+let audio   = null;
+
+function newCycle() {
+  cycle = buildCycle(randomSeed());
+}
+
+// ── drawing ───────────────────────────────────────────────────────────────────
+function draw() {
+  gc.fillStyle = '#070710';
+  gc.fillRect(0, 0, CW, CH);
+
+  // Title
+  gc.fillStyle = '#b8b8d0';
+  gc.font = 'bold 18px "Courier New"';
+  gc.textAlign = 'center';
+  gc.fillText('THEOREM', CW / 2, 30);
+
+  gc.fillStyle = '#1e1e38';
+  gc.font = '8px "Courier New"';
+  gc.fillText('rule 150  ·  11 cells  ·  circular  ·  period 31  ·  two complementary voices', CW / 2, 46);
+
+  // Note column headers
+  gc.font = '8px "Courier New"';
+  gc.textAlign = 'center';
+  for (let c = 0; c < CELLS; c++) {
+    const x = GL + c * CX + CX / 2;
+    // alternate coloring to hint at the two voices
+    gc.fillStyle = '#1a1a30';
+    gc.fillText(NOTES[c], x, GT - 7);
+  }
+
+  if (!cycle) {
+    gc.fillStyle = '#1e1e38';
+    gc.font = '11px "Courier New"';
+    gc.textAlign = 'center';
+    gc.fillText('…', CW / 2, GT + GH / 2);
+    return;
+  }
+
+  // ── full 31-row cycle grid ─────────────────────────────────────────────────
+  for (let r = 0; r < PERIOD; r++) {
+    const y      = GT + r * CY;
+    const state  = cycle[r];
+    const isHead = playing && step === r;
+
+    for (let c = 0; c < CELLS; c++) {
+      const x  = GL + c * CX;
+      const v1 = state[c];   // amber voice (S)
+      // v2 = 1 - v1         // blue voice (~S), always complement
+
+      if (v1 === 1) {
+        gc.fillStyle = isHead ? C_AMBER_HEAD : C_AMBER;
+      } else {
+        gc.fillStyle = isHead ? C_BLUE_HEAD : C_BLUE;
+      }
+      gc.fillRect(x + 1, y + 1, CX - 2, CY - 1);
+    }
+
+    // Playhead outline
+    if (isHead) {
+      gc.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      gc.lineWidth   = 1;
+      gc.strokeRect(GL, y, GW, CY);
+    }
+  }
+
+  // ── row numbers (right margin) ─────────────────────────────────────────────
+  gc.fillStyle  = '#141428';
+  gc.font       = '8px "Courier New"';
+  gc.textAlign  = 'left';
+  for (let r = 0; r < PERIOD; r += 5) {
+    gc.fillText(r, GL + GW + 6, GT + r * CY + CY - 1);
+  }
+
+  // ── current step note readout ──────────────────────────────────────────────
+  if (playing && cycle) {
+    const state   = cycle[step];
+    const playing1 = state.map((v, i) => v ? NOTES[i] : null).filter(Boolean);
+    const playing2 = state.map((v, i) => !v ? NOTES[i] : null).filter(Boolean);
+    gc.font = '8px "Courier New"';
+
+    gc.fillStyle  = '#7a4008';
+    gc.textAlign  = 'left';
+    gc.fillText('◆ ' + playing1.join(' '), GL, GT + GH + 18);
+
+    gc.fillStyle  = '#0e2858';
+    gc.textAlign  = 'right';
+    gc.fillText(playing2.join(' ') + ' ◆', GL + GW, GT + GH + 18);
+  }
+}
+
+// ── audio ─────────────────────────────────────────────────────────────────────
+function playNotes(r) {
+  if (!audio || !cycle) return;
+  const state  = cycle[r];
+  const t      = audio.currentTime;
+  const dur    = (bpm / 1000) * 0.65;
+
+  for (let c = 0; c < CELLS; c++) {
+    if (!state[c]) continue;   // only amber voice produces staccato notes
+
+    const osc  = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.type             = 'triangle';
+    osc.frequency.value  = FREQS[c];
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.07, t + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.78);
+    osc.connect(gain);
+    gain.connect(audio.destination);
+    osc.start(t);
+    osc.stop(t + dur);
+  }
+
+  // Blue voice: soft sustained sine pads (light, recessive)
+  for (let c = 0; c < CELLS; c++) {
+    if (state[c]) continue;    // only where amber is absent
+
+    const osc  = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.type             = 'sine';
+    osc.frequency.value  = FREQS[c];
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.022, t + 0.04);
+    gain.gain.linearRampToValueAtTime(0.018, t + dur * 0.8);
+    gain.gain.linearRampToValueAtTime(0, t + dur * 1.1);
+    osc.connect(gain);
+    gain.connect(audio.destination);
+    osc.start(t);
+    osc.stop(t + dur * 1.15);
+  }
+}
+
+// ── playback loop ─────────────────────────────────────────────────────────────
+function tick() {
+  draw();
+  if (playing) {
+    playNotes(step);
+    const el = document.getElementById('step-counter');
+    el.textContent = 'step ' + step + ' / ' + (PERIOD - 1);
+  }
+  step  = (step + 1) % PERIOD;
+  timer = setTimeout(tick, bpm);
+}
+
+function startPlay() {
+  if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+  if (audio.state === 'suspended') audio.resume();
+  if (timer) clearTimeout(timer);
+  playing = true;
+  step    = 0;
+  document.getElementById('status').textContent = 'playing · click to pause';
+  tick();
+}
+
+function pause() {
+  if (timer) clearTimeout(timer);
+  playing = false;
+  document.getElementById('status').textContent = 'click canvas to play';
+  document.getElementById('step-counter').textContent = '';
+  draw();
+}
+
+function resetCycle() {
+  pause();
+  step = 0;
+  newCycle();
+  draw();
+  document.getElementById('status').textContent = 'click canvas to play';
+}
+
+// ── events ────────────────────────────────────────────────────────────────────
+canvas.addEventListener('click', () => {
+  playing ? pause() : startPlay();
+});
+
+document.getElementById('btn-new').addEventListener('click', resetCycle);
+
+document.getElementById('tempo').addEventListener('input', e => {
+  bpm = parseInt(e.target.value);
+});
+
+// ── init ──────────────────────────────────────────────────────────────────────
+newCycle();
+draw();
+</script>
+</body>
+</html>
