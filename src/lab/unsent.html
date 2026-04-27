@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNSENT — match-spark.xyz</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --panel: #0d0d1a;
+      --bubble: #131320;
+      --border: #16162a;
+      --text: #8888aa;
+      --muted: #3a3a56;
+      --dim: #22223a;
+      --dot-color: #6060a0;
+      --accent: #4040a0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      user-select: none;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 0.9rem;
+      font-weight: normal;
+      letter-spacing: 0.55em;
+      color: #4040a0;
+      text-transform: uppercase;
+    }
+
+    .pips {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.2;
+      transition: opacity 0.5s ease, background 0.5s ease;
+    }
+    .pip.active  { opacity: 1;   background: var(--accent); }
+    .pip.done    { opacity: 0.4; background: var(--muted); }
+
+    /* Phone shell */
+    .phone {
+      width: 310px;
+      background: var(--panel);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(40,40,120,0.08);
+    }
+
+    .phone-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--dim);
+    }
+
+    .contact-name {
+      font-size: 0.78rem;
+      color: var(--text);
+      opacity: 0.6;
+      letter-spacing: 0.06em;
+    }
+
+    .contact-sub {
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.06em;
+    }
+
+    .messages {
+      padding: 20px 16px 18px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .ts-label {
+      text-align: center;
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      text-transform: lowercase;
+    }
+    .ts-label.show { opacity: 1; }
+
+    .typing-bubble {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bubble);
+      border-radius: 14px 14px 14px 3px;
+      padding: 10px 13px;
+      width: fit-content;
+      opacity: 0;
+      transform: translateY(5px) scale(0.97);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .typing-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      background: var(--dot-color);
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+    .typing-bubble.show .dot {
+      animation: dp 1.4s ease-in-out infinite;
+    }
+    .typing-bubble.show .dot:nth-child(2) { animation-delay: 0.22s; }
+    .typing-bubble.show .dot:nth-child(3) { animation-delay: 0.44s; }
+
+    @keyframes dp {
+      0%,60%,100% { opacity: 0.18; transform: scale(0.82); }
+      30%          { opacity: 0.95; transform: scale(1.08); }
+    }
+
+    .phone-footer {
+      padding: 8px 14px 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .input-mock {
+      width: 100%;
+      height: 32px;
+      background: var(--bubble);
+      border-radius: 18px;
+      opacity: 0.25;
+    }
+
+    /* Silence counter */
+    .counter {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      text-align: right;
+      transition: opacity 0.8s ease;
+    }
+    .counter-label {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .counter-val {
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      line-height: 1.2;
+    }
+
+    /* Final screen */
+    #final {
+      display: none;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    #final.show { display: block; }
+    #final.visible { opacity: 1; }
+
+    .final-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 48px;
+      margin: 14px 0;
+      min-width: 260px;
+    }
+    .final-lbl {
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .final-num {
+      font-family: 'Courier New', monospace;
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+    .final-num.small {
+      font-size: 1.3rem;
+      color: var(--muted);
+    }
+    .final-div {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-top: 28px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<header><h1>UNSENT</h1></header>
+
+<div class="pips">
+  <div class="pip" id="pip0"></div>
+  <div class="pip" id="pip1"></div>
+  <div class="pip" id="pip2"></div>
+  <div class="pip" id="pip3"></div>
+</div>
+
+<div class="phone" id="phone">
+  <div class="phone-header">
+    <div class="avatar"></div>
+    <div>
+      <div class="contact-name">— — —</div>
+      <div class="contact-sub" id="csub">last seen today</div>
+    </div>
+  </div>
+  <div class="messages">
+    <div class="ts-label" id="tslabel"></div>
+    <div class="typing-bubble" id="tbubble">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  <div class="phone-footer">
+    <div class="input-mock"></div>
+  </div>
+</div>
+
+<div id="final">
+  <div class="final-row">
+    <span class="final-lbl">typing</span>
+    <span class="final-num small" id="ftyping">—</span>
+  </div>
+  <div class="final-row">
+    <span class="final-lbl">silent</span>
+    <span class="final-num" id="fsilent">—</span>
+  </div>
+  <div class="final-div">nothing was sent</div>
+</div>
+
+<div class="counter" id="counter">
+  <div class="counter-label">silence</div>
+  <div class="counter-val" id="cval">0s</div>
+</div>
+
+<script>
+// ─── portraits ───────────────────────────────────────────────
+// Each event: {t: 'silence'|'type', d: milliseconds}
+// Portraits designed around real typing-indicator emotional grammar:
+// duration ∝ message weight (Herring 2014 — longer typing → harder news)
+// repeated-abort = extreme ambivalence
+// long gap after abort = deciding whether to return
+const portraits = [
+  {
+    label: "3:17 am",
+    events: [
+      {t:'silence', d:4000},
+      {t:'type',    d:9000},   // long first attempt
+      {t:'silence', d:3500},
+      {t:'type',    d:14000},  // longer second — building toward something
+      {t:'silence', d:6000},
+      {t:'type',    d:2000},   // brief abort
+      {t:'silence', d:12500},
+      {t:'type',    d:1400},   // last flicker
+      {t:'silence', d:18000},
+    ]
+  },
+  {
+    label: "11:08 pm",
+    events: [
+      {t:'silence', d:2000},
+      {t:'type',    d:750},    // barely started
+      {t:'silence', d:4000},
+      {t:'type',    d:1200},   // tries again
+      {t:'silence', d:2800},
+      {t:'type',    d:550},    // quicker abort
+      {t:'silence', d:8500},
+      {t:'type',    d:380},    // nearly nothing
+      {t:'silence', d:15000},
+    ]
+  },
+  {
+    label: "9:03 am",
+    events: [
+      {t:'silence', d:3000},
+      {t:'type',    d:22000},  // very long careful draft
+      {t:'silence', d:9000},
+      {t:'type',    d:18000},  // second attempt, also considered
+      {t:'silence', d:13000},
+      {t:'type',    d:7000},
+      {t:'silence', d:21000},
+    ]
+  },
+  {
+    label: "2:41 pm",
+    events: [
+      {t:'silence', d:5000},
+      {t:'type',    d:7000},
+      {t:'silence', d:28000},  // long gap — walked away, came back
+      {t:'type',    d:11000},
+      {t:'silence', d:22000},  // went away again
+      {t:'type',    d:3500},
+      {t:'silence', d:14000},
+    ]
+  },
+];
+
+// ─── audio ────────────────────────────────────────────────────
+let ctx = null;
+let presOsc, presGain, bgOsc, bgGain;
+
+function initAudio() {
+  if (ctx) return;
+  try {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    bgOsc   = ctx.createOscillator(); bgGain   = ctx.createGain();
+    presOsc = ctx.createOscillator(); presGain = ctx.createGain();
+    bgOsc.type   = 'sine'; bgOsc.frequency.value   = 88;
+    presOsc.type = 'sine'; presOsc.frequency.value = 178;
+    bgGain.gain.value   = 0.006;
+    presGain.gain.value = 0;
+    bgOsc.connect(bgGain);     bgGain.connect(ctx.destination);
+    presOsc.connect(presGain); presGain.connect(ctx.destination);
+    bgOsc.start(); presOsc.start();
+  } catch(e) {}
+}
+
+function fadePresence(to, t) {
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  presGain.gain.cancelScheduledValues(now);
+  presGain.gain.setValueAtTime(presGain.gain.value, now);
+  presGain.gain.linearRampToValueAtTime(to, now + t);
+}
+
+// ─── state ────────────────────────────────────────────────────
+let totalSilenceMs   = 0;
+let totalPresenceMs  = 0;
+let silencePhaseStart = null;
+let isTyping         = false;
+let intervalId       = null;
+
+const tbubble = document.getElementById('tbubble');
+const tslabel  = document.getElementById('tslabel');
+const cval     = document.getElementById('cval');
+const counter  = document.getElementById('counter');
+const phone    = document.getElementById('phone');
+const final    = document.getElementById('final');
+const pips     = [0,1,2,3].map(i => document.getElementById('pip' + i));
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function enterTyping() {
+  if (isTyping) return;
+  isTyping = true;
+  if (silencePhaseStart !== null) {
+    totalSilenceMs += Date.now() - silencePhaseStart;
+    silencePhaseStart = null;
+  }
+  tbubble.classList.add('show');
+  fadePresence(0.025, 0.3);
+}
+
+function enterSilence() {
+  if (!isTyping && silencePhaseStart !== null) return;
+  isTyping = false;
+  silencePhaseStart = Date.now();
+  tbubble.classList.remove('show');
+  fadePresence(0, 0.14);
+}
+
+function getLiveSilence() {
+  let s = totalSilenceMs;
+  if (silencePhaseStart !== null) s += Date.now() - silencePhaseStart;
+  return s;
+}
+
+function updateCounter() {
+  cval.textContent = Math.round(getLiveSilence() / 1000) + 's';
+}
+
+// ─── runner ───────────────────────────────────────────────────
+async function runPortrait(idx) {
+  const p = portraits[idx];
+
+  pips.forEach((pip, i) => {
+    pip.className = 'pip' + (i === idx ? ' active' : i < idx ? ' done' : '');
+  });
+
+  // Show timestamp label briefly
+  tslabel.textContent = p.label;
+  tslabel.classList.add('show');
+  await sleep(2200);
+  tslabel.classList.remove('show');
+  await sleep(800);
+
+  for (const ev of p.events) {
+    if (ev.t === 'silence') {
+      enterSilence();
+      await sleep(ev.d);
+    } else {
+      enterTyping();
+      totalPresenceMs += ev.d;
+      await sleep(ev.d);
+    }
+  }
+  enterSilence();
+}
+
+async function runAll() {
+  enterSilence(); // begin counting silence immediately
+
+  intervalId = setInterval(updateCounter, 400);
+
+  for (let i = 0; i < portraits.length; i++) {
+    await runPortrait(i);
+    if (i < portraits.length - 1) {
+      await sleep(2500);
+    }
+  }
+
+  clearInterval(intervalId);
+  updateCounter(); // final update
+
+  await sleep(2000);
+
+  // Fade out phone + counter
+  phone.style.transition   = 'opacity 1.3s ease';
+  counter.style.transition = 'opacity 1.3s ease';
+  document.querySelector('.pips').style.transition = 'opacity 1.3s ease';
+  phone.style.opacity   = '0';
+  counter.style.opacity = '0';
+  document.querySelector('.pips').style.opacity = '0';
+  document.querySelector('header').style.transition = 'opacity 1.3s ease';
+  document.querySelector('header').style.opacity = '0';
+
+  await sleep(1400);
+
+  phone.style.display   = 'none';
+  counter.style.display = 'none';
+  document.querySelector('.pips').style.display = 'none';
+  document.querySelector('header').style.display = 'none';
+
+  const presS = Math.round(totalPresenceMs  / 1000);
+  const silS  = Math.round(getLiveSilence() / 1000);
+
+  document.getElementById('ftyping').textContent = presS + 's';
+  document.getElementById('fsilent').textContent = silS  + 's';
+
+  final.classList.add('show');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    final.classList.add('visible');
+  }));
+
+  // fade bg audio
+  if (ctx) {
+    const now = ctx.currentTime;
+    bgGain.gain.linearRampToValueAtTime(0, now + 4);
+  }
+}
+
+// ─── start ────────────────────────────────────────────────────
+let started = false;
+
+document.addEventListener('click', () => {
+  if (!started) {
+    started = true;
+    initAudio();
+    runAll();
+  }
+});
+
+// Auto-start (no audio until click)
+setTimeout(() => {
+  if (!started) { started = true; runAll(); }
+}, 1800);
+</script>
+</body>
+</html>
