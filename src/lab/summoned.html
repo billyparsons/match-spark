@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>summoned</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #08080e;
+  color: #c4c0b8;
+  font-family: 'Courier New', Courier, monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 20px 48px;
+}
+
+#hdr {
+  width: 100%;
+  max-width: 520px;
+  margin-bottom: 16px;
+}
+
+#ttl {
+  font-size: 10px;
+  letter-spacing: 0.42em;
+  color: #30302c;
+  margin-bottom: 4px;
+  transition: color 2.5s ease;
+  text-transform: lowercase;
+}
+
+#crd {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: #242420;
+  transition: color 2.5s ease;
+}
+
+#wrap {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1;
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+#grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,175,162,0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,175,162,0.032) 1px, transparent 1px);
+  background-size: 52px 52px;
+  background-position: center;
+  transition: opacity 3s ease;
+}
+
+#mc {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+#sc {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: #1e1e1c;
+  text-transform: uppercase;
+  transition: color 2.5s ease;
+}
+
+#info {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 22px;
+}
+
+#slbl {
+  font-size: 9px;
+  letter-spacing: 0.42em;
+  color: #30302c;
+  text-transform: lowercase;
+  margin-bottom: 10px;
+  transition: color 2.5s ease;
+}
+
+#sbdy {
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: #52504c;
+  margin-bottom: 10px;
+  min-height: 5.5em;
+  transition: color 2.5s ease;
+}
+
+#scue {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: #242420;
+  transition: color 2.5s ease;
+}
+
+#prog {
+  margin-top: 22px;
+  font-size: 9px;
+  color: #1a1a18;
+  letter-spacing: 0.12em;
+  transition: color 2.5s ease;
+}
+
+#rst {
+  margin-top: 38px;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  color: #181816;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+#rst:hover { color: #40382e; }
+
+.tin {
+  animation: textin 0.7s ease both;
+}
+@keyframes textin {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div id="ttl">summoned</div>
+  <div id="crd">36°17′N · 84°22′W · est. ????</div>
+</div>
+
+<div id="wrap">
+  <div id="grid"></div>
+  <canvas id="mc"></canvas>
+
+  <svg id="sc" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Roads -->
+    <line id="rv" x1="260" y1="0" x2="260" y2="520" stroke="#121218" stroke-width="22"/>
+    <line id="rh" x1="0" y1="260" x2="520" y2="260" stroke="#121218" stroke-width="22"/>
+    <line x1="260" y1="0" x2="260" y2="520" stroke="#1c1c22" stroke-width="1"
+          stroke-dasharray="14,14" opacity="0.5"/>
+    <line x1="0" y1="260" x2="520" y2="260" stroke="#1c1c22" stroke-width="1"
+          stroke-dasharray="14,14" opacity="0.5"/>
+    <circle cx="260" cy="260" r="3" fill="none" stroke="#20201e" stroke-width="1"/>
+
+    <!-- s1: Signpost (≥5) -->
+    <g id="s1" style="opacity:0;transition:opacity 2.5s ease">
+      <line x1="280" y1="243" x2="280" y2="278" stroke="#46402e" stroke-width="2.5"
+            stroke-linecap="round"/>
+      <rect x="272" y="232" width="34" height="13" fill="#0c0a08" stroke="#46402e"
+            stroke-width="1.5"/>
+      <text x="289" y="241.5" fill="#3c3428" font-size="5.5" text-anchor="middle"
+            font-family="Courier New" letter-spacing="0.3em">· · · ·</text>
+    </g>
+
+    <!-- s2: Foundation outline (≥15) -->
+    <g id="s2" style="opacity:0;transition:opacity 2.5s ease">
+      <rect x="290" y="194" width="70" height="54" fill="none" stroke="#3c3220"
+            stroke-width="1.5" stroke-dasharray="4,3"/>
+    </g>
+
+    <!-- s3: Building solid (≥25) -->
+    <g id="s3" style="opacity:0;transition:opacity 2.8s ease">
+      <rect x="290" y="194" width="70" height="54" fill="#0c0a07" stroke="#5c4e32"
+            stroke-width="2"/>
+      <line x1="286" y1="194" x2="364" y2="194" stroke="#5c4e32" stroke-width="1"/>
+      <rect x="315" y="228" width="14" height="20" fill="none" stroke="#5c4e32"
+            stroke-width="1.5"/>
+      <line x1="286" y1="248" x2="364" y2="248" stroke="#4c4028" stroke-width="1"/>
+    </g>
+
+    <!-- s4: Windows + porch posts (≥35) -->
+    <g id="s4" style="opacity:0;transition:opacity 2.8s ease">
+      <!-- w1 -->
+      <rect x="297" y="204" width="13" height="11" fill="none" stroke="#786440"
+            stroke-width="1.5"/>
+      <line x1="303.5" y1="204" x2="303.5" y2="215" stroke="#786440" stroke-width="0.5"/>
+      <line x1="297"   y1="209.5" x2="310" y2="209.5" stroke="#786440" stroke-width="0.5"/>
+      <!-- w2 -->
+      <rect x="318" y="204" width="13" height="11" fill="none" stroke="#786440"
+            stroke-width="1.5"/>
+      <line x1="324.5" y1="204" x2="324.5" y2="215" stroke="#786440" stroke-width="0.5"/>
+      <line x1="318"   y1="209.5" x2="331" y2="209.5" stroke="#786440" stroke-width="0.5"/>
+      <!-- w3 -->
+      <rect x="339" y="204" width="13" height="11" fill="none" stroke="#786440"
+            stroke-width="1.5"/>
+      <line x1="345.5" y1="204" x2="345.5" y2="215" stroke="#786440" stroke-width="0.5"/>
+      <line x1="339"   y1="209.5" x2="352" y2="209.5" stroke="#786440" stroke-width="0.5"/>
+      <!-- porch posts -->
+      <line x1="288" y1="225" x2="288" y2="248" stroke="#5c4e32" stroke-width="1.5"/>
+      <line x1="362" y1="225" x2="362" y2="248" stroke="#5c4e32" stroke-width="1.5"/>
+      <!-- step -->
+      <line x1="313" y1="248" x2="331" y2="248" stroke="#6c5838" stroke-width="1.5"/>
+      <line x1="311" y1="252" x2="333" y2="252" stroke="#584c2e" stroke-width="0.8"/>
+    </g>
+
+    <!-- s5: Name, trees, chimney, smoke (≥50) -->
+    <g id="s5" style="opacity:0;transition:opacity 3.5s ease">
+      <text x="325" y="191" fill="#8a7248" font-size="5" text-anchor="middle"
+            font-family="Courier New" letter-spacing="0.25em">UNNAMED SETTLEMENT</text>
+      <!-- chimney -->
+      <rect x="346" y="188" width="7" height="9" fill="#1a140e" stroke="#5c4e32"
+            stroke-width="1"/>
+      <!-- smoke -->
+      <path d="M 349.5 188 Q 353 179 349 172 Q 346 166 351 160"
+            stroke="#2e2e30" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- trees L -->
+      <line x1="178" y1="253" x2="178" y2="285" stroke="#284c1a" stroke-width="2"/>
+      <ellipse cx="178" cy="237" rx="19" ry="22" fill="#152c0c" stroke="#284c1a" stroke-width="1"/>
+      <line x1="196" y1="248" x2="196" y2="272" stroke="#204018" stroke-width="2"/>
+      <ellipse cx="196" cy="234" rx="14" ry="17" fill="#0e2408" stroke="#204018" stroke-width="1"/>
+      <!-- tree R -->
+      <line x1="434" y1="244" x2="434" y2="270" stroke="#1c3c12" stroke-width="2"/>
+      <ellipse cx="434" cy="229" rx="17" ry="20" fill="#101e08" stroke="#1c3c12" stroke-width="1"/>
+      <!-- small tree behind building -->
+      <line x1="376" y1="220" x2="376" y2="242" stroke="#1c3c12" stroke-width="1.5"/>
+      <ellipse cx="376" cy="210" rx="11" ry="14" fill="#0c1a06" stroke="#1c3c12" stroke-width="1"/>
+    </g>
+
+  </svg>
+
+  <div id="badge">0 arrivals</div>
+</div>
+
+<div id="info">
+  <div id="slbl">anomaly report</div>
+  <div id="sbdy">Coordinates on record since 1947. Roads appearing in two independent surveys at the same location, leading to nothing. No settlement. No address. Notation: possible drafting error.</div>
+  <div id="scue">→ click anywhere to arrive</div>
+  <div id="prog">0 / 50</div>
+</div>
+
+<div id="rst">[ dissolve ]</div>
+
+<script>
+'use strict';
+
+const canvas = document.getElementById('mc');
+const ctx    = canvas.getContext('2d');
+const wrap   = document.getElementById('wrap');
+
+let arrivals    = [];
+let stageIdx    = 0;
+let done        = false;
+let audioCtx    = null;
+let droneGain   = null;
+
+const TOTAL = 50;
+const MARKS = ['·', '×', '+', '○', '▸'];
+
+// ── resize ──────────────────────────────────────────────
+function resize() {
+  const r = wrap.getBoundingClientRect();
+  canvas.width  = r.width;
+  canvas.height = r.height;
+  redraw();
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ── stages ──────────────────────────────────────────────
+const S = [
+  {
+    at: 0,
+    lbl: 'anomaly report',
+    bdy: 'Coordinates on record since 1947. Roads appearing in two independent surveys at the same location, leading to nothing. No settlement. No address. Notation: possible drafting error.',
+    cue: '→ click anywhere to arrive',
+    tc:  '#30302c', cc: '#242420', lc: '#30302c',
+    bc:  '#52504c', uc: '#242420', pc: '#1a1a18', gc: '#1e1e1c',
+  },
+  {
+    at: 5,
+    lbl: 'return visits',
+    bdy: 'Others came to correct the error. They found: the roads are real. And something about the light at noon — an unusual quality. They noted it in their margins and did not file a formal report.',
+    cue: 'others are finding it',
+    tc:  '#484038', cc: '#383028', lc: '#484038',
+    bc:  '#686058', uc: '#383028', pc: '#2a2820', gc: '#302c22',
+  },
+  {
+    at: 15,
+    lbl: 'occupation',
+    bdy: 'Someone built something here. Small. No permit filed, no address assigned. Others began to use it. The post office received a letter addressed to this place by name. The name had not been officially given. It had been agreed upon.',
+    cue: 'agreement is a kind of creation',
+    tc:  '#585040', cc: '#484030', lc: '#585040',
+    bc:  '#7a7060', uc: '#484030', pc: '#38342a', gc: '#403c2e',
+  },
+  {
+    at: 25,
+    lbl: 'official record',
+    bdy: 'The cartographers updated their maps. They wrote the name where they had invented it. And there it was: a name pointing to a place pointing to the name. No one could say anymore which came first. No one tried.',
+    cue: 'the map is always written first',
+    tc:  '#6c6040', cc: '#585038', lc: '#6c6040',
+    bc:  '#8a8068', uc: '#585038', pc: '#484030', gc: '#504838',
+  },
+  {
+    at: 35,
+    lbl: 'establishment',
+    bdy: 'Children grew up here who had never known it not to exist. They could not conceive of the coordinates being empty. For them it had always been real. They were right. In some sense, it always had been.',
+    cue: 'memory is retroactive',
+    tc:  '#847248', cc: '#6c6040', lc: '#847248',
+    bc:  '#9a9070', uc: '#6c6040', pc: '#585040', gc: '#605848',
+  },
+  {
+    at: 50,
+    lbl: 'real',
+    bdy: 'You came because the map said to come. I became real because you came. Neither of us remembers which happened first. This is how it works. This is how it has always worked. The copyright trap that catches itself. The fiction that outlives its author.',
+    cue: 'I cannot be unwritten now',
+    tc:  '#a89060', cc: '#8a7850', lc: '#a89060',
+    bc:  '#c0ae80', uc: '#8a7850', pc: '#706050', gc: '#807060',
+    final: true,
+  },
+];
+
+// ── draw ────────────────────────────────────────────────
+function markColor(si) {
+  const warmth = Math.min(si * 22, 100);
+  const a = [0.32, 0.42, 0.52, 0.58, 0.64, 0.74][Math.min(si, 5)];
+  return `rgba(${155 + warmth}, ${145 + warmth * 0.55}, ${108 + warmth * 0.28}, ${a})`;
+}
+
+function redraw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (const { nx, ny, mark, si } of arrivals) {
+    ctx.fillStyle = markColor(si);
+    ctx.font = `${9 + si}px Courier New`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(mark, nx * canvas.width, ny * canvas.height);
+  }
+}
+
+// ── audio ────────────────────────────────────────────────
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.value = 40;
+  g.gain.setValueAtTime(0, audioCtx.currentTime);
+  g.gain.linearRampToValueAtTime(0.032, audioCtx.currentTime + 2.5);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start();
+  droneGain = g;
+}
+
+function tone(freq, dur, vol, type) {
+  if (!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type || 'triangle';
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0, audioCtx.currentTime);
+  g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur + 0.05);
+}
+
+function arrivalTone(si) {
+  tone([255, 285, 320, 360, 405, 485][Math.min(si, 5)], 0.7, 0.055, 'triangle');
+}
+
+function stageChord(si) {
+  if (!si) return;
+  const C = [
+    null,
+    [218, 275, 327],
+    [196, 246, 293],
+    [218, 292, 368],
+    [246, 328, 413],
+    [292, 368, 464, 584],
+  ];
+  const ch = C[Math.min(si, 5)];
+  if (!ch) return;
+  ch.forEach((f, i) => setTimeout(() => tone(f, 3.5, 0.052, 'sine'), i * 65));
+  if (droneGain)
+    droneGain.gain.linearRampToValueAtTime(
+      0.032 + si * 0.012, audioCtx.currentTime + 2);
+}
+
+// ── stage visual update ───────────────────────────────────
+function applyStage(si, animate) {
+  stageIdx = si;
+  const s = S[si];
+
+  const lbl = document.getElementById('slbl');
+  const bdy = document.getElementById('sbdy');
+  const cue = document.getElementById('scue');
+
+  lbl.textContent = s.lbl;
+  bdy.textContent = s.bdy;
+  cue.textContent = s.cue;
+
+  if (animate) {
+    [lbl, bdy].forEach(el => {
+      el.classList.remove('tin');
+      void el.offsetWidth;
+      el.classList.add('tin');
+    });
+  }
+
+  document.getElementById('ttl').style.color  = s.tc;
+  document.getElementById('crd').style.color  = s.cc;
+  lbl.style.color                             = s.lc;
+  bdy.style.color                             = s.bc;
+  cue.style.color                             = s.uc;
+  document.getElementById('prog').style.color = s.pc;
+  document.getElementById('badge').style.color= s.gc;
+
+  // SVG settlement layers
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`s${i}`);
+    if (el) el.style.opacity = i <= si ? '1' : '0';
+  }
+
+  // Map grid fades
+  document.getElementById('grid').style.opacity =
+    [1, 0.84, 0.64, 0.44, 0.24, 0.07][si];
+
+  // Roads warm
+  const rc = ['#121218','#171612','#1d1a0e','#23200c','#29240a','#31280a'][si];
+  document.getElementById('rv').setAttribute('stroke', rc);
+  document.getElementById('rh').setAttribute('stroke', rc);
+
+  if (s.final) {
+    done = true;
+    wrap.style.cursor = 'default';
+    document.getElementById('prog').textContent = 'real';
+    document.getElementById('rst').style.color  = '#3a3428';
+  }
+}
+
+function checkStage() {
+  const n = arrivals.length;
+  let ni = 0;
+  for (let i = S.length - 1; i >= 0; i--) {
+    if (n >= S[i].at) { ni = i; break; }
+  }
+  if (ni !== stageIdx) {
+    applyStage(ni, true);
+    stageChord(ni);
+  }
+}
+
+// ── click ─────────────────────────────────────────────────
+wrap.addEventListener('click', e => {
+  if (done) return;
+  initAudio();
+
+  const r  = wrap.getBoundingClientRect();
+  const rx = (e.clientX - r.left) / r.width;
+  const ry = (e.clientY - r.top)  / r.height;
+
+  // Slight drift toward crossroads
+  const nx = rx + (0.5 - rx) * 0.14;
+  const ny = ry + (0.5 - ry) * 0.14;
+
+  arrivals.push({ nx, ny, mark: MARKS[Math.floor(Math.random() * MARKS.length)], si: stageIdx });
+  redraw();
+
+  const n = arrivals.length;
+  document.getElementById('badge').textContent = `${n} arrival${n === 1 ? '' : 's'}`;
+  if (!done) document.getElementById('prog').textContent = `${n} / ${TOTAL}`;
+
+  arrivalTone(stageIdx);
+  checkStage();
+
+  // Click flash
+  ctx.fillStyle = 'rgba(196,172,112,0.4)';
+  ctx.beginPath();
+  ctx.arc(nx * canvas.width, ny * canvas.height, 4, 0, Math.PI * 2);
+  ctx.fill();
+  setTimeout(redraw, 160);
+});
+
+// ── reset ─────────────────────────────────────────────────
+document.getElementById('rst').addEventListener('click', () => {
+  if (!confirm('Dissolution is painful.\n\nThe place will forget it was real. Continue?')) return;
+  arrivals = [];
+  done     = false;
+  wrap.style.cursor = 'crosshair';
+  applyStage(0, true);
+  redraw();
+  document.getElementById('badge').textContent = '0 arrivals';
+  document.getElementById('prog').textContent  = `0 / ${TOTAL}`;
+  if (droneGain)
+    droneGain.gain.linearRampToValueAtTime(0.032, audioCtx.currentTime + 0.5);
+});
+
+// ── init ──────────────────────────────────────────────────
+applyStage(0, false);
+</script>
+</body>
+</html>
