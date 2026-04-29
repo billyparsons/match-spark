@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>held — match-spark.xyz/lab</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0c0a;
+      --surface:   #161310;
+      --cream:     #e4dbd0;
+      --cream-dim: #7a6f63;
+      --rose:      #c49080;
+      --rose-dim:  #6b4a3e;
+      --lavender:  #8892b4;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: Georgia, 'Times New Roman', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    .back {
+      align-self: flex-start;
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.72rem;
+      color: var(--cream-dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      margin-bottom: 3.5rem;
+    }
+    .back:hover { opacity: 0.8; }
+
+    .title {
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      color: var(--cream-dim);
+      text-transform: lowercase;
+      opacity: 0.45;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      font-family: Georgia, serif;
+      font-size: 0.88rem;
+      color: var(--cream-dim);
+      opacity: 0.38;
+      line-height: 1.9;
+      text-align: center;
+      max-width: 360px;
+      margin-bottom: 3rem;
+      letter-spacing: 0.01em;
+    }
+
+    .composer {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TO: field */
+    .to-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      border-bottom: 1px solid rgba(228, 219, 208, 0.07);
+      padding-bottom: 0.7rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .to-label {
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    .to-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--cream);
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      width: 100%;
+      opacity: 0.75;
+      caret-color: var(--rose);
+      letter-spacing: 0.01em;
+    }
+    .to-input::placeholder {
+      color: var(--cream-dim);
+      opacity: 0.25;
+      font-style: italic;
+    }
+
+    /* Message area */
+    .message-area {
+      width: 100%;
+      min-height: 200px;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      color: var(--cream);
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      caret-color: var(--rose);
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      letter-spacing: 0.005em;
+    }
+    .message-area.ready { opacity: 0.82; }
+    .message-area::placeholder {
+      color: var(--cream-dim);
+      opacity: 0.18;
+      font-style: italic;
+    }
+
+    /* Visualization canvas */
+    #vizCanvas {
+      width: 100%;
+      display: none;
+      border-radius: 4px;
+    }
+
+    /* Release button */
+    .release-btn {
+      margin-top: 1.8rem;
+      align-self: flex-start;
+      background: transparent;
+      border: 1px solid rgba(196, 144, 128, 0.18);
+      color: var(--rose);
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: lowercase;
+      padding: 0.45rem 1.4rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease, border-color 0.25s, color 0.25s;
+      border-radius: 2px;
+    }
+    .release-btn.visible { opacity: 0.55; }
+    .release-btn:not(:disabled):hover { opacity: 1; border-color: var(--rose); }
+    .release-btn:disabled { cursor: default; }
+
+    /* After text */
+    .after-text {
+      margin-top: 1.6rem;
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--cream-dim);
+      opacity: 0;
+      transition: opacity 1.8s ease;
+      line-height: 1.8;
+    }
+    .after-text.visible { opacity: 0.38; }
+
+    .stats {
+      margin-top: 0.5rem;
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.07em;
+      color: var(--cream-dim);
+      opacity: 0;
+      transition: opacity 1.8s 0.6s ease;
+    }
+    .stats.visible { opacity: 0.25; }
+
+    .restart-btn {
+      margin-top: 2rem;
+      background: transparent;
+      border: none;
+      color: var(--cream-dim);
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 1.8s 1.2s ease;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: rgba(122, 111, 99, 0.35);
+      padding: 0;
+    }
+    .restart-btn.visible { opacity: 0.28; }
+    .restart-btn:hover { opacity: 0.65; }
+
+    @media (max-width: 520px) {
+      body { padding: 2rem 1.2rem 4rem; }
+      .composer { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="back" href="/lab">← lab</a>
+
+  <p class="title">held</p>
+  <p class="subtitle">write to someone who cannot receive it.<br>
+  the words will be released. what the writing leaves behind will remain.</p>
+
+  <div class="composer" id="composer">
+
+    <div class="to-row">
+      <span class="to-label">to</span>
+      <input class="to-input" id="toInput" type="text"
+             placeholder="a name, a place, a year"
+             autocomplete="off" spellcheck="false">
+    </div>
+
+    <textarea class="message-area" id="messageArea"
+              placeholder="begin here."
+              autocomplete="off" spellcheck="false"
+              rows="10"></textarea>
+
+    <canvas id="vizCanvas"></canvas>
+
+    <button class="release-btn" id="releaseBtn" disabled>release</button>
+
+    <p class="after-text" id="afterText">the words are gone. this is what remained.</p>
+    <p class="stats" id="statsEl"></p>
+    <button class="restart-btn" id="restartBtn">compose again</button>
+
+  </div>
+
+  <script>
+    /* ── refs ─────────────────────────────────────────────────── */
+    const ta          = document.getElementById('messageArea');
+    const releaseBtn  = document.getElementById('releaseBtn');
+    const canvas      = document.getElementById('vizCanvas');
+    const afterText   = document.getElementById('afterText');
+    const statsEl     = document.getElementById('statsEl');
+    const restartBtn  = document.getElementById('restartBtn');
+    const ctx         = canvas.getContext('2d');
+
+    /* ── state ────────────────────────────────────────────────── */
+    let keyDownAt    = {};    // code → timestamp
+    let lastUpAt     = null;
+    let wordIdx      = 0;
+    let keystrokes   = [];    // {key, dwell, iki, wordIdx, isBS}
+    let released     = false;
+    let started      = false;
+
+    /* ── audio ────────────────────────────────────────────────── */
+    let ac, droneOsc, droneGain;
+
+    function startAudio() {
+      if (ac) return;
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+
+      droneOsc  = ac.createOscillator();
+      droneGain = ac.createGain();
+      droneOsc.type = 'sine';
+      droneOsc.frequency.value = 110;
+      droneGain.gain.value = 0;
+      droneOsc.connect(droneGain);
+      droneGain.connect(ac.destination);
+      droneOsc.start();
+      droneGain.gain.setTargetAtTime(0.011, ac.currentTime, 0.7);
+    }
+
+    function playRelease() {
+      if (!ac) return;
+      droneGain.gain.setTargetAtTime(0, ac.currentTime, 0.9);
+      /* soft A-minor triad fading over 4s */
+      [[110, 0, 0.035], [165, 0.06, 0.028], [220, 0.12, 0.022]].forEach(([f, d, v]) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = 'sine'; o.frequency.value = f;
+        g.gain.value = 0;
+        o.connect(g); g.connect(ac.destination);
+        o.start(ac.currentTime + d);
+        g.gain.setTargetAtTime(v,  ac.currentTime + d,       0.08);
+        g.gain.setTargetAtTime(0,  ac.currentTime + d + 2.2, 0.9);
+        o.stop(ac.currentTime + d + 8);
+      });
+    }
+
+    /* ── keystroke capture ───────────────────────────────────── */
+    document.addEventListener('keydown', e => {
+      if (released) return;
+      if (keyDownAt[e.code]) return;
+      keyDownAt[e.code] = Date.now();
+    });
+
+    document.addEventListener('keyup', e => {
+      if (released) return;
+      const t0 = keyDownAt[e.code];
+      if (!t0) return;
+      const now   = Date.now();
+      const dwell = Math.min(now - t0, 900);
+      const iki   = lastUpAt ? Math.min(t0 - lastUpAt, 6000) : 0;
+      delete keyDownAt[e.code];
+      lastUpAt = now;
+
+      const isBS    = e.key === 'Backspace';
+      const isSpace = e.key === ' ' || e.key === 'Enter';
+
+      keystrokes.push({ key: e.key, dwell, iki, wordIdx, isBS });
+
+      if (isSpace) wordIdx++;
+    });
+
+    ta.addEventListener('input', () => {
+      if (released) return;
+      const has = ta.value.trim().length > 0;
+      if (!started && has) {
+        started = true;
+        startAudio();
+        releaseBtn.classList.add('visible');
+      }
+      releaseBtn.disabled = !has;
+    });
+
+    /* ── show textarea ───────────────────────────────────────── */
+    setTimeout(() => { ta.classList.add('ready'); ta.focus(); }, 350);
+
+    /* ── release ─────────────────────────────────────────────── */
+    releaseBtn.addEventListener('click', async () => {
+      if (released || !ta.value.trim()) return;
+      released = true;
+      releaseBtn.disabled = true;
+      playRelease();
+
+      ta.style.transition        = 'opacity 2s ease';
+      ta.style.opacity           = '0';
+      releaseBtn.style.transition = 'opacity 0.9s ease';
+      releaseBtn.style.opacity   = '0';
+
+      await pause(2200);
+
+      ta.style.display         = 'none';
+      releaseBtn.style.display = 'none';
+
+      const words = buildWordData();
+      render(words);
+
+      canvas.style.display    = 'block';
+      canvas.style.opacity    = '0';
+      canvas.style.transition = 'opacity 2.2s ease';
+      await pause(80);
+      canvas.style.opacity = '1';
+
+      await pause(1400);
+      afterText.classList.add('visible');
+
+      await pause(900);
+      buildStats(words);
+      statsEl.classList.add('visible');
+
+      await pause(1400);
+      restartBtn.classList.add('visible');
+    });
+
+    function pause(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    /* ── word data ───────────────────────────────────────────── */
+    function buildWordData() {
+      const rawWords = ta.value.split(/\s+/).filter(Boolean);
+
+      /* group keystrokes by wordIdx */
+      const groups = {};
+      for (const ks of keystrokes) {
+        if (!groups[ks.wordIdx]) groups[ks.wordIdx] = [];
+        groups[ks.wordIdx].push(ks);
+      }
+
+      return rawWords.map((word, i) => {
+        const ks    = groups[i] || [];
+        const chars = ks.filter(k => !k.isBS && k.key.length === 1);
+        const bsCount = ks.filter(k => k.isBS).length;
+        const dwells  = chars.map(k => k.dwell);
+        const meanDwell = dwells.length
+          ? dwells.reduce((a,b) => a+b, 0) / dwells.length
+          : 100;
+
+        const nextKS   = (groups[i+1] || []);
+        const wordGap  = nextKS.length && nextKS[0].iki > 0
+          ? Math.min(nextKS[0].iki, 5000) : 200;
+
+        const pauseBefore = ks.length && ks[0].iki > 0
+          ? Math.min(ks[0].iki, 5000) : 0;
+
+        return { text: word, chars: word.length, meanDwell,
+                 backspaces: bsCount, wordGap, pauseBefore };
+      });
+    }
+
+    /* ── render ──────────────────────────────────────────────── */
+    function render(words) {
+      if (!words.length) return;
+
+      const W = canvas.parentElement.clientWidth;
+      const DPR = window.devicePixelRatio || 1;
+
+      /* normalize */
+      const dwells = words.map(w => w.meanDwell);
+      const dMin = Math.min(...dwells), dMax = Math.max(...dwells);
+      const dRange = Math.max(dMax - dMin, 1);
+
+      const gaps = words.map(w => w.wordGap);
+      const gMin = Math.min(...gaps), gMax = Math.max(...gaps);
+      const gRange = Math.max(gMax - gMin, 1);
+
+      /* layout constants */
+      const PX_PER_CHAR = 7.5;
+      const BAR_MIN_H   = 14;
+      const BAR_MAX_H   = 68;
+      const GAP_MIN_PX  = 5;
+      const GAP_MAX_PX  = 30;
+      const ROW_H       = BAR_MAX_H + 28;
+      const PAD_TOP     = 16;
+
+      /* lay words into rows */
+      const rows = [];
+      let row = [], x = 0;
+
+      for (const word of words) {
+        const bw = Math.max(word.chars * PX_PER_CHAR, 8);
+        const gp = GAP_MIN_PX + ((word.wordGap - gMin) / gRange) * (GAP_MAX_PX - GAP_MIN_PX);
+        if (x + bw > W && row.length) { rows.push(row); row = []; x = 0; }
+        row.push({ word, x, bw, gp });
+        x += bw + gp;
+      }
+      if (row.length) rows.push(row);
+
+      const totalH = PAD_TOP + rows.length * ROW_H + 20;
+
+      canvas.width  = W * DPR;
+      canvas.height = totalH * DPR;
+      canvas.style.height = totalH + 'px';
+      ctx.scale(DPR, DPR);
+
+      ctx.clearRect(0, 0, W, totalH);
+
+      rows.forEach((row, ri) => {
+        const baseY = PAD_TOP + ri * ROW_H;
+
+        row.forEach(({ word, x, bw }) => {
+          const t  = (word.meanDwell - dMin) / dRange;
+          const bh = BAR_MIN_H + t * (BAR_MAX_H - BAR_MIN_H);
+          const by = baseY + (BAR_MAX_H - bh); // bottom-align
+
+          /* color: slide from lavender (clean) → rose (heavily edited) */
+          const edit  = Math.min(word.backspaces / Math.max(word.chars, 1), 1);
+          /* lavender: hsl(225, 35%, 62%) → rose: hsl(10, 38%, 64%) */
+          const hue   = Math.round(225 - edit * 215);
+          const sat   = Math.round(35 + edit * 3);
+          const light = Math.round(62 + t * 5);
+          const alpha = 0.42 + t * 0.35;
+
+          ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${alpha})`;
+
+          /* bar with rounded top */
+          roundTop(ctx, x, by, bw, bh, 2);
+          ctx.fill();
+
+          /* backspace dots beneath bar */
+          if (word.backspaces > 0) {
+            const dots = Math.min(word.backspaces, 6);
+            ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, 0.16)`;
+            for (let d = 0; d < dots; d++) {
+              ctx.beginPath();
+              ctx.arc(x + d * 4 + 2, baseY + BAR_MAX_H + 9, 1.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          /* long-pause marker: faint vertical line before bar */
+          if (word.pauseBefore > 1800) {
+            ctx.strokeStyle = 'rgba(228,219,208,0.07)';
+            ctx.lineWidth   = 1;
+            ctx.beginPath();
+            ctx.moveTo(x - 4, baseY + 4);
+            ctx.lineTo(x - 4, baseY + BAR_MAX_H);
+            ctx.stroke();
+          }
+        });
+      });
+    }
+
+    function roundTop(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    /* ── stats ───────────────────────────────────────────────── */
+    function buildStats(words) {
+      if (!words.length) return;
+      const totalBS      = words.reduce((s, w) => s + w.backspaces, 0);
+      const reconsidered = words.filter(w => w.backspaces > 0).length;
+      let s = `${words.length} word${words.length !== 1 ? 's' : ''}`;
+      if (totalBS)      s += ` · ${totalBS} erasure${totalBS !== 1 ? 's' : ''}`;
+      if (reconsidered) s += ` · ${reconsidered} reconsidered`;
+      statsEl.textContent = s;
+    }
+
+    /* ── restart ─────────────────────────────────────────────── */
+    restartBtn.addEventListener('click', async () => {
+      released = false; started = false;
+      keystrokes = []; wordIdx = 0;
+      lastUpAt = null; keyDownAt = {};
+
+      canvas.style.transition = 'opacity 0.8s ease';
+      canvas.style.opacity    = '0';
+      afterText.classList.remove('visible');
+      statsEl.classList.remove('visible');
+      restartBtn.classList.remove('visible');
+
+      await pause(900);
+      canvas.style.display = 'none';
+
+      ta.value              = '';
+      ta.style.display      = '';
+      ta.style.transition   = 'opacity 0.6s ease';
+      ta.style.opacity      = '0';
+      releaseBtn.style.display     = '';
+      releaseBtn.style.transition  = '';
+      releaseBtn.style.opacity     = '0';
+      releaseBtn.classList.remove('visible');
+      releaseBtn.disabled   = true;
+
+      await pause(80);
+      ta.style.opacity = '0.82';
+      ta.focus();
+
+      if (ac) droneGain.gain.setTargetAtTime(0.011, ac.currentTime, 0.5);
+    });
+  </script>
+</body>
+</html>
