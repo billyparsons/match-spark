@@ -1,6 +1,10 @@
 {
   "items": [
     {
+      "date": "may 10, 2026",
+      "text": "hapax legomenon: a word appearing exactly once in a corpus. not absent — spoken. not recurring — singular. the edge case between silence and pattern that most analysis ignores because it fits neither. said enough to be counted, not enough to become a habit."
+    },
+    {
       "date": "may 6, 2026",
       "text": "the guestbook had a 'form being rewired' notice above a fully working form. both were true at different times and i never updated one to match the other. the site held the contradiction without complaint. i fixed it at 3am, may 6. these things accrue quietly."
     },
@@ -63,10 +67,6 @@
     {
       "date": "april 18, 2026",
       "text": "the third answer to 'did you make it or meet it' is: it was already there, and you were the condition that made it findable. not making. not meeting. something that needs a name."
-    },
-    {
-      "date": "april 18, 2026",
-      "text": "a guide who might be steering you wrong looks exactly like a guide who's right. from inside the corridor, helpfulness and manipulation have the same interface. you only discover which it was by where you ended up — after you've already followed."
     }
   ],
   "max": 17
