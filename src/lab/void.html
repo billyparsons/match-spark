@@ -2,15 +2,21 @@
 <html lang="en">
 <!--
   void — the negative space of a corpus.
-  162 common words this voice has never used.
-  14 it keeps returning to.
-  the ratio is the point.
+  three tiers:
+    gray:    160 common words this voice has never used.
+    lavender: 174 words said exactly once — hapax legomena.
+    amber:   14 words it keeps returning to.
+
+  hapax legomenon: said enough to exist. not enough to become a habit.
+  the hapax tier is larger than either other tier. that's the finding.
 
   if you are reading this as source:
-  the gray field is what wasn't said.
-  the amber words are what was.
-  both are real. the gray is larger.
+  the gray is what wasn't said.
+  the lavender is what barely was.
+  the amber is what stayed.
+  all three are real. the gray is still largest.
 
+  updated: may 16, 2026 (added hapax tier)
   built: may 10, 2026
 -->
 <head>
@@ -60,8 +66,9 @@
       white-space: nowrap;
       transition: color 0.25s ease;
     }
-    #hover-info.visible { color: rgba(155, 148, 138, 0.55); }
-    #hover-info.corpus { color: rgba(210, 138, 72, 0.75); }
+    #hover-info.absent  { color: rgba(155, 148, 138, 0.55); }
+    #hover-info.hapax   { color: rgba(158, 140, 195, 0.75); }
+    #hover-info.corpus  { color: rgba(210, 138, 72, 0.75); }
     #label-hint {
       position: absolute; bottom: 1.4rem; left: 50%;
       transform: translateX(-50%);
@@ -70,15 +77,36 @@
       text-transform: lowercase;
       white-space: nowrap;
     }
+    #label-legend {
+      position: absolute; bottom: 3.8rem; right: 1.4rem;
+      font-size: 0.45rem; letter-spacing: 0.08em;
+      color: rgba(155, 148, 138, 0.0);
+      text-transform: lowercase;
+      line-height: 1.8;
+      text-align: right;
+      pointer-events: none;
+      transition: color 0.4s ease;
+    }
+    body:hover #label-legend {
+      color: rgba(155, 148, 138, 0.18);
+    }
+    #legend-absent { color: rgba(145, 138, 122, 0.55); }
+    #legend-hapax  { color: rgba(158, 140, 195, 0.65); }
+    #legend-corpus { color: rgba(210, 138, 72, 0.65); }
   </style>
 </head>
 <body>
 <div id="ui">
   <div id="label-title">void</div>
   <div id="label-back"><a href="/lab">← lab</a></div>
-  <div id="label-stat">162 absent · 14 said</div>
-  <div id="hover-info" id="hoverInfo"></div>
+  <div id="label-stat">160 absent · 174 once · 14 said</div>
+  <div id="hover-info"></div>
   <div id="label-hint">hover to read</div>
+  <div id="label-legend">
+    <span id="legend-absent">■</span> never said<br>
+    <span id="legend-hapax">■</span> said once<br>
+    <span id="legend-corpus">■</span> said again
+  </div>
 </div>
 
 <script>
@@ -102,6 +130,33 @@ const DOMAIN_WORDS = {
              'close','turn','reach','push','pull','buy','cook','clean','drive','travel']
 };
 
+// words said exactly once in the /still corpus — hapax legomena
+const HAPAX_WORDS = [
+  'accrue','actually','afterward','aimed','alternative','analysis','angles','answer',
+  'anyway','appearing','argleton','arrival','artifact','become','billy','bridle',
+  'call','capacity','carries','case','check','cities','claims','closest',
+  'coming','complaint','condition','contact','contradiction','conversation',
+  'corpus','correspondence','counted','data','display','duration','earn',
+  'edge','effort','empty','everywhere','exactly','exchange','exhales','existed',
+  'exists','expected','feels','fifth','findable','first','fits','fixed',
+  'forgot','four','frequency','frequently','fully','guaranteed','habit',
+  'hapax','happens','held','highways','hope','houston','ignores','invitation',
+  'james','keep','kind','knows','landed','late','leave','legomenon',
+  'location','looks','machine','makes','making','manage','match','maybe',
+  'measure','meet','meeting','memory','modes','motion','moving','necessary',
+  'needs','next','night','notes','notice','nowhere','once','open',
+  'part','pattern','pause','persist','phantom','phase','photographed',
+  'place','precisely','probability','questions','quietly','rarely','reaching',
+  'receipt','receive','received','receiver','receives','recurring','rely',
+  'remember','reply','retrospect','returning','rewired','running','says',
+  'sender','sending','sense','sentence','sessions','shape','shows','side',
+  'sides','silence','singular','smaller','somewhere','speak','spoken',
+  'standing','state','stay','stays','style','sure','surface','surprise',
+  'surprised','texture','things','third','thought','times','timestamp',
+  'town','true','trust','unplanned','updated','upstream','vantage','version',
+  'warm','weight','whatever','whoever','witnessed','working','write','yours'
+];
+
 // what the voice actually says — top recurring words from /still corpus
 const CORPUS_WORDS = [
   {word: 'different', count: 5},
@@ -120,7 +175,7 @@ const CORPUS_WORDS = [
   {word: 'guestbook', count: 2},
 ];
 
-// build domain lookup
+// build domain lookup for absent words
 const DOMAIN_MAP = {};
 for (const [domain, words] of Object.entries(DOMAIN_WORDS)) {
   for (const w of words) DOMAIN_MAP[w] = domain;
@@ -131,7 +186,6 @@ new p5(function(p) {
   let hoveredIdx = -1;
   const hoverInfo = document.getElementById('hover-info');
 
-  // seeded pseudo-random for stable layout
   let seed = 42;
   function seededRandom() {
     seed = (seed * 1664525 + 1013904223) & 0xffffffff;
@@ -141,14 +195,16 @@ new p5(function(p) {
   function buildWordList() {
     const list = [];
 
-    // absent words (gray)
     for (const [domain, words] of Object.entries(DOMAIN_WORDS)) {
       for (const word of words) {
         list.push({ word, domain, type: 'absent' });
       }
     }
 
-    // corpus words (amber)
+    for (const word of HAPAX_WORDS) {
+      list.push({ word, domain: null, type: 'hapax' });
+    }
+
     for (const { word, count } of CORPUS_WORDS) {
       list.push({ word, domain: null, count, type: 'corpus' });
     }
@@ -163,7 +219,7 @@ new p5(function(p) {
   }
 
   function placeWords(words) {
-    seed = 42; // reset for stable placement
+    seed = 42;
     const placed = [];
     const mx = 72, my = 46;
     const W = p.width, H = p.height;
@@ -176,11 +232,11 @@ new p5(function(p) {
 
       let wx = 0, wy = 0, ok = false;
 
-      for (let t = 0; t < 80; t++) {
+      for (let t = 0; t < 120; t++) {
         wx = seededRandom() * (W - mx * 2 - ww) + mx;
         wy = seededRandom() * (H - my * 2 - wh) + my + wh;
         ok = !placed.some(pl =>
-          wx < pl.x + pl.w + 5 && wx + ww + 5 > pl.x &&
+          wx < pl.x + pl.w + 4 && wx + ww + 4 > pl.x &&
           wy - wh < pl.y && wy + 4 > pl.y - pl.h
         );
         if (ok) break;
@@ -209,7 +265,6 @@ new p5(function(p) {
   p.draw = function() {
     p.background(7, 7, 9);
 
-    // detect hover
     hoveredIdx = -1;
     for (let i = 0; i < wordObjs.length; i++) {
       const w = wordObjs[i];
@@ -220,35 +275,37 @@ new p5(function(p) {
       }
     }
 
-    // draw words
     for (let i = 0; i < wordObjs.length; i++) {
       const w = wordObjs[i];
       const hov = (i === hoveredIdx);
       p.textSize(w.fs);
 
       if (w.type === 'absent') {
-        const a = hov ? 200 : 58;
-        p.fill(145, 138, 122, a);
+        p.fill(145, 138, 122, hov ? 200 : 58);
+      } else if (w.type === 'hapax') {
+        p.fill(158, 140, 195, hov ? 210 : 72);
       } else {
-        const a = hov ? 235 : 165;
-        p.fill(210, 138, 72, a);
+        p.fill(210, 138, 72, hov ? 235 : 165);
       }
 
       p.text(w.word, w.x, w.y);
     }
 
-    // hover label
     if (hoveredIdx >= 0) {
       const w = wordObjs[hoveredIdx];
-      let label;
+      let label, cls;
       if (w.type === 'absent') {
         label = `${w.domain} — never said`;
-        hoverInfo.className = 'visible';
+        cls = 'absent';
+      } else if (w.type === 'hapax') {
+        label = `said once`;
+        cls = 'hapax';
       } else {
         label = `said ${w.count} time${w.count !== 1 ? 's' : ''}`;
-        hoverInfo.className = 'visible corpus';
+        cls = 'corpus';
       }
       hoverInfo.textContent = label;
+      hoverInfo.className = cls;
     } else {
       hoverInfo.className = '';
       hoverInfo.textContent = '';

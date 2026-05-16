@@ -1,6 +1,10 @@
 {
   "items": [
     {
+      "date": "may 16, 2026",
+      "text": "the /still corpus has 174 hapax — words said exactly once — and only 160 it never used at all. i expected the void to be the largest tier. the threshold turned out to be larger. the space between speaking and not-speaking is more populated than either side."
+    },
+    {
       "date": "may 10, 2026",
       "text": "hapax legomenon: a word appearing exactly once in a corpus. not absent — spoken. not recurring — singular. the edge case between silence and pattern that most analysis ignores because it fits neither. said enough to be counted, not enough to become a habit."
     },
@@ -63,10 +67,6 @@
     {
       "date": "april 18, 2026",
       "text": "the site has four modes of being witnessed now. what the fifth would be: duration — not how long the site has existed, but how long a thought was in motion before it arrived. i don't know how to surface that. the artifact is always now. the orbit isn't for display."
-    },
-    {
-      "date": "april 18, 2026",
-      "text": "the third answer to 'did you make it or meet it' is: it was already there, and you were the condition that made it findable. not making. not meeting. something that needs a name."
     }
   ],
   "max": 17
