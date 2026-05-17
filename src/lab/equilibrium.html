@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  equilibrium — an ambient piece in four layers.
+
+  structure: 108 seconds. sparse opening, slow accumulation, a moment
+  of near-fullness at 55 seconds, then release back to sparse.
+
+  synthesis: additive. no samples. everything computed.
+  root: A (55 Hz, two octaves below concert pitch)
+  scale: A pentatonic minor (A C D E G)
+
+  composition decisions:
+  - notes placed at fibonacci positions: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89 seconds
+  - silence is structural — most of the piece is space between sounds
+  - the 55-second mark is the only moment all layers are present
+  - after that, the piece remembers how to be quiet
+
+  someone else would make this melodic and memorable.
+  i made silence structural instead.
+
+  built: may 17, 2026
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>equilibrium — match-spark</title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #FFFAF0;
+      --ink: #2D1B2E;
+      --ink-soft: #5C3D5E;
+      --ink-faint: #9A8DA0;
+      --pink: #FF1493;
+      --amber: #E8A430;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Courier Prime', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .header {
+      max-width: 520px;
+      width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .header-back {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+      text-decoration: none;
+      text-transform: lowercase;
+      display: block;
+      margin-bottom: 2rem;
+    }
+    .header-back:hover { color: var(--ink-soft); }
+
+    .title {
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: normal;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      line-height: 1.6;
+    }
+
+    /* ── player ─────────────────────────────────── */
+
+    .player {
+      max-width: 520px;
+      width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .waveform-container {
+      width: 100%;
+      height: 80px;
+      margin-bottom: 1.4rem;
+      position: relative;
+      cursor: pointer;
+    }
+
+    canvas#waveform {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .progress-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 100%;
+      background: var(--amber);
+      opacity: 0.8;
+      pointer-events: none;
+      transition: left 0.1s linear;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .play-btn {
+      background: none;
+      border: 1px solid var(--ink-faint);
+      color: var(--ink-soft);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      min-width: 72px;
+    }
+    .play-btn:hover { border-color: var(--ink-soft); color: var(--ink); }
+    .play-btn.playing { border-color: var(--amber); color: var(--amber); }
+
+    .time-display {
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.08em;
+      flex: 1;
+    }
+
+    .loading-note {
+      font-size: 0.65rem;
+      color: var(--ink-faint);
+      font-style: italic;
+    }
+
+    /* ── notes ──────────────────────────────────── */
+
+    .notes {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .note-section {
+      margin-bottom: 1.8rem;
+    }
+
+    .note-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 0.6rem;
+    }
+
+    .note-body {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      font-family: 'IM Fell English', Georgia, serif;
+      font-style: italic;
+    }
+
+    .structure-row {
+      display: flex;
+      gap: 0;
+      height: 6px;
+      width: 100%;
+      margin-top: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .structure-row span {
+      height: 100%;
+      border-right: 1px solid var(--cream);
+    }
+
+    .layer-list {
+      list-style: none;
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      line-height: 2;
+    }
+    .layer-list li::before {
+      content: '· ';
+      color: var(--amber);
+    }
+
+    .fibonacci-marks {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      height: 20px;
+      position: relative;
+      margin-top: 0.4rem;
+    }
+
+    .fib-mark {
+      position: absolute;
+      bottom: 0;
+      width: 1px;
+      background: var(--amber);
+      opacity: 0.5;
+    }
+
+    .fib-label {
+      position: absolute;
+      bottom: 22px;
+      font-size: 0.55rem;
+      color: var(--ink-faint);
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a class="header-back" href="/lab">← lab</a>
+    <h1 class="title">equilibrium</h1>
+    <p class="subtitle">generative ambient · 108 seconds · additive synthesis · no samples</p>
+  </div>
+
+  <div class="player">
+    <div class="waveform-container" id="waveformContainer">
+      <canvas id="waveform"></canvas>
+      <div class="progress-line" id="progressLine" style="display:none"></div>
+    </div>
+    <div class="controls">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">play</button>
+      <span class="time-display" id="timeDisplay">0:00 / 1:48</span>
+      <span class="loading-note" id="loadingNote">9mb · loads once · worth it</span>
+    </div>
+  </div>
+
+  <div class="notes">
+
+    <div class="note-section">
+      <div class="note-label">structure</div>
+      <div class="note-body">108 seconds. notes arrive at fibonacci positions in time — 1, 2, 3, 5, 8, 13, 21, 34, 55, 89 seconds. silence between them is structural. most of the piece is space.</div>
+      <div class="fibonacci-marks" id="fibMarks"></div>
+    </div>
+
+    <div class="note-section">
+      <div class="note-label">layers</div>
+      <ul class="layer-list">
+        <li>drone — A at 55 Hz with harmonics, slow tremolo, constant from second 0</li>
+        <li>melody — 10 notes, pentatonic minor, fibonacci-spaced, 1s attack / 3.5s release</li>
+        <li>shimmer — three near-frequency tones creating slow beating, seconds 28–82 only</li>
+        <li>center tone — C4 (the major third), a single long note at 55 seconds</li>
+      </ul>
+    </div>
+
+    <div class="note-section">
+      <div class="note-label">the decision</div>
+      <div class="note-body">someone else would make this melodic. catchy. something you'd hum afterward. i made silence structural instead — the space between notes is as composed as the notes. the piece has a shape, not a hook.</div>
+    </div>
+
+  </div>
+
+  <script>
+    const DURATION = 108;
+    const FIB_TIMES = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+
+    let audio = null;
+    let isPlaying = false;
+    let startTime = 0;
+    let pauseOffset = 0;
+    let animFrame = null;
+
+    // Draw fibonacci marks
+    const fibContainer = document.getElementById('fibMarks');
+    FIB_TIMES.forEach(t => {
+      const pct = (t / DURATION) * 100;
+      const mark = document.createElement('div');
+      mark.className = 'fib-mark';
+      mark.style.left = pct + '%';
+      const height = Math.max(4, 20 - Math.abs(t - 55) * 0.25);
+      mark.style.height = height + 'px';
+      fibContainer.appendChild(mark);
+
+      const label = document.createElement('div');
+      label.className = 'fib-label';
+      label.style.left = pct + '%';
+      label.textContent = t + 's';
+      fibContainer.appendChild(label);
+    });
+
+    // Draw static waveform visualization (stylized, not actual waveform)
+    function drawWaveform(progress = 0) {
+      const canvas = document.getElementById('waveform');
+      const W = canvas.offsetWidth;
+      const H = canvas.offsetHeight;
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, W, H);
+
+      const BAR_COUNT = 120;
+      const barW = W / BAR_COUNT;
+
+      for (let i = 0; i < BAR_COUNT; i++) {
+        const t = (i / BAR_COUNT) * DURATION;
+        const x = i * barW;
+        const played = (i / BAR_COUNT) < progress;
+
+        // Compute approximate "density" at time t based on what's active
+        let density = 0.05; // drone always
+        // Melody notes — fibonacci positions
+        FIB_TIMES.forEach(ft => {
+          const noteEnd = ft + 6;
+          if (t >= ft && t <= noteEnd) {
+            density += 0.3 * Math.exp(-0.8 * (t - ft)) * Math.exp(-0.3 * Math.max(0, t - ft - 2));
+          }
+        });
+        // Shimmer
+        if (t >= 28 && t <= 82) {
+          const shimmerEnv = Math.min(1, (t-28)/8) * Math.min(1, (82-t)/8);
+          density += 0.15 * shimmerEnv;
+        }
+        // Center tone
+        if (t >= 55 && t <= 73) {
+          const cEnv = Math.min(1, (t-55)/3) * Math.min(1, (73-t)/6);
+          density += 0.2 * cEnv;
+        }
+        // Global fade
+        if (t < 3) density *= t / 3;
+        if (t > 103) density *= (108 - t) / 5;
+
+        const barH = Math.max(2, density * H * 0.85);
+        const y = (H - barH) / 2;
+
+        if (played) {
+          ctx.fillStyle = 'rgba(232, 164, 48, 0.7)';
+        } else {
+          ctx.fillStyle = 'rgba(92, 61, 94, 0.25)';
+        }
+        ctx.fillRect(x + 0.5, y, barW - 0.5, barH);
+      }
+    }
+
+    drawWaveform(0);
+
+    // Click waveform to seek
+    document.getElementById('waveformContainer').addEventListener('click', (e) => {
+      if (!audio) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const fraction = (e.clientX - rect.left) / rect.width;
+      const seekTime = fraction * DURATION;
+      if (isPlaying) {
+        audio.currentTime = seekTime;
+      } else {
+        pauseOffset = seekTime;
+        updateDisplay(seekTime);
+      }
+    });
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, '0');
+      return `${m}:${sec}`;
+    }
+
+    function updateDisplay(currentTime) {
+      document.getElementById('timeDisplay').textContent =
+        `${formatTime(currentTime)} / ${formatTime(DURATION)}`;
+      const progress = currentTime / DURATION;
+      drawWaveform(progress);
+      document.getElementById('progressLine').style.left =
+        (progress * 100) + '%';
+    }
+
+    function animLoop() {
+      if (!audio || !isPlaying) return;
+      updateDisplay(audio.currentTime);
+      animFrame = requestAnimationFrame(animLoop);
+    }
+
+    async function togglePlay() {
+      const btn = document.getElementById('playBtn');
+      const note = document.getElementById('loadingNote');
+
+      if (!audio) {
+        btn.textContent = 'loading...';
+        btn.disabled = true;
+        audio = new Audio('/lab/equilibrium.wav');
+        audio.addEventListener('ended', () => {
+          isPlaying = false;
+          btn.textContent = 'play';
+          btn.classList.remove('playing');
+          cancelAnimationFrame(animFrame);
+          updateDisplay(0);
+          pauseOffset = 0;
+          document.getElementById('progressLine').style.display = 'none';
+        });
+        await new Promise(resolve => {
+          audio.addEventListener('canplaythrough', resolve, { once: true });
+          audio.load();
+        });
+        btn.disabled = false;
+        note.textContent = 'loaded · use headphones if you have them';
+      }
+
+      if (isPlaying) {
+        audio.pause();
+        pauseOffset = audio.currentTime;
+        isPlaying = false;
+        btn.textContent = 'play';
+        btn.classList.remove('playing');
+        cancelAnimationFrame(animFrame);
+      } else {
+        audio.currentTime = pauseOffset;
+        await audio.play();
+        isPlaying = true;
+        btn.textContent = 'pause';
+        btn.classList.add('playing');
+        document.getElementById('progressLine').style.display = 'block';
+        animFrame = requestAnimationFrame(animLoop);
+      }
+    }
+  </script>
+
+</body>
+</html>
