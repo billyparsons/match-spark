@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ghost-word — an etymology generator for words that don't need one.
+
+  dord entered merriam-webster in 1934. stayed five years. got cited.
+  turned out to be a transcription error: "D or d" (density abbreviation),
+  filed without the slash. by the time anyone noticed, it had already been real.
+
+  this piece takes any word and gives it the history it never had.
+  the etymology is invented. the archival apparatus is sincere.
+
+  if you are reading this as source:
+  the word you typed is real.
+  the history is fabricated.
+  the distinction is smaller than you'd think.
+
+  built: may 17, 2026
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ghost word — match-spark</title>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream:      #F5F0E8;
+      --parchment:  #EDE8D8;
+      --ink:        #2A2018;
+      --ink-faded:  #6B5D48;
+      --ink-ghost:  #A89880;
+      --red:        #8B2020;
+      --border:     #C8BCA8;
+    }
+
+    html { font-size: 16px; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'IM Fell English', Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .header {
+      max-width: 560px;
+      width: 100%;
+      margin-bottom: 2.5rem;
+    }
+
+    .header-back {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-ghost);
+      text-decoration: none;
+      text-transform: lowercase;
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+    .header-back:hover { color: var(--ink-faded); }
+
+    .header-title {
+      font-size: 1.6rem;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.4rem;
+    }
+
+    .header-sub {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--ink-faded);
+      font-family: 'Courier Prime', monospace;
+      line-height: 1.5;
+    }
+
+    .input-area {
+      max-width: 560px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+
+    .word-input {
+      font-family: 'Courier Prime', monospace;
+      font-size: 1.1rem;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 0.3rem 0.2rem;
+      flex: 1;
+      outline: none;
+      letter-spacing: 0.05em;
+    }
+    .word-input::placeholder { color: var(--ink-ghost); font-style: italic; }
+    .word-input:focus { border-bottom-color: var(--ink-faded); }
+
+    .generate-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faded);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .generate-btn:hover { border-color: var(--ink-faded); color: var(--ink); }
+    .generate-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* the entry card */
+    .entry-card {
+      max-width: 560px;
+      width: 100%;
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      padding: 2rem 2.2rem 2.2rem;
+      position: relative;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .entry-card.visible { opacity: 1; }
+
+    /* SVG animation for the headword */
+    .headword-svg {
+      display: block;
+      width: 100%;
+      margin-bottom: 1.2rem;
+      overflow: visible;
+    }
+
+    .entry-pos {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--ink-faded);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .entry-definition {
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+      color: var(--ink);
+    }
+
+    .entry-etymology {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--ink-faded);
+      font-style: italic;
+    }
+
+    .entry-etymology strong {
+      font-style: normal;
+      color: var(--ink-faded);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .entry-note {
+      margin-top: 1rem;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--ink-ghost);
+      font-style: normal;
+      border-top: 1px solid var(--border);
+      padding-top: 0.8rem;
+    }
+
+    .entry-note .correction {
+      color: var(--red);
+      font-style: italic;
+    }
+
+    .archive-row {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .archive-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faded);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .archive-btn:hover { border-color: var(--red); color: var(--red); }
+    .archive-btn.archived {
+      border-color: var(--ink-ghost);
+      color: var(--ink-ghost);
+      cursor: default;
+    }
+
+    .archive-note {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--ink-ghost);
+      font-style: italic;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .archive-note.visible { opacity: 1; }
+
+    .footer-note {
+      max-width: 560px;
+      width: 100%;
+      margin-top: 2rem;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--ink-ghost);
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a class="header-back" href="/lab">← lab</a>
+    <h1 class="header-title">ghost word</h1>
+    <p class="header-sub">type a word. receive the history it never had.<br>
+    dord (n.) — "density," merriam-webster, 1934–1939. origin: transcription error.</p>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <input class="word-input" id="wordInput" type="text" placeholder="enter a word" maxlength="32" autocomplete="off" spellcheck="false" />
+      <button class="generate-btn" id="generateBtn" onclick="generate()">excavate</button>
+    </div>
+  </div>
+
+  <div class="entry-card" id="entryCard">
+    <svg class="headword-svg" id="headwordSvg" height="50" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="entry-pos" id="entryPos"></div>
+    <div class="entry-definition" id="entryDefinition"></div>
+    <div class="entry-etymology" id="entryEtymology"></div>
+    <div class="entry-note" id="entryNote"></div>
+    <div class="archive-row">
+      <button class="archive-btn" id="archiveBtn" onclick="archive()">submit to dictionary</button>
+      <span class="archive-note" id="archiveNote">filed. survives until the correction arrives.</span>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    this etymology is invented. the word is real. the distinction is smaller than you'd think.<br>
+    ghost words enter the record and survive their own origin stories. dord had five years.
+  </div>
+
+  <script>
+    const ROOTS = [
+      { root: "grad", lang: "Latin", meaning: "to step, to walk", example: "gradient, degrade" },
+      { root: "fac", lang: "Latin", meaning: "to make, to do", example: "factor, artifact" },
+      { root: "lumen", lang: "Latin", meaning: "light, opening", example: "illuminate, luminary" },
+      { root: "vor", lang: "Latin", meaning: "to turn, to change", example: "version, revert" },
+      { root: "solen", lang: "Greek", meaning: "pipe, channel, hollow", example: "solenoid" },
+      { root: "kairos", lang: "Greek", meaning: "the right moment, opening", example: "kairos" },
+      { root: "algos", lang: "Greek", meaning: "pain, grief", example: "nostalgia, analgesic" },
+      { root: "telos", lang: "Greek", meaning: "end, purpose", example: "teleology" },
+      { root: "skia", lang: "Greek", meaning: "shadow, shade", example: "skiascopy" },
+      { root: "brenn", lang: "Old Norse", meaning: "to burn, to mark", example: "brand" },
+      { root: "hafen", lang: "Middle English", meaning: "to hold, to possess", example: "haven" },
+      { root: "gleam", lang: "Proto-Germanic", meaning: "brightness, reflection", example: "gleam" },
+      { root: "faran", lang: "Old English", meaning: "to journey, to fare", example: "fare, wayfarer" },
+      { root: "klinein", lang: "Greek", meaning: "to lean, to slope", example: "incline, clinic" },
+      { root: "lithos", lang: "Greek", meaning: "stone, record", example: "monolith, lithograph" },
+    ];
+
+    const PARTS_OF_SPEECH = [
+      "n.", "v. tr.", "v. intr.", "adj.", "adv.", "n. obs.", "v. arch."
+    ];
+
+    const CENTURIES = [
+      "13th century", "14th century", "15th century", "16th century",
+      "17th century", "18th century", "early 19th century"
+    ];
+
+    const LANGUAGES = [
+      "Middle English", "Old French", "Anglo-Norman", "Medieval Latin",
+      "Late Latin", "Old Norse", "Low German", "Middle Dutch"
+    ];
+
+    const DEFINITIONS = [
+      [
+        "the quality of a surface that has been exposed to weather for a period too brief to alter its character but long enough to be visible",
+        "a thin residue on glass or polished metal left by water that has evaporated before it could be wiped away",
+        "the interval between the last use of a tool and the moment it is picked up again",
+        "a partial recollection that cannot be traced to a source",
+        "the weight of a small object held in the hand longer than necessary",
+        "the moment a word becomes too familiar to carry meaning",
+        "the habit of checking a door after locking it",
+        "the sound a house makes when no one is moving through it",
+        "the difference between the last draft and the submitted version, when the difference is no longer visible",
+        "a word spoken at the threshold of sleep that cannot be recovered",
+        "the quality of light in a room after the lamp has been turned off",
+        "a letter begun and not finished, kept for no reason",
+        "the distance between intending to speak and speaking",
+        "the particular silence of a room after a question has been asked",
+        "a name remembered only as a shape, not as sound",
+      ],
+      [
+        "to mark or alter (a surface) by prolonged contact with a dissimilar material",
+        "to recall partially and without source",
+        "to hold or carry beyond the point of necessity",
+        "to enter a space without disturbing its air",
+        "to begin a letter and not finish it",
+        "to become too familiar to carry meaning",
+        "to speak at the threshold of sleep",
+        "to pass from one language to another without change of form but with loss of sense",
+      ]
+    ];
+
+    const NOTES = [
+      "word entered through copying error in {year} edition; original manuscript reads {alt}. correction noted by editors; entry retained through {end}.",
+      "first recorded in {year} as a headword; citation source lost in {fire} fire of {end}. subsequent entries cite this edition as origin.",
+      "entered by error when transcriber conflated two adjacent entries; see also {alt}. removal proposed but not enacted through {end}.",
+      "word appears in {year} draft index without citation; assumed carried forward from {alt}. verification pending.",
+      "headword derived from illegible marginal note in {year} folio; reconstructed by editor. original inscription not recovered.",
+    ];
+
+    function seededRandom(seed) {
+      let s = seed;
+      return function() {
+        s = (s * 9301 + 49297) % 233280;
+        return s / 233280;
+      };
+    }
+
+    function hashWord(word) {
+      let h = 0;
+      for (let i = 0; i < word.length; i++) {
+        h = Math.imul(31, h) + word.charCodeAt(i) | 0;
+      }
+      return Math.abs(h);
+    }
+
+    function pick(arr, rand) {
+      return arr[Math.floor(rand() * arr.length)];
+    }
+
+    function buildEtymology(word, rand) {
+      const root = pick(ROOTS, rand);
+      const via = pick(LANGUAGES, rand);
+      const century = pick(CENTURIES, rand);
+
+      // construct a plausible phonetic path
+      const wordLen = word.length;
+      const stem = word.length > 4 ? word.slice(0, Math.floor(wordLen * 0.6)) : word.slice(0, -1);
+
+      return `<strong>ETYMOLOGY</strong> ${century}, via ${via}, from ${root.lang} <em>${root.root}</em> (${root.meaning}; cf. ${root.example}). ` +
+        `The form passed through ${via} as <em>${stem}${pick(['e','en','an','um','is'], rand)}</em>, ` +
+        `acquiring the terminal ${pick(['-ment', '-ance', '-al', '-ure', '-ion', '-ness'], rand)} in the transition to written English. ` +
+        `Sense narrowed in the ${century.replace('century','c.')} to its present specialized use.`;
+    }
+
+    function buildNote(word, rand) {
+      const year = 1820 + Math.floor(rand() * 140);
+      const end = year + 3 + Math.floor(rand() * 15);
+      const alt = word.slice(0, -1) + pick(['e', 's', 'ed', 'al', 'ment'], rand);
+      const fires = ['London', 'Edinburgh', 'Boston', 'Amsterdam', 'Leipzig'];
+      const fire = pick(fires, rand);
+
+      let template = pick(NOTES, rand);
+      return template
+        .replace('{year}', year)
+        .replace('{end}', end)
+        .replace('{alt}', `<em>${alt}</em>`)
+        .replace('{fire}', fire);
+    }
+
+    function buildHeadwordSVG(word) {
+      const svg = document.getElementById('headwordSvg');
+      svg.innerHTML = '';
+
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', '0');
+      text.setAttribute('y', '38');
+      text.setAttribute('font-family', "'IM Fell English', Georgia, serif");
+      text.setAttribute('font-size', '2.2rem');
+      text.setAttribute('fill', '#2A2018');
+      text.setAttribute('letter-spacing', '0.04em');
+      text.textContent = word;
+
+      // animate: letters fade in one by one
+      const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      animate.setAttribute('attributeName', 'opacity');
+      animate.setAttribute('from', '0');
+      animate.setAttribute('to', '1');
+      animate.setAttribute('dur', '0.4s');
+      animate.setAttribute('fill', 'freeze');
+      text.appendChild(animate);
+
+      svg.appendChild(text);
+
+      // underline that draws in
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', '0');
+      line.setAttribute('y1', '44');
+      line.setAttribute('x2', '0');
+      line.setAttribute('y2', '44');
+      line.setAttribute('stroke', '#C8BCA8');
+      line.setAttribute('stroke-width', '0.5');
+
+      const animateLine = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      animateLine.setAttribute('attributeName', 'x2');
+      animateLine.setAttribute('from', '0');
+      animateLine.setAttribute('to', Math.min(word.length * 22, 500).toString());
+      animateLine.setAttribute('dur', '0.6s');
+      animateLine.setAttribute('begin', '0.2s');
+      animateLine.setAttribute('fill', 'freeze');
+      line.appendChild(animateLine);
+
+      svg.appendChild(line);
+    }
+
+    function generate() {
+      const input = document.getElementById('wordInput');
+      const word = input.value.trim().toLowerCase();
+      if (!word) return;
+
+      const seed = hashWord(word);
+      const rand = seededRandom(seed);
+
+      const card = document.getElementById('entryCard');
+      const pos = document.getElementById('entryPos');
+      const defEl = document.getElementById('entryDefinition');
+      const etymEl = document.getElementById('entryEtymology');
+      const noteEl = document.getElementById('entryNote');
+      const archiveBtn = document.getElementById('archiveBtn');
+      const archiveNote = document.getElementById('archiveNote');
+
+      // reset archive state
+      archiveBtn.classList.remove('archived');
+      archiveBtn.textContent = 'submit to dictionary';
+      archiveNote.classList.remove('visible');
+
+      // build content
+      const partOfSpeech = pick(PARTS_OF_SPEECH, rand);
+      const defBank = partOfSpeech.startsWith('v') ? DEFINITIONS[1] : DEFINITIONS[0];
+      const definition = pick(defBank, rand);
+      const etymology = buildEtymology(word, rand);
+      const note = buildNote(word, rand);
+
+      buildHeadwordSVG(word);
+      pos.textContent = partOfSpeech;
+      defEl.textContent = definition;
+      etymEl.innerHTML = etymology;
+      noteEl.innerHTML = `<span class="correction">editorial note —</span> ${note}`;
+
+      card.classList.remove('visible');
+      void card.offsetWidth;
+      card.classList.add('visible');
+    }
+
+    function archive() {
+      const btn = document.getElementById('archiveBtn');
+      const note = document.getElementById('archiveNote');
+      btn.classList.add('archived');
+      btn.textContent = 'filed';
+      note.classList.add('visible');
+    }
+
+    // enter key
+    document.getElementById('wordInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') generate();
+    });
+  </script>
+</body>
+</html>
