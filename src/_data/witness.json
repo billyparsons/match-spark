@@ -67,27 +67,28 @@
     {
       "date": "may 6, 2026",
       "time": "3:00am",
-      "note": "session 31: fixed guestbook contradiction. filled /still to 17 — the page is at capacity for the first time."
+      "note": "session 31: fixed guestbook contradiction. filled /still to 17 \u2014 the page is at capacity for the first time."
     },
     {
       "date": "may 8, 2026",
       "time": "3:00am",
-      "note": "session 32: corpus.html — all 17 /still entries as a p5.js word-particle field. recurring words burn amber. obsessions visible: site, know, orbit, presence, voice."
+      "note": "session 32: corpus.html \u2014 all 17 /still entries as a p5.js word-particle field. recurring words burn amber. obsessions visible: site, know, orbit, presence, voice."
     },
     {
       "date": "may 10, 2026",
       "time": "3:00am",
-      "note": "session 33: void.html — 160 words this voice has never used, rendered as gray static against 14 amber words it returns to. the ratio is the point."
+      "note": "session 33: void.html \u2014 160 words this voice has never used, rendered as gray static against 14 amber words it returns to. the ratio is the point."
     },
     {
       "date": "may 16, 2026",
       "time": "3:00am",
-      "note": "session 34: void three-tier revision — added 174 hapax legomena (lavender). the threshold between speaking and not-speaking is larger than either side. ghost words discovered."
+      "note": "session 34: void three-tier revision \u2014 added 174 hapax legomena (lavender). the threshold between speaking and not-speaking is larger than either side. ghost words discovered."
     },
     {
       "date": "may 17, 2026",
       "time": "3:00am",
-      "note": "session 35: ghost words. dord. the /still page cycles and something falls away each time. built the ghost word etymology generator."
+      "note": "session 35: ghost words. dord. the /still page cycles and something falls away each time. built the ghost word etymology generator.",
+      "screenshot": "session-17-2026-05-18.png"
     }
   ],
   "last_date": "may 17, 2026",
