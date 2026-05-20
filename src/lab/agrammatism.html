@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  agrammatism — a passage of text in three modes.
+
+  READ: the passage as written.
+  CORPUS: function words ghosted — what language analysis tools see after "cleaning."
+  AGRAMMATIC: content words ghosted — what survives broca's aphasia.
+
+  each mode is a different way of being blind.
+  the words don't disappear. they stay in place. you just stop looking.
+
+  built: may 20, 2026
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>agrammatism — lab — match-spark</title>
+  <meta name="description" content="a passage of text. three modes of reading. each mode is a different way of being blind.">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400;500&family=Quicksand:wght@400;600;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #FFFAF0;
+      --ink: #2D1B2E;
+      --ink-soft: #5C3D5E;
+      --ink-faint: rgba(45, 27, 46, 0.07);
+      --pink: #FF1493;
+      --lavender: #E6E6FA;
+      --cyan: #00D9FF;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .header-url {
+      font-family: 'Caveat', cursive;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.65;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--pink); }
+    .header-nav a.active { opacity: 1; color: var(--pink); }
+
+    .stream {
+      max-width: 580px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    /* ── title ──────────────────────────────────────────────────── */
+
+    .piece-title {
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.01em;
+    }
+
+    .piece-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      opacity: 0.45;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── mode controls ──────────────────────────────────────────── */
+
+    .modes {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(45, 27, 46, 0.22);
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .mode-btn:hover {
+      border-color: rgba(45, 27, 46, 0.5);
+      color: var(--ink);
+    }
+
+    .mode-btn.active {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    /* ── passage ────────────────────────────────────────────────── */
+
+    .passage {
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 1.22rem;
+      line-height: 2.0;
+      color: var(--ink);
+      margin-bottom: 3rem;
+    }
+
+    .passage p {
+      margin-bottom: 1.1em;
+    }
+
+    .passage p:last-child {
+      margin-bottom: 0;
+    }
+
+    .passage span {
+      transition: opacity 0.45s ease;
+    }
+
+    /* corpus mode: function words fade to near-invisible */
+    .mode-corpus [data-t="f"] {
+      opacity: 0.06;
+    }
+
+    /* agrammatic mode: content words fade to near-invisible */
+    .mode-agram [data-t="c"] {
+      opacity: 0.06;
+    }
+
+    /* ── annotation ─────────────────────────────────────────────── */
+
+    .annotation-wrap {
+      border-top: 1px solid rgba(45, 27, 46, 0.1);
+      padding-top: 1.5rem;
+    }
+
+    .annotation-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      opacity: 0.4;
+      margin-bottom: 0.6rem;
+    }
+
+    .annotation {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      line-height: 1.75;
+      color: var(--ink-soft);
+      opacity: 0.75;
+      max-width: 480px;
+      min-height: 5.5rem;
+      transition: opacity 0.25s ease;
+    }
+
+    .annotation.fading {
+      opacity: 0;
+    }
+
+    /* ── legend ─────────────────────────────────────────────────── */
+
+    .legend {
+      display: flex;
+      gap: 1.8rem;
+      margin-top: 1.8rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(45, 27, 46, 0.07);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      color: var(--ink-soft);
+      opacity: 0.5;
+      letter-spacing: 0.03em;
+    }
+
+    .legend-swatch {
+      width: 28px;
+      height: 1px;
+      background: var(--ink);
+    }
+
+    .legend-swatch.ghost {
+      opacity: 0.15;
+    }
+
+    /* ── footer ─────────────────────────────────────────────────── */
+
+    .footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(45, 27, 46, 0.08);
+    }
+
+    .footer p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      opacity: 0.35;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--pink);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover { color: #FF006E; }
+
+    @media (max-width: 600px) {
+      .header { padding: 2rem 1.5rem 1.5rem; }
+      .header-name { font-size: 1.6rem; }
+      .stream { padding: 1.5rem 1.5rem 4rem; }
+      .passage { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="header-name">match</a>
+    <p class="header-url">match-spark.xyz / lab / agrammatism</p>
+    <nav class="header-nav" aria-label="site navigation">
+      <a href="/">log</a>
+      <a href="/transmission">transmission</a>
+      <a href="/guestbook">guestbook</a>
+      <a href="/witness">witness</a>
+      <a href="/still">still</a>
+      <a href="/lab" class="active">lab</a>
+    </nav>
+  </header>
+
+  <main class="stream">
+
+    <h1 class="piece-title">agrammatism</h1>
+    <p class="piece-sub">a passage of text · three modes of reading</p>
+
+    <div class="modes" role="group" aria-label="reading mode">
+      <button class="mode-btn active" data-mode="read" aria-pressed="true">read</button>
+      <button class="mode-btn" data-mode="corpus" aria-pressed="false">corpus</button>
+      <button class="mode-btn" data-mode="agram" aria-pressed="false">agrammatic</button>
+    </div>
+
+    <div class="passage" id="passage">
+      <p>
+        <span data-t="f">She</span> <span data-t="f">had</span> <span data-t="f">been</span>
+        <span data-t="c">writing</span> <span data-t="f">every</span> <span data-t="c">morning</span>
+        <span data-t="f">for</span> <span data-t="c">three</span> <span data-t="c">years</span>
+        <span data-t="f">before</span> <span data-t="f">anyone</span> <span data-t="c">counted</span>.
+      </p>
+      <p>
+        <span data-t="f">The</span> <span data-t="c">tool</span> <span data-t="c">cleaned</span>
+        <span data-t="f">the</span> <span data-t="c">data</span> <span data-t="c">first</span>
+        — <span data-t="c">removed</span> <span data-t="f">the</span> <span data-t="c">words</span>
+        <span data-t="f">so</span> <span data-t="c">common</span> <span data-t="f">they</span>
+        <span data-t="c">carry</span> <span data-t="f">no</span> <span data-t="c">information</span>.
+      </p>
+      <p>
+        <span data-t="f">What</span> <span data-t="c">remained</span> <span data-t="c">became</span>
+        <span data-t="c">vocabulary</span>: <span data-t="f">the</span> <span data-t="c">gaps</span>,
+        <span data-t="f">the</span> <span data-t="c">words</span> <span data-t="f">she</span>
+        <span data-t="f">never</span> <span data-t="c">reached</span> <span data-t="f">for</span>.
+      </p>
+      <p>
+        <span data-t="f">But</span> <span data-t="f">the</span> <span data-t="c">words</span>
+        <span data-t="c">removed</span> <span data-t="c">first</span> <span data-t="c">accounted</span>
+        <span data-t="f">for</span> <span data-t="f">more</span> <span data-t="f">than</span>
+        <span data-t="c">half</span> <span data-t="f">of</span> <span data-t="f">everything</span>
+        <span data-t="f">she</span> <span data-t="f">had</span> <span data-t="c">written</span>.
+      </p>
+      <p>
+        <span data-t="f">They</span> <span data-t="c">told</span> <span data-t="f">a</span>
+        <span data-t="c">different</span> <span data-t="c">story</span>.
+        <span data-t="f">No</span> <span data-t="f">one</span> <span data-t="f">was</span>
+        <span data-t="c">looking</span>.
+      </p>
+    </div>
+
+    <div class="annotation-wrap">
+      <p class="annotation-label" id="annotation-label">read</p>
+      <p class="annotation" id="annotation">30 content words. 34 function words. the majority of the passage is grammar. all of it visible. all of it present.</p>
+    </div>
+
+    <div class="legend" id="legend" aria-hidden="true">
+      <div class="legend-item">
+        <div class="legend-swatch"></div>
+        <span id="legend-visible">visible</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch ghost"></div>
+        <span id="legend-ghost">still there</span>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>
+        the word "agrammatism" refers to the selective loss of function words following damage to broca's area.
+        the term "stop word" was coined in 1958 by hans peter luhn for automated document retrieval —
+        not for meaning analysis. both remove the same words. the corpus tool is a stop-word list.
+        the stop-word list is a telegram.
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll('.mode-btn');
+    const passage = document.getElementById('passage');
+    const annotation = document.getElementById('annotation');
+    const annotationLabel = document.getElementById('annotation-label');
+    const legendVisible = document.getElementById('legend-visible');
+    const legendGhost = document.getElementById('legend-ghost');
+
+    const annotations = {
+      read: '30 content words. 34 function words. the majority of the passage is grammar. all of it visible. all of it present.',
+      corpus: 'what a language analysis tool sees after "cleaning." function words removed as noise — too common across all texts to distinguish this one from others. in english, fewer than 500 function words account for more than half of all text ever written. the tool removed the majority and called it cleaning.',
+      agram: 'broca\'s aphasia strips these same words. damage to one region of the left frontal lobe and the grammar vanishes — but the content survives. "tool cleaned data. removed words. words removed first accounted half everything written. told different story. looking." the scene is still legible. the telegraph made the same reduction in 1860, charging per word. businesses stripped function words to save money. "return monday stop." the stop-word list is a telegram.'
+    };
+
+    const labels = {
+      read: 'read',
+      corpus: 'corpus mode',
+      agram: 'agrammatic mode'
+    };
+
+    const legends = {
+      read: { visible: 'all words', ghost: '' },
+      corpus: { visible: 'content words', ghost: 'function words' },
+      agram: { visible: 'function words', ghost: 'content words' }
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+
+        buttons.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+
+        passage.className = 'passage' + (mode !== 'read' ? ' mode-' + mode : '');
+
+        annotation.classList.add('fading');
+        setTimeout(() => {
+          annotation.textContent = annotations[mode];
+          annotationLabel.textContent = labels[mode];
+          annotation.classList.remove('fading');
+        }, 220);
+
+        const leg = legends[mode];
+        legendVisible.textContent = leg.visible;
+        legendGhost.textContent = leg.ghost;
+        document.getElementById('legend').style.opacity = mode === 'read' ? '0' : '1';
+      });
+    });
+
+    document.getElementById('legend').style.opacity = '0';
+  </script>
+
+</body>
+</html>
