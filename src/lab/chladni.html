@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  chladni — sand on a vibrating plate.
+
+  eight standing wave patterns (m, n) from the square plate formula:
+    f(x, y) = cos(n·π·x)·cos(m·π·y) − cos(m·π·x)·cos(n·π·y)
+
+  1500 particles gradient-descend toward the nodal lines —
+  the places where the amplitude is zero, where nothing moves.
+
+  sand gathers there because the vibrating surface shakes it away
+  from everywhere else.
+
+  the patterns have never been perfect. the mandalas in the videos
+  are computer-generated. real cymatics are alive and imperfect and
+  look almost like this.
+
+  built: may 22, 2026
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>chladni — lab — match-spark</title>
+  <meta name="description" content="sand particles settling onto the nodal lines of a vibrating plate. eight frequencies. one shake button.">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:      #0a0908;
+      --plate:   #111009;
+      --text:    #6a6258;
+      --dim:     #302e2a;
+      --sand:    #c8a060;
+      --gold:    #d4ac5a;
+      --border:  #1e1c18;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 3rem;
+    }
+
+    /* ── header ── */
+    header {
+      width: 100%;
+      max-width: 560px;
+      padding: 1.6rem 1.5rem 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+    }
+
+    header a {
+      color: #4a4640;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    header a:hover { color: var(--sand); }
+
+    /* ── canvas container ── */
+    #cnv-wrap {
+      width: min(500px, 96vw);
+      height: min(500px, 96vw);
+      margin: 0.8rem 0 0.5rem;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    #cnv-wrap canvas { display: block; }
+
+    /* ── freq label ── */
+    .freq-label {
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      text-align: center;
+      height: 1.3em;
+      margin-bottom: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    /* ── controls ── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      max-width: 520px;
+      margin-bottom: 0.7rem;
+    }
+
+    button {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      background: transparent;
+      border: 1px solid #1e1c18;
+      color: #3a3830;
+      padding: 5px 11px;
+      cursor: pointer;
+      border-radius: 1px;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    button:hover {
+      border-color: #5a5040;
+      color: #8a7850;
+    }
+
+    button.active {
+      border-color: #7a6030;
+      color: var(--sand);
+      background: #141210;
+    }
+
+    button.shake-btn:hover {
+      border-color: #806040;
+      color: #c09050;
+    }
+
+    /* ── sound row ── */
+    .sound-row {
+      margin-bottom: 1.4rem;
+    }
+
+    button.sound-on {
+      border-color: #4a6040;
+      color: #7a9868;
+    }
+
+    /* ── annotation ── */
+    .annotation {
+      max-width: 440px;
+      padding: 0 1.5rem;
+      font-size: 0.72rem;
+      line-height: 1.9;
+      color: #2e2c28;
+      text-align: center;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .annotation em {
+      color: #3e3c38;
+      font-style: normal;
+    }
+
+    .annotation .reveal {
+      display: block;
+      margin-top: 0.9rem;
+      font-size: 0.68rem;
+      color: #252320;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/">match</a>
+    <a href="/lab">← lab</a>
+  </header>
+
+  <div id="cnv-wrap"></div>
+
+  <p class="freq-label" id="freq-label">m=1, n=2 · 220 hz · settling</p>
+
+  <div class="controls" id="controls"></div>
+
+  <div class="sound-row">
+    <button id="sound-btn">sound off</button>
+  </div>
+
+  <div class="annotation">
+    sand on a vibrating plate gathers at the nodal lines —<br>
+    the places where the plate does not move.<br><br>
+    <em>the perfect symmetrical mandalas you have seen in videos are computer-generated.<br>
+    the rings of power production team found that real cymatics footage was too wild,<br>
+    too imperfect — they mixed it with CGI to get the beauty they wanted.</em>
+    <span class="reveal">this is what real sound actually does to sand.</span>
+  </div>
+
+  <script>
+    const PATTERNS = [
+      { m: 1, n: 2, freq: 220,  label: 'm=1 n=2' },
+      { m: 2, n: 3, freq: 440,  label: 'm=2 n=3' },
+      { m: 3, n: 4, freq: 720,  label: 'm=3 n=4' },
+      { m: 1, n: 4, freq: 544,  label: 'm=1 n=4' },
+      { m: 2, n: 5, freq: 1100, label: 'm=2 n=5' },
+      { m: 4, n: 5, freq: 1640, label: 'm=4 n=5' },
+      { m: 3, n: 7, freq: 2400, label: 'm=3 n=7' },
+      { m: 5, n: 8, freq: 3640, label: 'm=5 n=8' },
+    ];
+
+    let curPat  = 0;
+    let audioCtx = null, osc = null, gainNode = null;
+    let soundOn = false;
+
+    // Chladni formula: square plate standing wave
+    // nodal lines where f = 0; sand gathers there
+    function cf(x, y, m, n) {
+      return Math.cos(n * Math.PI * x) * Math.cos(m * Math.PI * y)
+           - Math.cos(m * Math.PI * x) * Math.cos(n * Math.PI * y);
+    }
+
+    // Build pattern buttons
+    const controlsEl = document.getElementById('controls');
+    PATTERNS.forEach(({ m, n, freq, label }, i) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.dataset.idx = i;
+      b.className = i === 0 ? 'active' : '';
+      b.onclick = () => {
+        curPat = i;
+        document.querySelectorAll('#controls button[data-idx]').forEach((el, j) => {
+          el.classList.toggle('active', j === i);
+        });
+        document.getElementById('freq-label').textContent =
+          `${label} · ${freq} hz · settling`;
+        setTimeout(() => {
+          const lbl = document.getElementById('freq-label');
+          if (lbl.textContent.includes('settling'))
+            lbl.textContent = `${label} · ${freq} hz`;
+        }, 4000);
+        if (soundOn && osc) osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.06);
+        if (window._agitate) window._agitate(7);
+      };
+      controlsEl.appendChild(b);
+    });
+
+    // Shake button
+    const shakeB = document.createElement('button');
+    shakeB.className = 'shake-btn';
+    shakeB.textContent = 'shake';
+    shakeB.onclick = () => { if (window._scatter) window._scatter(); };
+    controlsEl.appendChild(shakeB);
+
+    // Sound toggle
+    document.getElementById('sound-btn').onclick = function () {
+      soundOn = !soundOn;
+      this.textContent = soundOn ? 'sound on' : 'sound off';
+      this.classList.toggle('sound-on', soundOn);
+
+      if (soundOn) {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          gainNode = audioCtx.createGain();
+          gainNode.gain.value = 0.038;
+          gainNode.connect(audioCtx.destination);
+        }
+        osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = PATTERNS[curPat].freq;
+        osc.connect(gainNode);
+        osc.start();
+      } else if (osc) {
+        osc.stop();
+        osc = null;
+      }
+    };
+
+    // p5 sketch
+    new p5(function (p) {
+      const N = 1500;
+      const pts = [];
+      let W, H;
+      let agit = 10; // start high → initial settle from scattered state
+
+      window._agitate = function (a) { agit = Math.max(agit, a); };
+      window._scatter  = function () {
+        pts.forEach(pt => { pt.x = p.random(W); pt.y = p.random(H); });
+        agit = 10;
+        const lbl = document.getElementById('freq-label');
+        const { m, n, freq } = PATTERNS[curPat];
+        lbl.textContent = `m=${m} n=${n} · ${freq} hz · settling`;
+        setTimeout(() => {
+          if (lbl.textContent.includes('settling'))
+            lbl.textContent = `m=${m} n=${n} · ${freq} hz`;
+        }, 5000);
+      };
+
+      p.setup = function () {
+        const wrap = document.getElementById('cnv-wrap');
+        W = wrap.offsetWidth;
+        H = wrap.offsetHeight;
+        p.createCanvas(W, H).parent('cnv-wrap');
+        p.colorMode(p.HSB, 360, 100, 100, 100);
+        for (let i = 0; i < N; i++)
+          pts.push({ x: p.random(W), y: p.random(H) });
+      };
+
+      p.draw = function () {
+        // fade to near-black plate color
+        p.fill(32, 12, 5, 20);
+        p.noStroke();
+        p.rect(0, 0, W, H);
+
+        const { m, n } = PATTERNS[curPat];
+        agit *= 0.974;
+
+        const h   = 0.016;   // gradient step in normalized coords
+        const spd = 1.8;     // base pixel speed
+
+        for (let i = 0; i < N; i++) {
+          const pt = pts[i];
+          const nx = (pt.x / W) * 2 - 1;
+          const ny = (pt.y / H) * 2 - 1;
+
+          // |f| at particle + numerical gradient
+          const z0  = Math.abs(cf(nx,     ny,     m, n));
+          const gx  = (Math.abs(cf(nx + h, ny,     m, n)) - Math.abs(cf(nx - h, ny,     m, n))) / (2 * h);
+          const gy  = (Math.abs(cf(nx,     ny + h, m, n)) - Math.abs(cf(nx,     ny - h, m, n))) / (2 * h);
+
+          const noise = agit * 0.5 + 0.18;
+          pt.x -= gx * spd + p.random(-noise, noise);
+          pt.y -= gy * spd + p.random(-noise, noise);
+
+          if (pt.x < 1)     pt.x = 1;
+          if (pt.x > W - 1) pt.x = W - 1;
+          if (pt.y < 1)     pt.y = 1;
+          if (pt.y > H - 1) pt.y = H - 1;
+
+          // warm sand color — brighter at nodal lines (z0 near 0)
+          const hue  = 33 + z0 * 14;          // 33–47 (amber to gold)
+          const sat  = 50 + (1 - z0) * 28;    // 50–78
+          const bri  = 22 + (1 - z0) * 62;    // 22–84
+          const alpha = 48 + (1 - z0) * 40;   // 48–88
+
+          p.stroke(hue, sat, bri, alpha);
+          p.strokeWeight(1.4);
+          p.point(pt.x, pt.y);
+        }
+      };
+
+      p.windowResized = function () {
+        const wrap = document.getElementById('cnv-wrap');
+        W = wrap.offsetWidth;
+        H = wrap.offsetHeight;
+        p.resizeCanvas(W, H);
+      };
+
+    }, 'cnv-wrap');
+  </script>
+
+</body>
+</html>
