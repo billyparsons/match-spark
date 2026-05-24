@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>threshold — match-spark.xyz</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #06070f;
+      --text: #d6d2c8;
+      --dim: #52506a;
+      --prediction: #bf2828;
+      --subcortical: #cc6010;
+      --threshold: #b89a18;
+      --conscious: #28905a;
+      --hesitation: #4070aa;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* nav */
+    #nav {
+      position: fixed;
+      top: 1.4rem;
+      left: 1.6rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      z-index: 10;
+    }
+    #nav a { color: var(--dim); text-decoration: none; }
+    #nav a:hover { color: var(--text); }
+
+    /* screens */
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    /* ── intro ── */
+    #intro { text-align: center; }
+
+    #intro h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 0.35em;
+      font-weight: normal;
+      margin-bottom: 0.4rem;
+    }
+
+    #intro .tagline {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+    }
+
+    #intro .instructions {
+      font-size: 0.85rem;
+      color: var(--dim);
+      line-height: 2;
+      max-width: 420px;
+      margin-bottom: 3rem;
+    }
+
+    #intro .instructions em {
+      color: var(--text);
+      font-style: normal;
+    }
+
+    .btn {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.22em;
+      color: var(--text);
+      background: none;
+      border: 1px solid var(--dim);
+      padding: 0.75rem 2.2rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .btn:hover { border-color: var(--text); background: rgba(255,255,255,0.04); }
+
+    /* ── game ── */
+    #game { display: none; cursor: crosshair; }
+
+    #round-counter {
+      position: fixed;
+      top: 1.4rem;
+      right: 1.6rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+    }
+
+    /* mini history bars */
+    #history {
+      position: fixed;
+      top: 3.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+      align-items: flex-end;
+      height: 28px;
+    }
+    .hbar {
+      width: 14px;
+      height: 28px;
+      border-radius: 2px;
+      opacity: 0.65;
+    }
+
+    /* ". . ." wait indicator */
+    #wait-dots {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--dim);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    /* flash target */
+    #target {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--text);
+      box-shadow: 0 0 40px rgba(214, 210, 200, 0.35);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2);
+      transition: opacity 0.07s, transform 0.09s ease-out;
+      pointer-events: none;
+    }
+    #target.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #target.clicked {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(3);
+      transition: opacity 0.18s, transform 0.22s ease-out;
+    }
+
+    /* result center display */
+    #result-area {
+      position: fixed;
+      bottom: 3.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    #time-num {
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    #zone-name {
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+
+    #zone-desc {
+      font-size: 0.72rem;
+      color: var(--dim);
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.35s;
+      max-width: 360px;
+    }
+
+    /* false start overlay */
+    #false-flash {
+      position: fixed;
+      inset: 0;
+      background: rgba(191, 40, 40, 0.12);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.08s;
+    }
+
+    /* annotation */
+    #annotation {
+      position: fixed;
+      bottom: 1.4rem;
+      right: 1.6rem;
+      font-size: 0.65rem;
+      color: var(--dim);
+      line-height: 1.8;
+      text-align: right;
+      max-width: 240px;
+      pointer-events: none;
+    }
+    #annotation strong { color: rgba(214,210,200,0.5); font-weight: normal; }
+
+    /* ── done ── */
+    #done { display: none; text-align: center; overflow-y: auto; gap: 0; }
+
+    #done h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--dim);
+      font-weight: normal;
+      margin-bottom: 0.6rem;
+    }
+
+    #classification {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      letter-spacing: 0.15em;
+      font-weight: normal;
+      margin-bottom: 2.5rem;
+    }
+
+    /* zone bars */
+    #zone-bars {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      height: 100px;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .zone-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .zone-bar { width: 28px; border-radius: 3px 3px 0 0; min-height: 3px; }
+    .zone-tick { font-size: 0.6rem; color: var(--dim); }
+    .zone-abbr {
+      font-size: 0.5rem;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin-top: 3px;
+    }
+
+    #avg-line {
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    #verdict {
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 1.9;
+      max-width: 480px;
+      margin-bottom: 2rem;
+    }
+    #verdict em { color: var(--text); font-style: normal; }
+
+    #done .btn { margin-bottom: 1.5rem; }
+
+    #done .back {
+      font-size: 0.65rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+    }
+    #done .back:hover { color: var(--text); }
+
+    @media (max-width: 500px) {
+      #annotation { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="nav"><a href="/">match</a> / <a href="/lab">lab</a></div>
+<div id="false-flash"></div>
+
+<!-- ── intro ── -->
+<div class="screen" id="intro">
+  <h1>threshold</h1>
+  <p class="tagline">a reaction time experiment</p>
+  <p class="instructions">
+    a circle will appear somewhere on screen.<br>
+    <em>click anywhere</em> the moment you see it.<br><br>
+    your reaction time will reveal which mode<br>
+    your brain was operating in.<br><br>
+    you cannot tell, from the inside, which one it is.
+  </p>
+  <button class="btn" id="start-btn">begin — 10 rounds</button>
+</div>
+
+<!-- ── game ── -->
+<div class="screen" id="game">
+  <div id="round-counter">round <span id="rnum">1</span> / 10</div>
+  <div id="history"></div>
+  <div id="wait-dots">. . .</div>
+  <div id="target"></div>
+  <div id="result-area">
+    <div id="time-num"></div>
+    <div id="zone-name"></div>
+    <div id="zone-desc"></div>
+  </div>
+</div>
+
+<div id="annotation">
+  <strong>visual floor: ~150ms</strong><br>
+  below this, cortical processing<br>
+  hasn't completed. the experience<br>
+  of seeing may come after the click.
+</div>
+
+<!-- ── done ── -->
+<div class="screen" id="done">
+  <h2>your baseline</h2>
+  <div id="classification"></div>
+  <div id="zone-bars"></div>
+  <p id="avg-line"></p>
+  <p id="verdict"></p>
+  <button class="btn" id="restart-btn">again</button>
+  <a class="back" href="/lab">← lab</a>
+</div>
+
+<script>
+// ── zones ──
+const ZONES = [
+  {
+    key: 'prediction',
+    name: 'PREDICTION',
+    abbr: 'PRED',
+    max: 80,
+    color: 'var(--prediction)',
+    hex: '#bf2828',
+    desc: 'below visual processing time. you moved before the light reached your brain.',
+    freq: 180, wave: 'sawtooth'
+  },
+  {
+    key: 'subcortical',
+    name: 'SUBCORTICAL',
+    abbr: 'SUBC',
+    max: 150,
+    color: 'var(--subcortical)',
+    hex: '#cc6010',
+    desc: 'the express route — no cortex, no awareness. a reflex shared with fish.',
+    freq: 260, wave: 'sawtooth'
+  },
+  {
+    key: 'threshold',
+    name: 'THRESHOLD',
+    abbr: 'THRS',
+    max: 250,
+    color: 'var(--threshold)',
+    hex: '#b89a18',
+    desc: 'consciousness was assembling while your finger moved. the 150ms line.',
+    freq: 420, wave: 'sine'
+  },
+  {
+    key: 'conscious',
+    name: 'CONSCIOUS',
+    abbr: 'CONS',
+    max: 400,
+    color: 'var(--conscious)',
+    hex: '#28905a',
+    desc: 'you saw it, processed it, and acted. the full sensorimotor loop.',
+    freq: 660, wave: 'sine'
+  },
+  {
+    key: 'hesitation',
+    name: 'HESITATION',
+    abbr: 'HESI',
+    max: Infinity,
+    color: 'var(--hesitation)',
+    hex: '#4070aa',
+    desc: 'you had it and let a moment go.',
+    freq: 330, wave: 'sine'
+  }
+];
+
+function getZone(ms) {
+  return ZONES.find(z => ms < z.max);
+}
+
+// ── audio ──
+let ctx = null;
+function audio() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return ctx;
+}
+
+function tone(freq, wave, dur, vol = 0.25) {
+  try {
+    const a = audio();
+    const osc = a.createOscillator();
+    const gain = a.createGain();
+    osc.type = wave;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, a.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, a.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(a.destination);
+    osc.start();
+    osc.stop(a.currentTime + dur + 0.01);
+  } catch(e) {}
+}
+
+function sfxAppear() { tone(900, 'sine', 0.08, 0.12); }
+function sfxZone(zone) { tone(zone.freq, zone.wave, 0.22, 0.28); }
+function sfxFalse() { tone(140, 'sawtooth', 0.35, 0.35); }
+
+// ── state ──
+const ROUNDS = 10;
+const MIN_WAIT = 1100;
+const MAX_WAIT = 3800;
+
+let phase = 'idle';   // idle | waiting | target | result | done
+let results = [];
+let round = 0;
+let targetAt = 0;
+let timer = null;
+
+// ── DOM ──
+const introEl   = document.getElementById('intro');
+const gameEl    = document.getElementById('game');
+const doneEl    = document.getElementById('done');
+const rnumEl    = document.getElementById('rnum');
+const histEl    = document.getElementById('history');
+const dotsEl    = document.getElementById('wait-dots');
+const targetEl  = document.getElementById('target');
+const timeNumEl = document.getElementById('time-num');
+const zoneNameEl= document.getElementById('zone-name');
+const zoneDescEl= document.getElementById('zone-desc');
+const falseEl   = document.getElementById('false-flash');
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('restart-btn').addEventListener('click', restartGame);
+
+// ── game flow ──
+function startGame() {
+  introEl.style.display = 'none';
+  gameEl.style.display = 'flex';
+  results = [];
+  round = 0;
+  histEl.innerHTML = '';
+  nextRound();
+}
+
+function restartGame() {
+  doneEl.style.display = 'none';
+  gameEl.style.display = 'flex';
+  results = [];
+  round = 0;
+  histEl.innerHTML = '';
+  document.getElementById('zone-bars').innerHTML = '';
+  nextRound();
+}
+
+function nextRound() {
+  if (round >= ROUNDS) { endGame(); return; }
+
+  round++;
+  rnumEl.textContent = round;
+
+  // reset display
+  timeNumEl.textContent = '';
+  timeNumEl.style.color = '';
+  zoneNameEl.style.opacity = '0';
+  zoneDescEl.style.opacity = '0';
+  targetEl.className = '';
+
+  phase = 'waiting';
+  dotsEl.style.opacity = '1';
+
+  const delay = MIN_WAIT + Math.random() * (MAX_WAIT - MIN_WAIT);
+  // micro-jitter so last 50ms isn't predictable
+  const jitter = 30 + Math.random() * 180;
+
+  timer = setTimeout(() => {
+    timer = setTimeout(flashTarget, jitter);
+  }, delay);
+}
+
+function flashTarget() {
+  phase = 'target';
+  dotsEl.style.opacity = '0';
+
+  // random safe position
+  const pad = 90;
+  const cx = pad + Math.random() * (window.innerWidth  - pad * 2);
+  const cy = pad + Math.random() * (window.innerHeight - pad * 2 - 100);
+
+  targetEl.style.left = cx + 'px';
+  targetEl.style.top  = cy + 'px';
+  targetEl.classList.add('show');
+  targetAt = performance.now();
+
+  sfxAppear();
+}
+
+// ── clicks ──
+document.addEventListener('click', onPageClick);
+document.addEventListener('touchend', e => { e.preventDefault(); onPageClick(e); }, { passive: false });
+
+function onPageClick(e) {
+  // ignore clicks on buttons
+  if (e.target.closest('.btn') || e.target.closest('#nav') || e.target.closest('.back')) return;
+
+  if (phase === 'idle' || phase === 'result' || phase === 'done') return;
+
+  if (phase === 'waiting') {
+    doFalseStart();
+    return;
+  }
+
+  if (phase === 'target') {
+    const ms = Math.round(performance.now() - targetAt);
+    doResult(ms);
+  }
+}
+
+function doFalseStart() {
+  clearTimeout(timer);
+  phase = 'result';
+
+  falseEl.style.opacity = '1';
+  setTimeout(() => { falseEl.style.opacity = '0'; }, 120);
+
+  timeNumEl.textContent = 'FALSE';
+  timeNumEl.style.color = 'var(--prediction)';
+  zoneNameEl.textContent = 'START';
+  zoneNameEl.style.color = 'var(--prediction)';
+  setTimeout(() => { zoneNameEl.style.opacity = '1'; }, 60);
+
+  dotsEl.style.opacity = '0';
+  sfxFalse();
+  results.push({ ms: null, zone: null, false_start: true });
+  addHistBar(null);
+
+  timer = setTimeout(nextRound, 1400);
+}
+
+function doResult(ms) {
+  clearTimeout(timer);
+  phase = 'result';
+
+  const zone = getZone(ms);
+  results.push({ ms, zone, false_start: false });
+
+  targetEl.className = 'clicked';
+
+  timeNumEl.textContent = ms + 'ms';
+  timeNumEl.style.color = zone.color;
+
+  zoneNameEl.textContent = zone.name;
+  zoneNameEl.style.color = zone.color;
+  zoneDescEl.textContent = zone.desc;
+
+  setTimeout(() => {
+    zoneNameEl.style.opacity = '1';
+    zoneDescEl.style.opacity = '1';
+  }, 80);
+
+  sfxZone(zone);
+  addHistBar(zone);
+
+  timer = setTimeout(nextRound, 2100);
+}
+
+function addHistBar(zone) {
+  const bar = document.createElement('div');
+  bar.className = 'hbar';
+  bar.style.background = zone ? zone.hex : '#333';
+  bar.title = zone ? zone.name : 'false start';
+  histEl.appendChild(bar);
+}
+
+// ── end ──
+function endGame() {
+  phase = 'done';
+  gameEl.style.display = 'none';
+  doneEl.style.display = 'flex';
+
+  const valid = results.filter(r => !r.false_start);
+  const falseCount = results.length - valid.length;
+  const avg = valid.length
+    ? Math.round(valid.reduce((s, r) => s + r.ms, 0) / valid.length)
+    : 0;
+
+  // zone counts
+  const counts = {};
+  ZONES.forEach(z => { counts[z.key] = 0; });
+  valid.forEach(r => { counts[r.zone.key]++; });
+
+  // dominant zone
+  let dominant = ZONES[3]; // fallback: conscious
+  let maxC = 0;
+  ZONES.forEach(z => {
+    if (counts[z.key] > maxC) { maxC = counts[z.key]; dominant = z; }
+  });
+
+  // classification
+  const classEl = document.getElementById('classification');
+  classEl.textContent = dominant.name;
+  classEl.style.color = dominant.color;
+
+  // bars
+  const barsEl = document.getElementById('zone-bars');
+  const maxCount = Math.max(...ZONES.map(z => counts[z.key]), 1);
+  ZONES.forEach(z => {
+    const col = document.createElement('div');
+    col.className = 'zone-col';
+
+    const bar = document.createElement('div');
+    bar.className = 'zone-bar';
+    bar.style.height = Math.max(3, Math.round((counts[z.key] / maxCount) * 90)) + 'px';
+    bar.style.background = z.hex;
+
+    const tick = document.createElement('div');
+    tick.className = 'zone-tick';
+    tick.textContent = counts[z.key];
+    tick.style.color = counts[z.key] > 0 ? z.hex : 'var(--dim)';
+
+    const abbr = document.createElement('div');
+    abbr.className = 'zone-abbr';
+    abbr.textContent = z.abbr;
+
+    col.appendChild(bar);
+    col.appendChild(tick);
+    col.appendChild(abbr);
+    barsEl.appendChild(col);
+  });
+
+  // avg line
+  document.getElementById('avg-line').textContent =
+    valid.length ? `average: ${avg}ms` : 'no valid rounds';
+
+  // verdict
+  buildVerdict(dominant, counts, avg, valid.length, falseCount);
+}
+
+function buildVerdict(dominant, counts, avg, validCount, falseCount) {
+  const predFast = counts.prediction + counts.subcortical;
+  const slow = counts.hesitation;
+
+  let parts = [];
+
+  if (dominant.key === 'prediction') {
+    parts.push(`most responses came before 80ms — below the floor of visual processing. you were not reacting to the target. <em>you were predicting when it would appear</em>, and the flash arrived during a movement already in motion. the experience of "seeing and then clicking" was assembled after the fact.`);
+  } else if (dominant.key === 'subcortical') {
+    parts.push(`most responses traveled the subcortical express route — fast enough that the cortex wasn't in the loop. your superior colliculus processed the target's location and routed the motor signal directly. <em>no consciousness required, or present.</em> the same pathway that moves your eyes in the dark.`);
+  } else if (dominant.key === 'threshold') {
+    parts.push(`most responses landed at the edge of visual consciousness — 150 to 250ms. the target was still entering awareness while your finger was already moving. <em>you saw it, probably.</em> but the experience may have been sealed after the click, not before.`);
+  } else if (dominant.key === 'conscious') {
+    parts.push(`most responses landed in the conscious zone. the full loop: photon to retina, retina to V1, V1 to decision, decision to hand. <em>you saw it, and then you moved.</em> the sequence was yours in the order you experienced it.`);
+  } else {
+    parts.push(`most responses came after 400ms. you had the signal and held it for a moment before committing. <em>the pause is interesting.</em> it may mean caution, or that the motor command needed confirmation before it would execute.`);
+  }
+
+  if (predFast >= Math.ceil(validCount * 0.4) && dominant.key !== 'prediction' && dominant.key !== 'subcortical') {
+    parts.push(`${predFast} of your responses were under 150ms — fast enough that visual consciousness couldn't have been the cause. those were predictions that happened to land.`);
+  }
+
+  if (falseCount > 0) {
+    parts.push(`${falseCount} false start${falseCount > 1 ? 's' : ''} — anticipation fired in the wrong direction.`);
+  }
+
+  const verdictEl = document.getElementById('verdict');
+  verdictEl.innerHTML = parts.join(' ');
+}
+</script>
+
+</body>
+</html>
