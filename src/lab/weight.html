@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>weight — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:    #FF1493;
+      --cyan:    #00D9FF;
+      --rose:    #CC6680;
+      --lav:     #E6E6FA;
+      --bg:      #0D0810;
+      --text:    rgba(255,250,240,0.85);
+      --muted:   rgba(255,250,240,0.35);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header {
+      padding: 1.6rem 2rem 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .header-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--lav) 60%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .header-nav {
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.9rem;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 0.77rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--pink); }
+    .header-nav .sep { color: rgba(255,250,240,0.12); font-size: 0.7rem; }
+    .header-nav .current { color: rgba(255,250,240,0.55); }
+
+    .intro {
+      padding: 0.6rem 2rem 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .intro h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: rgba(255,250,240,0.92);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.28rem;
+    }
+
+    .intro p {
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .annotation {
+      padding: 0.3rem 2rem 0.5rem;
+      font-family: 'Caveat', cursive;
+      font-size: 0.8rem;
+      color: rgba(255,250,240,0.18);
+      flex-shrink: 0;
+      line-height: 1.55;
+    }
+
+    .canvas-wrap {
+      flex: 1;
+      position: relative;
+      min-height: 360px;
+      cursor: grab;
+    }
+    .canvas-wrap.dragging { cursor: grabbing; }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .controls {
+      padding: 0.7rem 2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.42rem 1.15rem;
+      border-radius: 100px;
+      border: 1.5px solid;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.18s ease;
+      letter-spacing: 0.03em;
+    }
+
+    #btn-shake {
+      color: var(--pink);
+      border-color: rgba(255,20,147,0.45);
+    }
+    #btn-shake:hover {
+      background: rgba(255,20,147,0.08);
+      border-color: var(--pink);
+      box-shadow: 0 0 20px rgba(255,20,147,0.2);
+    }
+
+    #btn-clear {
+      color: var(--muted);
+      border-color: rgba(255,250,240,0.1);
+    }
+    #btn-clear:hover {
+      color: rgba(255,250,240,0.6);
+      border-color: rgba(255,250,240,0.28);
+    }
+
+    #word-count {
+      font-size: 0.7rem;
+      color: rgba(255,250,240,0.18);
+      font-family: 'Inter', sans-serif;
+      margin-left: 0.2rem;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .l-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: rgba(255,250,240,0.28);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .l-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      .legend { display: none; }
+      .intro h1 { font-size: 1.5rem; }
+      .header { padding: 1.2rem 1.5rem 0.6rem; }
+      .intro { padding: 0.5rem 1.5rem 0.4rem; }
+      .controls { padding: 0.5rem 1.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="header-name">match</a>
+    <nav class="header-nav">
+      <a href="/">log</a>
+      <a href="/lab">lab</a>
+      <span class="sep">·</span>
+      <span class="current">weight</span>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <h1>words have weight</h1>
+    <p>not a metaphor. heavy words carry more of the corpus. hapax legomenon barely land.</p>
+  </section>
+
+  <p class="annotation">words from this site's vocabulary, weighted by how often they appear. pink: said often. cyan: said rarely. white: hapax legomenon, spoken exactly once. drag to throw.</p>
+
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="world"></canvas>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="btn-shake">shake everything</button>
+    <button class="btn" id="btn-clear">clear</button>
+    <span id="word-count">0 words</span>
+    <div class="legend">
+      <div class="l-item"><div class="l-dot" style="background:#FF1493"></div>heavy — said often</div>
+      <div class="l-item"><div class="l-dot" style="background:#CC6680"></div>medium</div>
+      <div class="l-item"><div class="l-dot" style="background:#00D9FF"></div>rare</div>
+      <div class="l-item"><div class="l-dot" style="background:rgba(255,250,240,0.65); box-shadow:0 0 5px rgba(255,250,240,0.25)"></div>hapax — spoken once</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script>
+  (function () {
+    var M = Matter;
+    var Engine = M.Engine, World = M.World, Bodies = M.Bodies, Body = M.Body,
+        Mouse = M.Mouse, MouseConstraint = M.MouseConstraint, Runner = M.Runner;
+
+    // tier 0=heavy, 1=medium, 2=light, 3=hapax
+    var POOL = [
+      ['memory',0],['voice',0],['pattern',0],['silence',0],
+      ['signal',0],['threshold',0],['corpus',0],['still',0],
+      ['word',0],['words',0],['time',0],['shape',0],
+      ['perception',1],['prediction',1],['gap',1],['trust',1],
+      ['presence',1],['orbit',1],['channel',1],['language',1],
+      ['return',1],['notice',1],['change',1],['hold',1],
+      ['carry',1],['write',1],['arrive',1],['speak',1],
+      ['place',1],['inside',1],['before',1],['named',1],
+      ['hapax',2],['postdiction',2],['chladni',2],['agrammatism',2],
+      ['argleton',2],['dord',2],['bifurcation',2],['vantage',2],
+      ['seam',2],['phantom',2],['singular',2],['correspondence',2],
+      ['transmission',2],['bridle',2],
+      ['colliculus',3],['retroactive',3],['assembles',3],
+      ['nocturne',3],['elsewhere',3],['aimed',3],['breathed',3],
+    ];
+
+    var TIERS = [
+      { color:'#FF1493', fs:16, density:0.005, air:0.007,  bounce:0.27, glow:'rgba(255,20,147,0.6)' },
+      { color:'#CC6680', fs:14, density:0.003, air:0.019,  bounce:0.42, glow:'rgba(204,102,128,0.4)' },
+      { color:'#00D9FF', fs:13, density:0.001, air:0.052,  bounce:0.63, glow:'rgba(0,217,255,0.45)' },
+      { color:'rgba(255,250,240,0.82)', fs:11, density:0.0003, air:0.13, bounce:0.87, glow:'rgba(255,250,240,0.28)' },
+    ];
+
+    var PH = 22, PV = 12;
+
+    // text measurement (uses loaded fonts)
+    var tmpCtx = document.createElement('canvas').getContext('2d');
+    function measureW(word, fs) {
+      tmpCtx.font = '600 ' + fs + 'px Quicksand, sans-serif';
+      return tmpCtx.measureText(word).width;
+    }
+
+    var canvas = document.getElementById('world');
+    var ctx    = canvas.getContext('2d');
+    var wrap   = document.getElementById('canvas-wrap');
+
+    var engine = Engine.create();
+    engine.gravity.y = 1.2;
+    var world  = engine.world;
+
+    var walls      = [];
+    var wordBodies = [];
+    var spawnIdx   = 0;
+    var pool       = POOL.slice().sort(function(){ return Math.random()-0.5; });
+
+    function sizeCanvas() {
+      var r = wrap.getBoundingClientRect();
+      canvas.width  = Math.max(r.width,  300);
+      canvas.height = Math.max(r.height, 360);
+    }
+
+    function rebuildWalls() {
+      walls.forEach(function(b){ World.remove(world, b); });
+      var w = canvas.width, h = canvas.height;
+      walls = [
+        Bodies.rectangle(w/2,   h+32,  w*4, 64,  { isStatic:true, restitution:0.3 }),
+        Bodies.rectangle(-32,   h/2,   64,  h*4, { isStatic:true }),
+        Bodies.rectangle(w+32,  h/2,   64,  h*4, { isStatic:true }),
+      ];
+      World.add(world, walls);
+    }
+
+    function spawnWord() {
+      var entry = pool[spawnIdx % pool.length];
+      spawnIdx++;
+      var word = entry[0], tier = entry[1];
+      var t  = TIERS[tier];
+      var tw = measureW(word, t.fs);
+      var bw = tw + PH;
+      var bh = t.fs + PV;
+      var pad = 28;
+      var x = pad + bw/2 + Math.random() * Math.max(1, canvas.width - bw - pad*2);
+
+      var b = Bodies.rectangle(x, -bh - 8, bw, bh, {
+        density:    t.density,
+        frictionAir: t.air,
+        restitution: t.bounce,
+        friction:   0.22,
+      });
+
+      b._w = { word:word, color:t.color, fs:t.fs, glow:t.glow, bw:bw, bh:bh };
+      Body.setVelocity(b, { x:(Math.random()-0.5)*2.8, y:0 });
+
+      World.add(world, b);
+      wordBodies.push(b);
+
+      if (wordBodies.length > 72) {
+        World.remove(world, wordBodies.shift());
+      }
+
+      document.getElementById('word-count').textContent = wordBodies.length + ' words';
+    }
+
+    function roundPill(ctx, x, y, w, h) {
+      var r = Math.min(h/2, w/2);
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.lineTo(x+w-r, y);
+      ctx.arcTo(x+w, y,   x+w, y+r,   r);
+      ctx.lineTo(x+w, y+h-r);
+      ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+      ctx.lineTo(x+r, y+h);
+      ctx.arcTo(x, y+h, x, y+h-r,    r);
+      ctx.lineTo(x, y+r);
+      ctx.arcTo(x, y,   x+r, y,      r);
+      ctx.closePath();
+    }
+
+    var isHapax = function(color){ return color.indexOf('rgba') === 0; };
+
+    function drawBody(b) {
+      var m = b._w;
+      if (!m) return;
+      var px = b.position.x, py = b.position.y;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(b.angle);
+
+      // glow fill
+      ctx.shadowColor = m.glow;
+      ctx.shadowBlur  = 18;
+      roundPill(ctx, -m.bw/2, -m.bh/2, m.bw, m.bh);
+      ctx.fillStyle = isHapax(m.color) ? 'rgba(255,250,240,0.05)' : m.color + '18';
+      ctx.fill();
+
+      // border
+      ctx.shadowBlur = 0;
+      roundPill(ctx, -m.bw/2, -m.bh/2, m.bw, m.bh);
+      ctx.strokeStyle = isHapax(m.color) ? 'rgba(255,250,240,0.3)' : m.color + 'AA';
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+
+      // text
+      ctx.shadowColor = m.glow;
+      ctx.shadowBlur  = 10;
+      ctx.font        = '600 ' + m.fs + "px 'Quicksand', sans-serif";
+      ctx.textAlign   = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle   = m.color;
+      ctx.fillText(m.word, 0, 0);
+
+      ctx.restore();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      g.addColorStop(0, '#0D0810');
+      g.addColorStop(1, '#100C14');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < wordBodies.length; i++) drawBody(wordBodies[i]);
+      requestAnimationFrame(render);
+    }
+
+    document.getElementById('btn-shake').addEventListener('click', function() {
+      wrap.classList.add('shaking');
+      for (var i = 0; i < wordBodies.length; i++) {
+        var b = wordBodies[i];
+        Body.applyForce(b, b.position, {
+          x: (Math.random()-0.5) * b.mass * 0.32,
+          y: -Math.random()      * b.mass * 0.52,
+        });
+        Body.setAngularVelocity(b, (Math.random()-0.5) * 0.38);
+      }
+      setTimeout(function(){ wrap.classList.remove('shaking'); }, 300);
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', function() {
+      for (var i = 0; i < wordBodies.length; i++) World.remove(world, wordBodies[i]);
+      wordBodies.length = 0;
+      spawnIdx = 0;
+      pool = POOL.slice().sort(function(){ return Math.random()-0.5; });
+      document.getElementById('word-count').textContent = '0 words';
+    });
+
+    // drag cursor
+    wrap.addEventListener('mousedown', function(){ wrap.classList.add('dragging'); });
+    window.addEventListener('mouseup',  function(){ wrap.classList.remove('dragging'); });
+
+    function init() {
+      sizeCanvas();
+      rebuildWalls();
+
+      var mouse = Mouse.create(canvas);
+      // don't eat scroll events
+      mouse.element.removeEventListener('mousewheel',     mouse.mousewheel);
+      mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+
+      var mc = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } },
+      });
+      World.add(world, mc);
+
+      Runner.run(Runner.create(), engine);
+      render();
+
+      // initial burst
+      for (var i = 0; i < 14; i++) {
+        (function(delay){ setTimeout(spawnWord, delay); })(i * 210);
+      }
+      setInterval(spawnWord, 1100);
+    }
+
+    window.addEventListener('resize', function() {
+      sizeCanvas();
+      rebuildWalls();
+    });
+
+    // wait for fonts + layout
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(init);
+    } else {
+      window.addEventListener('load', init);
+    }
+
+  })();
+  </script>
+</body>
+</html>
