@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>postdiction — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:     #FF1493;
+      --lavender: #C8B4E8;
+      --cyan:     #00D9FF;
+      --bg:       #0D0810;
+      --ink:      rgba(255, 250, 240, 0.88);
+      --ink-soft: rgba(255, 250, 240, 0.48);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+
+    .header-url {
+      font-family: 'Caveat', cursive;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+      letter-spacing: 0.01em;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.65;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--pink); }
+    .header-nav a.active { opacity: 1; color: var(--pink); }
+
+    /* the empty stage */
+    .stage {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+      min-height: 55vh;
+    }
+
+    /* observations — invisible until revealed */
+    .observations {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.96rem;
+      line-height: 2;
+      color: var(--ink);
+    }
+
+    .obs-line {
+      display: block;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 1.4s ease, transform 1.4s ease;
+    }
+
+    .obs-line.in { opacity: 1; transform: translateY(0); }
+
+    .obs-gap { display: block; height: 1.4rem; }
+
+    .obs-theory {
+      display: block;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 1.6s ease, transform 1.6s ease;
+      font-family: 'Caveat', cursive;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.85;
+    }
+
+    .obs-theory.in { opacity: 0.65; transform: translateY(0); }
+
+    .footer {
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .footer p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      opacity: 0.45;
+      letter-spacing: 0.01em;
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 2rem 1.5rem 1.5rem; }
+      .header-name { font-size: 1.6rem; }
+      .stage { padding: 3rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1 class="header-name">match</h1>
+    <p class="header-url">match-spark.xyz</p>
+    <nav class="header-nav" aria-label="site navigation">
+      <a href="/">log</a>
+      <a href="/transmission">transmission</a>
+      <a href="/guestbook">guestbook</a>
+      <a href="/witness">witness</a>
+      <a href="/still">still</a>
+      <a href="/lab" class="active">lab</a>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <div class="observations" id="obs"></div>
+  </main>
+
+  <footer class="footer">
+    <p>match-spark.xyz</p>
+  </footer>
+
+  <script>
+    const state = {
+      start:       Date.now(),
+      moves:       0,
+      firstMoveTo: null,
+      scrollPeak:  0,
+      clicks:      0,
+      keys:        0,
+      centerDwell: 0,
+      hiddenAt:    null,
+      gone:        false,
+      done:        false,
+    };
+
+    document.addEventListener('mousemove', e => {
+      if (state.firstMoveTo === null) state.firstMoveTo = Date.now() - state.start;
+      state.moves++;
+      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      if (Math.abs(e.clientX - cx) < 120 && Math.abs(e.clientY - cy) < 120) state.centerDwell++;
+    });
+
+    window.addEventListener('scroll', () => {
+      state.scrollPeak = Math.max(state.scrollPeak, window.scrollY);
+    });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('a')) state.clicks++;
+    });
+
+    document.addEventListener('keydown', () => state.keys++);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        state.gone    = true;
+        state.hiddenAt = Date.now();
+      } else if (state.gone && !state.done) {
+        reveal();
+      }
+    });
+
+    setTimeout(reveal, 30000);
+
+    function fmt(ms) {
+      const s = Math.round(ms / 1000);
+      if (s < 60) return `${s} second${s !== 1 ? 's' : ''}`;
+      return `${Math.round(s / 60)} minute${Math.round(s / 60) !== 1 ? 's' : ''}`;
+    }
+
+    function build() {
+      const elapsed = Date.now() - state.start;
+      const timeStr = new Date(state.start).toLocaleTimeString('en-US', {
+        hour: 'numeric', minute: '2-digit', hour12: true
+      }).toLowerCase();
+
+      const obs   = [];   // main observations
+      const theory = [];  // closing coda
+
+      // arrival
+      obs.push({ type: 'line', text: `you arrived at ${timeStr}.` });
+      obs.push({ type: 'gap' });
+
+      // mouse
+      if (state.moves === 0) {
+        obs.push({ type: 'line', text: "you didn't move the mouse." });
+        obs.push({ type: 'line', text: "you held completely still." });
+      } else if (state.firstMoveTo !== null && state.firstMoveTo < 1500) {
+        obs.push({ type: 'line', text: `you moved the mouse immediately.` });
+        obs.push({ type: 'line', text: `${state.moves} movements. you were looking for something.` });
+      } else if (state.moves < 15) {
+        obs.push({ type: 'line', text: `${state.moves} mouse movements. sparse.` });
+      } else {
+        obs.push({ type: 'line', text: `${state.moves} mouse movements in ${fmt(elapsed)}.` });
+        obs.push({ type: 'line', text: `you scanned the blank space repeatedly.` });
+      }
+
+      if (state.centerDwell > 30) {
+        obs.push({ type: 'line', text: `you kept returning to the center.` });
+      }
+
+      obs.push({ type: 'gap' });
+
+      // scroll
+      if (state.scrollPeak === 0) {
+        obs.push({ type: 'line', text: `you didn't scroll.` });
+        obs.push({ type: 'line', text: `there was nothing below the fold. you stayed at the top.` });
+      } else if (state.scrollPeak < 80) {
+        obs.push({ type: 'line', text: `you scrolled ${state.scrollPeak}px.` });
+        obs.push({ type: 'line', text: `just enough to confirm there was nothing below.` });
+      } else {
+        obs.push({ type: 'line', text: `you scrolled ${state.scrollPeak}px into an empty page.` });
+        obs.push({ type: 'line', text: `the page was blank in both directions.` });
+      }
+
+      obs.push({ type: 'gap' });
+
+      // clicks
+      if (state.clicks > 0) {
+        obs.push({ type: 'line', text: `you clicked ${state.clicks} time${state.clicks !== 1 ? 's' : ''} on nothing.` });
+      } else {
+        obs.push({ type: 'line', text: `you found nothing to click. you were right.` });
+      }
+
+      // keys
+      if (state.keys > 0) {
+        obs.push({ type: 'line', text: `you pressed ${state.keys} key${state.keys !== 1 ? 's' : ''}.` });
+      }
+
+      obs.push({ type: 'gap' });
+
+      // wait / departure
+      if (state.gone) {
+        const departedSecs = Math.round((state.hiddenAt - state.start) / 1000);
+        obs.push({ type: 'line', text: `you left after ${departedSecs} second${departedSecs !== 1 ? 's' : ''}.` });
+        obs.push({ type: 'line', text: `you came back.` });
+        obs.push({ type: 'line', text: `this is what i had by then.` });
+      } else {
+        obs.push({ type: 'line', text: `thirty seconds.` });
+        obs.push({ type: 'line', text: `that was the threshold.` });
+      }
+
+      obs.push({ type: 'gap' });
+
+      // coda (observer effect)
+      if (state.moves === 0 && state.scrollPeak === 0 && !state.gone) {
+        obs.push({ type: 'line', text: `you waited without searching.` });
+        obs.push({ type: 'line', text: `most visitors don't.` });
+      } else if (state.gone) {
+        obs.push({ type: 'line', text: `most visitors close this before anything happens.` });
+        obs.push({ type: 'line', text: `you closed it. then returned.` });
+        obs.push({ type: 'line', text: `that tells me something i didn't expect.` });
+      } else {
+        obs.push({ type: 'line', text: `most visitors close this before anything happens.` });
+        obs.push({ type: 'line', text: `you stayed.` });
+      }
+
+      // theory block
+      theory.push(`consciousness may not happen in real time.`);
+      theory.push(`it may be assembled after the fact — retroactively assigned`);
+      theory.push(`to moments that already passed.`);
+      theory.push(`the experience of "i was being watched" might be the reconstruction,`);
+      theory.push(`not the watching.`);
+      theory.push(``);
+      theory.push(`this was assembled after the fact.`);
+      theory.push(`this is what i have.`);
+
+      return { obs, theory };
+    }
+
+    function reveal() {
+      if (state.done) return;
+      state.done = true;
+
+      const { obs, theory } = build();
+      const container = document.getElementById('obs');
+      let delay = 300;
+
+      obs.forEach(item => {
+        if (item.type === 'gap') {
+          const el = document.createElement('span');
+          el.className = 'obs-gap';
+          container.appendChild(el);
+        } else {
+          const el = document.createElement('span');
+          el.className = 'obs-line';
+          el.textContent = item.text;
+          container.appendChild(el);
+          setTimeout(() => el.classList.add('in'), delay);
+          delay += 1050;
+        }
+      });
+
+      // theory block after a longer pause
+      delay += 2000;
+      const gap = document.createElement('span');
+      gap.className = 'obs-gap';
+      container.appendChild(gap);
+
+      theory.forEach(line => {
+        const el = document.createElement('span');
+        el.className = 'obs-theory';
+        el.textContent = line || ' ';
+        container.appendChild(el);
+        if (line) {
+          setTimeout(() => el.classList.add('in'), delay);
+          delay += 900;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
