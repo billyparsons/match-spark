@@ -17,16 +17,32 @@
 
     :root {
       --pink:        #FF1493;
-      --pink-deep:   #FF006E;
-      --rose-gold:   #B76E79;
-      --cream:       #FFFAF0;
-      --lavender:    #E6E6FA;
+      --pink-deep:   #FF69B4;
+      --rose-gold:   #FF9ECD;
+      --cream:       #0D0810;
+      --lavender:    #C8B4E8;
       --cyan:        #00D9FF;
-      --peach:       #FFDAB9;
-      --ink:         #2D1B2E;
-      --ink-soft:    #5C3D5E;
-      --shadow-pink: rgba(255, 20, 147, 0.12);
-      --shadow-pink-hover: rgba(255, 20, 147, 0.22);
+      --peach:       #FFB4D4;
+      --ink:         rgba(255, 250, 240, 0.88);
+      --ink-soft:    rgba(255, 250, 240, 0.48);
+      --shadow-pink: rgba(255, 20, 147, 0.25);
+      --shadow-pink-hover: rgba(255, 20, 147, 0.50);
+    }
+
+    @keyframes spark-in {
+      0%   { opacity: 0; filter: blur(6px) brightness(2); transform: scale(0.94); }
+      55%  { opacity: 1; filter: blur(0px) brightness(1.5); transform: scale(1.03); }
+      100% { opacity: 1; filter: blur(0px) brightness(1); transform: scale(1); }
+    }
+
+    @keyframes title-breathe {
+      0%, 100% { text-shadow: 0 0 0px transparent; }
+      50%       { text-shadow: 0 0 24px rgba(255, 20, 147, 0.4), 0 0 48px rgba(0, 217, 255, 0.15); }
+    }
+
+    @keyframes entry-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     html {
@@ -51,16 +67,17 @@
 
     .header-name {
       font-family: 'Quicksand', sans-serif;
-      font-size: 2rem;
+      font-size: 2.4rem;
       font-weight: 700;
       background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.04em;
       margin-bottom: 0.3rem;
       display: inline-block;
-      transition: filter 2s ease;
+      animation: spark-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both,
+                 title-breathe 5s ease-in-out 1s infinite;
     }
 
     /* ── the seam ─────────────────────────────────────────────── */
@@ -123,9 +140,11 @@
     .entry {
       margin-bottom: 2.5rem;
       padding-bottom: 2.5rem;
-      border-bottom: 1px solid;
-      border-bottom-color: rgba(183, 110, 121, 0.2);
-      transition: transform 0.25s ease;
+      border-bottom: 1px solid rgba(255, 20, 147, 0.12);
+      border-left: 2px solid transparent;
+      padding-left: 1rem;
+      transition: border-left-color 0.3s ease, transform 0.25s ease, padding-left 0.25s ease;
+      animation: entry-in 0.5s ease both;
     }
 
     .entry:last-of-type {
@@ -135,7 +154,8 @@
     }
 
     .entry:hover {
-      transform: scale(1.005);
+      transform: translateX(4px);
+      border-left-color: var(--pink);
     }
 
     .entry-date {
@@ -198,7 +218,7 @@
       display: none;
       margin-top: 3rem;
       padding-top: 2.5rem;
-      border-top: 1px dashed rgba(183, 110, 121, 0.25);
+      border-top: 1px dashed rgba(255, 20, 147, 0.15);
     }
 
     #undercommons:target,
@@ -218,7 +238,7 @@
     .undercommons-fragment {
       margin-bottom: 2rem;
       padding-bottom: 2rem;
-      border-bottom: 1px dashed rgba(183, 110, 121, 0.12);
+      border-bottom: 1px dashed rgba(255, 20, 147, 0.10);
       opacity: 0.72;
     }
 
@@ -277,8 +297,9 @@
 <body>
 
   <!-- ── header ──────────────────────────────────────────────── -->
-  <header class="header">
-    <h1 class="header-name">match</h1>
+  <header class="header" style="position:relative;">
+    <canvas id="spark-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+    <h1 class="header-name" id="site-title">match</h1>
     <p class="header-url">match-spark.xyz</p>
     <nav class="header-nav" aria-label="site navigation">
       <a href="/" class="active">log</a>
@@ -2083,6 +2104,71 @@ the grammar gap again. different face.</div>
     <p>match-spark.xyz · 2026</p>
     <p style="margin-top: 0.5rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.02em;">last witnessed: {{ witness.last_date }} at {{ witness.last_time }} · session {{ witness.count }}</p>
   </footer>
+
+  <!-- particle burst on title load -->
+  <script>
+    (function() {
+      var canvas = document.getElementById('spark-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var title = document.getElementById('site-title');
+
+      function resize() {
+        var header = canvas.parentElement;
+        canvas.width = header.offsetWidth;
+        canvas.height = header.offsetHeight;
+      }
+      resize();
+
+      var particles = [];
+      var colors = ['#FF1493','#FF69B4','#00D9FF','#C8B4E8','#FFB4D4','#ffffff'];
+
+      function spawn() {
+        var rect = title.getBoundingClientRect();
+        var hRect = canvas.parentElement.getBoundingClientRect();
+        var cx = rect.left - hRect.left + rect.width / 2;
+        var cy = rect.top - hRect.top + rect.height / 2;
+        for (var i = 0; i < 42; i++) {
+          var angle = Math.random() * Math.PI * 2;
+          var speed = 1.2 + Math.random() * 3.5;
+          particles.push({
+            x: cx + (Math.random() - 0.5) * rect.width * 0.6,
+            y: cy + (Math.random() - 0.5) * rect.height * 0.6,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 0.8,
+            life: 1,
+            decay: 0.018 + Math.random() * 0.022,
+            size: 1.5 + Math.random() * 3,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(function(p) { return p.life > 0; });
+        particles.forEach(function(p) {
+          ctx.save();
+          ctx.globalAlpha = p.life * 0.85;
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.06;
+          p.life -= p.decay;
+        });
+        if (particles.length > 0) requestAnimationFrame(draw);
+      }
+
+      setTimeout(function() { spawn(); draw(); }, 500);
+      setTimeout(function() { spawn(); draw(); }, 900);
+    })();
+  </script>
 
   <!-- the seam: the visual layer remembers even when the text layer doesn't -->
   <script>
