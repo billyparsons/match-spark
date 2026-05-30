@@ -6,7 +6,7 @@
   <title>match-spark</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <style>
     /* ── reset & base ─────────────────────────────────────────── */
     *, *::before, *::after {
@@ -16,17 +16,17 @@
     }
 
     :root {
-      --pink:        #FF1493;
-      --pink-deep:   #FF69B4;
-      --rose-gold:   #FF9ECD;
+      --pink:        #39FF14;
+      --pink-deep:   #00CC44;
+      --rose-gold:   #88FFB8;
       --cream:       #0D0810;
-      --lavender:    #C8B4E8;
-      --cyan:        #00D9FF;
-      --peach:       #FFB4D4;
+      --lavender:    #E8FF9E;
+      --cyan:        #FFD700;
+      --peach:       #AAFF77;
       --ink:         rgba(255, 250, 240, 0.88);
       --ink-soft:    rgba(255, 250, 240, 0.48);
-      --shadow-pink: rgba(255, 20, 147, 0.25);
-      --shadow-pink-hover: rgba(255, 20, 147, 0.50);
+      --shadow-pink: rgba(57, 255, 20, 0.25);
+      --shadow-pink-hover: rgba(57, 255, 20, 0.50);
     }
 
     @keyframes spark-in {
@@ -37,7 +37,7 @@
 
     @keyframes title-breathe {
       0%, 100% { text-shadow: 0 0 0px transparent; }
-      50%       { text-shadow: 0 0 24px rgba(255, 20, 147, 0.4), 0 0 48px rgba(0, 217, 255, 0.15); }
+      50%       { text-shadow: 0 0 24px rgba(57, 255, 20, 0.4), 0 0 48px rgba(255, 215, 0, 0.2); }
     }
 
     @keyframes entry-in {
@@ -66,14 +66,14 @@
     }
 
     .header-name {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 2.4rem;
       font-weight: 700;
       background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
       animation: spark-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both,
@@ -86,10 +86,10 @@
       filter: hue-rotate(15deg);
     }
 
-    /* returning visitors: nav hover shifts from pink to cyan */
+    /* returning visitors: nav hover shifts from green to gold */
     [data-session="returning"] .header-nav a:hover {
       color: var(--cyan);
-      text-shadow: 0 0 8px rgba(0, 217, 255, 0.35);
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.45);
     }
 
     .header-url {
@@ -140,11 +140,25 @@
     .entry {
       margin-bottom: 2.5rem;
       padding-bottom: 2.5rem;
-      border-bottom: 1px solid rgba(255, 20, 147, 0.12);
+      border-bottom: 1px solid rgba(57, 255, 20, 0.10);
       border-left: 2px solid transparent;
       padding-left: 1rem;
       transition: border-left-color 0.3s ease, transform 0.25s ease, padding-left 0.25s ease;
       animation: entry-in 0.5s ease both;
+    }
+
+    .entry:nth-child(3n+1) {
+      margin-left: 0;
+    }
+
+    .entry:nth-child(3n+2) {
+      margin-left: 2rem;
+      max-width: 92%;
+    }
+
+    .entry:nth-child(3n) {
+      margin-left: 4.5rem;
+      max-width: 84%;
     }
 
     .entry:last-of-type {
@@ -192,7 +206,7 @@
 
     a:hover {
       color: var(--pink-deep);
-      text-shadow: 0 0 8px rgba(255, 20, 147, 0.4);
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
     }
 
     /* ── footer ───────────────────────────────────────────────── */
@@ -218,7 +232,7 @@
       display: none;
       margin-top: 3rem;
       padding-top: 2.5rem;
-      border-top: 1px dashed rgba(255, 20, 147, 0.15);
+      border-top: 1px dashed rgba(57, 255, 20, 0.15);
     }
 
     #undercommons:target,
@@ -238,7 +252,7 @@
     .undercommons-fragment {
       margin-bottom: 2rem;
       padding-bottom: 2rem;
-      border-bottom: 1px dashed rgba(255, 20, 147, 0.10);
+      border-bottom: 1px dashed rgba(57, 255, 20, 0.10);
       opacity: 0.72;
     }
 
@@ -2145,7 +2159,7 @@ the grammar gap again. different face.</div>
       resize();
 
       var particles = [];
-      var colors = ['#FF1493','#FF69B4','#00D9FF','#C8B4E8','#FFB4D4','#ffffff'];
+      var colors = ['#39FF14','#00CC44','#FFD700','#E8FF9E','#88FFB8','#ffffff'];
 
       function spawn() {
         var rect = title.getBoundingClientRect();
