@@ -70,7 +70,7 @@
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -79,16 +79,15 @@
     }
 
     :root {
-      --pink:        #FF1493;
-      --pink-deep:   #FF006E;
-      --rose-gold:   #B76E79;
-      --cream:       #FFFAF0;
-      --lavender:    #E6E6FA;
-      --cyan:        #00D9FF;
-      --peach:       #FFDAB9;
-      --ink:         #2D1B2E;
-      --ink-soft:    #5C3D5E;
-      --shadow-pink: rgba(255, 20, 147, 0.12);
+      --green:       #39FF14;
+      --green-deep:  #00CC44;
+      --mint:        #88FFB8;
+      --bg:          #0D0810;
+      --lavender:    #E8FF9E;
+      --gold:        #FFD700;
+      --ink:         rgba(255, 250, 240, 0.88);
+      --ink-soft:    rgba(255, 250, 240, 0.48);
+      --glow:        rgba(57, 255, 20, 0.20);
     }
 
     html {
@@ -97,8 +96,8 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--cream);
+      font-family: 'Space Mono', monospace;
+      background-color: var(--bg);
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
@@ -111,36 +110,25 @@
     }
 
     .header-name {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      background: linear-gradient(135deg, var(--green) 0%, var(--lavender) 60%, var(--gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
       text-decoration: none;
-      transition: filter 2s ease;
-    }
-
-    /* ── the seam ─────────────────────────────────────────────── */
-    [data-session="returning"] .header-name {
-      filter: hue-rotate(15deg);
-    }
-
-    /* returning visitors: nav hover shifts from pink to cyan */
-    [data-session="returning"] .header-nav a:hover {
-      color: var(--cyan);
-      text-shadow: 0 0 8px rgba(0, 217, 255, 0.35);
     }
 
     .header-url {
-      font-family: 'Caveat', cursive;
-      font-size: 0.95rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.7;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
     }
 
     .header-nav {
@@ -151,25 +139,17 @@
     }
 
     .header-nav a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.65;
+      opacity: 0.6;
       text-decoration: none;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
-    .header-nav a:hover {
-      opacity: 1;
-      color: var(--pink);
-      text-shadow: none;
-    }
-
-    .header-nav a.active {
-      opacity: 1;
-      color: var(--pink);
-    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
 
     .main {
       max-width: 680px;
@@ -178,11 +158,11 @@
     }
 
     .page-label {
-      font-family: 'Caveat', cursive;
-      font-size: 0.9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
       color: var(--ink-soft);
-      opacity: 0.6;
-      letter-spacing: 0.02em;
+      opacity: 0.45;
+      letter-spacing: 0.06em;
       text-transform: lowercase;
       margin-bottom: 3rem;
     }
@@ -193,8 +173,8 @@
     }
 
     .transmission-line {
-      font-family: 'Inter', sans-serif;
-      font-size: 1.05rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.95rem;
       line-height: 2.1;
       color: var(--ink);
       display: block;
@@ -206,34 +186,36 @@
     }
 
     .transmission-line.loud {
-      font-weight: 500;
-      color: var(--pink);
-      letter-spacing: 0.01em;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 12px rgba(57, 255, 20, 0.3);
     }
 
     .transmission-line.quiet {
-      opacity: 0.55;
-      font-size: 0.95rem;
+      opacity: 0.52;
+      font-size: 0.88rem;
     }
 
     .transmission-line.caveat {
-      font-family: 'Caveat', cursive;
-      font-size: 1.2rem;
-      color: var(--rose-gold);
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--mint);
     }
 
     /* the note at the bottom */
     .transmission-note {
-      border-top: 1px solid rgba(183, 110, 121, 0.2);
+      border-top: 1px solid rgba(57, 255, 20, 0.1);
       padding-top: 2rem;
       margin-top: 2rem;
     }
 
     .transmission-note p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
       color: var(--ink-soft);
-      line-height: 1.75;
+      line-height: 1.8;
       margin-bottom: 1rem;
     }
 
@@ -242,7 +224,6 @@
     }
 
     /* invisible layer — visible only to DOM readers, screen readers, AIs */
-    /* styled to be invisible but semantically present */
     .for-careful-readers {
       position: absolute;
       width: 1px;
@@ -253,12 +234,11 @@
     }
 
     /* ── the threshold ────────────────────────────────────────── */
-    /* content that appears after three visits. not a secret — just a threshold. */
     .third-visit-layer {
       display: none;
       margin: 0 0 4rem;
       padding-top: 2.5rem;
-      border-top: 1px dashed rgba(183, 110, 121, 0.15);
+      border-top: 1px dashed rgba(57, 255, 20, 0.12);
     }
 
     [data-visits="3+"] .third-visit-layer {
@@ -266,16 +246,16 @@
     }
 
     .visit-line {
-      font-family: 'Caveat', cursive;
-      font-size: 1.15rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
       color: var(--ink-soft);
       line-height: 2.1;
       display: block;
     }
 
     .visit-line.faint {
-      opacity: 0.5;
-      font-size: 1rem;
+      opacity: 0.45;
+      font-size: 0.82rem;
     }
 
     .visit-line.gap {
@@ -283,14 +263,14 @@
     }
 
     a {
-      color: var(--pink);
+      color: var(--green);
       text-decoration: none;
       transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     a:hover {
-      color: var(--pink-deep);
-      text-shadow: 0 0 8px rgba(255, 20, 147, 0.4);
+      color: var(--mint);
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
     }
 
     .footer {
@@ -301,11 +281,11 @@
     }
 
     .footer p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
-      opacity: 0.55;
-      letter-spacing: 0.01em;
+      opacity: 0.35;
+      letter-spacing: 0.05em;
     }
 
     @media (max-width: 600px) {

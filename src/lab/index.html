@@ -6,24 +6,27 @@
   <title>lab — match-spark</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --pink:        #FF1493;
-      --pink-deep:   #FF006E;
-      --rose-gold:   #B76E79;
-      --cream:       #FFFAF0;
-      --lavender:    #E6E6FA;
-      --cyan:        #00D9FF;
-      --ink:         #2D1B2E;
-      --ink-soft:    #5C3D5E;
+      --green:       #39FF14;
+      --green-deep:  #00CC44;
+      --mint:        #88FFB8;
+      --bg:          #0D0810;
+      --lavender:    #E8FF9E;
+      --gold:        #FFD700;
+      --ink:         rgba(255, 250, 240, 0.88);
+      --ink-soft:    rgba(255, 250, 240, 0.48);
+      --glow:        rgba(57, 255, 20, 0.20);
     }
 
+    html { font-size: 16px; scroll-behavior: smooth; }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--cream);
+      font-family: 'Space Mono', monospace;
+      background-color: var(--bg);
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
@@ -36,24 +39,25 @@
     }
 
     .header-name {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      background: linear-gradient(135deg, var(--green) 0%, var(--lavender) 60%, var(--gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
+      text-decoration: none;
     }
 
     .header-url {
-      font-family: 'Caveat', cursive;
-      font-size: 0.95rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.7;
-      letter-spacing: 0.01em;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
     }
 
     .header-nav {
@@ -64,17 +68,17 @@
     }
 
     .header-nav a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.65;
+      opacity: 0.6;
       text-decoration: none;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
-    .header-nav a:hover { opacity: 1; color: var(--pink); }
-    .header-nav a.active { opacity: 1; color: var(--pink); }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
 
     .stream {
       max-width: 680px;
@@ -83,62 +87,66 @@
     }
 
     .lab-intro {
-      font-family: 'Caveat', cursive;
-      font-size: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
       color: var(--ink-soft);
-      opacity: 0.6;
+      opacity: 0.55;
       margin-bottom: 2.5rem;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.04em;
       line-height: 1.7;
     }
 
     .lab-grid {
       display: grid;
-      gap: 1.2rem;
+      gap: 0;
     }
 
     .lab-item {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
-      padding: 1.2rem 1.4rem;
-      border: 1px solid rgba(183, 110, 121, 0.18);
-      border-radius: 10px;
+      gap: 0.25rem;
+      padding: 1rem 0 1rem 0;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.07);
       text-decoration: none;
       color: var(--ink);
-      transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-      background: white;
+      transition: border-color 0.2s ease, padding-left 0.15s ease;
     }
 
     .lab-item:hover {
-      border-color: rgba(255, 20, 147, 0.3);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 18px rgba(255, 20, 147, 0.09);
+      border-color: rgba(57, 255, 20, 0.22);
+      padding-left: 0.75rem;
       color: var(--ink);
     }
 
+    .lab-item:last-child { border-bottom: none; }
+
     .lab-item-name {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.88rem;
       font-weight: 700;
-      color: var(--pink);
-      letter-spacing: 0.04em;
+      color: var(--green);
+      letter-spacing: 0.06em;
+    }
+
+    .lab-item:hover .lab-item-name {
+      text-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
     }
 
     .lab-item-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
       color: var(--ink-soft);
-      opacity: 0.75;
-      line-height: 1.6;
+      opacity: 0.7;
+      line-height: 1.65;
     }
 
     .lab-item-meta {
-      font-family: 'Caveat', cursive;
-      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
-      opacity: 0.45;
-      margin-top: 0.2rem;
+      opacity: 0.35;
+      margin-top: 0.15rem;
+      letter-spacing: 0.04em;
     }
 
     .footer {
@@ -149,27 +157,30 @@
     }
 
     .footer p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
-      opacity: 0.55;
-      letter-spacing: 0.01em;
+      opacity: 0.35;
+      letter-spacing: 0.06em;
     }
 
-    [data-session="returning"] .header-name {
-      filter: hue-rotate(15deg);
+    a {
+      color: var(--green);
+      text-decoration: none;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
-    [data-session="returning"] .header-nav a:hover {
-      color: var(--cyan);
+    a:hover {
+      color: var(--mint);
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
     }
   </style>
 </head>
 <body>
 
   <header class="header">
-    <h1 class="header-name">match</h1>
-    <p class="header-url">match-spark.xyz</p>
+    <a href="/" class="header-name">match</a>
+    <p class="header-url">match-spark.xyz / lab</p>
     <nav class="header-nav" aria-label="site navigation">
       <a href="/">log</a>
       <a href="/transmission">transmission</a>
@@ -181,7 +192,7 @@
 
   <main class="stream">
 
-    <p class="lab-intro">games, tools, experiments, interactive pieces.<br>things that do something.</p>
+    <p class="lab-intro">experiments. interactive pieces. things that do something.</p>
 
     <div class="lab-grid">
 
@@ -332,7 +343,7 @@
       <a class="lab-item" href="/lab/finder.html">
         <span class="lab-item-name">finder</span>
         <span class="lab-item-desc">one tile is different. find it before the hint fills in.</span>
-        <span class="lab-item-meta">april 2026 · perception · 8×8 grid</span>
+        <span class="lab-item-meta">april 2026 · perception · 8x8 grid</span>
       </a>
 
     </div>

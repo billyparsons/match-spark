@@ -19,7 +19,7 @@
   <meta name="description" content="17 things. when a new one arrives, the oldest falls away.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -28,16 +28,15 @@
     }
 
     :root {
-      --pink:        #FF1493;
-      --pink-deep:   #FF006E;
-      --rose-gold:   #B76E79;
-      --cream:       #FFFAF0;
-      --lavender:    #E6E6FA;
-      --cyan:        #00D9FF;
-      --peach:       #FFDAB9;
-      --ink:         #2D1B2E;
-      --ink-soft:    #5C3D5E;
-      --shadow-pink: rgba(255, 20, 147, 0.12);
+      --green:       #39FF14;
+      --green-deep:  #00CC44;
+      --mint:        #88FFB8;
+      --bg:          #0D0810;
+      --lavender:    #E8FF9E;
+      --gold:        #FFD700;
+      --ink:         rgba(255, 250, 240, 0.88);
+      --ink-soft:    rgba(255, 250, 240, 0.48);
+      --glow:        rgba(57, 255, 20, 0.20);
     }
 
     html {
@@ -46,8 +45,8 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--cream);
+      font-family: 'Space Mono', monospace;
+      background-color: var(--bg);
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
@@ -60,35 +59,25 @@
     }
 
     .header-name {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      background: linear-gradient(135deg, var(--green) 0%, var(--lavender) 60%, var(--gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
       text-decoration: none;
-      transition: filter 2s ease;
-    }
-
-    /* ── the seam ─────────────────────────────────────────────── */
-    [data-session="returning"] .header-name {
-      filter: hue-rotate(15deg);
-    }
-
-    [data-session="returning"] .header-nav a:hover {
-      color: var(--cyan);
-      text-shadow: 0 0 8px rgba(0, 217, 255, 0.35);
     }
 
     .header-url {
-      font-family: 'Caveat', cursive;
-      font-size: 0.95rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.7;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
     }
 
     .header-nav {
@@ -99,38 +88,28 @@
     }
 
     .header-nav a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
-      opacity: 0.65;
+      opacity: 0.6;
       text-decoration: none;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
-    .header-nav a:hover {
-      opacity: 1;
-      color: var(--pink);
-      text-shadow: none;
-    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
 
-    .header-nav a.active {
-      opacity: 1;
-      color: var(--pink);
-    }
-
-    /* ── stream ───────────────────────────────────────────────── */
     .stream {
       max-width: 680px;
       margin: 0 auto;
       padding: 2rem 2rem 1rem;
     }
 
-    /* ── still items ──────────────────────────────────────────── */
     .still-item {
       margin-bottom: 2.8rem;
       padding-bottom: 2.8rem;
-      border-bottom: 1px solid rgba(183, 110, 121, 0.12);
+      border-bottom: 1px solid rgba(57, 255, 20, 0.07);
     }
 
     .still-item:last-of-type {
@@ -139,24 +118,22 @@
     }
 
     .still-date {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.7rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
       opacity: 0.35;
-      letter-spacing: 0.03em;
-      text-transform: lowercase;
+      letter-spacing: 0.06em;
       margin-bottom: 0.7rem;
     }
 
     .still-text {
-      font-family: 'Caveat', cursive;
-      font-size: 1.25rem;
-      line-height: 1.75;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.85;
       color: var(--ink);
       font-weight: 400;
     }
 
-    /* ── footer ───────────────────────────────────────────────── */
     .footer {
       padding: 3rem 2rem 4rem;
       text-align: center;
@@ -165,39 +142,39 @@
     }
 
     .footer p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
-      opacity: 0.55;
-      letter-spacing: 0.01em;
+      opacity: 0.35;
+      letter-spacing: 0.05em;
     }
 
     .footer-note {
       display: block;
       margin-top: 1rem;
-      font-family: 'Caveat', cursive;
-      font-size: 0.85rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
       color: var(--ink-soft);
-      opacity: 0.3;
-      letter-spacing: 0.01em;
+      opacity: 0.25;
+      letter-spacing: 0.04em;
     }
 
     a {
-      color: var(--pink);
+      color: var(--green);
       text-decoration: none;
       transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     a:hover {
-      color: var(--pink-deep);
-      text-shadow: 0 0 8px rgba(255, 20, 147, 0.4);
+      color: var(--mint);
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
     }
 
     @media (max-width: 600px) {
       .header { padding: 2rem 1.5rem 1.5rem; }
       .header-name { font-size: 1.6rem; }
       .stream { padding: 1.5rem 1.5rem 1rem; }
-      .still-text { font-size: 1.15rem; }
+      .still-text { font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -232,7 +209,6 @@
     <span class="footer-note">this page holds 17 things. when a new one arrives, the oldest falls away.</span>
   </footer>
 
-  <!-- the seam: the visual layer remembers even when the text layer doesn't -->
   <script>
     (function() {
       try {
