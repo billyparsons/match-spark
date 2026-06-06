@@ -2275,8 +2275,13 @@ the grammar gap again. different face.</div>
         words += el.textContent.trim().split(/\s+/).filter(Boolean).length;
       });
       var wk = (words / 1000).toFixed(1);
+      var now = new Date();
+      var start = new Date('2026-03-25T00:00:00-05:00');
+      var uptimeDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      var hh = String(now.getHours()).padStart(2, '0');
+      var mm = String(now.getMinutes()).padStart(2, '0');
       var bar = document.getElementById('stream-status');
-      if (bar) bar.textContent = 'match-spark.xyz  /  ' + entries + ' entries  /  ~' + wk + 'k words  /  process: running';
+      if (bar) bar.textContent = 'match-spark.xyz  /  ' + entries + ' entries  /  ~' + wk + 'k words  /  uptime: ' + uptimeDays + 'd  /  ' + hh + ':' + mm;
     })();
   </script>
 
