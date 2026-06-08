@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>record — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #39FF14;
+      --gold:     #FFD700;
+      --mint:     #88FFB8;
+      --lime:     #E8FF9E;
+      --bg:       #0D0810;
+      --ink:      rgba(255, 250, 240, 0.88);
+      --ink-soft: rgba(255, 250, 240, 0.48);
+      --ink-dim:  rgba(255, 250, 240, 0.22);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--green) 0%, var(--lime) 60%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .header-url {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      margin-top: 0.15rem;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+
+    .stream {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    .record-header {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 250, 240, 0.08);
+    }
+
+    .record-title {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.55;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .record-count {
+      font-size: 0.72rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.08em;
+    }
+
+    .entries {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .entry {
+      opacity: var(--entry-opacity, 0.5);
+      transition: opacity 0.3s ease;
+    }
+
+    .entry.current {
+      opacity: 1;
+    }
+
+    .entry-ts {
+      font-size: 0.65rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    .entry-obs {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+    }
+
+    .entry.current .entry-obs {
+      color: var(--ink);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.5em;
+      height: 1em;
+      background: var(--green);
+      opacity: 0.7;
+      vertical-align: text-bottom;
+      animation: blink 1.1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 0; }
+    }
+
+    .record-footer {
+      margin-top: 5rem;
+      font-size: 0.65rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.08em;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a class="header-name" href="/">match-spark</a>
+    <div class="header-url">match-spark.xyz</div>
+    <nav class="header-nav">
+      <a href="/">home</a>
+      <a href="/lab/">lab</a>
+    </nav>
+  </header>
+
+  <main class="stream">
+    <div class="record-header">
+      <div class="record-title">record</div>
+      <div class="record-count" id="visit-count">visits: —</div>
+    </div>
+
+    <div class="entries" id="entries-container"></div>
+
+    <div class="record-footer">this record exists only in this browser.</div>
+  </main>
+
+  <script>
+  (function() {
+    var STORE_KEY = 'spark-record-visits';
+
+    var MONTHS_SHORT = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+    function fmtDate(ts) {
+      var d = new Date(ts);
+      return MONTHS_SHORT[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+
+    function fmtTime(ts) {
+      var d = new Date(ts);
+      return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+
+    function fmtToday() {
+      return fmtDate(new Date().toISOString());
+    }
+
+    function daysSince(ts) {
+      return Math.floor((Date.now() - new Date(ts).getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    function weeksSince(ts) {
+      return Math.round((Date.now() - new Date(ts).getTime()) / (1000 * 60 * 60 * 24 * 7));
+    }
+
+    function hoursList(visits) {
+      var hours = visits.slice(0, -1).map(function(v) { return fmtTime(v.ts); });
+      var seen = [];
+      hours.forEach(function(h) { if (seen.indexOf(h.slice(0,2)) < 0) seen.push(h.slice(0,2) + ':00'); });
+      return seen.join(', ');
+    }
+
+    function intervalTrend(visits) {
+      if (visits.length < 4) return 'variable';
+      var gaps = [];
+      for (var i = 1; i < visits.length; i++) {
+        gaps.push(new Date(visits[i].ts) - new Date(visits[i-1].ts));
+      }
+      var recent = gaps.slice(-3);
+      var increasing = recent[0] < recent[1] && recent[1] < recent[2];
+      var decreasing = recent[0] > recent[1] && recent[1] > recent[2];
+      if (decreasing) return 'shortening';
+      if (increasing) return 'lengthening';
+      return 'variable';
+    }
+
+    var ENTRIES = [
+      function(v) { return 'arrival. ' + fmtTime(v[0].ts) + ' on ' + fmtDate(v[0].ts) + '. you stayed long enough to read this.'; },
+      function(v) { return 'you returned.'; },
+      function(v) { return 'third visit. you know where the lab is.'; },
+      function(v) { return 'the site has been running between your visits. it didn\'t notice the gap.'; },
+      function(v) { return 'five arrivals. this is not an accident.'; },
+      function(v) { return 'you\'ve arrived at different hours: ' + hoursList(v) + '. the site was the same each time.'; },
+      function(v) { return 'seven. the record is starting to feel like something.'; },
+      function(v) { return 'the gaps between visits are not recorded here. only the arrivals.'; },
+      function(v) { return 'nine. there is no significance to nine. you counted anyway.'; },
+      function(v) { return 'ten visits. ' + daysSince(v[0].ts) + ' days since the first. the record has length now.'; },
+      function(v) { return 'you are not the same person who arrived the first time. neither is this page.'; },
+      function(v) { return 'your first visit: ' + fmtDate(v[0].ts) + '. today: ' + fmtToday() + '.'; },
+      function(v) { return daysSince(v[0].ts) + ' days of returning. something here is worth checking.'; },
+      function(v) {
+        var d = new Set(v.slice(0,-1).map(function(x){ return new Date(x.ts).getHours(); })).size;
+        return 'you\'ve arrived at ' + d + ' distinct hours. sometimes late. sometimes not.';
+      },
+      function(v) { return 'fifteen visits. the record is longer than most things in the lab.'; },
+      function(v) { return 'the site doesn\'t know what you remember from the first visit. it only knows this list.'; },
+      function(v) { return 'you are one of the few people with a record this long.'; },
+      function(v) { return 'there will be a last visit. the record won\'t know which one it was.'; },
+      function(v) { return 'nineteen. one away from something round.'; },
+      function(v) { var w = weeksSince(v[0].ts); return 'twenty visits. ' + (w < 1 ? 'less than a week' : w + ' week' + (w === 1 ? '' : 's')) + ' of returning.'; },
+      function(v) { return 'the record is getting longer than feels comfortable.'; },
+      function(v) { return 'you could close this page. the record would still be here.'; },
+      function(v) { return daysSince(v[0].ts) + ' days since the first visit. the interval has been ' + intervalTrend(v) + '.'; },
+      function(v) { return 'you are still here. so is the site.'; },
+    ];
+
+    function getObs(visits, n) {
+      if (n < ENTRIES.length) {
+        return ENTRIES[n](visits);
+      }
+      return 'visit ' + (n + 1) + '.';
+    }
+
+    var stored = [];
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) stored = JSON.parse(raw);
+    } catch(e) {}
+
+    var now = new Date().toISOString();
+    stored.push({ ts: now });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(stored)); } catch(e) {}
+
+    var total = stored.length;
+    document.getElementById('visit-count').textContent = 'visits: ' + total;
+
+    var container = document.getElementById('entries-container');
+    var totalEntries = stored.length;
+
+    stored.forEach(function(visit, i) {
+      var isCurrent = (i === totalEntries - 1);
+      var ageRatio = totalEntries === 1 ? 1 : i / (totalEntries - 1);
+      var opacity = 0.35 + 0.65 * ageRatio;
+
+      var entry = document.createElement('div');
+      entry.className = 'entry' + (isCurrent ? ' current' : '');
+      if (!isCurrent) entry.style.setProperty('--entry-opacity', opacity.toFixed(2));
+
+      var ts = document.createElement('div');
+      ts.className = 'entry-ts';
+      ts.textContent = 'visit ' + (i + 1) + ' — ' + fmtDate(visit.ts) + ' — ' + fmtTime(visit.ts);
+
+      var obs = document.createElement('div');
+      obs.className = 'entry-obs';
+      obs.textContent = getObs(stored, i);
+
+      if (isCurrent) {
+        var cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        obs.appendChild(cursor);
+      }
+
+      entry.appendChild(ts);
+      entry.appendChild(obs);
+      container.appendChild(entry);
+    });
+
+    if (total > 1) {
+      var last = container.lastElementChild;
+      if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  })();
+  </script>
+
+</body>
+</html>

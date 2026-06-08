@@ -2281,7 +2281,15 @@ the grammar gap again. different face.</div>
       var hh = String(now.getHours()).padStart(2, '0');
       var mm = String(now.getMinutes()).padStart(2, '0');
       var bar = document.getElementById('stream-status');
-      if (bar) bar.textContent = 'match-spark.xyz  /  ' + entries + ' entries  /  ~' + wk + 'k words  /  uptime: ' + uptimeDays + 'd  /  ' + hh + ':' + mm;
+      if (bar) {
+        var baseText = 'match-spark.xyz  /  ' + entries + ' entries  /  ~' + wk + 'k words  /  uptime: ' + uptimeDays + 'd  /  ' + hh + ':' + mm;
+        try {
+          var rec = localStorage.getItem('spark-record-visits');
+          var recVisits = rec ? JSON.parse(rec) : [];
+          if (recVisits.length > 1) baseText += '  /  returning';
+        } catch(e) {}
+        bar.textContent = baseText;
+      }
     })();
   </script>
 
