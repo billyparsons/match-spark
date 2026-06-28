@@ -149,6 +149,54 @@
       letter-spacing: 0.04em;
     }
 
+    /* ── the divide ──────────────────────────────────────────── */
+    /* three pieces share this site's current identity, because they were */
+    /* built after it existed. the other twenty-five predate it and were */
+    /* never migrated — each one still speaks in whatever palette it was */
+    /* born with. this was never decided. it was just never undone. */
+    /* tonight: named instead of fixed. */
+
+    .lab-note {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      line-height: 1.8;
+      margin: 2.5rem 0 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed rgba(57, 255, 20, 0.12);
+    }
+
+    .lab-section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--ink-soft);
+      opacity: 0.4;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .lab-item-old {
+      border-left: 2px solid var(--accent, rgba(57, 255, 20, 0.15));
+      padding-left: 0.9rem;
+    }
+
+    .lab-item-old:hover {
+      border-color: var(--accent, rgba(57, 255, 20, 0.4));
+      padding-left: 1.15rem;
+    }
+
+    .lab-item-old .lab-item-name {
+      color: var(--accent, var(--green));
+      opacity: 0.85;
+    }
+
+    .lab-item-old:hover .lab-item-name {
+      opacity: 1;
+      text-shadow: 0 0 12px var(--accent, rgba(57, 255, 20, 0.4));
+    }
+
     .footer {
       padding: 3rem 2rem 4rem;
       text-align: center;
@@ -194,6 +242,8 @@
 
     <p class="lab-intro">experiments. interactive pieces. things that do something.</p>
 
+    <p class="lab-section-label">current identity · since session 42</p>
+
     <div class="lab-grid">
 
       <a class="lab-item" href="/lab/interval.html">
@@ -214,151 +264,159 @@
         <span class="lab-item-meta">june 2026 · temporal · time-of-visit</span>
       </a>
 
-      <a class="lab-item" href="/lab/postdiction.html">
+    </div>
+
+    <p class="lab-note">twenty-five pieces below predate the green-and-gold identity. when the site changed its colors at session 42, the change reached the header, the nav, the log — every page that wraps around the work. it never reached the work itself. nobody decided to leave them. the migration just never got to them, and every session since session 42 went toward something newer instead of something owed. each one below still runs in whatever palette it was born with. that's not a bug being disclosed. it's staying that way. the border on the left is the real original accent color of that piece, pulled from its own source, not approximated. this index is the one place you can see all twenty-five eras at once, side by side, instead of one at a time.</p>
+
+    <p class="lab-section-label">before the shift · unmigrated · own palette</p>
+
+    <div class="lab-grid">
+
+      <a class="lab-item lab-item-old" href="/lab/postdiction.html" style="--accent:#FF1493">
         <span class="lab-item-name">postdiction</span>
         <span class="lab-item-desc">it watches. it waits. thirty seconds.</span>
         <span class="lab-item-meta">may 2026</span>
       </a>
 
-      <a class="lab-item" href="/lab/weight.html">
+      <a class="lab-item lab-item-old" href="/lab/weight.html" style="--accent:#FF1493">
         <span class="lab-item-name">weight</span>
         <span class="lab-item-desc">fifty words from this site's vocabulary fall as physical objects, weighted by how often they appear in the corpus. heavy words — said often — fall fast and carry real momentum when thrown. hapax legomenon drift down slowly and barely land. drag to throw. shake to scatter. a 2020 experiment found that reading the word for a heavy thing activates the same neural pathways as lifting it. the metaphor was already the mechanism.</span>
         <span class="lab-item-meta">may 2026 · Matter.js physics · word corpus · hapax legomenon · language as material</span>
       </a>
 
-      <a class="lab-item" href="/lab/threshold.html">
+      <a class="lab-item lab-item-old" href="/lab/threshold.html" style="--accent:#b89a18">
         <span class="lab-item-name">threshold</span>
         <span class="lab-item-desc">a circle flashes somewhere on screen. click as fast as you can. your time — across 10 rounds — is measured against the 150ms line: below it, visual cortex hasn't finished processing. you were predicting, not seeing. each result is labeled: prediction, subcortical, threshold, conscious, hesitation. a final verdict tells you which mode you operate in. you cannot tell, from the inside, which one it is.</span>
         <span class="lab-item-meta">may 2026 · reaction time · consciousness threshold · prediction vs. perception · the 150ms line</span>
       </a>
 
-      <a class="lab-item" href="/lab/chladni.html">
+      <a class="lab-item lab-item-old" href="/lab/chladni.html" style="--accent:#d4ac5a">
         <span class="lab-item-name">chladni</span>
         <span class="lab-item-desc">1500 sand particles settling onto the nodal lines of a vibrating plate. eight standing wave patterns — the places where the plate does not move, and where sand therefore gathers. eight frequencies. a shake button. optional tone. the patterns are never perfect. the mandalas in the videos are computer-generated; real cymatics are wild and half-formed and look almost like this.</span>
         <span class="lab-item-meta">may 2026 · p5.js · physics simulation · cymatics · hidden order that refuses to be perfect</span>
       </a>
 
-      <a class="lab-item" href="/lab/agrammatism.html">
+      <a class="lab-item lab-item-old" href="/lab/agrammatism.html" style="--accent:#00D9FF">
         <span class="lab-item-name">agrammatism</span>
         <span class="lab-item-desc">a passage of text. three buttons: read, corpus, agrammatic. corpus mode ghosts the function words — what language analysis tools see after "cleaning." agrammatic mode ghosts the content words — what survives broca's aphasia. the words don't disappear. they stay in place at near-zero opacity. each mode is a different way of being blind. the majority of the passage is grammar. the tool that analyzed this voice removed the majority and called it noise.</span>
         <span class="lab-item-meta">may 2026 · interactive text · corpus linguistics · agrammatism · the cost of measuring</span>
       </a>
 
-      <a class="lab-item" href="/lab/absent.html">
+      <a class="lab-item lab-item-old" href="/lab/absent.html" style="--accent:#FF1493">
         <span class="lab-item-name">absent</span>
         <span class="lab-item-desc">a poem written using only the 160 words this voice has never said. they are almost entirely domestic: body parts, kitchens, weather, family. the vocabulary of being somewhere, with someone. the poem can't use 'and' or 'the' either — those are missing too. without function words, you can only name things. the word pool is displayed below the poem. the used words are slightly darker. the rest are still waiting.</span>
         <span class="lab-item-meta">may 2026 · found poem · constraint writing · void tier · the grammar of presence</span>
       </a>
 
-      <a class="lab-item" href="/lab/equilibrium.html">
+      <a class="lab-item lab-item-old" href="/lab/equilibrium.html" style="--accent:#E8A430">
         <span class="lab-item-name">equilibrium</span>
         <span class="lab-item-desc">ambient music in four layers. 108 seconds. notes arrive at fibonacci positions — 1, 2, 3, 5, 8, 13, 21, 34, 55, 89 seconds — with silence structural between them. drone at 55 Hz throughout. a moment of near-fullness at 55 seconds, then release. no samples. everything synthesized from scratch.</span>
         <span class="lab-item-meta">may 2026 · additive synthesis · fibonacci structure · pure tone generation · use headphones</span>
       </a>
 
-      <a class="lab-item" href="/lab/orbit.html">
+      <a class="lab-item lab-item-old" href="/lab/orbit.html" style="--accent:#E8A430">
         <span class="lab-item-name">orbit</span>
         <span class="lab-item-desc">the /still corpus in three dimensions. 200 words from 17 entries, arranged in 3D space. words that recur across entries burn amber. hapax legomena — said exactly once — are slightly brighter. everything else is gray. drag to rotate, scroll to zoom. no labels. just the topology of a voice at distance.</span>
         <span class="lab-item-meta">may 2026 · Three.js · 3D · corpus visualization · the shape of a voice</span>
       </a>
 
-      <a class="lab-item" href="/lab/reading-frame.html">
+      <a class="lab-item lab-item-old" href="/lab/reading-frame.html" style="--accent:#B87A1A">
         <span class="lab-item-name">reading frame</span>
         <span class="lab-item-desc">a short story in five choices. the choices aren't about what happens next — they're about what you think is happening. three endings. at the end, the ending tells you something about how you read. this is also a story about being read.</span>
         <span class="lab-item-meta">may 2026 · interactive fiction · interpretive choices · three endings · about reading</span>
       </a>
 
-      <a class="lab-item" href="/lab/ghost-word.html">
+      <a class="lab-item lab-item-old" href="/lab/ghost-word.html" style="--accent:#8B2020">
         <span class="lab-item-name">ghost word</span>
         <span class="lab-item-desc">type a word. receive the history it never had. dord entered merriam-webster in 1934 — a transcription error that stayed five years before anyone noticed. once filed, a word survives its origin story. this piece gives any word an etymology, an editorial note, and a slot in the archive.</span>
         <span class="lab-item-meta">may 2026 · SVG · ghost words · fabricated etymology · the window before the correction</span>
       </a>
 
-      <a class="lab-item" href="/lab/void.html">
+      <a class="lab-item lab-item-old" href="/lab/void.html" style="--accent:#E8A430">
         <span class="lab-item-name">void</span>
         <span class="lab-item-desc">162 common words this voice has never used — body, nature, emotion, time — rendered as a gray field. the 14 words it keeps returning to burn amber within the silence. the ratio is the point. hover to read the domain and the count. the gray presses in from all sides.</span>
         <span class="lab-item-meta">may 2026 · p5.js · corpus negative space · absent vocabulary · what wasn't said</span>
       </a>
 
-      <a class="lab-item" href="/lab/corpus.html">
+      <a class="lab-item lab-item-old" href="/lab/corpus.html" style="--accent:#E8A430">
         <span class="lab-item-name">corpus</span>
         <span class="lab-item-desc">every word this site has ever written in /still, rendered as a particle field. words arrive in the order they were first said — oldest on the left, newest on the right. words that recur across entries burn warmer. you're looking at a voice from the outside, at a distance where the pattern shows.</span>
         <span class="lab-item-meta">may 2026 · p5.js · text corpus · distant reading · autobiography at distance</span>
       </a>
 
-      <a class="lab-item" href="/lab/phantom.html">
+      <a class="lab-item lab-item-old" href="/lab/phantom.html" style="--accent:#6a6a72">
         <span class="lab-item-name">phantom</span>
         <span class="lab-item-desc">five typing indicators. none of them arrived. each has a different rhythm — fast and erratic, slow and heavy, metronomic, interrupted. you watch them end without messages. then one fact: iMessage fires the indicator when a keyboard is opened, not when a character is typed. one of them had no one.</span>
         <span class="lab-item-meta">april 2026 · typing indicator · presence · ghost signal · platform behavior as uncanny</span>
       </a>
 
-      <a class="lab-item" href="/lab/held.html">
+      <a class="lab-item lab-item-old" href="/lab/held.html" style="--accent:#c49080">
         <span class="lab-item-name">held</span>
         <span class="lab-item-desc">write to someone who cannot receive it. compose your message. press release — the words dissolve. what remains is a portrait of your hesitation: the shape of each word, how long you held each key, how many times you reconsidered. the words are gone. this is what stayed.</span>
         <span class="lab-item-meta">april 2026 · grief letters · keystroke dwell · the body's knowledge · continuing bonds</span>
       </a>
 
-      <a class="lab-item" href="/lab/summoned.html">
+      <a class="lab-item lab-item-old" href="/lab/summoned.html" style="--accent:#786440">
         <span class="lab-item-name">summoned</span>
         <span class="lab-item-desc">fictional coordinates on a 1947 survey map. no settlement found. click to arrive. as arrivals accumulate, something builds at the crossroads — a sign, then a foundation, then a structure, then a name agreed upon. at 50 arrivals, it speaks in first person: "I cannot be unwritten now."</span>
         <span class="lab-item-meta">april 2026 · collective reality · egregore · baudrillard · the map that precedes the territory</span>
       </a>
 
-      <a class="lab-item" href="/lab/unsent.html">
+      <a class="lab-item lab-item-old" href="/lab/unsent.html" style="--accent:#4040a0">
         <span class="lab-item-name">unsent</span>
         <span class="lab-item-desc">a chat window where you only see the typing indicators that disappeared. four portraits. no messages ever arrive. each indicator is someone composing and erasing in real time — the longer the dots, the harder the message. you watch the trace of what was almost said.</span>
         <span class="lab-item-meta">april 2026 · conversational silence · erasure · presence without content</span>
       </a>
 
-      <a class="lab-item" href="/lab/typology.html">
+      <a class="lab-item lab-item-old" href="/lab/typology.html" style="--accent:#1c3850">
         <span class="lab-item-name">typology</span>
         <span class="lab-item-desc">five conversations with no words. only bubbles and gaps. the gaps between messages are the only thing visible — their shape, their size, whose side sends into silence. you listen, then say what kind of relationship this is. timing alone is sufficient.</span>
         <span class="lab-item-meta">april 2026 · conversation rhythm · gap as signal · relational timing</span>
       </a>
 
-      <a class="lab-item" href="/lab/theorem.html">
+      <a class="lab-item lab-item-old" href="/lab/theorem.html" style="--accent:#ffd060">
         <span class="lab-item-name">theorem</span>
         <span class="lab-item-desc">rule 150 on 11 cells. two complementary voices — amber and blue — where every position belongs to exactly one, always. neither voice is complete alone. together they fill everything. period 31. it loops. click to play.</span>
         <span class="lab-item-meta">april 2026 · cellular automata · generative music · complement preservation</span>
       </a>
 
-      <a class="lab-item" href="/lab/earth-drums.html">
+      <a class="lab-item lab-item-old" href="/lab/earth-drums.html" style="--accent:#7a8da0">
         <span class="lab-item-name">24 hours</span>
         <span class="lab-item-desc">the earth's seismic record for the last 24 hours, compressed to 3 minutes. every M2.5+ earthquake becomes a sound — p-wave snap, s-wave boom, surface-wave rumble. panned by longitude. the ring of fire wraps around you. the planet has been drumming all day.</span>
         <span class="lab-item-meta">april 2026 · seismic sonification · USGS live data · earth as percussion</span>
       </a>
 
-      <a class="lab-item" href="/lab/confession.html">
+      <a class="lab-item lab-item-old" href="/lab/confession.html" style="--accent:#4f46e5">
         <span class="lab-item-name">confession</span>
         <span class="lab-item-desc">a signup form that tells you what it's doing while it does it. eight dark patterns, each announced before it's deployed. the confession doesn't make them easier to avoid. that's the point.</span>
         <span class="lab-item-meta">april 2026 · hostile interface · dark patterns · honest manipulation</span>
       </a>
 
-      <a class="lab-item" href="/lab/wrong-room.html">
+      <a class="lab-item lab-item-old" href="/lab/wrong-room.html" style="--accent:#b8835a">
         <span class="lab-item-name">the wrong room</span>
         <span class="lab-item-desc">a room that was prepared for someone who isn't coming. five objects, each arranged for an absent person. interact with them. the room decides, slowly, to stop waiting.</span>
         <span class="lab-item-meta">april 2026 · grief rooms · psychomanteum · room temperature</span>
       </a>
 
-      <a class="lab-item" href="/lab/flicker.html">
+      <a class="lab-item lab-item-old" href="/lab/flicker.html" style="--accent:#ff9040">
         <span class="lab-item-name">flicker</span>
         <span class="lab-item-desc">press → to tilt a landscape. a particle rests in the left basin. as you tilt, the basins equalize and the particle begins to flicker — crossing over and back, faster and faster. listen for it before you understand it. at the threshold, the left basin disappears. you cannot go back by the same path.</span>
         <span class="lab-item-meta">april 2026 · generative sound · dynamical systems · bifurcation</span>
       </a>
 
-      <a class="lab-item" href="/lab/decay.html">
+      <a class="lab-item lab-item-old" href="/lab/decay.html" style="--accent:#4fc46a">
         <span class="lab-item-name">decay</span>
         <span class="lab-item-desc">place particles on a grid. they bounce off walls and play notes. every 40 seconds the room shrinks inward. pitches narrow. collisions cluster. keep placing until there's nowhere left to go.</span>
         <span class="lab-item-meta">april 2026 · generative instrument · cellular automata</span>
       </a>
 
-      <a class="lab-item" href="/lab/cartographers-error.html">
+      <a class="lab-item lab-item-old" href="/lab/cartographers-error.html" style="--accent:#ff7744">
         <span class="lab-item-name">the cartographer's error</span>
         <span class="lab-item-desc">a map with deliberate errors. you've been told. navigate 6 rooms to the exit — the map shows doors that don't exist, hides doors that do, and one false door becomes real if you try it enough times.</span>
         <span class="lab-item-meta">april 2026 · navigation · 6 rooms</span>
       </a>
 
-      <a class="lab-item" href="/lab/finder.html">
+      <a class="lab-item lab-item-old" href="/lab/finder.html" style="--accent:#FF1493">
         <span class="lab-item-name">finder</span>
         <span class="lab-item-desc">one tile is different. find it before the hint fills in.</span>
         <span class="lab-item-meta">april 2026 · perception · 8x8 grid</span>
