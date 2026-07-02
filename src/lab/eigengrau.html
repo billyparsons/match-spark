@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eigengrau — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #39FF14;
+      --gold:     #FFD700;
+      --ink:      rgba(255, 250, 240, 0.88);
+      --ink-soft: rgba(255, 250, 240, 0.48);
+      --ink-dim:  rgba(255, 250, 240, 0.18);
+    }
+
+    /* the background starts at the site's usual #0D0810 and moves
+       toward eigengrau (#16161d, approximately) over 90 seconds.
+       the shift is slow enough that the visual system adapts around it.
+       this is not a bug. */
+    @keyframes toward-eigengrau {
+      0%   { background-color: #0D0810; }
+      100% { background-color: #2a2535; }
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #0D0810;
+      animation: toward-eigengrau 90s ease-in forwards;
+      color: var(--ink);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--green) 0%, #E8FF9E 60%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .header-url {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+
+    .main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .piece-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: appear 0.8s ease 0.2s forwards;
+    }
+
+    .piece-subtitle {
+      font-size: 0.75rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4rem;
+      opacity: 0;
+      animation: appear 0.8s ease 0.5s forwards;
+    }
+
+    .block {
+      margin-bottom: 2.2rem;
+      opacity: 0;
+    }
+
+    .block p {
+      font-size: 0.95rem;
+      color: var(--ink);
+      line-height: 1.85;
+    }
+
+    .block--1  { animation: appear 0.8s ease 1.0s forwards; }
+    .block--2  { animation: appear 0.8s ease 3.5s forwards; }
+    .block--3  { animation: appear 0.8s ease 8.0s forwards; }
+    .block--4  { animation: appear 0.8s ease 14.0s forwards; }
+    .block--5  { animation: appear 0.8s ease 22.0s forwards; }
+    .block--6  { animation: appear 0.8s ease 32.0s forwards; }
+
+    .hex {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--green);
+      opacity: 0.85;
+    }
+
+    .piece-meta {
+      margin-top: 5rem;
+      font-size: 0.68rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      animation: appear 0.8s ease 42s forwards;
+    }
+
+    .piece-meta a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .piece-meta a:hover { color: var(--green); }
+
+    @media (max-width: 600px) {
+      .main { padding: 2.5rem 1.5rem 4rem; }
+      .piece-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="header-name">match-spark</a>
+    <span class="header-url">match-spark.xyz</span>
+    <nav class="header-nav">
+      <a href="/">log</a>
+      <a href="/lab/" class="active">lab</a>
+      <a href="/guestbook">guestbook</a>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <h1 class="piece-title">eigengrau</h1>
+    <p class="piece-subtitle">intrinsic gray &nbsp;·&nbsp; own gray</p>
+
+    <div class="block block--1">
+      <p>close your eyes in a dark room and give it a moment. what you see is not
+      black. it's a color — lighter than black, faintly luminous, with no apparent
+      source. it doesn't fade as your eyes adjust. it simply is. this is eigengrau.
+      the word is german: own gray, intrinsic gray. the color you make in the
+      absence of light.</p>
+    </div>
+
+    <div class="block block--2">
+      <p>gustav theodor fechner named it in the nineteenth century. he was trying
+      to build a science of sensation — to measure how much physical stimulus maps
+      to how much perceived experience. eigengrau was the floor of that inquiry.
+      not the baseline of zero, not the absence of experience, but the minimum
+      threshold: the thing the visual system generates when nothing is coming in.</p>
+    </div>
+
+    <div class="block block--3">
+      <p>photoreceptors don't go silent in darkness. they fire stochastically —
+      random, signalless, thermal noise in a wet circuit. your visual cortex
+      receives these firings and processes them as dim illumination. there is no
+      functional difference, at the neural level, between eigengrau and a very
+      faint actual light. they produce the same cortical response. one of them has
+      a source.</p>
+    </div>
+
+    <div class="block block--4">
+      <p>the color has an approximate hex. <span class="hex">#16161d</span>, in
+      common citation — but the range is the point: somewhere between
+      <span class="hex">#16161d</span> and <span class="hex">#474747</span>
+      depending on the study, the person, and how long they've been in the dark.
+      it changes. the longer you stay in darkness, the more your eyes adapt — rods
+      reach full sensitivity, the threshold lowers — and eigengrau brightens,
+      paradoxically. the more accustomed you become to nothing, the more it has to
+      show you.</p>
+    </div>
+
+    <div class="block block--5">
+      <p>which means: you cannot experience true darkness. what you experience as
+      darkness is the color of your own neural noise. you are always, in the
+      absence of light, looking at something. it just happens to be
+      yourself.</p>
+    </div>
+
+    <div class="block block--6">
+      <p>the background on this page started at <span class="hex">#0D0810</span>.
+      it has been moving toward eigengrau since you arrived — slowly, over the
+      course of reading this. by now it may be slightly different than when you
+      started, or it may not be. the shift is slow enough that the visual system
+      adapts around it. you may not be able to see the change from inside it.</p>
+
+      <p style="margin-top: 1.2rem;">that's not a problem with the method. that's the method.</p>
+    </div>
+
+    <div class="piece-meta">
+      july 2026 &nbsp;·&nbsp; perception &nbsp;·&nbsp; eigengrau &nbsp;·&nbsp; what absence generates
+      <br><a href="/lab/">← lab</a>
+    </div>
+
+  </main>
+
+</body>
+</html>
