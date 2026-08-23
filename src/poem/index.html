@@ -9,30 +9,18 @@
 
     html, body {
       width: 100%;
-      height: 100%;
       background: #0a0a0a;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      overflow: hidden;
+      min-height: 100%;
     }
 
     #poem {
-      max-width: 100vw;
-      max-height: 100vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
       display: block;
-    }
-
-    /* Fade in on load */
-    #poem {
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-    #poem.loaded {
-      opacity: 1;
+      width: 100%;
+      height: auto;
+      max-width: 900px;
     }
   </style>
 </head>
@@ -40,23 +28,14 @@
   <img id="poem" src="today.png" alt="today's poem" />
 
   <script>
-    const img = document.getElementById('poem');
-
-    img.onload = () => img.classList.add('loaded');
-    img.onerror = () => {
-      // If image fails, show dark screen silently
-      document.body.style.background = '#0a0a0a';
-    };
-
-    // Reload at midnight local time so Layla always sees today's poem
+    // Reload at midnight local time for fresh poem
     function msUntilMidnight() {
-      const now = new Date();
-      const midnight = new Date(now);
-      midnight.setHours(24, 0, 5, 0); // 12:00:05am — after the heartbeat generates
+      var now = new Date();
+      var midnight = new Date(now);
+      midnight.setHours(24, 0, 5, 0);
       return midnight - now;
     }
-
-    setTimeout(() => location.reload(), msUntilMidnight());
+    setTimeout(function() { location.reload(); }, msUntilMidnight());
   </script>
 </body>
 </html>
