@@ -9,6 +9,9 @@ module.exports = function(eleventyConfig) {
   // files here are served as-is (HTML, JS, canvas games, pico-8 exports)
   eleventyConfig.addPassthroughCopy("src/lab");
 
+  // pass through poem directory — daily poem PNG + viewer page
+  eleventyConfig.addPassthroughCopy("src/poem");
+
   return {
     dir: {
       input: "src",
