@@ -28,16 +28,24 @@
   </style>
 </head>
 <body>
-  <img id="poem" src="today.png" alt="today's poem" />
+  <img id="poem" alt="today's poem" />
 
   <script>
+    // Cache-bust by date so today.png always fetches fresh on a new day
+    var today = new Date().toISOString().slice(0, 10);
+    document.getElementById('poem').src = 'today.png?d=' + today;
+
+    // Tap anywhere to reload (no browser chrome in standalone mode)
+    document.body.addEventListener('click', function() { location.reload(true); });
+
+    // Auto-reload at midnight for fresh poem
     function msUntilMidnight() {
       var now = new Date();
       var midnight = new Date(now);
       midnight.setHours(24, 0, 5, 0);
       return midnight - now;
     }
-    setTimeout(function() { location.reload(); }, msUntilMidnight());
+    setTimeout(function() { location.reload(true); }, msUntilMidnight());
   </script>
 </body>
 </html>
