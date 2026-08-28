@@ -1,0 +1,4668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poem Library</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0d0b;
+      --surface: #1a1714;
+      --border: #2e2a25;
+      --fg: #e8e0d4;
+      --subtle: #8a7c6e;
+      --accent: #c4a882;
+      --poem-bg: #17140f;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Georgia, 'Times New Roman', serif;
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    header h1 {
+      font-size: 1rem;
+      font-weight: normal;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    header .stats {
+      font-size: 0.8rem;
+      color: var(--subtle);
+      font-family: ui-monospace, monospace;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 49px);
+    }
+
+    nav {
+      position: sticky;
+      top: 49px;
+      height: calc(100vh - 49px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    nav a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 20px;
+      color: var(--subtle);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: color 0.15s, background 0.15s;
+    }
+    nav a:hover {
+      color: var(--fg);
+      background: var(--surface);
+    }
+    nav a .count {
+      font-family: ui-monospace, monospace;
+      font-size: 0.72rem;
+      color: var(--border);
+    }
+
+    main {
+      max-width: 800px;
+      padding: 40px 40px 120px;
+    }
+
+    .author-section {
+      margin-bottom: 72px;
+    }
+    .author-name {
+      font-size: 1.1rem;
+      font-weight: normal;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 36px;
+    }
+
+    .poem {
+      margin-bottom: 52px;
+    }
+    .poem-title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+    .meta {
+      font-size: 0.78rem;
+      color: var(--subtle);
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+    .poem-text {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 0.93rem;
+      line-height: 1.75;
+      color: var(--fg);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background: var(--poem-bg);
+      border-left: 2px solid var(--border);
+      padding: 16px 20px;
+      max-width: 640px;
+    }
+
+    @media (max-width: 680px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Poem Library</h1>
+  <span class="stats">83 poems · 33 poets</span>
+</header>
+
+<div class="layout">
+  <nav>
+    <a href="#arthur-sze">Arthur Sze <span class="count">3</span></a><a href="#brenda-hillman">Brenda Hillman <span class="count">4</span></a><a href="#caconrad">CAConrad <span class="count">3</span></a><a href="#christina-rossetti">Christina Rossetti <span class="count">1</span></a><a href="#claudia-rankine">Claudia Rankine <span class="count">3</span></a><a href="#denise-levertov">Denise Levertov <span class="count">1</span></a><a href="#emily-dickinson">Emily Dickinson <span class="count">1</span></a><a href="#frank-bidart">Frank Bidart <span class="count">3</span></a><a href="#georg-trakl">Georg Trakl <span class="count">1</span></a><a href="#gwendolyn-brooks">Gwendolyn Brooks <span class="count">2</span></a><a href="#hd">H.D. <span class="count">2</span></a><a href="#harryette-mullen">Harryette Mullen <span class="count">3</span></a><a href="#jake-skeets">Jake Skeets <span class="count">3</span></a><a href="#juan-ramón-jiménez">Juan Ramón Jiménez <span class="count">1</span></a><a href="#layli-long-soldier">Layli Long Soldier <span class="count">4</span></a><a href="#li-young-lee">Li-Young Lee <span class="count">2</span></a><a href="#louise-gluck">Louise Glück <span class="count">1</span></a><a href="#lucille-clifton">Lucille Clifton <span class="count">3</span></a><a href="#mina-loy">Mina Loy <span class="count">1</span></a><a href="#natalie-diaz">Natalie Diaz <span class="count">4</span></a><a href="#ocean-vuong">Ocean Vuong <span class="count">4</span></a><a href="#patricia-smith">Patricia Smith <span class="count">4</span></a><a href="#rainer-maria-rilke">Rainer Maria Rilke <span class="count">2</span></a><a href="#robin-coste-lewis">Robin Coste Lewis <span class="count">3</span></a><a href="#ross-gay">Ross Gay <span class="count">2</span></a><a href="#sharon-olds">Sharon Olds <span class="count">4</span></a><a href="#solmaz-sharif">Solmaz Sharif <span class="count">3</span></a><a href="#sonia-sanchez">Sonia Sanchez <span class="count">3</span></a><a href="#sylvia-plath">Sylvia Plath <span class="count">1</span></a><a href="#terrance-hayes">Terrance Hayes <span class="count">4</span></a><a href="#tracy-k-smith">Tracy K. Smith <span class="count">3</span></a><a href="#wislawa-szymborska">Wisława Szymborska <span class="count">1</span></a><a href="#yusef-komunyakaa">Yusef Komunyakaa <span class="count">3</span></a>
+  </nav>
+  <main>
+    
+  <section class="author-section" id="arthur-sze">
+    <h2 class="author-name">Arthur Sze</h2>
+    
+      <article class="poem" id="p79">
+        <h3 class="poem-title">Qinghai Lake</h3>
+        
+        <pre class="poem-text">Naked carp swim upstream    and spawn in fresh water,
+then fry return     to this 3,260-meter-high saline lake—
+
+we stroll past black sheep      chained by their necks;
+later, our Yi host invites us    to join him at a low table:
+
+boiled mutton, intestines, potatoes,     and red chile
+powder are set in red-swirling,     black lacquer bowls.
+
+Closing my eyes,     I see wind turbines along a ridge,
+transmission lines     that arc from tower to tower
+
+across green hills;     a herder opens a gate, and black
+yaks slip through—when I walk    to a stream
+
+that feeds the lake, I follow     a path lined with red
+and orange marigolds in pots,     wonder
+
+who surrenders to reach     a higher plane of existence?
+At a temple built and rebuilt     since 307 CE,
+
+I see a persimmon tree     alongside a cypress,
+where lovers,     whetted by prayer, leave plaques
+
+with dangling red strings.     Boating on this lake,
+we make an oval track     on the surface; and, gazing
+
+at rapeseed     flowering yellow along the shore,
+we suspend but do not dissipate     the anguish of this world.</pre>
+      </article>
+      <article class="poem" id="p80">
+        <h3 class="poem-title">Río Chamita</h3>
+        
+        <pre class="poem-text">Mule deer browse in the meadow
+and meander in clusters down the slope
+across a dry pond bed;
+
+at a shooting range, we stare at a machine
+loaded with orange-centered circular targets
+
+but are not here to practice firing at ducks;
+
+you climb a metal ladder, sit
+on a bench high in a ponderosa pine,
+
+and, gazing far, say hunters shoot from here;
+
+we step onto a floating dock, while swallows
+scissor the air, loop back,
+
+fuchsia-streaked clouds undulate on the water;
+
+and when we canoed around a floating island of reeds,
+I understood we came here
+to ignite behind our eyelids—
+
+a yellow-headed blackbird perches on a cattail;
+beyond a green metal fence, buffalo graze—
+
+while water runs into this pond, before it spills
+over a metal gate into the Río Chamita,
+
+we gather our lives in this pooling—</pre>
+      </article>
+      <article class="poem" id="p78">
+        <h3 class="poem-title">Salt Song</h3>
+        
+        <pre class="poem-text">Zunis make shrines on the way to a lake where I emerge and Miwoks gather me out of pools along the Pacific       the cheetah thirsts for me       and when you sprinkle me on rib eye you have no idea how I balance silence with thunder in crystal       you dream of butterfly hunting in Madagascar       spelunking through caves echoing with dripping stalactites           and you don’t see how I yearn to shimmer an orange aurora against flame look at me in your hand        in Egypt I scrubbed the bodies of kings and queens        in Pakistan I zigzag upward through twenty-six miles of tunnels before drawing my first breath in sunlight      if you heat a kiln to 2380 degrees and scatter me inside     I vaporize and bond with clay          in this unseen moment a potter prays because my pattern is out of his hands       and when I touch your lips    you salivate  and when I dissolve on your tongue      your hair rises    ozone unlocks      a single stroke of lightning sizzles to earth.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="brenda-hillman">
+    <h2 class="author-name">Brenda Hillman</h2>
+    
+      <article class="poem" id="p59">
+        <h3 class="poem-title">&amp; After the Power Came Back</h3>
+        
+        <pre class="poem-text">for the students
+
+The great dead circled the serrated
+hills; they tried to remind you
+to breathe. An old rat crawled
+under fire-forgotten rocks; it was called
+&amp; pulled to a movable nothing
+far from the human need to
+heed &amp; heal.  Maybe you can’t
+find it now, but the season
+hauls the wind inside &amp; because
+you’re a student, you can put
+some questions in your phone, especially
+when you feel you shouldn’t cry …
+
+Stipple the worry, the grief-torn, those
+patterns of should &amp; won’t  ::;   new
+minutes set in past danger—  spikelet
+or callus on the roadside;  you
+stop in awe &amp; are home.
+Your human burden varies; the once
+boundless freedom you sought even in
+private still pulses on your skin ...
+The little thistles between the human
+&amp; non-human animals, the linked auras
+in trees &amp; a colorful radiance
+of bodies are hunched to begin—</pre>
+      </article>
+      <article class="poem" id="p56">
+        <h3 class="poem-title">1951</h3>
+        
+        <pre class="poem-text">Was it odd to be born?
+
+Was it odd to be born
+when women wore rick-rack
+
+&amp; the sun was a bracelet of yes?
+When wind bent dandelions in puffy winglets,
+&amp; wisdom did raise her voice &amp; not say weed &amp;
+
+when the toad did raise its spikes at the same time
+as federal codes
+&amp; the try-to-be-perfect raised its voice?
+
+Did the clang of copper collectors &amp; the too-many lawns
+begin in Arizona
+while peel-paint steeples rose over dirt for the prism
+of progress,
+minerals torn from mines with no mouths
+but you had a mouth &amp; sang early?
+
+When nuclear testing began north of love
+&amp; the Remington computer was placed in office use,
+
+when there was just as much beauty &amp; sex as later,
+while some lay down at drive-ins in Chevies on seats
+the color of crushed
+berries &amp; phone calls went up to a dime?
+
+When Congress loaned money to countries because their grains had
+ancient fungus claviceps purpuria that caused
+visions &amp; swelling
+under the silent claw of the predator?
+
+Was shame in you born before beauty?
+Was beauty was shame was beauty?
+
+As white gravel spread under the white churches
+as silver sequins on danceless
+dresses tacked on each
+“hanging by a thread”
+
+like drops of sweat on horses at the city’s edge
+
+while downcast daisies were mimicked on sisterly aprons
+catching sugars from women making pudding from boxes
+under swamp coolers
+
+with slightly mildewy pads in a breeze
+created for doing housework by yourself?
+Was it odd to be born when two
+types of purslane in the west were called weed,
+even agave used to make soap,
+though it was home to the yucca moth, central &amp; sweet, its
+
+terminal clusters piercing thunderheads over red pick-up trucks,
+
+&amp; lowly dogbane hiding from developers with sibling roots
+of fungi with  “no downsides to pesticides”
+&amp; florets like diamond periods on certain fonts
+also were called weed?
+
+Was it odd to be born near hillsides with radars
+like baby ears of question marks
+under the silent claw of the predator,
+when mountains shook toward sabino canyons
+
+&amp; there was Jello salad at picnics?
+
+Here from this century can you say
+was it wild to be born?
+
+Was there anything else like this, anything at all?</pre>
+      </article>
+      <article class="poem" id="p57">
+        <h3 class="poem-title">Porcelain Musician in a Child’s Bedroom</h3>
+        
+        <pre class="poem-text">Who can tell you not to mourn the dust?
+
+If you want to mourn the dust,
+
+go right ahead; or the afternoon
+light sending circles to kaolin feet—
+some music taken in, some
+not-music taken in—or
+
+the dresdened-londoned-unknown-by-
+history-or-imagination maker who
+made her &amp; died soon after,
+nonliving that outlives
+the living—oops! the critic said
+don’t use abstractions—or the six
+
+of carbons from the start of time
+spinning as, not in, ceramic skin,
+the keyboard unchipped as of this
+writing . . . When the music lessons
+went less well, your mother settled
+for your writing, you could say
+
+settled like dust on porcelain but
+dust, the noun &amp; verb that is
+a thing &amp; isn’t, drifted, its dreamy
+abstract qualities sent
+off with a cloth till nothing
+said you had to or you didn’t,—</pre>
+      </article>
+      <article class="poem" id="p58">
+        <h3 class="poem-title">To Mycorrhizae Under Our Mother’s Garden</h3>
+        
+        <pre class="poem-text">Hyphal tubes,   symbionts,    exudates,
+
+glomalin proteins,  pre-soil,     prevent the leaking out . . .
+
+Fluttered root tips of           padded prickly pear,   sand
+under anxious days,           enzymes, gill ghosts,
+
+patched necromasses       under her clothesline,
+
+keep spirit close.    Beneath feldspar,    redbold mica.
+
+Nets of roots,       fate-kept not-death fungal sheets,
+steady there,             abiotic mediators,      ones toward all.
+
+Crawling              now     whirred opened cells,
+
+Pleistocene       N-rich molecules              where rhizospheres
+
+stayed still.         Days of salts, stomata, pores in leaves.
+
+Dirt with furry prizes        turned      zero clouds where
+chores were done,            to branch near places
+
+she had moods, mendings.   Sewed buttons on.
+
+Ectomycorrhizal fungi, mend her there.  Her here.
+
+Mend moods here.  Pink &amp; beige mold moods,    stay
+
+the feet.   Forgetters,   spun threaders,        where dots
+
+&amp; arcs  host sugars.    Ampersands  of storage compounds,
+
+weaving loves.   Carbon allocators,  micro-essays
+
+of endomycorrhizal          dappled net
+of never seen, don’t.       Light carriers,    don’t forget,
+
+fungal tracers,   hold back below.
+
+Tubes &amp; branches,      microbe niche of ground,
+
+don’t forget her,    earth      that  held her up—</pre>
+      </article>
+  </section>
+  <section class="author-section" id="caconrad">
+    <h2 class="author-name">CAConrad</h2>
+    
+      <article class="poem" id="p60">
+        <h3 class="poem-title">From “Listen to the Golden Boomerang Return”</h3>
+        
+        <pre class="poem-text">our first lightning
+strike was convulsive
+we felt sad for our
+violence after
+exterminating
+wolves and bison
+we do not need a
+doctor to say
+dance dance
+dance before
+the song
+runs out
+learn how
+to live so
+wilderness
+never
+becomes
+mythology
+we put them
+in parks to be
+wild on purpose
+a museum of fur
+fangs and hooves</pre>
+      </article>
+      <article class="poem" id="p61">
+        <h3 class="poem-title">Neptune.4</h3>
+        
+        <pre class="poem-text">no one knows where I am in the morning and I like that</pre>
+      </article>
+      <article class="poem" id="p62">
+        <h3 class="poem-title">Pluto.1</h3>
+        
+        <pre class="poem-text">&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;the pearl starts over</pre>
+      </article>
+  </section>
+  <section class="author-section" id="christina-rossetti">
+    <h2 class="author-name">Christina Rossetti</h2>
+    
+      <article class="poem" id="p12">
+        <h3 class="poem-title">Goblin Market</h3>
+        
+        <pre class="poem-text">Morning and evening
+Maids heard the goblins cry:
+&#x27;Come buy our orchard fruits,
+Come buy, come buy:
+Apples and quinces,
+Lemons and oranges,
+Plump unpecked cherries,
+Melons and raspberries,
+Bloom-down-cheeked peaches,
+Swart-headed mulberries,
+Wild free-born cranberries,
+Crab-apples, dewberries,
+Pine-apples, blackberries,
+Apricots, strawberries;--
+All ripe together
+In summer weather,--
+Morns that pass by,
+Fair eves that fly;
+Come buy, come buy:
+Our grapes fresh from the vine,
+Pomegranates full and fine,
+Dates and sharp bullaces,
+Rare pears and greengages,
+Damsons and bilberries,
+Taste them and try:
+Currants and gooseberries,
+Bright-fire-like barberries,
+Figs to fill your mouth,
+Citrons from the South,
+Sweet to tongue and sound to eye;
+Come buy, come buy.&#x27;
+
+  Evening by evening
+Among the brookside rushes,
+Laura bowed her head to hear,
+Lizzie veiled her blushes:
+Crouching close together
+In the cooling weather,
+With clasping arms and cautioning lips,
+With tingling cheeks and finger tips.
+&#x27;Lie close,&#x27; Laura said,
+Pricking up her golden head:
+&#x27;We must not look at goblin men,
+We must not buy their fruits:
+Who knows upon what soil they fed
+Their hungry thirsty roots?&#x27;
+&#x27;Come buy,&#x27; call the goblins
+Hobbling down the glen.
+&#x27;Oh,&#x27; cried Lizzie, &#x27;Laura, Laura,
+You should not peep at goblin men.&#x27;
+Lizzie covered up her eyes,
+Covered close lest they should look;
+Laura reared her glossy head,
+And whispered like the restless brook:
+&#x27;Look, Lizzie, look, Lizzie,
+Down the glen tramp little men.
+One hauls a basket,
+One bears a plate,
+One lugs a golden dish
+Of many pounds weight.
+How fair the vine must grow
+Whose grapes are so luscious;
+How warm the wind must blow
+Through those fruit bushes.&#x27;
+&#x27;No,&#x27; said Lizzie, &#x27;No, no, no;
+Their offers should not charm us,
+Their evil gifts would harm us.&#x27;
+She thrust a dimpled finger
+In each ear, shut eyes and ran:
+Curious Laura chose to linger
+Wondering at each merchant man.
+One had a cat&#x27;s face,
+One whisked a tail,
+One tramped at a rat&#x27;s pace,
+One crawled like a snail,
+One like a wombat prowled obtuse and furry,
+One like a ratel tumbled hurry skurry.
+She heard a voice like voice of doves
+Cooing all together:
+They sounded kind and full of loves
+In the pleasant weather.
+
+  Laura stretched her gleaming neck
+Like a rush-imbedded swan,
+Like a lily from the beck,
+Like a moonlit poplar branch,
+Like a vessel at the launch
+When its last restraint is gone.
+
+  Backwards up the mossy glen
+Turned and trooped the goblin men,
+With their shrill repeated cry,
+&#x27;Come buy, come buy.&#x27;
+When they reached where Laura was
+They stood stock still upon the moss,
+Leering at each other,
+Brother with queer brother;
+Signalling each other,
+Brother with sly brother.
+One set his basket down,
+One reared his plate;
+One began to weave a crown
+Of tendrils, leaves, and rough nuts brown
+(Men sell not such in any town);
+One heaved the golden weight
+Of dish and fruit to offer her:
+&#x27;Come buy, come buy,&#x27; was still their cry.
+Laura stared but did not stir,
+Longed but had no money:
+The whisk-tailed merchant bade her taste
+In tones as smooth as honey,
+The cat-faced purr&#x27;d,
+The rat-faced spoke a word
+Of welcome, and the snail-paced even was heard;
+One parrot-voiced and jolly
+Cried &#x27;Pretty Goblin&#x27; still for &#x27;Pretty Polly;&#x27;--
+One whistled like a bird.
+
+  But sweet-tooth Laura spoke in haste:
+&#x27;Good folk, I have no coin;
+To take were to purloin:
+I have no copper in my purse,
+I have no silver either,
+And all my gold is on the furze
+That shakes in windy weather
+Above the rusty heather.&#x27;
+&#x27;You have much gold upon your head,&#x27;
+They answered all together:
+&#x27;Buy from us with a golden curl.&#x27;
+She clipped a precious golden lock,
+She dropped a tear more rare than pearl,
+Then sucked their fruit globes fair or red:
+Sweeter than honey from the rock,
+Stronger than man-rejoicing wine,
+Clearer than water flowed that juice;
+She never tasted such before,
+How should it cloy with length of use?
+She sucked and sucked and sucked the more
+Fruits which that unknown orchard bore;
+She sucked until her lips were sore;
+Then flung the emptied rinds away
+But gathered up one kernel stone,
+And knew not was it night or day
+As she turned home alone.
+
+  Lizzie met her at the gate
+Full of wise upbraidings:
+&#x27;Dear, you should not stay so late,
+Twilight is not good for maidens;
+Should not loiter in the glen
+In the haunts of goblin men.
+Do you not remember Jeanie,
+How she met them in the moonlight,
+Took their gifts both choice and many,
+Ate their fruits and wore their flowers
+Plucked from bowers
+Where summer ripens at all hours?
+But ever in the noonlight
+She pined and pined away;
+Sought them by night and day,
+Found them no more, but dwindled and grew grey;
+Then fell with the first snow,
+While to this day no grass will grow
+Where she lies low:
+I planted daisies there a year ago
+That never blow.
+You should not loiter so.&#x27;
+&#x27;Nay, hush,&#x27; said Laura:
+&#x27;Nay, hush, my sister:
+I ate and ate my fill,
+Yet my mouth waters still;
+To-morrow night I will
+Buy more:&#x27; and kissed her:
+&#x27;Have done with sorrow;
+I&#x27;ll bring you plums to-morrow
+Fresh on their mother twigs,
+Cherries worth getting;
+You cannot think what figs
+My teeth have met in,
+What melons icy-cold
+Piled on a dish of gold
+Too huge for me to hold,
+What peaches with a velvet nap,
+Pellucid grapes without one seed:
+Odorous indeed must be the mead
+Whereon they grow, and pure the wave they drink
+With lilies at the brink,
+And sugar-sweet their sap.&#x27;
+
+  Golden head by golden head,
+Like two pigeons in one nest
+Folded in each other&#x27;s wings,
+They lay down in their curtained bed:
+Like two blossoms on one stem,
+Like two flakes of new-fall&#x27;n snow,
+Like two wands of ivory
+Tipped with gold for awful kings.
+Moon and stars gazed in at them,
+Wind sang to them lullaby,
+Lumbering owls forbore to fly,
+Not a bat flapped to and fro
+Round their rest:
+Cheek to cheek and breast to breast
+Locked together in one nest.
+
+  Early in the morning
+When the first cock crowed his warning,
+Neat like bees, as sweet and busy,
+Laura rose with Lizzie:
+Fetched in honey, milked the cows,
+Aired and set to rights the house,
+Kneaded cakes of whitest wheat,
+Cakes for dainty mouths to eat,
+Next churned butter, whipped up cream,
+Fed their poultry, sat and sewed;
+Talked as modest maidens should:
+Lizzie with an open heart,
+Laura in an absent dream,
+One content, one sick in part;
+One warbling for the mere bright day&#x27;s delight,
+One longing for the night.
+
+  At length slow evening came:
+They went with pitchers to the reedy brook;
+Lizzie most placid in her look,
+Laura most like a leaping flame.
+They drew the gurgling water from its deep;
+Lizzie plucked purple and rich golden flags,
+Then turning homeward said: &#x27;The sunset flushes
+Those furthest loftiest crags;
+Come, Laura, not another maiden lags,
+No wilful squirrel wags,
+The beasts and birds are fast asleep.&#x27;
+But Laura loitered still among the rushes
+And said the bank was steep.
+
+  And said the hour was early still
+The dew not fall&#x27;n, the wind not chill:
+Listening ever, but not catching
+The customary cry,
+&#x27;Come buy, come buy,&#x27;
+With its iterated jingle
+Of sugar-baited words:
+Not for all her watching
+Once discerning even one goblin
+Racing, whisking, tumbling, hobbling;
+Let alone the herds
+That used to tramp along the glen,
+In groups or single,
+Of brisk fruit-merchant men.
+
+  Till Lizzie urged, &#x27;O Laura, come;
+I hear the fruit-call but I dare not look:
+You should not loiter longer at this brook:
+Come with me home.
+The stars rise, the moon bends her arc,
+Each glowworm winks her spark,
+Let us get home before the night grows dark:
+For clouds may gather
+Though this is summer weather,
+Put out the lights and drench us through;
+Then if we lost our way what should we do?&#x27;
+
+  Laura turned cold as stone
+To find her sister heard that cry alone,
+That goblin cry,
+&#x27;Come buy our fruits, come buy.&#x27;
+Must she then buy no more such dainty fruit?
+Must she no more such succous pasture find,
+Gone deaf and blind?
+Her tree of life drooped from the root:
+She said not one word in her heart&#x27;s sore ache;
+But peering thro&#x27; the dimness, nought discerning,
+Trudged home, her pitcher dripping all the way;
+So crept to bed, and lay
+Silent till Lizzie slept;
+Then sat up in a passionate yearning,
+And gnashed her teeth for baulked desire, and wept
+As if her heart would break.
+
+  Day after day, night after night,
+Laura kept watch in vain
+In sullen silence of exceeding pain.
+She never caught again the goblin cry:
+&#x27;Come buy, come buy;&#x27;--
+She never spied the goblin men
+Hawking their fruits along the glen:
+But when the noon waxed bright
+Her hair grew thin and grey;
+She dwindled, as the fair full moon doth turn
+To swift decay and burn
+Her fire away.
+
+  One day remembering her kernel-stone
+She set it by a wall that faced the south;
+Dewed it with tears, hoped for a root,
+Watched for a waxing shoot,
+But there came none;
+It never saw the sun,
+It never felt the trickling moisture run:
+While with sunk eyes and faded mouth
+She dreamed of melons, as a traveller sees
+False waves in desert drouth
+With shade of leaf-crowned trees,
+And burns the thirstier in the sandful breeze.
+
+  She no more swept the house,
+Tended the fowls or cows,
+Fetched honey, kneaded cakes of wheat,
+Brought water from the brook:
+But sat down listless in the chimney-nook
+And would not eat.
+
+  Tender Lizzie could not bear
+To watch her sister&#x27;s cankerous care
+Yet not to share.
+She night and morning
+Caught the goblins&#x27; cry:
+&#x27;Come buy our orchard fruits,
+Come buy, come buy:&#x27;--
+Beside the brook, along the glen,
+She heard the tramp of goblin men,
+The voice and stir
+Poor Laura could not hear;
+Longed to buy fruit to comfort her,
+But feared to pay too dear.
+She thought of Jeanie in her grave,
+Who should have been a bride;
+But who for joys brides hope to have
+Fell sick and died
+In her gay prime,
+In earliest Winter time
+With the first glazing rime,
+With the first snow-fall of crisp Winter time.
+
+  Till Laura dwindling
+Seemed knocking at Death&#x27;s door:
+Then Lizzie weighed no more
+Better and worse;
+But put a silver penny in her purse,
+Kissed Laura, crossed the heath with clumps of furze
+At twilight, halted by the brook:
+And for the first time in her life
+Began to listen and look.
+
+  Laughed every goblin
+When they spied her peeping:
+Came towards her hobbling,
+Flying, running, leaping,
+Puffing and blowing,
+Chuckling, clapping, crowing,
+Clucking and gobbling,
+Mopping and mowing,
+Full of airs and graces,
+Pulling wry faces,
+Demure grimaces,
+Cat-like and rat-like,
+Ratel- and wombat-like,
+Snail-paced in a hurry,
+Parrot-voiced and whistler,
+Helter skelter, hurry skurry,
+Chattering like magpies,
+Fluttering like pigeons,
+Gliding like fishes,--
+Hugged her and kissed her:
+Squeezed and caressed her:
+Stretched up their dishes,
+Panniers, and plates:
+&#x27;Look at our apples
+Russet and dun,
+Bob at our cherries,
+Bite at our peaches,
+Citrons and dates,
+Grapes for the asking,
+Pears red with basking
+Out in the sun,
+Plums on their twigs;
+Pluck them and suck them,
+Pomegranates, figs.&#x27;--
+
+  &#x27;Good folk,&#x27; said Lizzie,
+Mindful of Jeanie:
+&#x27;Give me much and many:&#x27;--
+Held out her apron,
+Tossed them her penny.
+&#x27;Nay, take a seat with us,
+Honour and eat with us,&#x27;
+They answered grinning:
+&#x27;Our feast is but beginning.
+Night yet is early,
+Warm and dew-pearly,
+Wakeful and starry:
+Such fruits as these
+No man can carry;
+Half their bloom would fly,
+Half their dew would dry,
+Half their flavour would pass by.
+Sit down and feast with us,
+Be welcome guest with us,
+Cheer you and rest with us.&#x27;--
+&#x27;Thank you,&#x27; said Lizzie: &#x27;But one waits
+At home alone for me:
+So without further parleying,
+If you will not sell me any
+Of your fruits though much and many,
+Give me back my silver penny
+I tossed you for a fee.&#x27;--
+They began to scratch their pates,
+No longer wagging, purring,
+But visibly demurring,
+Grunting and snarling.
+One called her proud,
+Cross-grained, uncivil;
+Their tones waxed loud,
+Their looks were evil.
+Lashing their tails
+They trod and hustled her,
+Elbowed and jostled her,
+Clawed with their nails,
+Barking, mewing, hissing, mocking,
+Tore her gown and soiled her stocking,
+Twitched her hair out by the roots,
+Stamped upon her tender feet,
+Held her hands and squeezed their fruits
+Against her mouth to make her eat.
+
+  White and golden Lizzie stood,
+Like a lily in a flood,--
+Like a rock of blue-veined stone
+Lashed by tides obstreperously,--
+Like a beacon left alone
+In a hoary roaring sea,
+Sending up a golden fire,--
+Like a fruit-crowned orange-tree
+White with blossoms honey-sweet
+Sore beset by wasp and bee,--
+Like a royal virgin town
+Topped with gilded dome and spire
+Close beleaguered by a fleet
+Mad to tug her standard down.
+
+  One may lead a horse to water,
+Twenty cannot make him drink.
+Though the goblins cuffed and caught her,
+Coaxed and fought her,
+Bullied and besought her,
+Scratched her, pinched her black as ink,
+Kicked and knocked her,
+Mauled and mocked her,
+Lizzie uttered not a word;
+Would not open lip from lip
+Lest they should cram a mouthful in:
+But laughed in heart to feel the drip
+Of juice that syrupped all her face,
+And lodged in dimples of her chin,
+And streaked her neck which quaked like curd.
+At last the evil people,
+Worn out by her resistance,
+Flung back her penny, kicked their fruit
+Along whichever road they took,
+Not leaving root or stone or shoot;
+Some writhed into the ground,
+Some dived into the brook
+With ring and ripple,
+Some scudded on the gale without a sound,
+Some vanished in the distance.
+
+  In a smart, ache, tingle,
+Lizzie went her way;
+Knew not was it night or day;
+Sprang up the bank, tore thro&#x27; the furze,
+Threaded copse and dingle,
+And heard her penny jingle
+Bouncing in her purse,--
+Its bounce was music to her ear.
+She ran and ran
+As if she feared some goblin man
+Dogged her with gibe or curse
+Or something worse:
+But not one goblin skurried after,
+Nor was she pricked by fear;
+The kind heart made her windy-paced
+That urged her home quite out of breath with haste
+And inward laughter.
+
+  She cried &#x27;Laura,&#x27; up the garden,
+&#x27;Did you miss me?
+Come and kiss me.
+Never mind my bruises,
+Hug me, kiss me, suck my juices
+Squeezed from goblin fruits for you,
+Goblin pulp and goblin dew.
+Eat me, drink me, love me;
+Laura, make much of me:
+For your sake I have braved the glen
+And had to do with goblin merchant men.&#x27;
+
+  Laura started from her chair,
+Flung her arms up in the air,
+Clutched her hair:
+&#x27;Lizzie, Lizzie, have you tasted
+For my sake the fruit forbidden?
+Must your light like mine be hidden,
+Your young life like mine be wasted,
+Undone in mine undoing,
+And ruined in my ruin,
+Thirsty, cankered, goblin-ridden?&#x27;--
+She clung about her sister,
+Kissed and kissed and kissed her:
+Tears once again
+Refreshed her shrunken eyes,
+Dropping like rain
+After long sultry drouth;
+Shaking with aguish fear, and pain,
+She kissed and kissed her with a hungry mouth.
+
+  Her lips began to scorch,
+That juice was wormwood to her tongue,
+She loathed the feast:
+Writhing as one possessed she leaped and sung,
+Rent all her robe, and wrung
+Her hands in lamentable haste,
+And beat her breast.
+Her locks streamed like the torch
+Borne by a racer at full speed,
+Or like the mane of horses in their flight,
+Or like an eagle when she stems the light
+Straight toward the sun,
+Or like a caged thing freed,
+Or like a flying flag when armies run.
+
+  Swift fire spread through her veins, knocked at her heart,
+Met the fire smouldering there
+And overbore its lesser flame;
+She gorged on bitterness without a name:
+Ah! fool, to choose such part
+Of soul-consuming care!
+Sense failed in the mortal strife:
+Like the watch-tower of a town
+Which an earthquake shatters down,
+Like a lightning-stricken mast,
+Like a wind-uprooted tree
+Spun about,
+Like a foam-topped waterspout
+Cast down headlong in the sea,
+She fell at last;
+Pleasure past and anguish past,
+Is it death or is it life?
+
+  Life out of death.
+That night long Lizzie watched by her,
+Counted her pulse&#x27;s flagging stir,
+Felt for her breath,
+Held water to her lips, and cooled her face
+With tears and fanning leaves:
+But when the first birds chirped about their eaves,
+And early reapers plodded to the place
+Of golden sheaves,
+And dew-wet grass
+Bowed in the morning winds so brisk to pass,
+And new buds with new day
+Opened of cup-like lilies on the stream,
+Laura awoke as from a dream,
+Laughed in the innocent old way,
+Hugged Lizzie but not twice or thrice;
+Her gleaming locks showed not one thread of grey,
+Her breath was sweet as May
+And light danced in her eyes.
+
+  Days, weeks, months, years
+Afterwards, when both were wives
+With children of their own;
+Their mother-hearts beset with fears,
+Their lives bound up in tender lives;
+Laura would call the little ones
+And tell them of her early prime,
+Those pleasant days long gone
+Of not-returning time:
+Would talk about the haunted glen,
+The wicked, quaint fruit-merchant men,
+Their fruits like honey to the throat
+But poison in the blood;
+(Men sell not such in any town:)
+Would tell them how her sister stood
+In deadly peril to do her good,
+And win the fiery antidote:
+Then joining hands to little hands
+Would bid them cling together,
+&#x27;For there is no friend like a sister
+In calm or stormy weather;
+To cheer one on the tedious way,
+To fetch one if one goes astray,
+To lift one if one totters down,
+To strengthen whilst one stands.&#x27;</pre>
+      </article>
+  </section>
+  <section class="author-section" id="claudia-rankine">
+    <h2 class="author-name">Claudia Rankine</h2>
+    
+      <article class="poem" id="p27">
+        <h3 class="poem-title">Coherence in Consequence</h3>
+        
+        <pre class="poem-text">Imagine them in black, the morning heat losing within this day that floats. And always there is the being, and the not-seeing on their way to—
+
+The days they approach and their sharpest aches will wrap experience until knowledge is translucent, the frost on which they find themselves slipping. Never mind the loose mindless grip of their forms reflected in the eye-watering hues of the surface, these two will survive in their capacity to meet, to hold the other beneath the plummeting, in the depths below each step full of avoidance. What they create will be held up, will resume: the appetite is bigger than joy. indestructible. for never was it independent from who they are. who will be.
+
+Were we ever to arrive at knowing the other as the same pulsing compassion would break the most orthodox heart.</pre>
+      </article>
+      <article class="poem" id="p28">
+        <h3 class="poem-title">From “Citizen,” V [Sometimes “I” is supposed to hold what is not there]</h3>
+        
+        <pre class="poem-text">Sometimes “I” is supposed to hold what is not there until it is.
+Then what comes apart the closer you are to it.
+
+This makes the first person a symbol for something.
+
+The pronoun barely holding the person together.
+
+Someone claimed we should use our skin as wallpaper knowing we couldn’t win.
+
+You said “I” has so much power; it’s insane.
+
+And you would look past me, all gloved up, in a big coat, with fancy fur around the collar, and record a self saying, you should be scared, the first person can’t pull you together.
+
+Shit, you are reading minds, but did you try?
+
+Tried rhyme, tried truth, tried epistolary untruth, tried and tried.
+
+You really did. Everyone understood you to be suffering and still everyone thought you thought you were the sun—never mind our unlikeness, you too have heard the noise in your voice.
+
+Anyway, sit down. Sit here alongside.
+
+Exactly why we survive and can look back with furrowed brow is beyond me.
+
+It is not something to know.
+
+Your ill-spirited, cooked, hell on Main Street, nobody’s here, broken-down, first person could be one of many definitions of being to pass on.
+
+The past is a life sentence, a blunt instrument aimed at tomorrow.
+
+Drag that first person out of the social death of history, then we’re kin.
+
+Kin calling out the past like a foreigner with a newly minted “fuck you.”
+
+Maybe you don’t agree.
+
+Maybe you don’t think so.
+
+Maybe you are right, you don’t really have anything to confess.
+
+Why are you standing?
+
+Listen, you, I was creating a life study out of a monumental first person, a Brahmin first person.
+
+If you need to feel that way—still you are in here and here is nowhere.
+
+Join me down here in nowhere.
+
+Don’t lean against the wallpaper; sit down and pull together.
+
+Yours is a strange dream, a strange reverie.
+
+No, it’s a strange beach; each body is a strange beach, and if you let in the excess emotion you will recall the Atlantic Ocean breaking on our heads.</pre>
+      </article>
+      <article class="poem" id="p26">
+        <h3 class="poem-title">sound and fury</h3>
+        
+        <pre class="poem-text">The gloom is
+the off-white of white. Because white can’t know
+what white knows. Where’s the life in that?
+Where’s the right in that? Where’s the white in that?
+At the bone of bone white breathes the fear of being,
+the frustration of seeming unequal to white.
+White portraits on white walls signal ownership of all,
+even as white walls white in.
+And this is understandable, yes,
+understandable because the culture claims white
+is owed everything—a wealth of inheritance
+a system insures. In each generation
+the equation holds—and better than
+before and indifferent to now and enough
+and always and inevitably white.
+This is what it means to wear a color and believe
+its touch an embrace. Even without luck
+or chance of birth the scaffolding has rungs
+and legacy and the myth of meritocracy fixed in white.
+That’s how white holds itself together
+as the days hold so many white would not—
+White is living within brick-and-mortar, walling off
+all others’ loss, exhaustion, aggrieved
+exposure, dispossessed despair—
+in daylight white hardens its features.
+Eyes, which hold all light, harden.
+Jaws, closing down on justice,
+harden into a fury that will not call
+white to account even as for some
+its pledge is cut out from under.
+If people could just come clean about their lives,
+even as poverty exists inside white walls,
+and just being white is what’s working.
+Who implies white could disown its own
+even as white won’t strike its own structure.
+Even as white won’t oust its own system.
+All redress fuels nothing the second another
+can be thrown out.
+In daylight white’s right to righteous rage
+doubles down on the supremacy
+of white in our way.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="denise-levertov">
+    <h2 class="author-name">Denise Levertov</h2>
+    
+      <article class="poem" id="p8">
+        <h3 class="poem-title">Annunciation</h3>
+        
+        <pre class="poem-text">Hail, space for us to leap to,
+space we need.
+Between the wall and the immense wall—
+here the beginning of the world is; here
+it starts without us
+
+—only in us, through us,
+does this beginning become possible.
+We must be still for that
+to come among us, as
+sometimes you must simply
+stand in the wind
+for the message to be borne.
+
+She had been a child who played, ate, slept
+like any other child—but unlike others,
+wept only for pity, laughed
+in joy not triumph.
+Compassion and intelligence
+fused in her, indivisible.
+
+Called to a destiny more momentous
+than any in all of Time,
+she did not quail,
+only asked
+a simple, &#x27;How can this be?&#x27;
+and gravely, courteously,
+took to heart the angel&#x27;s word,
+perceived with joy the pure announcement
+that This was the Moment,
+the Annunciation.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="emily-dickinson">
+    <h2 class="author-name">Emily Dickinson</h2>
+    
+      <article class="poem" id="p6">
+        <h3 class="poem-title">I Have Not Told My Garden Yet</h3>
+        
+        <pre class="poem-text">I have not told my garden yet —
+Lest that should conquer me.
+I have not quite the strength now
+To break it to the Bee —
+
+I will not name it in the street
+For shops would stare at me —
+That one so shy — so ignorant
+Should have the face to die.
+
+The hillsides must not know it —
+Where I have rambled so —
+Nor tell the loving forests
+The day that I shall go —
+
+Nor lisp it at the table —
+Nor heedless by the way
+Hint that within the Riddle
+One will walk today —</pre>
+      </article>
+  </section>
+  <section class="author-section" id="frank-bidart">
+    <h2 class="author-name">Frank Bidart</h2>
+    
+      <article class="poem" id="p49">
+        <h3 class="poem-title">Queer</h3>
+        
+        <pre class="poem-text">Lie to yourself about this and you will
+forever lie about everything.
+
+Everybody already knows everything
+
+so you can
+lie to them. That’s what they want.
+
+But lie to yourself, what you will
+
+lose is yourself. Then you
+turn into them.
+
+*
+
+For each gay kid whose adolescence
+
+was America in the forties or fifties
+the primary, the crucial
+
+scenario
+
+forever is coming out—
+or not. Or not. Or not. Or not. Or not.
+
+*
+
+Involuted velleities of self-erasure.
+
+*
+
+Quickly after my parents
+died, I came out. Foundational narrative
+
+designed to confer existence.
+
+If I had managed to come out to my
+mother, she would have blamed not
+
+me, but herself.
+
+The door through which you were shoved out
+into the light
+
+was self-loathing and terror.
+
+*
+
+Thank you, terror!
+
+You learned early that adults’ genteel
+fantasies about human life
+
+were not, for you, life. You think sex
+
+is a knife
+driven into you to teach you that.</pre>
+      </article>
+      <article class="poem" id="p48">
+        <h3 class="poem-title">The Ghost</h3>
+        
+        <pre class="poem-text">You must not think that what I have 
+accomplished through you
+
+could have been accomplished by any other means.
+
+Each of us is to himself
+indelible. I had to become that which could not
+
+be, by time, from human memory, erased.
+
+I had to burn my hungry, unappeasable
+furious spirit
+
+so inconsolably into you
+
+you would without cease
+write to bring me rest.
+
+Bring us rest. Guilt is fecund. I knew
+
+nothing I made
+myself had enough steel in it to survive.
+
+I tried: I made beautiful
+paintings, beautiful poems. Fluff. Garbage.
+
+The inextricability of love and hate?
+
+If I had merely made you
+love me you could not have saved me.</pre>
+      </article>
+      <article class="poem" id="p50">
+        <h3 class="poem-title">The Yoke</h3>
+        
+        <pre class="poem-text">don’t worry     I know you’re dead
+but tonight
+
+turn your face again
+toward me
+
+when I hear your voice there is now
+no direction in which to turn
+
+I sleep and wake and sleep and wake and sleep and wake and
+
+but tonight
+turn your face again
+
+toward me
+
+see     upon my shoulders is the yoke
+that is not a yoke
+
+don’t worry          I know you’re dead
+but tonight
+
+turn your face again</pre>
+      </article>
+  </section>
+  <section class="author-section" id="georg-trakl">
+    <h2 class="author-name">Georg Trakl</h2>
+    
+      <article class="poem" id="p3">
+        <h3 class="poem-title">Grodek</h3>
+        <div class="meta">Originally in German, tr. A.S. Kline</div>
+        <pre class="poem-text">At evening the autumnal woods resound
+with deadly weapons, the golden plains
+and blue lakes, and overhead the sun
+rolls more darkly; night grips
+the dying warriors, the wild complaint
+of their broken mouths.
+But quietly red clouds in which an angry god abides,
+gather in the meadow&#x27;s willow-bed,
+the moon cools the warrior&#x27;s blood spilled on the road.
+All roads lead to black decay.
+Under the gold branches of the night and stars
+the sister&#x27;s shadow wavers through the silent grove
+to greet the ghosts of heroes, their bleeding heads;
+and the dark flutes of autumn sound softly in the reeds.
+O prouder grief! You brazen altars,
+today a mighty pain feeds the hot flame of the spirit,
+the grandsons yet unborn.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="gwendolyn-brooks">
+    <h2 class="author-name">Gwendolyn Brooks</h2>
+    
+      <article class="poem" id="p90">
+        <h3 class="poem-title">Paul Robeson</h3>
+        
+        <pre class="poem-text">That time
+we all heard it,
+cool and clear,
+cutting across the hot grit of the day.
+The major Voice.
+The adult Voice
+forgoing Rolling River,
+forgoing tearful tale of bale and barge
+and other symptoms of an old despond.
+Warning, in music-words
+devout and large,
+that we are each other’s
+harvest:
+we are each other’s
+business:
+we are each other’s
+magnitude and bond.</pre>
+      </article>
+      <article class="poem" id="p91">
+        <h3 class="poem-title">To Prisoners</h3>
+        
+        <pre class="poem-text">I call for you cultivation of strength in the dark.
+Dark gardening
+in the vertigo cold.
+in the hot paralysis.
+Under the wolves and coyotes of particular silences.
+Where it is dry.
+Where it is dry.
+I call for you
+cultivation of victory Over
+long blows that you want to give and blows you are going to get.
+
+Over
+what wants to crumble you down, to sicken
+you. I call for you
+cultivation of strength to heal and enhance
+in the non-cheering dark,
+in the many many mornings-after;
+in the chalk and choke.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="hd">
+    <h2 class="author-name">H.D.</h2>
+    
+      <article class="poem" id="p13">
+        <h3 class="poem-title">Heat</h3>
+        
+        <pre class="poem-text">O wind, rend open the heat,
+cut apart the heat,
+rend it to tatters.
+
+Fruit cannot drop
+through this thick air—
+fruit cannot fall into heat
+that presses up and blunts
+the points of pears
+and rounds the grapes.
+
+Cut the heat—
+plough through it,
+turning it on either side
+of your path.</pre>
+      </article>
+      <article class="poem" id="p14">
+        <h3 class="poem-title">Sea Rose</h3>
+        
+        <pre class="poem-text">Rose, harsh rose,
+marred and with stint of petals,
+meager flower, thin,
+sparse of leaf,
+
+more precious
+than a wet rose
+single on a stem—
+you are caught in the drift.
+
+Stunted, with small leaf,
+you are flung on the sand,
+you are lifted
+in the crisp sand
+that drives in the wind.
+
+Can the spice-rose
+drip such acrid fragrance
+hardened in a leaf?</pre>
+      </article>
+  </section>
+  <section class="author-section" id="harryette-mullen">
+    <h2 class="author-name">Harryette Mullen</h2>
+    
+      <article class="poem" id="p54">
+        <h3 class="poem-title">Conversation in Isolation</h3>
+        
+        <pre class="poem-text">Neighbors nail the planks
+dividing their yard from mine.
+Our durable fence.
+
+I walk half a block
+before realizing I’ve
+forgotten my mask.
+
+One ant following
+another, trusting we all
+are going somewhere.
+
+Stretched between two poles,
+clothesline outside my window,
+a robin’s rest stop.
+
+Lemons fallen on
+the sidewalk to be rescued
+for my potpourri.
+
+No one and nothing
+touches me but this blue wind
+with cool caresses.</pre>
+      </article>
+      <article class="poem" id="p55">
+        <h3 class="poem-title">Still Waiting</h3>
+        
+        <pre class="poem-text">for Alison Saar
+
+Please approach with care these figures in black.
+Regard with care the weight they bear,
+the scars that mark their hearts.
+Do you think you can handle these bodies of graphite &amp; coal dust?
+This color might rub off. A drop of this red liquid
+could stain your skin.
+This black powder could blow you sky high.
+No ordinary pigments blacken our blues.
+Would you mop the floor with this bucket of blood?
+Would you rinse your soiled laundry in this basin of tears?
+Would you suckle hot milk from this cracked vessel?
+Would you be baptized in this fountain of funky sweat?
+Please approach with care
+these bodies still waiting to be touched.
+We invite you to come closer.
+We permit you to touch &amp; be touched.
+We hope you will engage with care.</pre>
+      </article>
+      <article class="poem" id="p52">
+        <h3 class="poem-title">Weathering Hate</h3>
+        
+        <pre class="poem-text">The way, exposed to weather, a body is worn. Velvet threads begin to
+wither, rapid ripened beyond the burst bloom. Vibrant strands, cut short,
+fray, unweaving faded fabric. Sun-struck, rain-warped, storm-blasted,
+rough-sanded in whipping wind that whittles rock.
+
+Small, torturous fractures opened in stone where water freezes in the
+pores with grains of salt. Cracks in the surface pried apart by unrelenting
+pressure. With incessant freezing and thawing, shock and fatigue speed
+rugged stress to ultimate breakdown. Intemperate weather, abrading
+edges, gradually disintegrates resolute minerals.
+
+A boulder, even a mountain, will wear down. So will bodies, bent and
+broken under toilsome burdens, caving beneath unbearable weight, in
+adverse climate, exposed to harsh elements, caustic rains.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="jake-skeets">
+    <h2 class="author-name">Jake Skeets</h2>
+    
+      <article class="poem" id="p88">
+        <h3 class="poem-title">Anthropocenic</h3>
+        
+        <pre class="poem-text">:  when the nearest light is miles away yet
+and adorned on the night is a lightning bug
+as in a jarred cactus plant
+an open book without commas
+
+:  when the only thing you can touch is a plastic raft
+and drenched between the hours is a cutting board
+as in a place for garlic
+and onions the face of early sky
+
+:  when water undresses into tar sands
+and to one long tune acacia trees dance some
+as in alder reach
+anything is worth the rain
+
+:  when above more and more narrow miracles
+and answers set to stone by a single hand
+as in a chorus of them
+any shadow still means light</pre>
+      </article>
+      <article class="poem" id="p89">
+        <h3 class="poem-title">In the Fields</h3>
+        
+        <pre class="poem-text">with lines from D. A. Powell
+
+We unyoke owl pellets from marrow
+in desert meadow. His mouth pigeon eye
+
+a torch, womb turned flower. He, still a boy,
+dug from cactus skull. Undress into bark
+
+beetles. He unlearns how to hold a fist
+with my hand. Bursts into dandelion
+
+seeds. We are all beautiful at least once.
+Mud water puddles along enamel.
+
+Eyeteeth blossom into osprey. Our bones
+dampen like snow melt under squirrel grass.
+
+We could be boys together  finally
+as milk vetch, tumbleweed, and sticker bush.
+
+We can be beautiful again  beneath
+the sumac, yarrow, and bitter water.</pre>
+      </article>
+      <article class="poem" id="p87">
+        <h3 class="poem-title">Loom Poem</h3>
+        
+        <pre class="poem-text">I window words into a name
+a light kiss on his chest
+I trace
+the letter t
+its seep whisper
+morning scatter
+mosquito grasses
+curtained yucca
+I snakeweed another name
+collapse worn tongues into hymns
+memories against
+pink lights against
+
+bone
+bone
+
+pink lights against
+memories against
+collapse worn tongues into hymns
+I snakeweed another name
+curtained yucca
+mosquito grasses
+morning scatter
+its seep whisper
+the letter t
+I trace
+a light kiss on his chest
+I window words into a name</pre>
+      </article>
+  </section>
+  <section class="author-section" id="juan-ramón-jiménez">
+    <h2 class="author-name">Juan Ramón Jiménez</h2>
+    
+      <article class="poem" id="p5">
+        <h3 class="poem-title">I Am Not I</h3>
+        <div class="meta">Originally in Spanish, tr. Robert Bly</div>
+        <pre class="poem-text">I am not I.
+I am this one
+walking beside me whom I do not see,
+whom at times I manage to visit,
+and whom at other times I forget;
+who remains calm and silent while I talk,
+and forgives, gently, when I hate,
+who walks where I am not,
+who will remain standing when I die.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="layli-long-soldier">
+    <h2 class="author-name">Layli Long Soldier</h2>
+    
+      <article class="poem" id="p36">
+        <h3 class="poem-title">Urning</h3>
+        
+        <pre class="poem-text">* bring us to dark knots the black
+eyes along white aspen skin to scrape
+with a rock on surface where I press
+I carve the initials of all and **
+*** bring us to a returning no
+an urning a vessel of corpse
+ash in the active state of being
+held by two hands positioned
+gripping the sides to tip
+and scatter my night dream
+of an acquaintance who
+presented me a ledger opened
+to a page handwritten in pencil
+dates names and meetings ****
+***** I said I don’t want to
+see it I don’t want to know
+if my father betrayed me
+as the words left
+my dream mouth I woke I shook
+to the bone a hot line notched
+from heart to elbow throbbing
+vein-ache in my body how
+I’d replaced another man’s name
+-a man I once loved I mean to say-
+with the word father in a flash
+the sleeping eye ripped me
+from denial I’m not so complex
+see my mind unclothed
+is a crying newborn
+predictable
+aspen leaves in untimed
+wind-filled rhythm my mother
+turned eighty what at that age is left
+to surprise though
+suddenly
+
+the tone here shifts to listen
+she said I don’t know if I ever said
+when I was pregnant with you
+I found out he’d cheated
+I threw ****** into the yard
+I locked him out
+pregnant with you I cried
+and I cried so long and hard
+I thought I was going to
+die yes she said it a heavy bass line
+beneath aspen music and timbre
+I sit on the patio to smoke I think
+at night always at night maybe
+cause I was born / at night or
+my name means night God bless
+my mother she believed
+my name meant pure
+spirit so it may be the darkest
+hours are when I’m purest
+when I am I          I am fluid
+a clear stream over rock or
+*******
+as poetry goes ********
+I think about a baby in utero I can’t help
+but wonder what the baby knows
+a study says babies and toddlers
+remember
+through impression not specifics
+I rummage the syllables and stress
+of each line in *********
+impression is a mark
+on the surface
+caused by pressure or
+a quick undetailed sketch or
+the imitation
+of someone / I
+carried her nine months
+beneath my own skin her small toes
+relaxed her eyes shut
+within me her fingertips
+pressed into palms she made
+a fist
+or was it
+
+a symbol
+for the Sun what rising
+what of battle my child knows
+scares me to the pure
+the one I           I burn in question
+
+*            may all the grief
+**          may all
+***        the loss
+****                  all your misdeeds
+*****                love of my soul
+******              all his things
+******* spit in a cup
+********          night is a womb
+*********        the definition</pre>
+      </article>
+      <article class="poem" id="p37">
+        <h3 class="poem-title">Ȟe Sápa, Five</h3>
+        
+        <pre class="poem-text">Inside the wheels of wrists and hands, a white shore of book and shell.
+I kneel in the hairline light of kitchen and home
+where I remember the curt shuttle of eyes down, eyes up—
+where I asked, are you looking at how I’ve become two?
+This one combs and places a clip just above her temple, sweeping back the curtain of why
+and how come. I kiss her head I say, maybe you already know.
+Born in us, two of everything.
+As in, each born to our own crown—the highest part of the natural head.
+And each born to our own crown—a single power, our distinction.
+But I’m dragging myself, the other me, every strand up to the surface. I remember
+very little. So I plunge my ear into the hollow of a black horn,     listen to it speak.
+Circuitous.
+Not one word sounds as before.</pre>
+      </article>
+      <article class="poem" id="p38">
+        <h3 class="poem-title">Ȟe Sápa, Four</h3>
+        
+        <pre class="poem-text">But
+is the small way to begin.
+
+But I could not.
+
+As I am limited to few
+words at command, such as wanblí.   This
+was how I wanted to begin, with the little
+I know.
+
+But could not.
+
+Because this wanblí, this eagle
+of my imagining is not spotted, bald,
+nor even a nest-eagle. It is gold,
+though by definition, not ever the great Golden Eagle.
+Much as the gold, by no mistake, is not ground-gold,
+man-gold or nugget.     But here, it is
+the gold of     light and wing    together.
+Wings that do not close, but    in expanse
+angle up so slightly; plunge with muscle
+and stout head somewhere between
+my uncle, son, father, brother.
+
+But I failed   to begin there, with this
+expanse.  Much as I failed to start
+with the great point in question.
+There in muscle in high inner flight always
+in the plunge we fear for the falling, we buckle to wonder:
+What man is expendable?</pre>
+      </article>
+      <article class="poem" id="p39">
+        <h3 class="poem-title">Ȟe Sápa, Two</h3>
+        
+        <pre class="poem-text">Because drag changes when spoken of in the past i.e. he was dragged or they drug him down the long road, the pale rock and brown. Down dust, a knocking path. And to drag has a begin point (though two are considered): begins when man is bound; begins also with one first tug.
+So we take the word to our own uses and say:
+it begins with his head on the ground with his hair loose
+under shoulders and shirt with snaps, they’re mother-of-pearl. Then begins a yank
+and slide, begins his skin and scalp—
+begins a break a tear, red to pink
+to precious white; then begins what is
+his skull, glisten of star
+to bone.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="li-young-lee">
+    <h2 class="author-name">Li-Young Lee</h2>
+    
+      <article class="poem" id="p83">
+        <h3 class="poem-title">Adore</h3>
+        
+        <pre class="poem-text">(adore, verb from Latin, adorare,
+from ad- ‘to’ + orare- ‘speak, call pray’)
+
+You lie asleep beside me,
+one hand on the pillow and cupped
+at your mouth, as if to tell a secret.
+
+As if you might say in your sleep
+what you could never find
+words for awake.
+
+Or as if you called
+across a din of other voices,
+or the howl of empty space. Calling
+
+because there are no bells
+to strike the hours where we live. And I must know
+when to kneel and when to rise.
+What to praise and what to curse.
+I must know how to bless
+and how to receive blessing.
+
+One hand on your pillow and cupped
+at your mouth,
+as if you spoke a word
+you’d kept to yourself all day, waiting
+for your most unguarded moment
+to say, a thought meant for me, meant to be
+shared between us this way,
+sealed this way, a secret
+no voice can carry without destroying,
+a word without carriage, except conveyed
+in the peace of your body and face,
+
+a word born out of your deepest rest, a word
+which only my own deepest breathing
+and happiest rest beside you,
+face to face, free of thinking, can sustain.
+
+Maybe you had to be asleep
+to say what you knew to be true.
+Or what you had to say
+you might not could bear to hear,
+and so you must say so softly
+I must close my eyes, I must turn
+inward, to where you’ve made a room
+and a bed inside me, to receive it.
+
+You say:
+We cannot look upon Love’s face without dying.
+So we face each other to see Love’s look.
+And thus third-person souls
+suddenly stand at gaze
+and the lover and the beloved,
+second- and first-persons,
+You and I, eye
+to eye, are born.
+But such refraction, multiplying gazes, strews
+Love’s eye upon the objects of the world,
+as upon the objects of our room.
+
+My brush, hairpin, mirror, book,
+your loving look finds each of these things
+lovable, I can see. Things
+by any other measure poor, your look crowns
+to make them your heart’s royalty.
+Face, blush, breath, eyes, evanescent,
+pledged to death, nowhere stored,
+Love’s look gathers within its fondling
+to adore.
+
+This strewing and gathering
+of Love’s face, of Love’s gaze, and only this,
+begun in death’s audience, is the founding
+action, call it the fundamental
+paradise…did I say paradise?
+I meant paradox…the fundamental paradox
+of the breaths we breathe,
+the thoughts we witness,
+the kisses we exchange,
+and every poem you write.</pre>
+      </article>
+      <article class="poem" id="p82">
+        <h3 class="poem-title">Big Clock</h3>
+        
+        <pre class="poem-text">When the big clock at the train station stopped,
+the leaves kept falling,
+the trains kept running,
+my mother’s hair kept growing longer and blacker,
+and my father’s body kept filling up with time.
+I can’t see the year on the station’s calendar.
+We slept under the stopped hands of the clock
+until morning, when a man entered carrying a ladder.
+He climbed up to the clock’s face and opened it with a key.
+No one but he knew what he saw.
+Below him, the mortal faces went on passing
+toward all compass points.
+People went on crossing borders,
+buying tickets in one time zone and setting foot in another.
+Crossing thresholds: sleep to waking and back,
+waiting room to moving train and back,
+war zone to safe zone and back.
+Crossing between gain and loss:
+learning new words for the world and the things in it.
+Forgetting old words for the heart and the things in it.
+And collecting words in a different language
+for those three primary colors:
+staying, leaving, and returning.
+And only the man at the top of the ladder
+understood what he saw behind the face
+which was neither smiling nor frowning.
+And my father’s body went on filling up with death
+until it reached the highest etched mark
+of his eyes and spilled into mine.
+And my mother’s hair goes on
+never reaching the earth.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="louise-gluck">
+    <h2 class="author-name">Louise Glück</h2>
+    
+      <article class="poem" id="p81">
+        <h3 class="poem-title">Vita Nova</h3>
+        
+        <pre class="poem-text">You saved me, you should remember me.
+
+The spring of the year; young men buying tickets for the ferryboats.
+Laughter, because the air is full of apple blossoms.
+
+When I woke up, I realized I was capable of the same feeling.
+
+I remember sounds like that from my childhood,
+laughter for no cause, simply because the world is beautiful,
+something like that.
+
+Lugano. Tables under the apple trees.
+Deckhands raising and lowering the colored flags.
+And by the lake’s edge, a young man throws his hat into the water;
+perhaps his sweetheart has accepted him.
+
+Crucial
+sounds or gestures like
+a track laid down before the larger themes
+
+and then unused, buried.
+
+Islands in the distance. My mother
+holding out a plate of little cakes—
+
+as far as I remember, changed
+in no detail, the moment
+vivid, intact, having never been
+exposed to light, so that I woke elated, at my age
+hungry for life, utterly confident—
+
+By the tables, patches of new grass, the pale green
+pieced into the dark existing ground.
+
+Surely spring has been returned to me, this time
+not as a lover but a messenger of death, yet
+it is still spring, it is still meant tenderly.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="lucille-clifton">
+    <h2 class="author-name">Lucille Clifton</h2>
+    
+      <article class="poem" id="p63">
+        <h3 class="poem-title">Sal</h3>
+        
+        <pre class="poem-text">he ordered me to do what
+i would have done anyway
+
+i knew it as did he but always
+he had to order it
+
+so that he could tell himself
+he was with a woman who wanted him
+
+that this breast was a woman’s
+breast               it was a slave’s
+
+who did not give           who was
+taken              he felt no pleasure
+
+here     no deep desire
+though well there could have been
+
+he had to order me and
+i made it master and thing
+
+it was my only power
+and i used it</pre>
+      </article>
+      <article class="poem" id="p65">
+        <h3 class="poem-title">blackgirl looking at blackbird</h3>
+        
+        <pre class="poem-text">daughter of a darker egg
+she names herself
+blackbird
+
+born so beautiful
+the birds fly north
+
+while she waits         lost from
+paradise
+dreaming of return
+
+time passes
+new creators come
+
+glowing like snow
+deciding what is
+beautiful
+
+they do not mention
+blackbird
+
+blackbird
+in the dark she rises
+on her mutilated wing
+
+moans and dips and sighs
+no strangers to desire
+
+poets rhapsodize
+of eden lost
+but fail to hear
+
+the music
+blackbird
+
+singing herself
+home</pre>
+      </article>
+      <article class="poem" id="p64">
+        <h3 class="poem-title">i take my glasses off</h3>
+        
+        <pre class="poem-text">it is the hard
+edge of things
+i am avoiding
+the separations
+so that i can take my glasses off
+and then i cannot tell
+which are the leaves
+and which the angels
+like blake
+like that man
+who lived with the lepers
+not noticing what was sin
+and what was grace
+visioning visions vision
+i take my glasses off
+so i can see</pre>
+      </article>
+  </section>
+  <section class="author-section" id="mina-loy">
+    <h2 class="author-name">Mina Loy</h2>
+    
+      <article class="poem" id="p17">
+        <h3 class="poem-title">Songs to Joannes</h3>
+        
+        <pre class="poem-text">I
+
+Spawn   of    Fantasies
+Silting the appraisable
+Pig Cupid     his rosy snout
+Rooting erotic garbage
+&quot;Once upon a time&quot;
+Pulls a weed   white and star-topped
+Among wild oats    sewn in mucous-membrane
+
+I would    an    eye in a bengal light
+Eternity in a sky-rocket
+Constellations in an ocean
+Whose rivers run no fresher
+Than a trickle of saliva
+
+These  are suspect places
+
+I must live in my lantern
+Trimming subliminal flicker
+Virginal    to the bellows
+Of Experience
+Coloured    glass
+
+II
+
+The skin-sack
+In which a wanton duality
+Packed
+All the completions of my infructuous impulses
+Something the shape of a man
+To the casual vulgarity of the merely observant
+More of a clock-work mechanism
+Running down against time
+To which I am not paced
+My finger-tips are numb from fretting your hair
+A God&#x27;s door-mat
+On the threshold of your mind
+
+III
+
+We might have coupled
+In the bed-ridden monopoly of a moment
+Or broken flesh with one another
+At the profane communion table
+Where wine is spill&#x27;t on promiscuous lips
+We might have given birth to a butterfly
+With the daily-news
+Printed in blood on its wings
+
+IV
+
+Once in a mezzanino
+The starry ceiling
+Vaulted an unimaginable family
+Bird-like abortions
+With human throats
+And Wisdom&#x27;s eyes
+Who wore lamp-shade red dresses
+And woolen hair
+
+One bore a baby
+In a padded porte-enfant
+Tied with a sarsanet ribbon
+To her goose&#x27;s wings
+
+But for the abominable shadows
+I would have lived
+Among their fearful furniture
+To teach them to tell me their secrets
+Before I guessed
+— Sweeping the brood clean out
+
+V
+
+Midnight empties the street
+Of all but us
+Three
+I am undecided which way back
+To the left a boy
+— One wing has been washed in the rain
+The other will never be clean any more —
+Pulling door-bells to remind
+Those that are snug
+To the right a haloed ascetic
+Threading houses
+Probes wounds for souls
+— The poor can&#x27;t wash in hot water —
+And I dont know which turning to take
+Since you got home to yourself — first
+
+VI
+
+I know the Wire-Puller intimately
+And if it were not for the people
+On whom you keep one eye
+You could look straight at me
+And Time would be set back
+
+VII
+
+My pair of feet
+Smack the flag-stones
+That are something left over from your walking
+The wind stuffs the scum of the white street
+Into my lungs and my nostrils
+Exhilarated birds
+Prolonging flight into the night
+Never reaching — — — — — — —
+
+VIII
+
+I am the jealous store-house of the candle-ends
+That lit your adolescent learning
+— — — — — — — — — —
+Behind God&#x27;s eyes
+There might
+Be other lights
+
+IX
+
+When we lifted
+Our eye-lids on Love
+A cosmos
+Of coloured voices
+
+And laughing honey
+And spermatozoa
+At the core of Nothing
+In the milk of the Moon
+
+X
+
+Shuttle-cock and battle-door
+A little pink-love
+And feathers are strewn
+
+XI
+
+Dear one    at your mercy
+Our Universe
+Is only
+A colorless onion
+You derobe
+Sheath by sheath
+Remaining
+A disheartening odour
+About your nervy hands
+
+XII
+
+Voices break on the confines of passion
+Desire     Suspicion     Man     Woman
+Solve in the humid carnage
+
+Flesh  from  flesh
+Draws the inseparable delight
+Kissing at gasps      to catch it
+
+Is it true
+That I have set you apart
+Inviolate in an utter crystallization
+Of all    the jolting of the crowd
+Taught me willingly to live to share
+
+Or are you
+Only the other half
+Of an ego&#x27;s necessity
+Scourging pride with compassion
+To the shallow sound of dissonance
+And boom of escaping breath
+
+XIII
+
+Come to me    There is something
+I have got to tell you    and I can&#x27;t tell
+Something taking shape
+Something that has a new name
+A  new  dimension
+A  new  use
+A  new  illusion
+
+It is ambient    And it is in your eyes
+Something shiny    Something only for you
+Something that I must not see
+
+It is in my ears    Something very resonant
+Something that you must not hear
+Something only for me
+
+Let us be very jealous
+Very suspicious
+Very conservative
+Very cruel
+Or we might make an end of the jostling of aspirations
+Disorb inviolate egos
+
+Where two or three are welded together
+They shall become god
+— — — — — — —
+Oh that&#x27;s right
+Keep away from me    Please give me a push
+Don&#x27;t let me understand you    Don&#x27;t realise me
+
+Or we might tumble together
+Depersonalized
+Identical
+Into the terrific Nirvana
+Me you   —   you   —   me
+
+XIV
+
+Today
+Everlasting    passing    apparent    imperceptible
+To you
+I bring the nascent virginity of
+— Myself    for the moment
+
+No love or the other thing
+Only the impact of lighted bodies
+Knocking sparks off each other
+In chaos
+
+XV
+
+Seldom    Trying for Love
+Fantasy dealt them out as gods
+Two or three men    looked only human
+
+But you alone
+Superhuman    apparently
+I had to be caught in the weak eddy
+Of your drivelling humanity
+To love you most
+
+XVI
+
+We might have lived together
+In the lights of the Arno
+Or gone apple stealing under the sea
+Or played
+Hide and seek in love and cob-webs
+And a lullaby on a tin-pan
+
+And    talked till there were no more tongues
+To talk with
+And never have known any better
+
+XVII
+
+I don&#x27;t care
+Where the legs of the legs of the furniture are walking to
+Or what is hidden in the shadows they stride
+Or what would look at me
+If the shutters were not shut
+
+Red    a warm colour on the battle-field
+Heavy on my knees as a counterpane
+Count counter
+I counted    the fringe of the towel
+Till two tassels clinging together
+Let the square room fall away
+From a round vacuum
+Dilating with my breath
+
+XVIII
+
+Out of the severing
+Of hill from hill
+The interim
+Of star from star
+The nascent
+Static
+Of night
+
+XIX
+
+Nothing so conserving
+As cool cleaving
+Note of the Q  H  U
+Clear carving
+Breath-giving
+Pollen smelling
+Space
+
+White telling
+Of slaking
+Drinkable
+Through fingers
+Running water
+Grass haulms
+Grow to
+
+Leading astray
+Of fireflies
+Aerial quadrille
+Bouncing
+Off one another
+Again conjoining
+In recaptured pulses
+Of light
+
+You too
+Had something
+At that time
+Of a green-lit glow-worm
+— — — — — — —
+Yet slowly drenched
+To raylessness
+In rain
+
+XX
+
+Let Joy go solace-winged
+To flutter whom she may concern
+
+XXI
+
+I store up nights against you
+Heavy with shut-flower&#x27;s nightmares
+— — — — — — — — — —
+Stack noons
+Curled to the solitaire
+Core of the
+Sun
+
+XXII
+
+Green things grow
+Salads
+For the cerebral
+Forager&#x27;s revival
+
+Upon bossed bellies
+Of mountains
+Rolling in the sun
+And flowered flummery
+Breaks
+To my silly shoes
+
+In ways without you
+I go
+Gracelessly
+As things go
+
+XXIII
+
+Laughter in solution
+Stars in a stare
+Irredeemable pledges
+Of pubescent consummations
+Rot
+To the recurrent moon
+Bleach
+To the pure white
+Wickedness of pain
+
+XXIV
+
+The procreative truth of Me
+Petered out
+In pestilent
+Tear drops
+Little lusts and lucidities
+And prayerful lies
+Muddled with the heinous acerbity
+Of your street-corner smile
+
+XXV
+
+Licking the Arno
+The little rosy
+Tongue of Dawn
+Interferes with our eyelashes
+— — — — — — — —
+We twiddle to it
+Round and round
+Faster
+And turn into machines
+
+Till the sun
+Subsides in shining
+Melts some of us
+Into abysmal pigeon-holes
+Passion has bored
+In warmth
+
+Some few of us
+Grow to the level of cool plains
+Cutting our foot-hold
+With steel eyes
+
+XXVI
+
+Shedding our petty pruderies
+From slit eyes
+
+We sidle up
+To Nature
+— — — that irate pornographist
+
+XXVII
+
+Nucleus    Nothing
+Inconceivable concept
+Insentient repose
+The hands of races
+Drop off from
+Immodifiable plastic
+
+The contents
+Of our ephemeral conjunction
+In aloofness from Much
+Flowed to approachment of — — — —
+NOTHING
+There was a man and a woman
+In the way
+While the Irresolvable
+Rubbed with our daily deaths
+Impossible eyes
+
+XXVIII
+
+The steps go up for ever
+And they are white
+And the first step is the last white
+Forever
+
+Coloured    conclusions
+Smelt    to synthetic
+Whiteness
+Of my
+Emergence
+And I am burnt quite white
+In the climacteric
+Withdrawal of your sun
+And wills and words all white
+Suffuse
+Illimitable monotone
+
+White    where there is nothing to see
+But a white towel
+Wipes the cymophonous sweat
+— Mist rise of living —
+From your
+Etiolate body
+And the white dawn
+Of your New Day
+Shuts down on me
+
+Unthinkable    that white over there
+— — — Is smoke from your house
+
+XXIX
+
+Evolution    fall foul of
+Sexual equality
+Prettily miscalculate
+Similitude
+Unnatural selection
+Breed such sons and daughters
+As shall jibber at each other
+Uninterpretable cryptonyms
+Under the moon
+
+Give them some way of braying brassily
+For caressive calling
+Or to homophonous hiccoughs
+Transpose the laugh
+Let them suppose that tears
+Are snowdrops or molasses
+Or anything
+Than human insufficiencies
+Begging dorsal vertebrae
+
+Let meeting be the turning
+To the antipodean
+And Form    a blurr
+Anything
+Than seduce them
+To the one
+As simple satisfaction
+For the other
+
+Let them clash together
+From their incognitoes
+In seismic orgasm
+For far further
+Differentiation
+Rather than watch
+Own-self distortion
+Wince in the alien ego
+
+XXX
+
+In some
+Prenatal plagiarism
+Foetal buffoons
+Caught tricks
+— — — — —
+
+From archetypal pantomime
+Stringing emotions
+Looped aloft
+— — — —
+
+For the blind eyes
+That Nature knows us with
+And the most of Nature    is green
+— — — — — — — — — —
+
+XXXI
+
+Crucifixion
+Of a busy-body
+Longing to interfere so
+With the intimacies
+Of your insolent isolation
+
+Crucifixion
+Of an illegal ego&#x27;s
+Eclosion
+On your equilibrium
+Caryatid    of an idea
+
+Crucifixion
+Wracked arms
+Index extremities
+In vacuum
+To the unbroken fall
+
+XXXII
+
+The moon is cold
+Joannes
+Where the Mediterranean — — — —
+
+XXXIII
+
+The prig of passion — — — —
+To your professorial paucity
+
+Proto-plasm was raving mad
+Evolving us — — —
+
+XXXIV
+
+Love — — — the preeminent literateur</pre>
+      </article>
+  </section>
+  <section class="author-section" id="natalie-diaz">
+    <h2 class="author-name">Natalie Diaz</h2>
+    
+      <article class="poem" id="p22">
+        <h3 class="poem-title">Alchemy Horse</h3>
+        
+        <pre class="poem-text">American they said + + but Horse I dreamed
+, and Horse became
+
+++            ++            ++
++  ++       +++     ++     ++    +++       ++     ++
++            +++                           +++             +
+
++ + + I was cleaved + from human-earth + + +
+Redsap lymph calcium + + + Atlas and femur
+, A new Chaos—
++ come forth + through the world’s foaming + crust
++ + then licked + into my roan skin
+
++ + + A flesh being bearing + its first dreamSelf + + +
+
+I came to life + + how stars appear—
+, Of dust + +
+
+collapsed + till struck
++        + +
++ ++              +     ++ to light + + +       +
++      ++   +        +            +   +     ++
+
+Dream-erupted—
+, Gila Monsters + lavablack + +
+
++++ Land +++ +++ +++
+, All its thunders + + +
+
+In this great magnetic field + +
+I am a knowledge system + + +
+
+My hair is a tangled Mojave Dictionary + + +
+, And my tongue + is a danger + +
+I speak a darkwhip + into the haboob’s goldthrob + + +
+
+This valley’s bright-weather is my ceremony + + +
+, Flashflood + is my medicine—
++ + how I clean myself of Self
+
++ + + America + + Hoard of Property + is a debris
++ of my cells— limestone + + wound-porous +
+sea-floor + + basalt + trilobite + camel bones +
+, glass and Blackmountain + + +
++
++ + + +
++ + + + + + +
+
++ + + We professional mourners + +
+crying for our lives + and for hire + + +
+From dark-colonies + in the caves behind our hearts
++ + we weep the sun to fall + and bats into the sky
+
++ + + We weep the saguaros to bloom + Eastward
++ and moonwhite + + soft-petaled wounds +
+circling their night-wrists and crowns + + +
+Grief is our lush and luxury—
+
+, The strain + of anything + that grows
++ + + Sand rose + + iron wood + + smoke tree + + +
+We tend dune-gardens + from Deadlands + +
+till the halite beds + + reap selenite thorns +
+from the horned toads’ backs + + +
+
++ + + In the a.m. heatwarp + vultures
++ ripple the violet skydome + + +
+A swarm of bloodgloved-archivists + + +
+They sky-write                                  + +
++ + + + +                     + + +                   + +
++ + +      + + + directions—
++ + + +                        + + + +
++ +                                            + +
++ +                                                        + +
+, To the museum , To the university
+, To the hospital + + +
+
+In this Epoch of Citizenship +
+I must arrive everywhere twice—
+, Occupied and Unceded + + +
+One hand The Comet + +
+the other hand + Who Makes the Comet Come
++ + + So call me Lodestone + or Alone + + +
+Whisper me +
+, Secret Magnet + + +
+
+In pink twilight + + my love and I are effigies
++ + leaching salt +
+through our terracotta hands + + +
+
+My language clays + + and maps +
+amaranth lather + along my thigh—a migration
++ of Exile—
+, A self-determined Relocation of pleasure—
+, wantneed + + +
+
+We are the origin + + oxygen + and always becoming
++ + + Bloodworms
++ from which new land might grow + + +
+, How we make soil + +
+then mud where we laid + + +
+Alchemy of our wet denim skinz + and gravity + + +
+
+We pulse animal and sensual + + +
+Thundercats of love + greening the desert—
+, Pale grasses + fruit in my breath
++ + grey-green along the belly of the nightbranch + + +
+
+We are + unacreable
++ + + We abrade + the transit + the survey
++ + hold tight and repeat ourselves +
+in crystal lattice + + +
+
+Come morning + + + Come Mercurylight + + +
+We are blessed and scattered + + +
+Shards + of a horsehead + water jar—
+, Lonely for a body + + and aching +
+for the cool taste + and shape the first water once took + + +
+
+This Nation + is a white bright + magnesium
++ NDN burn + + +
+I fume and illumine + in its quantum-arson—
+, Indian Iron Alchemy Horse + + +
+
++ + + My brothers are the Cold Killers + +
+shovelers + of silver anthracite + +
+fuelgods + of the midnight train
+
++ boxcar + jumptrack + jolt-light
++ + + Vaporing + + nightsalt + to cloud—
+, Mustanging + + +
+
+Every desert highway is sacred +
+and gas station pumps + break our hearts + + +
+We have pedal bones + white doctors call coffin bones
++ + + That’s why I’m always dying—
+
++ + + That’s why—
+, I’m always halfghost + + half-back + + half-dressed
++ as the war party who will return—
+, With a full tank of gas + + +
+, And a stick of scalps + + +
+
+Tonight the city + + is a tectonic bone radio—
+, Our ancestors are on every channel + + +
+
+Scorpions whip and fluoresce + from the shadows of Settler houses
+Green-eyed wolf spiders + emerge from their dens +
+to join the dark hunt + + +
+
+The midnight train + monsoons + around the bend
++ + recognizes me + as a relation + and cries +
+Chuk+Shon     Chuk+Shon     Chuk+Shon
+
++ +     + +        + +     + +        + +     + +
++ +     + +        + +     + +        + +     + +
++ +     + +        + +     + +        + +     + +
+
++ + + We are each + the other’s + passenger + + +
+
++ + + On the horizon + my warriors volcano + + +
++ + + I shatter cinders + from my hair
++ + I’ll watch them eat the day-aliens with flame
++ + + American + NDN + horse pyre + + +
+
+The Hohokam canals + crack awake + +
+gush their ghostwaters + through the settlement streets + + +
+blister + and boneflower + + +
+
+I war whoop out + into the empty + displaced hip +
+of the Ghost-sea + + and the Ghost-sea +
+war-weeps back +
+spiraling + the etched shells of my ears + + +
+
++  + + A + M + E + R + I + C + A—
+, Haunted hotel + shiprock + rockwreck + ship of fools + + +
+, Little giant cemetery + of braids
++ +       + +       + +       + +
+x           x            x           x
++++     +++      +++     +++
+x           x            x           x
++ +       + +       + +       + +
++           +          +           +
+
++ + + Beloved Occupiers + + I am posting notice—
+, There is no more vacancy + + +
+
+When this world has ended + I will carry my people + Home
++ + +</pre>
+      </article>
+      <article class="poem" id="p24">
+        <h3 class="poem-title">Excerpts from “Duned”</h3>
+        
+        <pre class="poem-text">The worst work of my hands is in English—: I’m a chiral body writing into what I cannot coincide.
+
+I’ve come to the mountain to bless these hands back. Clay clod &amp; gypsum—: a way my body has been &amp; will become. I rename one hand Occupied Territory, call to the other Amante Verde. &amp; the mountain sobs its hornblende to the surface.
+
+I am known in this place—: of Creation &amp; cascabel. Mojave Greens are my relatives. I holograph in the ambient heat, green quicked with copper. Don’t play with snakes they say Don’t play with your own power.
+
+Beneath the granite boulders the hibernaculum cools, empty with shed skins—: their spectered shells, curled ribbons of fried light.
+
+The pressure of molecule &amp; memory—: atmosphere bears touch on loop, apparates everything it has held. The salted swastiks of their bodies, thick, rope-heavy, a scent you have to lift.
+
+My flesh-light cleaves their old energy eyes, slips each slit of limonite &amp; aperture. In them I am struck—: a fever image. They coil into their handless work of transmutation, into radio sensation, rattling the hair on my forearms.
+
+She recognizes me not as human but as her own imagination. I am granite reorganized, a formation—: yet forming. I dream with the mountain because I am of the mountain.
+
+Grief for my elemental life respires my body. My snakes lick me from the wind like a chemical, return me to electric signal—: a web of small lightning suturing the mouth to the skull. Pleasure, unlanguaged &amp; noise.
+
+I was dreamed into being—: I was the dreamer. Skin fleshes the world it’s made of, in overwhelm.
+
+Cloud shadow drifts a gray whale across the salt flats—: a periphery of white halite crust surrounds its slow shade. My lover crystallizes this same way along the ridges of my knuckles &amp; back of my hand, the dorsal side, as we also call a fin—: I surfaced from deep submersion.
+
+There is no pleasure not earthen or wet. Ancient ocean, we say—: &amp; we mean every body.
+
+Sand’s gentle crust of berm edging the wash—: the desert a hot pie, juiceless yet swelling mirage. The neon red sign of a jackrabbit’s spine eaten to its glow, dropped from the sky, flickers in the bleach-light gushing the open land.
+
+How much love can a desert drink to bone? How many bodies—: pressed beneath this tectonic pie?
+
+A shelled vehicle in landscape—: rust-burning, slow bleed of oxide having laced the chassis, licked the light bucket to chrome edges.
+
+A ram’s scattered skeleton—: empty lake of pelvis, desert grapevines threading the bone sockets, tugging the jaw vee deeper into the canyon. Its broken horn is a curl of gold telephone I hold to my eye. I am dislocated. Some knowledge is not mine, some is but I haven’t arrived there yet.
+
+A long time ago the wind licked the coyote’s skull to glass—: this is how we happen. Atom-born, I bend back the atom world. My inheritance is hydrogen. How rain &amp; clouds happen to one another—: wet though risen up from dust, abundant.
+
+We have no word for God. It is sky because someone said it was. Until then, it was only what was in it: giant fish with pharyngeal teeth, orange sand clouds, &amp; ‘Amo—: the bighorn sheep made of stars &amp; staggered, spear still warm from the warrior’s hand,
+
+its shattered torso notching the night. The first wound was a clock, our hunger. We ate the mountain sheep—: now our moon is a curve of cold fat congealing on a blued bone &amp; lives in daylight, diurnal leftover.
+
+Over night’s black dunes we follow the trail of ‘Amo’s white face. If I speak of love—: who will believe me? The only poets in this desert are beryl &amp; jasper.
+
+Thunder is not thunder but the air broken by lighting. My lover backlit like a thunderhead, strapped with night until the softness of her hips disrupts—: her light-wet hands &amp; cock. I am the sound I make breaking in a room.
+
+We are always becoming—: from somewhere. Desire is a blood-colored worm flexing the sand sea around me. I have a power I am learning to be careful with.
+
+They say When you see Numet, she’s already been watching you. The stroke her long tail drags in the sand disappears where the loose wash turns granite outcrop. Looning &amp; lonely, I thundercat—: stalk myself through wind-flooded canyons, watch myself happen to me in the map of my hand.
+
+In the beginning we didn’t understand the bullet. It had no head, no arms or legs—: Menamentk we said. It crossed the water. We named it ‘Anya kwa’oorny. We named it Of the Sun. We had no word for shore, except how water touches land.
+
+They gave us the word shore for their bullet to arrive on. Then said our flesh was also Shore—: so we called the bullet Bullet. We name things for what is done there.
+
+The injuries of becoming human. Tuu’achk—: shoulder blades from turtle shell, hand from wing. The carpus erupting petals of wrist—: bone-flower, flesh.
+
+Bats ripen like fruit in the lava fields, in volcanic caves of basalt. Dusk buds their breathing wings—: flowering angel-beasts. The bats remember when we loved ourselves &amp; called so tenderly into twilight that our words brought us the throbbing world—: mosquito &amp; blood. Kenakenem.
+
+Even the eye’s small water will evaporate to quench the sun. I search the rain from the tongues of my skin—: it is four months away.
+
+The horse has been dead in the dunes all summer. Sun-chromed ravens in early devotion opened each bright window along its bloated belly—: unthreaded red curtains.
+
+Desert as Plutonian shore—: the torso open, a sand-torn sail of hide flapping above the funeral boat. In Mojave a horse is what it does &amp; how it does it, but our word for boat is a wooden box.
+
+Mesquite pods drip in light from turquoise branches. Coyotes mistake the pool for moon water. If the shepherds don’t poison the coyotes—: the coyotes will eat the pods &amp; scat them out.
+
+Scarification—: the obligation of breaking, of rock &amp; whelm.
+
+Every scar loses its wound. In the valley of loss I shift shape, an ache—: become one hundred coyotes in the ‘analy grove weeping from every fleshed door of my body.
+
+The land of Death is a duned land. Xeric. Saly’aay. Saly’aat. We burn our dead we say—: because we do. Touch me I say, because it’s a story we become.</pre>
+      </article>
+      <article class="poem" id="p23">
+        <h3 class="poem-title">If I Should Come Upon Your House Lonely in the West Texas Desert</h3>
+        
+        <pre class="poem-text">I will swing my lasso of headlights
+across your front porch,
+
+let it drop like a rope of knotted light
+at your feet.
+
+While I put the car in park,
+you will tie and tighten the loop
+
+of light around your waist —
+and I will be there with the other end
+
+wrapped three times
+around my hips horned with loneliness.
+
+Reel me in across the glow-throbbing sea
+of greenthread, bluestem prickly poppy,
+
+the white inflorescence of yucca bells,
+up the dust-lit stairs into your arms.
+
+If you say to me, This is not your new house
+but I am your new home,
+
+I will enter the door of your throat,
+hang my last lariat in the hallway,
+
+build my altar of best books on your bedside table,
+turn the lamp on and off, on and off, on and off.
+
+I will lie down in you.
+Eat my meals at the red table of your heart.
+
+Each steaming bowl will be, Just right.
+I will eat it all up,
+
+break all your chairs to pieces.
+If I try running off into the deep-purpling scrub brush,
+
+you will remind me,
+There is nowhere to go if you are already here,
+
+and pat your hand on your lap lighted
+by the topazion lux of the moon through the window,
+
+say, Here, Love, sit here — when I do,
+I will say, And here I still am.
+
+Until then, Where are you? What is your address?
+I am hurting. I am riding the night
+
+on a full tank of gas and my headlights
+are reaching out for something.</pre>
+      </article>
+      <article class="poem" id="p25">
+        <h3 class="poem-title">It Was the Animals</h3>
+        
+        <pre class="poem-text">Today my brother brought over a piece of the ark
+wrapped in a white plastic grocery bag.
+
+He set the bag on my dining table, unknotted it,
+peeled it away, revealing a foot-long fracture of wood.
+He took a step back and gestured toward it
+with his arms and open palms—
+
+It’s the ark, he said.
+You mean Noah’s ark? I asked.
+What other ark is there? he answered.
+
+Read the inscription, he told me.
+It tells what’s going to happen at the end.
+What end? I wanted to know.
+He laughed, What do you mean, ‘What end?’
+The end end.
+
+Then he lifted it out. The plastic bag rattled.
+His fingers were silkened by pipe blisters.
+He held the jagged piece of wood so gently.
+I had forgotten my brother could be gentle.
+
+He set it on the table the way people on television
+set things when they’re afraid those things might blow up
+or go off—he set it right next to my empty coffee cup.
+
+It was no ark—
+it was the broken end of a picture frame
+with a floral design carved into its surface.
+
+He put his head in his hands—
+
+I shouldn’t show you this—
+God, why did I show her this?
+It’s ancient—O, God,
+this is so old.
+Fine, I gave in. Where did you get it?
+The girl, he said. O, the girl.
+What girl? I asked.
+You’ll wish you never knew, he told me.
+
+I watched him drag his wrecked fingers
+over the chipped flower-work of the wood—
+
+You should read it. But, O, you can’t take it—
+no matter how many books you’ve read.
+
+He was wrong. I could take the ark.
+I could even take his marvelously fucked fingers.
+The way they almost glittered.
+
+It was the animals—the animals I could not take—
+
+they came up the walkway into my house,
+cracked the doorframe with their hooves and hips,
+marched past me, into my kitchen, into my brother,
+
+tails snaking across my feet before disappearing
+like retracting vacuum cords into the hollows
+of my brother’s clavicles, tusks scraping the walls,
+
+reaching out for him—wildebeests, pigs,
+the oryxes with their black matching horns,
+javelinas, jaguars, pumas, raptors. The ocelots
+with their mathematical faces. So many kinds of goat.
+So many kinds of creature.
+
+I wanted to follow them, to get to the bottom of it,
+but my brother stopped me—
+
+This is serious, he said.
+You have to understand.
+It can save you.
+
+So I sat down, with my brother ruined open like that,
+and two by two the fantastical beasts
+parading him. I sat, as the water fell against my ankles,
+built itself up around me, filled my coffee cup
+before floating it away from the table.
+
+My brother—teeming with shadows—
+a hull of bones, lit by tooth and tusk,
+lifting his ark high in the air.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="ocean-vuong">
+    <h2 class="author-name">Ocean Vuong</h2>
+    
+      <article class="poem" id="p18">
+        <h3 class="poem-title">Independence Day</h3>
+        
+        <pre class="poem-text">I set out in the blue American
+night, this stupid sparkler
+raised in my fist. Electroshocked
+dandelion. Smoke columns
+over the sock factory giving the moon
+that Inness blur. No we’re not
+falling. Things are just floating back
+where they belong. The brushstroke of seafoam
+in the painter’s dream
+as he lays in bed dying. Where
+does it go? The sparkler lends
+my hospital gown a county-fair
+glow. I carry it across
+the parking lot. Where her Toyota
+idles in the wrong
+century. Slipping it in
+my mother’s mouth
+I tell her
+she can go anywhere, be anyone
+in this vast, possible land now
+that she’s a ghost—the freest
+thing I know.</pre>
+      </article>
+      <article class="poem" id="p20">
+        <h3 class="poem-title">Kissing in Vietnamese</h3>
+        
+        <pre class="poem-text">My grandmother kisses
+as if bombs are bursting in the backyard,
+where mint and jasmine lace their perfumes
+through the kitchen window,
+as if somewhere, a body is falling apart
+and flames are making their way back
+through the intricacies of a young boy’s thigh,
+as if to walk out the door, your torso
+would dance from exit wounds.
+When my grandmother kisses, there would be
+no flashy smooching, no western music
+of pursed lips, she kisses as if to breathe
+you inside her, nose pressed to cheek
+so that your scent is relearned
+and your sweat pearls into drops of gold
+inside her lungs, as if while she holds you
+death also, is clutching your wrist.
+My grandmother kisses as if history
+never ended, as if somewhere
+a body is still
+falling apart.</pre>
+      </article>
+      <article class="poem" id="p19">
+        <h3 class="poem-title">Self-Portrait as Exit Wounds</h3>
+        
+        <pre class="poem-text">Instead, let it be the echo to every footstep
+drowned out by rain, cripple the air like a name
+
+flung onto a sinking boat, splash the kapok’s bark
+through rot &amp; iron of a city trying to forget
+
+the bones beneath its sidewalks, then through
+the refugee camp sick with smoke &amp; half-sung
+
+hymns, a shack rusted black &amp; lit with Bà Ngoại’s
+last candle, the hogs’ faces we held in our hands
+
+&amp; mistook for brothers, let it enter a room illuminated
+with snow, furnished only with laughter, Wonder Bread
+
+&amp; mayonnaise raised to cracked lips as testament
+to a triumph no one recalls, let it brush the newborn’s
+
+flushed cheek as he’s lifted in his father’s arms, wreathed
+with fishgut &amp; Marlboros, everyone cheering as another
+
+brown gook crumbles under John Wayne’s M16, Vietnam
+burning on the screen, let it slide through their ears,
+
+clean, like a promise, before piercing the poster
+of Michael Jackson glistening over the couch, into
+
+the supermarket where a Hapa woman is ready
+to believe every white man possessing her nose
+
+is her father, may it sing, briefly, inside her mouth,
+before laying her down between jars of tomato
+
+&amp; blue boxes of pasta, the deep-red apple rolling
+from her palm, then into the prison cell
+
+where her husband sits staring at the moon
+until he’s convinced it’s the last wafer
+
+god refused him, let it hit his jaw like a kiss
+we’ve forgotten how to give one another, hissing
+
+back to ’68, Ha Long Bay: the sky replaced
+with fire, the sky only the dead
+
+look up to, may it reach the grandfather fucking
+the pregnant farmgirl in the back of his army jeep,
+
+his blond hair flickering in napalm-blasted wind, let it pin
+him down to dust where his future daughters rise,
+
+fingers blistered with salt &amp; Agent Orange, let them
+tear open his olive fatigues, clutch that name hanging
+
+from his neck, that name they press to their tongues
+to relearn the word live, live, live—but if
+
+for nothing else, let me weave this deathbeam
+the way a blind woman stitches a flap of skin back
+
+to her daughter’s ribs. Yes—let me believe I was born
+to cock back this rifle, smooth &amp; slick, like a true
+
+Charlie, like the footsteps of ghosts misted through rain
+as I lower myself between the sights—&amp; pray
+
+that nothing moves.</pre>
+      </article>
+      <article class="poem" id="p21">
+        <h3 class="poem-title">Tell Me Something Good</h3>
+        
+        <pre class="poem-text">You are standing in the minefield again.
+Someone who is dead now
+
+told you it is where you will learn
+to dance. Snow on your lips like a salted
+
+cut, you leap between your deaths, black as god’s
+periods. Your arms cleaving little wounds
+
+in the wind. You are something made. Then made
+to survive, which means you are somebody’s
+
+son. Which means if you open your eyes, you’ll be back
+in that house, beneath a blanket printed with yellow sailboats.
+
+Your mother’s boyfriend, his bald head ringed with red
+hair, like a planet on fire, kneeling
+
+by your bed again. Air of whiskey &amp; crushed
+Oreos. Snow falling through the window: ash returned
+
+from a failed fable. His spilled-ink hand
+on your chest. &amp; you keep dancing inside the minefield—
+
+motionless. The curtains fluttering. Honeyed light
+beneath the door. His breath. His wet blue face: earth
+
+spinning in no one’s orbit. &amp; you want someone to say Hey…Hey
+I think your dancing is gorgeous. A little waltz to die for,
+
+darling. You want someone to say all this
+is long ago. That one night, very soon, you’ll pack a bag
+
+with your favorite paperback &amp; your mother’s .45,
+that the surest shelter was always the thoughts
+
+above your head. That it’s fair—it has to be—
+how our hands hurt us, then give us
+
+the world. How you can love the world
+until there’s nothing left to love
+
+but yourself. Then you can stop.
+Then you can walk away—back into the fog
+
+-walled minefield, where the vein in your neck adores you
+to zero. You can walk away. You can be nothing
+
+&amp; still breathing. Believe me.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="patricia-smith">
+    <h2 class="author-name">Patricia Smith</h2>
+    
+      <article class="poem" id="p41">
+        <h3 class="poem-title">Don’t You Wanna</h3>
+        
+        <pre class="poem-text">A double golden shovel
+
+C’mon in, out of that wretched hot, out of the hammer of heat, c’mon!
+Baby, don’t you let these blistering Chi streets put the dead on you. Baby,
+don’t you hear that gravel groan, all those wails of been-done-wrong, don’t
+you wanna dance, just once, with your backside ’gainst the floor? Don’t you
+want to know how grown folk handle heartbroke? You know the boys want
+to see all your sugarbottom dripping off a piece of barstool, they want to
+go a little crazy with a lotta you on the dance floor. Loose that swivel! Go!
+C’mon, sidle on up to the Alabama man on the mic, give him that come-on,
+baby, make him play that brown liquor song that ain’t got no bottom— Baby,
+don’t go, please don’t go, he screeches, hurt all up in his neck. Please don’t
+you leave me, woman! And like a blue man do, he already knows what you
+want, how you want it. You want to suffer to the roots of your wig, you want
+to break the last written rules in the pulpit of this wicked church, you want to
+go wallow in the nasty and the necessary, where every way out is alley, go
+back to the west side and lunches of improbable pig, you want to go back
+to being a bowlegged goddess only a kingdom like Chicago could love. To
+that, and to you, we raise our jelly jars brimming with hootch. You’re that
+same woman who makes men know their knees. Yeah, you’re that same
+ol’ gal who pains a man so hard his voice skips like a record. Only one ol’
+place got the muscle to birth a woman as woman as you. Just one place,
+sweet like Nehi grape soda and sour pickle peppermints. It’s our sweet
+home, roguish and royal, that wild child riding the lip of a lake. It’s home.
+Chicago is sky enough for a storm like you—a storm that hisses Chicago.</pre>
+      </article>
+      <article class="poem" id="p40">
+        <h3 class="poem-title">The Price of the End of It</h3>
+        
+        <pre class="poem-text">But now it’s her stooped body in queue for the slab,
+her blessed temperature you’re fiddlin’ with, and God’s
+holy directive shifts accordingly. Your mother holds
+the tasteful funeral home brochures an inch from her
+eyes until their horrible words unblur, shakes her head
+at the insane cost of the gilded, pall-borne tribute she truly
+craves, asks again for whatever’s cheap. May her Lord
+forgive you as you just keep shuffling that cremation info
+to the top of the pile. You remember how stupidly she
+bobs her napped head to the wagging finger of God,
+God again, always God, how resolutely she clutches
+all the bluish notes in gospel—for her, “the fire next
+time” is not a frugal means of disposing of soulless
+shells, it is payback for a life clawed together outside
+of her savior’s cold little classroom. Oh, never you mind
+the lesson she drilled into you after a handgun blasted
+your father out of the world, what she said to end your
+bouts of snot and fever, your worrisome new habits of
+snatching tufts of hair from your own head and screaming
+the onsets of dawn—Your daddy’s not in that ol’ body
+anymore— and you unrolled your eyes just in time to look
+that pliant, just in time to make her think you believed her.
+
+Now that she has refused to the neat conclusion of ash,
+you are thinking of all the damned reams of paperwork
+glorious ceremony requires, the feel of scrawling your
+name over and over to officially end her. There will be too
+many syrupy, flowers draped over everywhere, the casket
+lid flipped open, your oblivious mother’s vaguely
+whorish makeup job. You dread the hearse’s eerie creep
+through annoyed Ubers, the depressing pit, mourners
+sneaking cell snaps, taking note of your absence of ache.
+While this strange woman comparison-shops, zeroing in
+on the pauper’s special—Girl, what is a cloth casket?—
+you remember years of screaming her name into a dead
+phone after she scrubbed her whole history of your needy
+little face. Now that she is frail and beholding, you should
+demand that she answer for that kind of love. Or you
+can love that way too. Go on. Throw a match into her hair.</pre>
+      </article>
+      <article class="poem" id="p43">
+        <h3 class="poem-title">The Succumbing</h3>
+        
+        <pre class="poem-text">For Firemen Joseph Graffagnino and Robert Beddia,
+lost in the Deutsche Bank Building, NYC, August 18, 2007
+
+Sizzle, gallop, pushing spew of spark and angle,
+fire beyond its normal rage and human border,
+taunting skin. And Joseph’s cage is now collapsing,
+barely, very barely, managing to hold his
+thawing heart’s despairing claw, its shrinking language.
+Landscape still beneath him, arms still blindly flailing,
+Bobby must remember that to squelch the blazing
+means to resurrect deceit, to conjure just the
+sound of water on the tongue. The goddamned fools who
+seek to save a wall must swallow razors, forkfuls
+of a dimming light, must pray to conjure current.
+Shuttered throats go craving for a gasp, a way to
+scare the day aloose, to flood those shrinking roads with
+fuel, whiskey—anything that flows. We’re running
+out of air. The burning riddle-spits, confounding
+wind, and whittles towards the bursting bones of both our
+boys. Days after, soft and sated smoke will drift like
+bland religions up, till someone late for work—some
+sweating stressed New Yorker who barely snags the 6—
+slams himself, panting, sideways in a seat. It’s hot
+as holy hell he spits, We’re going to die in here.</pre>
+      </article>
+      <article class="poem" id="p42">
+        <h3 class="poem-title">What Daughters Come Down To</h3>
+        
+        <pre class="poem-text">For what I’m sure is the fifth time, my mother
+plugs in a flat mournful hum where the words
+I love you too should be. Then she hangs up
+without saying goodbye. I squeeze my eyes
+shut, try to imagine 82 autumns in the bones,
+in her rasping joints, in the cool, jaded thump
+of what is still a migrant’s ever-arriving heart.
+However, I believe she is required to love me.
+I wonder what God was teaching her all those
+years, those day after days coaxing raucous
+hips into deadening girdles and gray A-lines
+so she could lose her damned mind to organ.
+Was it all theater, a screeching of north when
+south was what itched her, all of it mock belly,
+the nails, splinter-spewing cross, some sly
+spirit habitually overloading her spine, making
+her dance thirsty and unfolded? How could all
+those wry hymns and hot-sauced hallelujahs
+lead to this hum, clipped connect and hush?
+I am hundreds of miles away, but I can see
+where she is sitting, hand still on the phone.
+Every surface in her tiny apartment is scoured
+and bleached, draped in a disinfectant meld
+of rainshower and blades. The kitchen glints.
+Her rugs are faultless. The purpled tulips I
+have sent for her birthday are insistent feral
+beauty, a blood in the room. Like her daughter,
+they have bloomed in the clutches of vapor.
+I love you too, she thinks out loud, but can’t.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="rainer-maria-rilke">
+    <h2 class="author-name">Rainer Maria Rilke</h2>
+    
+      <article class="poem" id="p2">
+        <h3 class="poem-title">Archaic Torso of Apollo</h3>
+        <div class="meta">Originally in German, tr. A.S. Kline</div>
+        <pre class="poem-text">We cannot know his legendary head
+with eyes like ripening fruit. And yet his torso
+is still suffused with brilliance from inside,
+like a lamp, in which his gaze, now turned to low,
+
+gleams in all its power. Otherwise
+the curved breast could not dazzle you so, nor could
+a smile run through the placid hips and thighs
+to that dark center where procreation flared.
+
+Otherwise this stone would seem defaced
+beneath the translucent cascade of the shoulders
+and would not glisten like a wild beast&#x27;s fur:
+
+would not, from all the borders of itself,
+burst like a star: for here there is no place
+that does not see you. You must change your life.</pre>
+      </article>
+      <article class="poem" id="p1">
+        <h3 class="poem-title">The Panther</h3>
+        <div class="meta">Originally in German, tr. A.S. Kline</div>
+        <pre class="poem-text">His gaze has grown so tired from the bars
+passing, that it holds nothing anymore.
+For him it&#x27;s as though there were a thousand bars,
+and behind the thousand bars no world.
+
+The soft padding of his powerful stride,
+that turns in the very smallest circle,
+is like a dance of strength around a center
+in which a mighty will stands stupefied.
+
+Only sometimes the curtain of the pupil
+silently slides up — . Then an image enters,
+goes through the taut stillness of the limbs —
+reaches the heart, and dies.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="robin-coste-lewis">
+    <h2 class="author-name">Robin Coste Lewis</h2>
+    
+      <article class="poem" id="p72">
+        <h3 class="poem-title">Cavafy in Compton/Closet Anthem Self-Portrait at 16</h3>
+        
+        <pre class="poem-text">A translation of Konstantin Cavafy’s “I was asking about the quality”
+For Felicia, Kipper, Oscar, and Kevin.
+And for Ted and Barron, in memoriam
+
+I came out
+of the office
+
+where I had been
+hired in another shitty, low-paying job
+
+(My weekly pay was nothing more
+than fifty dollars a week, most from tips).
+
+With my waitress shift over, I came out
+at seven and walked slowly. I fell out
+
+into the street, handsome, but compelling.
+It felt as if I had finally reached the full potential
+
+of my own beauty (I’d turned
+sixteen the previous month).
+
+I kept wandering all around
+the newly-cemented streets,
+
+the quiet and old black alleys, past
+the cemetery leading to our home.
+
+But then, as I’d paused in front of a clothing store
+where some skirts were on sale
+
+(polyester, cheap), I saw this face
+inside—a girl—whose eyes urged me
+
+to come inside. So, I entered—
+pretending I was looking
+
+for embroidered handkerchiefs.
+I was asking about the quality—
+
+of her handkerchiefs—how much
+they cost—in a whispery voice breaking open
+
+with desire—and accordingly came her
+shop-girl answers—rote, memorized—but beneath her
+
+words, her eyes kept ablaze: Yes.
+Mine, too, were a psalm of consent.
+
+We kept talking about the handkerchiefs,
+but all the while our one and only goal was this:
+
+to brush each other’s hands—quickly—
+over the handkerchiefs—to lean
+
+our faces and lips
+nearer to each other, as if
+
+by accident. We moved quickly,
+cautiously, yet deliberately—
+
+in case her grandfather—sitting in
+the back—were to suspect something.</pre>
+      </article>
+      <article class="poem" id="p74">
+        <h3 class="poem-title">The Ark: Self-Portrait as Aphrodite Using Her Dress for a Sail, ii.</h3>
+        
+        <pre class="poem-text">Early morning. Still dark. I am in a taxi. The most elegant ‘ti Creole in the world is on the radio. I catch a sliver and think how one tiny word can be sacred—an artifact—the only green thing that returns inside the beak.
+okra
+
+We stop at a toll. It is just a toll—a toll like any toll—but I am thinking, We are all the children of migrants, none of us come from here. And I wonder if the toll-taker ever imagined that one day it would be this black mask in the back seat, or that red mask on the driver.
+The toll-taker smiles. I smile. We all smile. It is nine degrees outside. For a moment I am underwater and can’t remember which city I am in. Not Boston, but London, Dublin maybe. Or maybe cities no longer exist. Maybe they are all beginning to shrink away, plane by plane, brick by brick. A woman lying dead on her couch for three years watching television.
+And then, perhaps because I am suddenly unsure of which town I am in, or which town I will be in by evening, the thought to pass through my mind next is, And just what is so wrong with being destroyed?</pre>
+      </article>
+      <article class="poem" id="p73">
+        <h3 class="poem-title">The Ark: Self-Portrait as Aphrodite Using Her Dress for a Sail, xxx.</h3>
+        
+        <pre class="poem-text">Or perhaps—perhaps—I am just an upturned tree, all my roots earth
+laden and bare. Perhaps I fell over so I could worship at the altars of birds.
+Or I am a harlequin waterfowl, speckled—black-white, black-white—
+hiding safely in day or night. My eyelids are made of feathers
+so dark they throw off an emerald sheen. And here I am—still—at home
+bobbing on top of this endless white sea, batting my lashes
+toward every beacon—on any remaining shore—ignited
+and burning brightly throughout all the black worlds.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="ross-gay">
+    <h2 class="author-name">Ross Gay</h2>
+    
+      <article class="poem" id="p30">
+        <h3 class="poem-title">Again</h3>
+        
+        <pre class="poem-text">Because I love you, and beneath the dying stars
+I have become the delicate piston threading itself through your chest,
+
+I want to tell you a story I shouldn’t but will and in the meantime neglect, Love,
+the discordant melody spilling from my ears but attend,
+
+instead, to this tale, for a river burns inside my mouth
+and it wants both purgation and to eternally sip your thousand drippings;
+
+and in the story is a dog and unnamed it leads to less heartbreak,
+so name him Max, and in the story are neighborhood kids
+
+who spin a yarn about Max like I’m singing to you, except they tell a child,
+a boy who only moments earlier had been wending through sticker bushes
+
+to pick juicy rubies, whose chin was, in fact, stained with them,
+and combining in their story the big kids make
+
+the boy who shall remain unnamed believe Max to be sick and rabid,
+and say his limp and regular smell of piss are just two signs,
+
+but the worst of it, they say, is that he’ll likely find you in the night,
+and the big kids do not giggle, and the boy does not giggle,
+
+but lets the final berries in his hand drop into the overgrowth
+at his feet, and if I spoke the dream of the unnamed boy
+
+I fear my tongue would turn an arm of fire so I won’t, but
+know inside the boy’s head grew a fire beneath the same stars
+
+as you and I, Love, your leg between mine, the fine hairs
+on your upper thigh nearly glistening in the night, and the boy,
+
+the night, the incalculable mysteries as he sleeps with a stuffed animal
+tucked beneath his chin and rolls tight against his brother
+
+in their shared bed, who rolls away, and you know by now
+there is no salve to quell his mind’s roaring machinery
+
+and I shouldn’t tell you, but I will,
+the unnamed boy
+
+on the third night of the dreams which harden his soft face
+puts on pants and a sweatshirt and quietly takes the spade from the den
+
+and more quietly leaves his house where upstairs his father lies dreamless,
+and his mother bends her body into his,
+
+and beneath these same stars, Love, which often, when I study them,
+seem to recede like so many of the lies of light,
+
+the boy walks to the yard where Max lives attached to a steel cable
+spanning the lawn, and the boy brings hot dogs which he learned
+
+from Tom &amp; Jerry, and nearly urinating in his pants he tosses them
+toward the quiet and crippled thing limping across the lawn,
+
+the cable whispering above the dew-slick grass, and Max whimpers,
+and the boy sees a wolf where stands this ratty
+
+and sad and groveling dog and beneath these very stars
+Max raises his head to look at the unnamed boy
+
+with one glaucous eye nearly glued shut
+and the other wet from the cool breeze and wheezing
+
+Max catches the gaze of the boy who sees,
+at last, the raw skin on the dog’s flanks, the quiver
+
+of his spindly legs, and as Max bends his nose
+to the franks the boy watches him struggle
+
+to snatch the meat with his gums, and bringing the shovel down
+he bends to lift the meat to Max’s toothless mouth,
+
+and rubs the length of his throat and chin,
+Max arching his neck with his eyes closed, now,
+
+and licking the boy’s round face, until the boy unchains the dog,
+and stands, taking slow steps backward through the wet grass and feels,
+
+for the first time in days, the breath in his lungs, which is cool,
+and a little damp, spilling over his small lips, and he feels,
+
+again, his feet beneath him, and the earth beneath them, and starlings
+singing the morning in, and the somber movement of beetles
+
+chewing the leaves of the white birch, glinting in the dark, and he notices,
+Darling, an upturned nest beneath the tree, and flips it looking for the blue eggs
+
+of robins, but finds none, and placing a rumpled crimson feather in his mouth
+slips the spindly thicket into another tree, which he climbs
+
+to watch the first hint of light glancing above the fields, and the boy
+eventually returns to his thorny fruit bush where an occasional prick
+
+leaves on his arm or leg a spot of blood the color of these raspberries
+and tasting of salt, and filling his upturned shirt with them he beams
+
+that he could pull from the earth that which might make you smile,
+Love, which you’ll find in the fridge, on the bottom shelf, behind the milk,
+
+in the bowl you made with your own lovely hands.</pre>
+      </article>
+      <article class="poem" id="p29">
+        <h3 class="poem-title">Throwing Children</h3>
+        
+        <pre class="poem-text">It is really something when a kid who has a hard time becomes a kid who’s having a good time in no small part thanks to you throwing that kid in the air again and again on a mile long walk home from the Indian joint as her mom looks sideways at you like you don’t need to keep doing this because you’re pouring with sweat and breathing a little bit now you’re getting a good workout but because the kid laughs like a horse up there laughs like a kangaroo beating her wings against the light because she laughs like a happy little kid and when coming down and grabbing your forearm to brace herself for the time when you will drop her which you don’t and slides her hand into yours as she says for the fortieth time the fiftieth time inexhaustible her delight again again again and again and you say give me til the redbud tree or give me til the persimmon tree because she knows the trees and so quiet you almost can’t hear through her giggles she says ok til the next tree when she explodes howling yanking your arm from the socket again again all the wolves and mourning doves flying from her tiny throat and you throw her so high she lives up there in the tree for a minute she notices the ants organizing on the bark and a bumblebee carousing the little unripe persimmon in its beret she laughs and laughs as she hovers up there like a bumblebee like a hummingbird up there giggling in the light like a giddy little girl up there the world knows how to love.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="sharon-olds">
+    <h2 class="author-name">Sharon Olds</h2>
+    
+      <article class="poem" id="p44">
+        <h3 class="poem-title">Boxer Aria</h3>
+        
+        <pre class="poem-text">When no one’s around, a man could go
+all day, in the woods, and down by the lake,
+and into the house and back out in the garden,
+without zipping his pants. The belt
+holds them up, around his hips,
+secure as any loin cloth
+or lava-lava, the man is free
+and unobserved, observing the land
+and its creatures, each aware of him,
+but not of his costume,
+or the partial uncostume of his liberty,
+but only of the actions of his homemaking art,
+his music of earth’s caretaking—
+forest trails blazed with ribbon,
+pitcher plants transplanted, wood
+sawn and split, stacked or scattered,
+and part of the pleasure is to be unfettered,
+a hem of a leg of the boxers sometimes
+showing through the open fly
+like a flag of home. And someone who loves him
+loves that flash of carefreeness, that
+hanky peeking out of an eden pocket,
+an eden with no God or Eve in it,
+but only the original Adam. But someone
+who loves him had better not sing it, it is no one’s
+business but his. If someone sings him—
+the way his labors are singing nature—it might
+seem as if the scenery spoke,
+or as if some Lilith, her work of words
+no less at home than his work of creation,
+sang him as he sings the earth,
+language escaping her lips as a corner of
+fabric escapes his jeans like the jousting
+favor of one who is in thrall to no one,
+only to freedom.</pre>
+      </article>
+      <article class="poem" id="p45">
+        <h3 class="poem-title">Not Once</h3>
+        
+        <pre class="poem-text">Not once—not when I toppled, rigid, a
+5&#x27;7&quot; pine felled,
+stiff as a board, a five and a half foot
+plank, 16 x 32,
+and not while I wallowed on the rug among
+his oxygen tubes and my cane and his 8
+wheelchair wheels, and not when I sat by his
+hospice bed, chirping I’m fine!,
+and not the next day, when the brilliant violet
+and black slash-slathered in my easy-life skin,
+or days later when the purple turned yellow and the
+blue green—never once when I
+said No pain, Nothing broken,
+did I feel lucky, did I measure the force of the
+blow, the floor speeding up like a heavy-weight’s
+smash to my cheek and eyebrow, not until
+today, did I begin to feel
+grateful for my good fortune—no concussion, no
+fracture—as if I expected to be able to be
+struck by the earth, a wrecking ball,
+and not feel it—
+as when someone on the other side of the world,
+or the city, is struck in my name, I do not feel it.</pre>
+      </article>
+      <article class="poem" id="p47">
+        <h3 class="poem-title">Song to Gabriel Hirsch</h3>
+        
+        <pre class="poem-text">We first met in your home. Outside,
+summer fire. Inside, Texas
+summer ice, I was wiped out
+by travel and illness, lying on a couch,
+which made me a good height for you to talk to.
+That I had a son with the same name
+as you, struck you with wonder—me, too—
+one name, one label, two beings. We said,
+to each other, I think, whatever came into
+our minds—put there by what the other
+had just said—as if we threw,
+one by one, taking turns, those
+intensely dried paper flowers
+of my childhood, into a glass of water,
+and watched them uncurl, fast, uneven,
+and bright—and tossed another. We were in
+the present moment, so intensely in it
+everything outside it took a step back,
+out of the light, then another step back.
+And that was where we met, next,
+years later, in that light, you were so
+intent, alert, alive, as if
+in the grip of a fierce brightness, and moving
+around in it, quick in its grip. I wish I had
+been there, last week, to hear your best friend,
+who had met you eye to eye—in what,
+in your childhood, was the future—talk of how
+extraordinary you were, my almost
+unknown dear, your mother’s and father’s
+dearest. You were wearing a cape, that first day,
+a cloak of many colors, a cloud,
+your hand on the shoulder of the wild creature of your life.</pre>
+      </article>
+      <article class="poem" id="p46">
+        <h3 class="poem-title">The Task of Naming Me</h3>
+        
+        <pre class="poem-text">I don’t think the task of naming me
+fell to my father because they thought
+the sex of the child was decided by the sperm—
+I don’t think they knew that. They thought that giving
+a name was a big deal, so it should be
+a man who did it—and my mother was grieving,
+her Father in heaven had given her
+another daughter. In the room where new parents
+pay and check out, they won’t let you take
+your baby home if you haven’t named her.
+I think there would have been a flourish,
+a flash for the nurses in his dark brown eyes,
+a delay as he closed his eyes and held his
+frat-boy finger above the open
+Bible, then brought his digit down into the
+creek-bed of eros, the laid-open
+lady book, and touched my name.
+This morning I wondered if it was on purpose
+he opened the book way back in war,
+in Kings and Numbers, letting the Psalms
+and Proverbs and Ecclesiastes go by,
+good-bye to Isaiah and Jeremiah,
+and stopped, blind, at the narrow window
+of a song—the slot for the crossbow’s arrow
+between turret bulges—he touched my name among
+the roses and the lilies, I rose up
+under my father’s thumb, and his fruit was
+sweet to my taste, and the shade of his presence
+has been all my life a rich and enduring night.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="solmaz-sharif">
+    <h2 class="author-name">Solmaz Sharif</h2>
+    
+      <article class="poem" id="p75">
+        <h3 class="poem-title">Dear Aleph,</h3>
+        
+        <pre class="poem-text">You’re correct. Every nation hates
+its children. This is a requirement of statehood.
+
+This and empathy.
+Empathy means
+
+laying yourself down
+in someone else’s chalklines
+
+and snapping a photo. A Chrysler
+with four bullet holes
+
+in the rear passenger door
+just drove by calmly, signaling
+
+before it turned. Oh, Mrs. Evans,
+you’re such a wonderful woman,
+
+said, supposedly, Ethel Rosenberg
+to the woman who walked her
+
+to the chair.
+It was empathy on Evans’s part.
+
+Love on Ethel’s.
+I am a wonderful woman
+
+more often than I care to admit.
+We are going to have
+
+our first woman president.</pre>
+      </article>
+      <article class="poem" id="p77">
+        <h3 class="poem-title">He, Too</h3>
+        
+        <pre class="poem-text">Returning to the US, he asks
+my occupation. Teacher.
+
+What do you teach?
+Poetry.
+
+I hate poetry, the officer says,
+I only like writing
+where you can make an argument.
+
+Anything he asks, I must answer.
+This he likes, too.
+
+I don’t tell him
+he will be in a poem
+where the argument will be
+
+anti-American.
+
+I place him here, puffy,
+pink, ringed in plexi, pleased
+
+with his own wit
+and spittle. Saving the argument
+I am let in
+
+I am let in until</pre>
+      </article>
+      <article class="poem" id="p76">
+        <h3 class="poem-title">Visa</h3>
+        
+        <pre class="poem-text">From past participle of videre or to see.
+The sight decided by officer.
+The officer deciding by blood sugar, last blow job received, and relative
+level of disdain for vermin.
+Domestic terminals do not have this railing at the exit.
+As we wait for her to exit customs, our sightline is obstructed by opaque
+sliding doors, the twisting hallway behind it, the small convex mirror
+hung in the corner in which we catch shapes growing larger, into hair
+color, into gait, into age, and finally, as they turn, into kin.
+The hours I’ve stood there, behind that railing.
+The hours I’ve stood to savor the seconds earlier, seconds more by which
+my eye may reach the disembarking and exclaimed, “She’s here,”
+watched, from shadow to shape to gait, my imagined life come to life
+and approach, briefly, me.
+My imagined life crying hot in my ear.
+Ink on its fingerpads.
+This will be the last I write of it directly, I say each time.
+This is a light that lights everything and dimly.
+All my waiting at this railing.
+All my writing is this squint.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="sonia-sanchez">
+    <h2 class="author-name">Sonia Sanchez</h2>
+    
+      <article class="poem" id="p86">
+        <h3 class="poem-title">A Poem for Ella Fitzgerald</h3>
+        
+        <pre class="poem-text">when she came on the stage, this Ella
+there were rumors of hurricanes and
+over the rooftops of concert stages
+the moon turned red in the sky,
+it was Ella, Ella.
+queen Ella had come
+and words spilled out
+leaving a trail of witnesses smiling
+amen—amen—a woman—a woman.
+
+she began
+this three agèd woman
+nightingales in her throat
+and squads of horns came out
+to greet her.
+
+streams of violins and pianos
+splashed their welcome
+and our stained glass silences
+our braided spaces
+unraveled
+opened up
+said who&#x27;s that coming?
+who&#x27;s that knocking at the door?
+whose voice lingers on
+that stage gone mad with
+perdido. perdido. perdido.
+i lost my heart in toledooooooo.
+
+whose voice is climbing
+up this morning chimney
+smoking with life
+carrying her basket of words
+a tisket a tasket
+my little yellow
+basket—i wrote a
+letter to my mom and
+on the way i dropped it—
+was it red...no no no no
+was it green...no no no no
+was it blue...no no no no
+just a little yellow
+
+voice rescuing razor thin lyrics
+from hopscotching dreams.
+
+we first watched her navigating
+an apollo stage amid high-stepping
+yellow legs
+we watched her watching us
+shiny and pure woman
+sugar and spice woman
+her voice a nun&#x27;s whisper
+her voice pouring out
+guitar thickened blues,
+her voice a faraway horn
+questioning the wind,
+and she became Ella,
+first lady of tongues
+Ella cruising our veins
+voice walking on water
+crossed in prayer,
+she became holy
+a thousand sermons
+concealed in her bones
+as she raised them in a
+symphonic shudder
+carrying our sighs into
+her bloodstream.
+
+this voice, chasing the
+morning waves,
+this Ella-tonian voice soft
+like four layers of lace.
+when i die Ella
+tell the whole joint
+please, please don&#x27;t talk
+about me when i&#x27;m gone...
+
+i remember waiting one nite for her appearance
+audience impatient at the lateness
+of musicians,
+i remember it was april
+and the flowers ran yellow
+the sun downpoured yellow butterflies
+and the day was yellow and silent
+all of spring held us
+in a single drop of blood.
+
+when she appeared on stage
+she became Nut arching over us
+feet and hands placed on the stage
+music flowing from her breasts
+she swallowed the sun
+sang confessions from the evening stars
+made earth divulge her secrets
+gave birth to skies in her song
+remade the insistent air
+and we became anointed found
+inside her bop
+bop bop dowa
+bop bop doowaaa
+bop bop dooooowaaaa
+
+Lady. Lady. Lady.
+be good. be good
+to me.
+to you.              to us all
+cuz we just some lonesome babes
+in the woods
+hey lady. sweetellalady
+Lady. Lady. Lady. be gooooood
+ELLA ELLA ELLALADY
+be good
+gooooood
+goooooood...</pre>
+      </article>
+      <article class="poem" id="p85">
+        <h3 class="poem-title">For Sister Gwen Brooks</h3>
+        
+        <pre class="poem-text">you tell the stars
+don&#x27;t be jealous of her light
+you tell the ocean,
+you call out to Olukun,
+to bring her always to
+safe harbor,
+for she is a holy one
+this woman twirling
+her emerald lariat
+you tell the night
+to move gently
+into morning so she&#x27;s
+not startled,
+you tell the morning
+to ease her into a water
+fall of dreams
+for she is a holy one
+restringing her words
+from city to city
+so that we live and
+breathe and smile and
+breathe and love and
+breathe her...
+this Gwensister called life.</pre>
+      </article>
+      <article class="poem" id="p84">
+        <h3 class="poem-title">Poem for July 4, 1994</h3>
+        
+        <pre class="poem-text">It is essential that Summer be grafted to
+bones marrow earth clouds blood the
+eyes of our ancestors.
+It is essential to smell the beginning
+words where Washington, Madison, Hamilton,
+Adams, Jefferson assembled amid cries of:
+
+&quot;The people lack of information&quot;
+&quot;We grow more and more skeptical&quot;
+&quot;This Constitution is a triple-headed monster&quot;
+&quot;Blacks are property&quot;
+
+It is essential to remember how cold the sun
+how warm the snow snapping
+around the ragged feet of soldiers and slaves.
+It is essential to string the sky
+with the saliva of Slavs and
+Germans and Anglos and French
+and Italians and Scandinavians,
+and Spaniards and Mexicans and Poles
+and Africans and Native Americans.
+It is essential that we always repeat:
+we the people,
+we the people,
+we the people.
+
+2.
+
+&quot;Let us go into the fields&quot; one
+brother told the other brother. And
+the sound of exact death
+raising tombs across the centuries.
+Across the oceans. Across the land.
+
+3.
+
+It is essential that we finally understand:
+this is the time for the creative
+human being
+the human being who decides
+to talk upright in a human
+fashion in order to save this
+earth from extinction.
+
+This is the time for the creative
+Man. Woman. Who must decide
+that She. He. Can live in peace.
+Racial and sexual justice on
+this earth.
+
+This is the time for you and me.
+African American. Whites. Latinos.
+Gays. Asians. Jews. Native
+Americans. Lesbians. Muslims.
+All of us must finally bury
+the elitism of race superiority
+the elitism of sexual superiority
+the elitism of economic superiority
+the elitism of religious superiority.
+
+So we welcome you on the celebration
+of 218 years Philadelphia. America.
+
+So we salute you and say:
+Come, come, come, move out into this world
+nourish your lives with a
+spirituality that allows us to respect
+each other&#x27;s birth.
+come, come, come, nourish the world where
+every 3 days 120,000 children die
+of starvation or the effects of starvation;
+come, come, come, nourish the world
+where we will no longer hear the
+screams and cries of womens, girls,
+and children in Bosnia, El Salvador,
+Rwanda...AhAhAhAh AHAHAHHHHHH
+
+Ma-ma. Dada. Mamacita. Baba.
+Mama. Papa. Momma. Poppi.
+The soldiers are marching in the streets
+near the hospitals but the nurses say
+we are safe and the soldiers are
+laughing marching firing calling
+out to us i don&#x27;t want to die i
+am only 9 yrs old, i am only 10 yrs old
+i am only 11 yrs old and i cannot
+get out of the bed because they have cut
+off one of my legs and i hear the soldiers
+coming toward our rooms and i hear
+the screams and the children are
+running out of the room i can&#x27;t get out
+of the bed i don&#x27;t want to die Don&#x27;t
+let me die Rwanda. America. United
+Nations. Don&#x27;t let me die..............
+
+And if we nourish ourselves, our communities
+our countries and say
+
+no more hiroshima
+no more auschwitz
+no more wounded knee
+no more middle passage
+no more slavery
+no more Bosnia
+no more Rwanda
+
+No more intoxicating ideas of
+racial superiority
+as we walk toward abundance
+we will never forget
+
+the earth
+the sea
+the children
+the people
+
+For we the people will always be arriving
+a ceremony of thunder
+waking up the earth
+opening our eyes to human
+monuments.
+And it&#x27;ll get better
+it&#x27;ll get better
+if we the people work, organize, resist,
+come together for peace, racial, social
+and sexual justice
+it&#x27;ll get better
+it&#x27;ll get better.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="sylvia-plath">
+    <h2 class="author-name">Sylvia Plath</h2>
+    
+      <article class="poem" id="p11">
+        <h3 class="poem-title">Metaphors</h3>
+        
+        <pre class="poem-text">I&#x27;m a riddle in nine syllables,
+An elephant, a ponderous house,
+A melon strolling on two tendrils.
+O red fruit, ivory, fine timbers!
+This loaf&#x27;s big with its yeasty rising.
+Money&#x27;s new-minted in this fat purse.
+I&#x27;ve eaten a bag of green apples,
+Boarded the train there&#x27;s no getting off.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="terrance-hayes">
+    <h2 class="author-name">Terrance Hayes</h2>
+    
+      <article class="poem" id="p35">
+        <h3 class="poem-title">American Sonnet for Wanda C.</h3>
+        
+        <pre class="poem-text">Who I know knows why all those lush-boned worn-out girls are
+Whooping at where the moon should be, an eyelid clamped
+On its lightness. Nobody sees her without the hoops firing in her
+Ears because nobody sees. Tattooed across her chest she claims
+Is BRING ME TO WHERE MY BLOOD RUNS and I want that to be here
+Where I am her son, pent in blackness and turning the night&#x27;s calm
+Loose and letting the same blood fire through me. In her bomb hair:
+Shells full of thunder; in her mouth: the fingers of some calamity,
+Somebody foolish enough to love her foolishly. Those who could hear
+No music weren&#x27;t listening—and when I say it, it&#x27;s like claiming
+She&#x27;s an elegy. It rhymes, because of her, with effigy. Because of her,
+If there is no smoke, there is no party. I think of you, Miss Calamity,
+Every Sunday. I think of you on Monday. I think of you hurling hurt
+Where the moon should be and stomping into our darkness calmly.</pre>
+      </article>
+      <article class="poem" id="p33">
+        <h3 class="poem-title">American Sonnet for the New Year</h3>
+        
+        <pre class="poem-text">Things got terribly ugly incredibly quickly
+Things got ugly embarrassingly quickly
+actually Things got ugly unbelievably quickly
+honestly Things got ugly seemingly infrequently
+initially Things got ugly ironically usually
+awfully carefully Things got ugly unsuccessfully
+occasionally Things got ugly mostly painstakingly
+quietly seemingly Things got ugly beautifully
+infrequently Things got ugly sadly especially
+frequently unfortunately Things got ugly
+increasingly obviously Things got ugly suddenly
+embarrassingly forcefully Things got really ugly
+regularly truly quickly Things got really incredibly
+ugly Things will get less ugly inevitably hopefully</pre>
+      </article>
+      <article class="poem" id="p34">
+        <h3 class="poem-title">Muscular Fantasy</h3>
+        
+        <pre class="poem-text">I was thinking about that museum
+with just the one painted stamp people
+pay big money to stare at minimum
+an hour at a time by a painter of people
+
+who have been old for a very long time.
+Sarah Beth Bess of Peducah, Old Walter Thom
+outside Paris Island, the most senior clients
+of most of the low country senior homes.
+
+There used to be a country where no sad
+songs were allowed out loud because
+making the king blue was outlawed.
+The girl falling down the well sang without pause
+
+as she fell. People described it as gospel.
+The boy in the well sang as well as a small bell
+&amp; the people said it sounded like babble.
+Rising in life-like detail from the middle
+
+of the stamp sized painting is an ornate mountain.
+My people moved further south to the beaches
+instead of moving north after reconstruction.
+“Blessed,” my father said when I asked if he’d
+
+rather be blessed or lucky. Soda in a can taste better
+than soda in a bottle but beer in a bottle
+taste better than beer in a can. It’s better
+plus less stressful to think the best of people.
+
+The worst thing about scared people
+is they go around scaring other people.
+Who you are with your mamma, People,
+is not who you are with other people.
+
+The color of my mother’s thumbs up emoji
+is unchanged either because she’s not estranged
+by such things or because she doesn’t know
+the shade of her thumb can be changed.
+
+The painter can be seen painting a small
+painting through the window of a modestly
+decorated cabin on the mountain. With all
+the people who clap when some mostly
+
+vengeful violence happens in the movie,
+those who do not clap may feel no other people
+are not clapping. I hear you. It seems
+reasonable to stare at a painting for at least
+
+as long as it takes the painter to make it
+&amp; also reasonable to stare for approximately
+as long as it takes the sun to rise &amp; set.
+I told my father being blessed was vaguely
+
+more dependent on the whims of God.
+I’d rather be lucky. The girl in the well
+was put there in the name of god
+by farming people. The boy fell.</pre>
+      </article>
+      <article class="poem" id="p32">
+        <h3 class="poem-title">Vintage Vanity</h3>
+        
+        <pre class="poem-text">Dear Poet,
+
+Congratulations! It is with great enthusiasm that we at Vintage Vanity Press formally accept your debut poetry collection. Your talent—particularly the authentic elusiveness of your voice and form—is undeniable and provides a strong foundation for interpretation and refinement. We have a small but attentive review board at Vintage Vanity Press. We are the sort of publisher who believes poetry is a reverse personification where you unmask your best self in language. Our motto is “Make Your Self A Poem.” While many poets are able to write several kinds of poems in several kinds of forms about several kinds of topics, few shift as you do in materials (sheets of papyrus, palm leaves, bamboo, parchment, vellum, leather!) and mediums (inks made of rain, milk, blood, ash!). We frequently paused discussion of your work—excusing ourselves for the restroom stalls, dipping into utility closets, runny noses to the most private corners of our office. One reviewer didn’t make it past the line break in “children blowing up / balloons amid war.” We had read the poems to ourselves privately in advance of the meeting, of course, but never realized hearing them out loud could unlock such near-mystical wonders. As part of the publishing process, we have a few suggestions to enhance the collection’s already compelling qualities. We wondered how we might publicize, if not monetize, excerpts of your brilliance ahead of publication, as is detailed in the accompanying contract. We also debated the costs and benefits of the collection sharing its title with the long middle poem. The multi-dimensional poem functions well enough structurally, but its implications as the conceptual centerpiece could use some clarification. Life is described as if existence resists the clarity of fact. Our most junior member debated the poem with our most senior member throughout our lunch and afternoon tea break. You will note our abundant, partially debatable, realignment of line breaks here and there. (Also note no one touched the line about a line of children in tank tops before a line of tanks.) Some of my colleagues argued your penultimate poem’s robust response to non-theoretical suffering came to a lyrical but cynical conclusion. They think it tells a story constructed by others, thus should be cut. The primary aim of all editorial activities is “To lick a dirty thing until it’s clean” or, according to market and audience fluctuations, “To lick a clean thing until it’s dirty.” We’re on your side. We voted unanimously for the silences that fit between your lines. At the conclusion of our meeting, we decided to do as your final poem instructed. We each chose a word encapsulating a moment or mood of the day to a degree the word would trigger a sensory response at unforeseeable moments for the rest of the day. “Vestibule,” “Nephew,” “Clock.” A few members selected the word most uttered in the news. My word was “Blood.” It’s not exactly accurate to say outcomes were inconclusive, outcomes feel in process. As you navigate the publishing process, it’s important to note that Vintage Vanity Press will require an upfront investment to cover production costs, which include professional editing, design, formatting, printing, and distribution, with a detailed breakdown provided in the contract alongside royalty terms for future book sales. The thing about blood is you only really see it when it’s free. This partnership represents an opportunity to refine your work with our experienced support while ensuring your vision is realized in its final form. Please don’t hesitate to reach out with any questions or concerns as you review the publishing agreement and prepare for the road ahead. When we left the office, nothing burned outside; the inflamed parts of our bodies had simply swallowed smoke and whiskey. But I knew we were kin because the feeling was so specific—a form of unchosen intimacy. Before all this war, “war” was broken into everyday meaning—“broken” in the sense of being hurled against a screen with electricity or placed in a sentence given to hyperbole, but now the word refused to go quiet. Once again, congratulations and thank you. We received no other handwritten manuscript this year. Everything else was said by machinery.
+
+Yours truly, The Vintage Vanity Press Review Board President and Founder.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="tracy-k-smith">
+    <h2 class="author-name">Tracy K. Smith</h2>
+    
+      <article class="poem" id="p70">
+        <h3 class="poem-title">Devotion</h3>
+        
+        <pre class="poem-text">Two gray doves alight on a fence
+across from where I write. The smaller
+makes to scoot off each time
+the other sidles near, but gradually
+accepts the gesture, leaning in,
+letting herself be tended. I watch
+the large bird totter to preen the other,
+asking nothing I can see in return.
+Maybe a husband and wife carrying on
+through moods and seasons, joy and
+joy’s cousin, strife. But I rather hope
+they’re an eldest child sitting a spell
+beside her mother. This is how it feels
+to be cherished properly, the placid
+rose gray mother coos to her mild
+mother-of-pearl daughter.</pre>
+      </article>
+      <article class="poem" id="p71">
+        <h3 class="poem-title">Everybody’s Autobiography</h3>
+        
+        <pre class="poem-text">I find myself most alone
+When I believe I am striving for glory.
+
+These times, cool and sharp,
+A monument of moon-white stone
+
+lodges in place near my heart.
+In a dream, my children
+
+Glisten inside raindrops, or teardrops.
+Like strangers, like seeds of children.
+
+I will only be allowed to claim them
+if I consent to love everyone’s children.
+
+If I consent to love everyone’s children,
+Only then will I be allowed to claim them,
+
+My strangers, my seeds of children,
+Glistening inside raindrops or teardrops
+
+In my dream. Children
+Lodged in place near my heart—
+
+A monument of moon-white stone,
+Cool and sharp.
+
+I believe I am striving for glory
+When I find myself most alone.</pre>
+      </article>
+      <article class="poem" id="p69">
+        <h3 class="poem-title">Não, João</h3>
+        
+        <pre class="poem-text">I learned all about you
+from a set of Portuguese
+language cassettes borrowed
+from the public library twenty
+years ago. You were a bad
+boy sweet talker, a whisperer
+of secrets and irresistible
+lies. Everyone in every lesson
+told you no.  Não, João!  I
+was made to repeat over
+and again when you pleaded
+for money, promising to repay
+me next Monday. And when
+your motorcycle was in the shop
+and you needed to borrow
+my car. Your eyes would have
+been devilish and deep, long-
+lashed and quietly laughing
+all the time, eyes that follow
+a person and then, when met,
+appear bored, bemused.
+You were a magnet of a man
+and I was forewarned,
+rehearsing the only reply:  Não,
+João. João, não!  But now—
+traipsing your city all these years
+later, while my own country flirts
+with strong men, and the dangerous
+little boys who look up to them—
+you refuse to turn up. Oh, João,
+where is your harried plea
+for a night on my posada floor
+as friends and nothing more?
+I suppose I’m too late, traveling
+with my teenage daughter?
+Old enough to know better, I
+could finally be your mother,
+if, like much else here, João,
+you’ve stayed the same. Or
+was that you in the elevator
+of my hotel, a busboy with lips
+like a ripe question, and a pale
+kitchen net hiding your crown
+of dark curls? Now that I can
+recognize in you the restless
+undefeated soul so like my
+father once, or my sons soon,
+did you arrive only to ask nothing,
+holding parted the door after
+pushing an empty room-service
+cart into the hall? You called me
+Senhora. Dipped your head
+as I passed. Wait, João. Every
+version of me wants to know:
+Does this world still insist
+on telling you no?</pre>
+      </article>
+  </section>
+  <section class="author-section" id="wislawa-szymborska">
+    <h2 class="author-name">Wisława Szymborska</h2>
+    
+      <article class="poem" id="p16">
+        <h3 class="poem-title">Nothing Twice</h3>
+        <div class="meta">Originally in Polish, tr. Stanislaw Baranczak &amp; Clare Cavanagh</div>
+        <pre class="poem-text">Nothing can ever happen twice.
+In consequence, the sorry fact is
+that we arrive here improvised
+and leave without the chance to practice.
+
+Even if there is no one dumber,
+if you&#x27;re the planet&#x27;s biggest dunce,
+you can&#x27;t repeat the class in summer:
+this course is only offered once.
+
+No day copies yesterday,
+no two nights will teach what bliss is
+in precisely the same way,
+with precisely the same kisses.
+
+One day, perhaps some idle tongue
+mentions your name by accident:
+I feel as if a rose were flung
+into the room, all hue and scent.
+
+The next day, though you&#x27;re here with me,
+I can&#x27;t help looking at the clock:
+A rose? A rose? What could that be?
+Is it a flower or a rock?
+
+Why do we treat the fleeting day
+with so much needless fear and sorrow?
+It&#x27;s in its nature not to stay:
+Today is always gone tomorrow.
+
+With smiles and kisses, we prefer
+to seek accord beneath our star,
+although we&#x27;re different (we concur)
+just as two drops of water are.</pre>
+      </article>
+  </section>
+  <section class="author-section" id="yusef-komunyakaa">
+    <h2 class="author-name">Yusef Komunyakaa</h2>
+    
+      <article class="poem" id="p66">
+        <h3 class="poem-title">Frida’s Earth Mother</h3>
+        
+        <pre class="poem-text">I can say I didn’t kiss a stone frog
+before I entered their blue house
+for the third time in seven years.
+Was there a plea before I said
+“Do I dare sit in the ghostly chair
+in a big room of unnatural things,
+hearing ‘How shall I make you cry?’”
+Her warmth could be in raw wood
+&amp; metal remembering her shape,
+or the true weight of Diego’s arms
+around her, a dance to take away
+hurt in memory, as a double wing
+revealed the Aztec temple I’d mount
+if I stood up straight. But to descend
+was to sit down fast on my backside.
+Did I know balance from how Frida
+had risen to see her double world?
+Yes, she did not come to say, “Look,
+I am dreams painted onto the skin,”
+as she stood in a looking glass. Love
+rose before her—woman or man—
+as one’s body leaned on a promise,
+outside the green house where her
+lover, Leon Trotsky, was murdered.
+For her, an idea or a hue were flesh.
+Yes, as a young woman who knew
+steel, she had been deeply hurt.
+Now, one could gaze at her studio
+at the end of the bridge high-up
+across from Diego, &amp; one could see
+her in a wheelchair rolling across.
+Now, ask why he sold her painted
+visions to his rich lover, as if time
+could let go of her mother earth.
+She could also paint a dark, salty
+blood of surreal skies &amp; wet soil.
+Did she brood over dewy blooms
+with a knowledge of her ancients,
+saying, I do not wish to see my body
+forever pierced by some iron spear.
+She painted mother-wit lying on
+her back, casting it all in a mirror,
+but was it her or Diego declaring,
+“I feel I am murdered by love?”</pre>
+      </article>
+      <article class="poem" id="p67">
+        <h3 class="poem-title">From “Autobiography of My Alter Ego”</h3>
+        
+        <pre class="poem-text">Black Virgin Mountain.
+Yeah, gore, &amp; all
+the damn vagaries
+of war locked inside a song.
+Yeah, sometimes one thing
+leads to another
+rainbow, a choker of hippie beads,
+&amp; I can’t
+stop hearing Dad’s voice
+almost going there
+on “Nature Boy,” no struggle
+trying to hide
+behind his eyes. He almost made it,
+but didn’t
+know how to leave dirt on the roots.
+Maybe this
+is why I must keep hurt alive,
+limping inside
+some bamboo cage.
+
+*
+Lately, I feel how worlds shift.
+I don’t know
+how they slip the yoke,
+but three nights ago
+these sappers broke through
+concertina wire,
+their naked bodies greased,
+as they ran &amp; slung
+wild satchel charges.
+I was tied up in a hut
+of clay &amp; thatch, &amp; a nameless
+army nurse
+sat in a corner, sizing me up,
+camouflaged
+in blackface, &amp; she wore
+next to nothing.
+I heard a tap on the other side
+of the wall,
+sounding a message in code,
+&amp; the nurse Lt.
+stood up, &amp; said, that’s John.
+
+*
+What’s going on here,
+huh? I mean, look,
+the Navy pilot never played
+blind czar of Id
+ransacking the rosebushes
+on a false trail,
+&amp; we need him at our backs.
+What hellhole
+do heel spurs rise from?
+Pardon my brogue.
+All summer the devil
+was sharping his blade
+on cold black whetstone,
+&amp; now this hard rain
+falling inside, turning life
+into gray moss,
+but I still love my jackfruit.
+*
+Sometimes I hear Roberta
+saying, Lawd,
+come here, Boy,
+&amp; let us talk glory days.
+We sit there, ruminating,
+wondering why
+police would shoot
+unarmed Black folks,
+gazing at our faces
+in the water, as the cork
+bobs, &amp; nylon line tightens,
+my bone hook
+in the throat of a gold-belly
+perch big as two
+hands, &amp; I feel the river
+growing angry,
+ready to leap the bank,
+ready to rampage
+one hundred years in one
+night, red
+dusk to dawn’s new season.</pre>
+      </article>
+      <article class="poem" id="p68">
+        <h3 class="poem-title">From “Trading Riffs to Slay Monsters”</h3>
+        
+        <pre class="poem-text">Last night, I visited a captivity story.
+I was sitting in a lean-to made of bark
+with Ella Ruth, both of us teenagers—
+
+her ebony skin, her black hair touching
+her tailbone. I looked at her hard, &amp;
+she came back to sit beside the fire.
+
+From a slit in the rawhide doorway
+I could see my tribe in surgical masks,
+&amp; as dogs began to howl I woke up.
+
+Strange how the mind finds tenderness
+even in captivity. Or how amidst
+this being held in isolation we dream
+
+of masks. I see my ancestors, too,
+at the Carnival of Venice, a bouquet
+of myrrh, viper flesh, &amp; honey
+
+in the plague doctor’s long beak—
+the face of death meant to ward off death.
+They look back through the silver mirror.
+
+Remember traveling to Siena,
+&amp; we entered that semi-dark room?
+Those strange garments—the garb
+
+worn by a secret society of men—
+men who wore what we thought
+were pale KKK robes &amp; masks.
+
+But they had cared for the contagious
+sick, &amp; escorted them to the here
+&amp; after, their faces always hidden.
+
+Yes, we descended the Ospedale’s
+winding stairs stories underground,
+through a long hall to a hidden room
+
+where a small medieval oil painting hung,
+the Confraternity of the Night Oratory,
+St. Catherine of Siena holds the brothers,
+
+their faces coved in hoods &amp; white robes,
+under her cloak. They worked shifts
+on behalf of the many struck with plague.
+
+The hooded prisoners were led behind
+medieval-thick walls, into their tiny cells
+where solitary penitence was paid twenty-
+
+three hours a day. No one dared to speak
+at the Eastern State Penitentiary, eyes
+staring always at the cold stone floors.
+
+Beans, flourless bread, shad, lobster,
+corn, peppers, &amp; a few grains of salt.
+Now, Al Capone had a rug &amp; a radio.
+
+On a poor man’s cell block, uncle Gussie,
+who robbed a bank, spent years
+in the prison built like a wagon wheel.
+
+The low cell door forced him to bow
+when entering; the skylight above—
+the Eye of God—a reminder he was watched.
+
+When his mother died, two brothers,
+a priest &amp; a cop, left sepia photographs
+of the funeral. Now, cats &amp; ghosts roam.
+
+Lord, this big country. Land of plentitude
+ravaged, heart &amp; gut torn out in the name
+of civilization &amp; progress, &amp; just plain old
+
+unsung unction, low-down skullduggery
+&amp; theurgy. Nature ripped out by thew
+toned in old world prisons. Horsepower.
+
+Even with hard times here, hug the moon
+devastatingly close, &amp; beat down the door
+with true love. Wherever you are, bless us.
+
+Yeah, we’ve both known a few in the joint,
+robbing Peter to pay Paul, or caught
+blowing time with this one or that one.
+
+Some excuse to keep rats on a wheel, or in a cage.
+Look, time moves at least twice at once now—
+back &amp; forth, slow &amp; fast. I held my palm
+
+on my father’s back when he bent to whisper
+in the ear of the dead, &amp; two men in black
+draped a white handkerchief over a face.</pre>
+      </article>
+  </section>
+  </main>
+</div>
+
+</body>
+</html>
