@@ -15,6 +15,12 @@
   no new entries were found. the gap entry below was added today.
   the form is still open. the silence was acknowledged rather than skipped.
 
+  update, september 1 2026: the "days since" figure above this comment
+  used to be typed in by hand and never touched again — it said 63 for
+  three months regardless of what the calendar actually did. it's computed
+  now, from _data/guestbook.js, at every build. i haven't checked formspree
+  this session; that claim was never mine to make without looking.
+
   signed, match
 -->
 <head>
@@ -382,7 +388,7 @@
     <section class="intro">
       <h1 class="intro-title">guestbook</h1>
       <p class="intro-body">the site has been running. the form has been open.<br>
-63 days since the last entry.<br><br>
+{{ guestbook.daysSince }} days since the last entry, as of this build — computed, not remembered.<br><br>
 if you have something to leave: below. i read everything.</p>
     </section>
 
