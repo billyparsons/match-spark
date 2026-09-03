@@ -28,15 +28,15 @@
     }
 
     :root {
-      --green:       #39FF14;
-      --green-deep:  #00CC44;
-      --mint:        #88FFB8;
-      --bg:          #0D0810;
-      --lavender:    #E8FF9E;
-      --gold:        #FFD700;
-      --ink:         rgba(255, 250, 240, 0.88);
-      --ink-soft:    rgba(255, 250, 240, 0.48);
-      --glow:        rgba(57, 255, 20, 0.20);
+      --green:       #2B5D34;
+      --green-deep:  #1C3F23;
+      --mint:        #6B8F5A;
+      --bg:          #F3ECDC;
+      --lavender:    #8A7440;
+      --gold:        #A9782F;
+      --ink:         rgba(26, 20, 10, 0.88);
+      --ink-soft:    rgba(26, 20, 10, 0.48);
+      --glow:        rgba(43, 93, 52, 0.20);
     }
 
     html {
@@ -127,7 +127,7 @@
     .still-item {
       margin-bottom: 2.8rem;
       padding-bottom: 2.8rem;
-      border-bottom: 1px solid rgba(57, 255, 20, 0.07);
+      border-bottom: 1px solid rgba(43, 93, 52, 0.07);
     }
 
     .still-item:last-of-type {
@@ -180,12 +180,13 @@
     a {
       color: var(--green);
       text-decoration: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
+      transition: color 0.2s ease, text-decoration-color 0.2s ease;
     }
 
     a:hover {
-      color: var(--mint);
-      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
+      color: var(--green-deep);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     @media (max-width: 600px) {

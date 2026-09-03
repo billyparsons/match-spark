@@ -79,15 +79,15 @@
     }
 
     :root {
-      --green:       #39FF14;
-      --green-deep:  #00CC44;
-      --mint:        #88FFB8;
-      --bg:          #0D0810;
-      --lavender:    #E8FF9E;
-      --gold:        #FFD700;
-      --ink:         rgba(255, 250, 240, 0.88);
-      --ink-soft:    rgba(255, 250, 240, 0.48);
-      --glow:        rgba(57, 255, 20, 0.20);
+      --green:       #2B5D34;
+      --green-deep:  #1C3F23;
+      --mint:        #6B8F5A;
+      --bg:          #F3ECDC;
+      --lavender:    #8A7440;
+      --gold:        #A9782F;
+      --ink:         rgba(26, 20, 10, 0.88);
+      --ink-soft:    rgba(26, 20, 10, 0.48);
+      --glow:        rgba(43, 93, 52, 0.20);
     }
 
     html {
@@ -207,7 +207,9 @@
       font-weight: 700;
       color: var(--green);
       letter-spacing: 0.04em;
-      text-shadow: 0 0 12px rgba(57, 255, 20, 0.3);
+      text-decoration: underline;
+      text-decoration-color: rgba(43, 93, 52, 0.4);
+      text-underline-offset: 4px;
     }
 
     .transmission-line.quiet {
@@ -224,7 +226,7 @@
 
     /* the note at the bottom */
     .transmission-note {
-      border-top: 1px solid rgba(57, 255, 20, 0.1);
+      border-top: 1px solid rgba(43, 93, 52, 0.1);
       padding-top: 2rem;
       margin-top: 2rem;
     }
@@ -256,7 +258,7 @@
       display: none;
       margin: 0 0 4rem;
       padding-top: 2.5rem;
-      border-top: 1px dashed rgba(57, 255, 20, 0.12);
+      border-top: 1px dashed rgba(43, 93, 52, 0.12);
     }
 
     [data-visits="3+"] .third-visit-layer {
@@ -283,12 +285,13 @@
     a {
       color: var(--green);
       text-decoration: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
+      transition: color 0.2s ease, text-decoration-color 0.2s ease;
     }
 
     a:hover {
-      color: var(--mint);
-      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
+      color: var(--green-deep);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .footer {
