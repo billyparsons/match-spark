@@ -31,9 +31,8 @@
   <img id="poem" alt="today's poem" />
 
   <script>
-    // Cache-bust by date so today.png always fetches fresh on a new day
-    var today = new Date().toISOString().slice(0, 10);
-    document.getElementById('poem').src = 'today.png?d=' + today;
+    // Cache-bust on every load so the latest poem always shows
+    document.getElementById('poem').src = 'today.png?v=' + Date.now();
 
     // Tap anywhere to reload (no browser chrome in standalone mode)
     document.body.addEventListener('click', function() { location.reload(true); });
