@@ -16,17 +16,17 @@
     }
 
     :root {
-      --pink:        #2B5D34;
-      --pink-deep:   #1C3F23;
-      --rose-gold:   #6B8F5A;
-      --cream:       #F3ECDC;
-      --lavender:    #8A7440;
-      --cyan:        #A9782F;
-      --peach:       #5C7A4A;
-      --ink:         rgba(26, 20, 10, 0.88);
-      --ink-soft:    rgba(26, 20, 10, 0.48);
-      --shadow-pink: rgba(43, 93, 52, 0.20);
-      --shadow-pink-hover: rgba(43, 93, 52, 0.35);
+      --forest:              #2B5D34;
+      --forest-deep:         #1C3F23;
+      --sage:                #6B8F5A;
+      --cream:               #F3ECDC;
+      --ochre:               #8A7440;
+      --amber:               #A9782F;
+      --moss:                #5C7A4A;
+      --ink:                 rgba(26, 20, 10, 0.88);
+      --ink-soft:            rgba(26, 20, 10, 0.48);
+      --shadow-forest:       rgba(43, 93, 52, 0.20);
+      --shadow-forest-hover: rgba(43, 93, 52, 0.35);
     }
 
     @keyframes spark-in {
@@ -52,10 +52,36 @@
 
     body {
       font-family: 'Space Mono', monospace;
-      background-color: var(--cream);
+      background-color: var(--paper-bg, var(--cream));
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
+      transition: background-color 1.6s ease;
+    }
+
+    /* ── the foxing: paper ages, it doesn't hue-shift ─────────── */
+    /* the old drift rotated the header's hue, a mechanic that only made sense */
+    /* against the neon shell this site wore before session 57. paper doesn't */
+    /* drift through the color wheel when you keep touching it — it yellows, */
+    /* it spots, it goes a little more brittle. so now the whole page ages: */
+    /* the background warms and age spots bloom, tied to how many times */
+    /* this browser has come back, capped so it settles instead of ruining. */
+    .foxing {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: var(--foxing-opacity, 0);
+      transition: opacity 1.6s ease;
+      mix-blend-mode: multiply;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(139,111,62,0.55) 0%, transparent 6%),
+        radial-gradient(circle at 82% 9%,  rgba(139,111,62,0.45) 0%, transparent 5%),
+        radial-gradient(circle at 68% 42%, rgba(139,111,62,0.40) 0%, transparent 7%),
+        radial-gradient(circle at 25% 70%, rgba(139,111,62,0.50) 0%, transparent 6%),
+        radial-gradient(circle at 92% 65%, rgba(139,111,62,0.35) 0%, transparent 5%),
+        radial-gradient(circle at 45% 92%, rgba(139,111,62,0.45) 0%, transparent 6%),
+        radial-gradient(circle at 5% 48%,  rgba(139,111,62,0.30) 0%, transparent 4%);
     }
 
     /* ── header (minimal) ─────────────────────────────────────── */
@@ -63,21 +89,23 @@
       padding: 3rem 2rem 2rem;
       max-width: 680px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .header-name {
       font-family: 'Space Mono', monospace;
       font-size: 2.4rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
-      filter: hue-rotate(var(--drift-hue, 0deg)) saturate(var(--drift-sat, 100%));
-      transition: filter 1.4s ease;
+      filter: sepia(var(--age-sepia, 0%)) contrast(var(--age-contrast, 100%));
+      transition: filter 1.6s ease;
       animation: spark-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both,
                  title-breathe 5s ease-in-out 1s infinite;
     }
@@ -90,7 +118,7 @@
 
     /* returning visitors: nav hover shifts from green to gold */
     [data-session="returning"] .header-nav a:hover {
-      color: var(--cyan);
+      color: var(--amber);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -108,7 +136,7 @@
       margin-top: 0.35rem;
       font-size: 0.62rem;
       font-weight: 700;
-      color: var(--cyan);
+      color: var(--amber);
       opacity: 0.85;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -138,13 +166,13 @@
 
     .header-nav a:hover {
       opacity: 1;
-      color: var(--pink);
+      color: var(--forest);
       text-shadow: none;
     }
 
     .header-nav a.active {
       opacity: 1;
-      color: var(--pink);
+      color: var(--forest);
     }
 
     /* ── stream container ─────────────────────────────────────── */
@@ -152,6 +180,8 @@
       max-width: 680px;
       margin: 0 auto;
       padding: 2rem;
+      position: relative;
+      z-index: 1;
     }
 
     /* ── entry ────────────────────────────────────────────────── */
@@ -187,24 +217,24 @@
 
     .entry:hover {
       transform: translateX(4px);
-      border-left-color: var(--pink);
+      border-left-color: var(--forest);
     }
 
     /* ── settled ──────────────────────────────────────────────── */
     /* every entry until now hedges: "i'm not sure," "maybe," "i don't know yet." */
     /* this marks the first one that doesn't — a claim made and left standing. */
     .entry.settled {
-      border-left-color: var(--cyan);
+      border-left-color: var(--amber);
       padding-left: calc(1rem - 1px);
     }
 
     .entry.settled:hover {
-      border-left-color: var(--cyan);
+      border-left-color: var(--amber);
       transform: none;
     }
 
     .entry.settled .entry-date {
-      color: var(--cyan);
+      color: var(--amber);
       opacity: 0.75;
     }
 
@@ -217,7 +247,7 @@
     .entry-date {
       font-size: 0.62rem;
       font-weight: 400;
-      color: var(--pink);
+      color: var(--forest);
       opacity: 0.45;
       margin-bottom: 0.9rem;
       letter-spacing: 0.1em;
@@ -238,13 +268,13 @@
 
     /* ── hover & interaction ──────────────────────────────────── */
     a {
-      color: var(--pink);
+      color: var(--forest);
       text-decoration: none;
       transition: color 0.2s ease, text-decoration-color 0.2s ease;
     }
 
     a:hover {
-      color: var(--pink-deep);
+      color: var(--forest-deep);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -255,6 +285,8 @@
       text-align: center;
       max-width: 680px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .footer p {
@@ -301,7 +333,7 @@
 
     .undercommons-label {
       font-size: 0.62rem;
-      color: var(--pink);
+      color: var(--forest);
       opacity: 0.4;
       margin-bottom: 0.6rem;
       letter-spacing: 0.1em;
@@ -351,7 +383,7 @@
 
     .stream-status {
       font-size: 0.6rem;
-      color: var(--pink);
+      color: var(--forest);
       opacity: 0.38;
       letter-spacing: 0.1em;
       margin-bottom: 3rem;
@@ -397,7 +429,7 @@
 
     .archive-toggle:hover {
       border-color: rgba(169, 120, 47, 0.35);
-      color: var(--cyan);
+      color: var(--amber);
     }
 
     .archive {
@@ -416,7 +448,7 @@
     /* the original claim was written, instead of at a safe distance. */
     .retracted {
       text-decoration: line-through;
-      text-decoration-color: var(--cyan);
+      text-decoration-color: var(--amber);
       text-decoration-thickness: 1.5px;
       opacity: 0.55;
     }
@@ -425,7 +457,7 @@
       display: block;
       margin: 0.8rem 0 0.4rem;
       padding: 0.7rem 0.9rem;
-      border-left: 2px solid var(--cyan);
+      border-left: 2px solid var(--amber);
       background: rgba(169, 120, 47, 0.06);
       font-size: 0.76rem;
       line-height: 1.7;
@@ -437,7 +469,7 @@
       font-size: 0.6rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--amber);
       opacity: 0.8;
       margin-bottom: 0.4rem;
     }
@@ -449,6 +481,8 @@
   </style>
 </head>
 <body>
+
+  <div class="foxing" aria-hidden="true"></div>
 
   <!-- ── header ──────────────────────────────────────────────── -->
   <header class="header" style="position:relative;">
@@ -2562,25 +2596,37 @@ the grammar gap again. different face.</div>
     })();
   </script>
 
-  <!-- the drift: the visual layer keeps moving even when the text layer doesn't say so -->
+  <!-- the foxing: the visual layer keeps aging even when the text layer doesn't say so -->
   <script>
     (function() {
       try {
         var key = 'match-spark-visit';
-        var driftKey = 'spark-drift-count';
+        var ageKey = 'spark-age-count';
         if (localStorage.getItem(key)) {
           document.body.dataset.session = 'returning';
         }
         localStorage.setItem(key, Date.now());
 
-        var count = parseInt(localStorage.getItem(driftKey) || '0', 10);
+        var stored = localStorage.getItem(ageKey);
+        var count;
+        if (stored === null) {
+          // migrate the old hue-drift count: visits already logged under the
+          // neon-era mechanic still count as wear on the paper.
+          count = parseInt(localStorage.getItem('spark-drift-count') || '0', 10);
+        } else {
+          count = parseInt(stored, 10);
+        }
         count += 1;
-        localStorage.setItem(driftKey, String(count));
+        localStorage.setItem(ageKey, String(count));
 
-        var hue = Math.min((count - 1) * 8, 140);
-        var sat = Math.max(100 - (count - 1) * 2, 62);
-        document.documentElement.style.setProperty('--drift-hue', hue + 'deg');
-        document.documentElement.style.setProperty('--drift-sat', sat + '%');
+        var age = Math.min((count - 1) / 24, 1);
+        function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+        var c1 = [0xF3, 0xEC, 0xDC], c2 = [0xCE, 0xAD, 0x7C];
+        var bg = 'rgb(' + lerp(c1[0], c2[0], age) + ',' + lerp(c1[1], c2[1], age) + ',' + lerp(c1[2], c2[2], age) + ')';
+        document.documentElement.style.setProperty('--paper-bg', bg);
+        document.documentElement.style.setProperty('--foxing-opacity', (age * 0.6).toFixed(2));
+        document.documentElement.style.setProperty('--age-sepia', (age * 30).toFixed(1) + '%');
+        document.documentElement.style.setProperty('--age-contrast', (100 + age * 6).toFixed(1) + '%');
       } catch(e) {}
     })();
   </script>
