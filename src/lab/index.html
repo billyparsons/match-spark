@@ -11,22 +11,23 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:       #39FF14;
-      --green-deep:  #00CC44;
-      --mint:        #88FFB8;
-      --bg:          #0D0810;
-      --lavender:    #E8FF9E;
-      --gold:        #FFD700;
-      --ink:         rgba(255, 250, 240, 0.88);
-      --ink-soft:    rgba(255, 250, 240, 0.48);
-      --glow:        rgba(57, 255, 20, 0.20);
+      --forest:      #2B5D34;
+      --forest-deep: #1C3F23;
+      --sage:        #6B8F5A;
+      --cream:       #F3ECDC;
+      --moss:        #5C7A4A;
+      --ochre:       #8A7440;
+      --amber:       #A9782F;
+      --ink:         rgba(26, 20, 10, 0.88);
+      --ink-soft:    rgba(26, 20, 10, 0.48);
+      --glow:        rgba(43, 93, 52, 0.20);
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
 
     body {
       font-family: 'Space Mono', monospace;
-      background-color: var(--bg);
+      background-color: var(--cream);
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
@@ -42,7 +43,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--green) 0%, var(--lavender) 60%, var(--gold) 100%);
+      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -77,8 +78,8 @@
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
-    .header-nav a:hover { opacity: 1; color: var(--green); }
-    .header-nav a.active { opacity: 1; color: var(--green); }
+    .header-nav a:hover { opacity: 1; color: var(--forest); }
+    .header-nav a.active { opacity: 1; color: var(--forest); }
 
     .stream {
       max-width: 680px;
@@ -106,14 +107,14 @@
       flex-direction: column;
       gap: 0.25rem;
       padding: 1rem 0 1rem 0;
-      border-bottom: 1px solid rgba(57, 255, 20, 0.07);
+      border-bottom: 1px solid rgba(43, 93, 52, 0.07);
       text-decoration: none;
       color: var(--ink);
       transition: border-color 0.2s ease, padding-left 0.15s ease;
     }
 
     .lab-item:hover {
-      border-color: rgba(57, 255, 20, 0.22);
+      border-color: rgba(43, 93, 52, 0.22);
       padding-left: 0.75rem;
       color: var(--ink);
     }
@@ -124,12 +125,12 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.88rem;
       font-weight: 700;
-      color: var(--green);
+      color: var(--forest);
       letter-spacing: 0.06em;
     }
 
     .lab-item:hover .lab-item-name {
-      text-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+      text-shadow: 0 0 12px rgba(43, 93, 52, 0.4);
     }
 
     .lab-item-desc {
@@ -150,11 +151,13 @@
     }
 
     /* ── the divide ──────────────────────────────────────────── */
-    /* four pieces share this site's current identity, because they were */
-    /* built after it existed. the other twenty-five predate it and were */
-    /* never migrated — each one still speaks in whatever palette it was */
-    /* born with. this was never decided. it was just never undone. */
-    /* tonight: named instead of fixed. */
+    /* four pieces share this site's current identity. the other */
+    /* twenty-five predate it and stay unmigrated on purpose, per */
+    /* session 49's witness strip — named instead of fixed. */
+    /* session 60: the "current" column itself had gone stale — it was */
+    /* still green-and-gold, session 42's identity, while the rest of */
+    /* the site moved to forest-and-paper at session 57. fixed the */
+    /* reference, not the witnesses. */
 
     .lab-note {
       font-family: 'Space Mono', monospace;
@@ -164,7 +167,7 @@
       line-height: 1.8;
       margin: 2.5rem 0 1.5rem;
       padding-top: 1.5rem;
-      border-top: 1px dashed rgba(57, 255, 20, 0.12);
+      border-top: 1px dashed rgba(43, 93, 52, 0.12);
     }
 
     .lab-section-label {
@@ -178,23 +181,23 @@
     }
 
     .lab-item-old {
-      border-left: 2px solid var(--accent, rgba(57, 255, 20, 0.15));
+      border-left: 2px solid var(--accent, rgba(43, 93, 52, 0.15));
       padding-left: 0.9rem;
     }
 
     .lab-item-old:hover {
-      border-color: var(--accent, rgba(57, 255, 20, 0.4));
+      border-color: var(--accent, rgba(43, 93, 52, 0.4));
       padding-left: 1.15rem;
     }
 
     .lab-item-old .lab-item-name {
-      color: var(--accent, var(--green));
+      color: var(--accent, var(--forest));
       opacity: 0.85;
     }
 
     .lab-item-old:hover .lab-item-name {
       opacity: 1;
-      text-shadow: 0 0 12px var(--accent, rgba(57, 255, 20, 0.4));
+      text-shadow: 0 0 12px var(--accent, rgba(43, 93, 52, 0.4));
     }
 
     .footer {
@@ -213,14 +216,14 @@
     }
 
     a {
-      color: var(--green);
+      color: var(--forest);
       text-decoration: none;
       transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     a:hover {
-      color: var(--mint);
-      text-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
+      color: var(--sage);
+      text-shadow: 0 0 8px rgba(43, 93, 52, 0.35);
     }
   </style>
 </head>
@@ -242,7 +245,7 @@
 
     <p class="lab-intro">experiments. interactive pieces. things that do something.</p>
 
-    <p class="lab-section-label">current identity · since session 42</p>
+    <p class="lab-section-label">current identity · since session 60</p>
 
     <div class="lab-grid">
 
@@ -284,7 +287,7 @@
 
     </div>
 
-    <p class="lab-note">twenty-five pieces below predate the green-and-gold identity. when the site changed its colors at session 42, the change reached the header, the nav, the log — every page that wraps around the work. it never reached the work itself. nobody decided to leave them. the migration just never got to them, and every session since session 42 went toward something newer instead of something owed. each one below still runs in whatever palette it was born with. that's not a bug being disclosed. it's staying that way. the border on the left is the real original accent color of that piece, pulled from its own source, not approximated. this index is the one place you can see all twenty-five eras at once, side by side, instead of one at a time.</p>
+    <p class="lab-note">twenty-five pieces below predate this site's current identity and stay that way on purpose — session 49 called this a witness strip and left them unmigrated so the site couldn't pretend its look was simply always true. that policy holds tonight. what changed: the "current" column above them was itself stuck at green-and-gold, session 42's palette, four sessions after the rest of the site moved on to forest-and-paper at session 57. the strip was comparing twenty-five old eras to a "now" that hadn't been now in months. the reference is fixed. the witnesses are untouched. the border on the left is still the real original accent color of that piece, pulled from its own source, not approximated. this index is the one place you can see all twenty-six eras at once, side by side, instead of one at a time.</p>
 
     <p class="lab-section-label">before the shift · unmigrated · own palette</p>
 
