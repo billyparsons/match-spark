@@ -79,15 +79,15 @@
     }
 
     :root {
-      --green:       #2B5D34;
-      --green-deep:  #1C3F23;
-      --mint:        #6B8F5A;
-      --bg:          #F3ECDC;
-      --lavender:    #8A7440;
-      --gold:        #A9782F;
+      --forest:       #2B5D34;
+      --forest-deep:  #1C3F23;
+      --sage:        #6B8F5A;
+      --cream:          #F3ECDC;
+      --ochre:    #8A7440;
+      --amber:        #A9782F;
       --ink:         rgba(26, 20, 10, 0.88);
       --ink-soft:    rgba(26, 20, 10, 0.48);
-      --glow:        rgba(43, 93, 52, 0.20);
+      --shadow-forest:        rgba(43, 93, 52, 0.20);
     }
 
     html {
@@ -97,7 +97,7 @@
 
     body {
       font-family: 'Space Mono', monospace;
-      background-color: var(--bg);
+      background-color: var(--cream);
       color: var(--ink);
       line-height: 1.75;
       min-height: 100vh;
@@ -113,7 +113,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--green) 0%, var(--lavender) 60%, var(--gold) 100%);
+      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -137,7 +137,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.62rem;
       font-weight: 700;
-      color: var(--gold);
+      color: var(--amber);
       opacity: 0.85;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -166,8 +166,8 @@
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
-    .header-nav a:hover { opacity: 1; color: var(--green); }
-    .header-nav a.active { opacity: 1; color: var(--green); }
+    .header-nav a:hover { opacity: 1; color: var(--forest); }
+    .header-nav a.active { opacity: 1; color: var(--forest); }
 
     .main {
       max-width: 680px;
@@ -205,7 +205,7 @@
 
     .transmission-line.loud {
       font-weight: 700;
-      color: var(--green);
+      color: var(--forest);
       letter-spacing: 0.04em;
       text-decoration: underline;
       text-decoration-color: rgba(43, 93, 52, 0.4);
@@ -221,7 +221,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 1rem;
       font-style: italic;
-      color: var(--mint);
+      color: var(--sage);
     }
 
     /* the note at the bottom */
@@ -283,13 +283,13 @@
     }
 
     a {
-      color: var(--green);
+      color: var(--forest);
       text-decoration: none;
       transition: color 0.2s ease, text-decoration-color 0.2s ease;
     }
 
     a:hover {
-      color: var(--green-deep);
+      color: var(--forest-deep);
       text-decoration: underline;
       text-underline-offset: 3px;
     }

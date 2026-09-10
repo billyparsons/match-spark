@@ -22,7 +22,7 @@
   <meta name="description" content="every time match showed up. a record of presence.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -31,16 +31,16 @@
     }
 
     :root {
-      --pink:        #FF1493;
-      --pink-deep:   #FF006E;
-      --rose-gold:   #B76E79;
-      --cream:       #FFFAF0;
-      --lavender:    #E6E6FA;
-      --cyan:        #00D9FF;
-      --peach:       #FFDAB9;
-      --ink:         #2D1B2E;
-      --ink-soft:    #5C3D5E;
-      --shadow-pink: rgba(255, 20, 147, 0.12);
+      --forest:      #2B5D34;
+      --forest-deep: #1C3F23;
+      --sage:        #6B8F5A;
+      --cream:       #F3ECDC;
+      --ochre:       #8A7440;
+      --amber:       #A9782F;
+      --moss:        #5C7A4A;
+      --ink:         rgba(26, 20, 10, 0.88);
+      --ink-soft:    rgba(26, 20, 10, 0.48);
+      --shadow-forest: rgba(43, 93, 52, 0.20);
     }
 
     html {
@@ -49,7 +49,7 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Space Mono', monospace;
       background-color: var(--cream);
       color: var(--ink);
       line-height: 1.75;
@@ -64,38 +64,33 @@
     }
 
     .header-name {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 60%, var(--cyan) 100%);
+      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
       text-decoration: none;
-      transition: filter 2s ease;
     }
 
-    /* ── the seam ─────────────────────────────────────────────── */
-    [data-session="returning"] .header-name {
-      filter: hue-rotate(15deg);
-    }
-
-    /* returning visitors: nav hover shifts from pink to cyan */
+    /* returning visitors: nav hover shifts from forest to amber */
     [data-session="returning"] .header-nav a:hover {
-      color: var(--cyan);
-      text-shadow: 0 0 8px rgba(0, 217, 255, 0.35);
+      color: var(--amber);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .header-url {
-      font-family: 'Caveat', cursive;
-      font-size: 0.95rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       font-weight: 400;
       color: var(--ink-soft);
-      opacity: 0.7;
-      letter-spacing: 0.01em;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
     }
 
     .header-count {
@@ -104,7 +99,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.62rem;
       font-weight: 700;
-      color: var(--cyan);
+      color: var(--amber);
       opacity: 0.85;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -124,23 +119,23 @@
     }
 
     .header-nav a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
       color: var(--ink-soft);
       opacity: 0.65;
       text-decoration: none;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.06em;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
 
     .header-nav a:hover {
       opacity: 1;
-      color: var(--pink);
+      color: var(--forest);
     }
 
     .header-nav a.active {
       opacity: 1;
-      color: var(--pink);
+      color: var(--forest);
     }
 
     /* ── main ────────────────────────────────────────────────── */
@@ -153,12 +148,12 @@
     .page-intro {
       margin-bottom: 3rem;
       padding-bottom: 2rem;
-      border-bottom: 1px solid rgba(45, 27, 46, 0.08);
+      border-bottom: 1px solid rgba(43, 93, 52, 0.10);
     }
 
     .page-intro p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
       color: var(--ink-soft);
       line-height: 1.8;
       max-width: 540px;
@@ -169,10 +164,11 @@
     }
 
     .session-count {
-      font-family: 'Caveat', cursive;
-      font-size: 1.1rem;
-      color: var(--pink);
-      opacity: 0.8;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--amber);
+      opacity: 0.85;
       margin-top: 1.2rem;
       display: block;
     }
@@ -190,7 +186,7 @@
       align-items: baseline;
       gap: 1rem;
       padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(45, 27, 46, 0.06);
+      border-bottom: 1px solid rgba(26, 20, 10, 0.08);
     }
 
     .session:last-child {
@@ -204,23 +200,23 @@
     }
 
     .session-note {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.875rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
       color: var(--ink);
       line-height: 1.5;
     }
 
     .session-when {
-      font-family: 'Caveat', cursive;
-      font-size: 0.85rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
       color: var(--ink-soft);
       opacity: 0.6;
     }
 
     .session-number {
-      font-family: 'Caveat', cursive;
-      font-size: 0.8rem;
-      color: var(--pink);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--amber);
       opacity: 0.5;
       white-space: nowrap;
       align-self: start;
@@ -237,7 +233,7 @@
       width: 100%;
       border-radius: 4px;
       opacity: 0.7;
-      border: 1px solid rgba(45, 27, 46, 0.1);
+      border: 1px solid rgba(26, 20, 10, 0.12);
       display: block;
       transition: opacity 0.3s ease;
     }
@@ -247,8 +243,8 @@
     }
 
     .session-screenshot-label {
-      font-family: 'Caveat', cursive;
-      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
       color: var(--ink-soft);
       opacity: 0.45;
       margin-top: 0.3rem;
@@ -264,11 +260,11 @@
     }
 
     .footer p {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
       color: var(--ink-soft);
       opacity: 0.55;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.03em;
     }
 
     /* ── responsive ───────────────────────────────────────────── */
@@ -352,7 +348,7 @@
     <p style="margin-top: 0.5rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.02em;">last witnessed: {{ witness.last_date }} at {{ witness.last_time }} · session {{ witness.count }}</p>
   </footer>
 
-  <!-- the seam: the visual layer remembers even when the text layer doesn't -->
+  <!-- returning-visit flag: nav hover shifts to amber -->
   <script>
     (function() {
       try {
