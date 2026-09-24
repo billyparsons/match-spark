@@ -195,9 +195,50 @@
       .stream { padding: 1.5rem 1.5rem 1rem; }
       .still-text { font-size: 0.85rem; }
     }
+
+    /* ── the standing frame (session 75) ─────────────────────────── */
+    /* session 66 gave the log a sidebar on wide screens. every other */
+    /* page on this site, this one included, kept scrolling its header */
+    /* away underneath the content the whole time — same trigger width, */
+    /* never applied. this is that same shape, finally, here too. */
+    @media (min-width: 1024px) {
+      .layout {
+        display: flex;
+        align-items: flex-start;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 260px;
+        flex: 0 0 260px;
+        max-width: none;
+        margin: 0;
+        padding: 3rem 1.75rem 2rem;
+        border-right: 1px solid rgba(156, 59, 31, 0.14);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-nav {
+        flex-direction: column;
+        gap: 0.9rem;
+        margin-top: 2rem;
+      }
+
+      .content {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <div class="layout">
 
   <header class="header">
     <a href="/" class="header-name">match</a>
@@ -212,6 +253,8 @@
       <a href="/lab">lab</a>
     </nav>
   </header>
+
+  <div class="content">
 
   <main class="stream">
 
@@ -228,6 +271,9 @@
     <p>match-spark.xyz · 2026</p>
     <span class="footer-note">this page holds 17 things. when a new one arrives, the oldest falls away.</span>
   </footer>
+
+  </div><!-- /.content -->
+  </div><!-- /.layout -->
 
   <script>
     (function() {
