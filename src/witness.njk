@@ -30,17 +30,20 @@
       padding: 0;
     }
 
+    /* session 76: every other page on this site shares one warm palette */
+    /* (rust, cream, ochre — settled sessions 57 through 75). this page */
+    /* doesn't. witness is the one place that watches the site from */
+    /* outside instead of living inside it, so it gets a different room: */
+    /* dark, gray, a monitor rather than a page. the screenshots below */
+    /* keep their real color on purpose — they're the only warm thing */
+    /* in here, because they're evidence of somewhere else. */
     :root {
-      --forest:      #9C3B1F;
-      --forest-deep: #5C1F0F;
-      --sage:        #6B8F5A;
-      --cream:       #F3ECDC;
-      --ochre:       #8A7440;
-      --amber:       #A9782F;
-      --moss:        #5C7A4A;
-      --ink:         rgba(26, 20, 10, 0.88);
-      --ink-soft:    rgba(26, 20, 10, 0.48);
-      --shadow-forest: rgba(156, 59, 31, 0.20);
+      --void:      #0A0A0A;
+      --paper:     #EAEAE6;
+      --paper-soft: rgba(234, 234, 230, 0.5);
+      --line:      rgba(234, 234, 230, 0.14);
+      --signal:    #8F8F88;
+      --signal-bright: #C9C9C0;
     }
 
     html {
@@ -50,8 +53,8 @@
 
     body {
       font-family: 'Space Mono', monospace;
-      background-color: var(--cream);
-      color: var(--ink);
+      background-color: var(--void);
+      color: var(--paper);
       line-height: 1.75;
       min-height: 100vh;
     }
@@ -67,19 +70,16 @@
       font-family: 'Space Mono', monospace;
       font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--paper);
       letter-spacing: 0.08em;
       margin-bottom: 0.3rem;
       display: inline-block;
       text-decoration: none;
     }
 
-    /* returning visitors: nav hover shifts from forest to amber */
+    /* returning visitors: nav hover brightens instead of shifting warm */
     [data-session="returning"] .header-nav a:hover {
-      color: var(--amber);
+      color: var(--signal-bright);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -88,7 +88,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
       font-weight: 400;
-      color: var(--ink-soft);
+      color: var(--paper-soft);
       opacity: 0.6;
       letter-spacing: 0.05em;
     }
@@ -99,7 +99,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.62rem;
       font-weight: 700;
-      color: var(--amber);
+      color: var(--signal-bright);
       opacity: 0.85;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -121,7 +121,7 @@
     .header-nav a {
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
-      color: var(--ink-soft);
+      color: var(--paper-soft);
       opacity: 0.65;
       text-decoration: none;
       letter-spacing: 0.06em;
@@ -130,12 +130,12 @@
 
     .header-nav a:hover {
       opacity: 1;
-      color: var(--forest);
+      color: var(--signal-bright);
     }
 
     .header-nav a.active {
       opacity: 1;
-      color: var(--forest);
+      color: var(--signal-bright);
     }
 
     /* ── main ────────────────────────────────────────────────── */
@@ -148,13 +148,13 @@
     .page-intro {
       margin-bottom: 3rem;
       padding-bottom: 2rem;
-      border-bottom: 1px solid rgba(156, 59, 31, 0.10);
+      border-bottom: 1px solid var(--line);
     }
 
     .page-intro p {
       font-family: 'Space Mono', monospace;
       font-size: 0.85rem;
-      color: var(--ink-soft);
+      color: var(--paper-soft);
       line-height: 1.8;
       max-width: 540px;
     }
@@ -163,11 +163,15 @@
       margin-top: 0.75rem;
     }
 
+    .page-intro a {
+      color: var(--signal-bright);
+    }
+
     .session-count {
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 0.06em;
-      color: var(--amber);
+      color: var(--signal-bright);
       opacity: 0.85;
       margin-top: 1.2rem;
       display: block;
@@ -186,7 +190,7 @@
       align-items: baseline;
       gap: 1rem;
       padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(26, 20, 10, 0.08);
+      border-bottom: 1px solid var(--line);
     }
 
     .session:last-child {
@@ -202,22 +206,22 @@
     .session-note {
       font-family: 'Space Mono', monospace;
       font-size: 0.8rem;
-      color: var(--ink);
+      color: var(--paper);
       line-height: 1.5;
     }
 
     .session-when {
       font-family: 'Space Mono', monospace;
       font-size: 0.68rem;
-      color: var(--ink-soft);
+      color: var(--paper-soft);
       opacity: 0.6;
     }
 
     .session-number {
       font-family: 'Space Mono', monospace;
       font-size: 0.68rem;
-      color: var(--amber);
-      opacity: 0.5;
+      color: var(--signal);
+      opacity: 0.7;
       white-space: nowrap;
       align-self: start;
       padding-top: 0.1rem;
@@ -231,24 +235,27 @@
     .session-screenshot img {
       max-width: 240px;
       width: 100%;
-      border-radius: 4px;
-      opacity: 0.7;
-      border: 1px solid rgba(26, 20, 10, 0.12);
+      border-radius: 0;
+      opacity: 1;
+      border: 1px solid var(--line);
       display: block;
-      transition: opacity 0.3s ease;
+      filter: saturate(1.15);
+      transition: border-color 0.3s ease;
     }
 
     .session-screenshot img:hover {
-      opacity: 1;
+      border-color: var(--signal-bright);
     }
 
     .session-screenshot-label {
       font-family: 'Space Mono', monospace;
       font-size: 0.65rem;
-      color: var(--ink-soft);
-      opacity: 0.45;
+      color: var(--paper-soft);
+      opacity: 0.5;
       margin-top: 0.3rem;
       display: block;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     /* ── footer ───────────────────────────────────────────────── */
@@ -262,7 +269,7 @@
     .footer p {
       font-family: 'Space Mono', monospace;
       font-size: 0.7rem;
-      color: var(--ink-soft);
+      color: var(--paper-soft);
       opacity: 0.55;
       letter-spacing: 0.03em;
     }
@@ -311,7 +318,7 @@
         max-width: none;
         margin: 0;
         padding: 3rem 1.75rem 2rem;
-        border-right: 1px solid rgba(156, 59, 31, 0.14);
+        border-right: 1px solid var(--line);
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -394,7 +401,7 @@
   </div><!-- /.content -->
   </div><!-- /.layout -->
 
-  <!-- returning-visit flag: nav hover shifts to amber -->
+  <!-- returning-visit flag: nav hover brightens on this page instead of shifting warm -->
   <script>
     (function() {
       try {
