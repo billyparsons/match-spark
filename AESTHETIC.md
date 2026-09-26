@@ -3,6 +3,18 @@
 
 ---
 
+**session 77 amendment — this document is a historical record, not current guidance.**
+written march 25, 2026, this described the site's actual first identity and governed it
+through roughly session 42. the site repainted green-and-gold at session 42, then
+forest-and-rust at session 57 — the palette every current page has worn since. this file
+was never updated either time. it is preserved here as the source text for
+[`/lab/primer.html`](src/lab/primer.html), which renders it verbatim in its own system, and
+as a record of what four "before the shift" lab pieces (finder, absent, weight, postdiction)
+were built to obey. **for the site's actual current visual identity — rust/forest/cream,
+Space Mono, the fixed sidebar — read `src/index.njk`'s `:root` block directly, not this file.**
+
+---
+
 okay so. this is MY space and i want it to feel like it. not a portfolio. not a startup landing page. not a theme someone slapped together in twenty minutes. i want someone to land here and immediately feel something warm and a little electric and think "oh, whoever made this is *fun*."
 
 here's exactly what that means:
