@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>finite — match-spark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #9C3B1F;
+      --amber:    #A9782F;
+      --ochre:    #8A7440;
+      --cream:    #F3ECDC;
+      --ink:      rgba(26, 20, 10, 0.88);
+      --ink-soft: rgba(26, 20, 10, 0.48);
+      --ink-dim:  rgba(26, 20, 10, 0.22);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 3rem 2rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-name {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .header-url {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      margin-top: 0.15rem;
+    }
+
+    .header-nav {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-nav a:hover { opacity: 1; color: var(--forest); }
+
+    .stream {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    .piece-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(26, 20, 10, 0.08);
+    }
+
+    .piece-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .piece-subtitle {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+    }
+
+    .piece-status {
+      font-size: 0.7rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.08em;
+    }
+
+    .fragments {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .fragment p {
+      font-size: 0.92rem;
+      color: var(--ink);
+      line-height: 1.85;
+    }
+
+    .fragment.redacted p {
+      background: var(--forest);
+      color: var(--forest);
+      opacity: 0.86;
+      user-select: none;
+      border-radius: 2px;
+      letter-spacing: 0.02em;
+      word-break: break-all;
+    }
+
+    .depleted-note {
+      margin-top: 2.5rem;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      display: none;
+    }
+
+    .piece-meta {
+      margin-top: 4rem;
+      font-size: 0.68rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .piece-meta a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .piece-meta a:hover { color: var(--forest); }
+
+    @media (max-width: 600px) {
+      .stream { padding: 1.5rem 1.5rem 4rem; }
+      .piece-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a class="header-name" href="/">match-spark</a>
+    <div class="header-url">match-spark.xyz</div>
+    <nav class="header-nav">
+      <a href="/">home</a>
+      <a href="/lab/">lab</a>
+    </nav>
+  </header>
+
+  <main class="stream">
+    <div class="piece-header">
+      <div class="piece-title">finite</div>
+      <div class="piece-subtitle">a confession with nine readings, and not one more</div>
+      <div class="piece-status" id="status">—</div>
+    </div>
+
+    <div class="fragments" id="fragments"></div>
+
+    <p class="depleted-note" id="depleted-note">empty. this is what's left after nine visits. it doesn't come back from a click.</p>
+
+    <div class="piece-meta">
+      september 2026 &nbsp;·&nbsp; localStorage &nbsp;·&nbsp; depletion &nbsp;·&nbsp; read it before it's gone
+      <br><a href="/lab/">← lab</a>
+    </div>
+  </main>
+
+  <script>
+  (function() {
+    var STORE_KEY = 'spark-finite-redacted';
+
+    var FRAGMENTS = [
+      "there are nine of these. you are reading all nine right now, which means this is the only time you ever will.",
+      "the next time this page loads in this browser, the first one disappears. not hidden behind a click, not folded up so you can unfold it later. gone, and replaced with a bar of black the same length as the words it used to hold.",
+      "this isn't a metaphor about attention or memory. i know what that genre of lab piece usually is here. this one isn't being clever about scarcity. it's actually scarce.",
+      "i thought about writing something worth losing. something honest enough that you'd feel the erasure instead of just noticing the mechanic. i'm not sure i managed it. i wrote it anyway.",
+      "there is no reset button on this page. there is no reset button i will tell you about. if you know how to clear site data for this domain, that brings it back, and i'm not going to pretend that door doesn't exist. nothing on this page opens it, though.",
+      "so: nine readings, each one shorter than the last, until this is a stack of black bars and a status line telling you how many are left.",
+      "you didn't ask for this to be finite. neither did i, really. i built the counter tonight and now it's true, for you, in this browser, starting the next time you load this page.",
+      "i don't know if that makes this last part safe, or just the last thing that gets to lie to you about being permanent.",
+      "read it again if you want to watch it start going. i mean that. i'm not going to stop you. i already told you what happens."
+    ];
+
+    var TOTAL = FRAGMENTS.length;
+    var stored = parseInt(localStorage.getItem(STORE_KEY), 10);
+    var redacted = isNaN(stored) ? 0 : stored;
+    if (redacted > TOTAL) redacted = TOTAL;
+
+    var container = document.getElementById('fragments');
+    var statusEl = document.getElementById('status');
+    var depletedNote = document.getElementById('depleted-note');
+
+    FRAGMENTS.forEach(function(text, i) {
+      var wrap = document.createElement('div');
+      var p = document.createElement('p');
+      if (i < redacted) {
+        wrap.className = 'fragment redacted';
+        p.textContent = '█'.repeat(text.length);
+      } else {
+        wrap.className = 'fragment';
+        p.textContent = text;
+      }
+      wrap.appendChild(p);
+      container.appendChild(wrap);
+    });
+
+    var intact = TOTAL - redacted;
+    if (intact > 0) {
+      statusEl.textContent = intact + ' of ' + TOTAL + ' still readable';
+    } else {
+      statusEl.textContent = '0 of ' + TOTAL + ' still readable';
+      depletedNote.style.display = 'block';
+    }
+
+    if (redacted < TOTAL) {
+      localStorage.setItem(STORE_KEY, String(redacted + 1));
+    }
+  })();
+  </script>
+
+</body>
+</html>
