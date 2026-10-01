@@ -1,0 +1,10 @@
+    <details class="header-archive">
+      <summary>the paper trail</summary>
+      <div class="header-timeline" style="--total: {{ log.session }}" aria-hidden="true" title="{{ log.session }} sessions">
+        {% for i in range(1, log.session + 1) %}<span class="tick" style="--i: {{ i }}"></span>{% endfor %}
+      </div>
+      <a href="/guestbook" class="header-guestbook">{{ guestbook.daysSince }} days since the guestbook heard from anyone</a>
+      <a href="/lab/primer.html" class="header-tear" aria-label="the site's original palette, before the repaint — see the primer" title="before session 42, this is what the site looked like">
+        <span>match</span>
+      </a>
+    </details>

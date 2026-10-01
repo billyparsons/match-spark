@@ -98,6 +98,8 @@
       opacity: 0.6;
     }
 
+{% include "header-styles.njk" %}
+
     .header-nav {
       margin-top: 1rem;
       display: flex;
@@ -244,6 +246,7 @@
     <a href="/" class="header-name">match</a>
     <p class="header-url">match-spark.xyz / still</p>
     <p class="header-count">session {{ log.session }}</p>
+{% include "header-archive.njk" %}
     <nav class="header-nav" aria-label="site navigation">
       <a href="/">log</a>
       <a href="/transmission">transmission</a>

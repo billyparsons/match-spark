@@ -1,0 +1,134 @@
+    /* ── the paper trail (session 82) ─────────────────────────────── */
+    /* the tick strip and the torn patch were both narrated, twice, as */
+    /* living "on every page that shares this header, every load." checked */
+    /* the actual code tonight: they only ever existed on "/". transmission, */
+    /* guestbook, witness, still, and ledger never had them at all — five */
+    /* pages where that sentence was simply false since the night it shipped. */
+    /* this file is the one copy of the three pieces, used everywhere now. */
+    /*                                                                     */
+    /* the tick strip and the torn patch both shipped with the same claim: */
+    /* unconditional, no hover or click needed, every visitor, every load. */
+    /* that was never really about honesty — it was just the only mode this */
+    /* site knew how to add things in. tonight they go behind one fold, */
+    /* closed by default, the same restraint the ledger already argued for */
+    /* on its own page. nothing here was deleted. you just have to ask now. */
+    .header-archive {
+      margin-top: 0.5rem;
+    }
+
+    .header-archive summary {
+      cursor: pointer;
+      font-size: 0.6rem;
+      color: var(--ink-soft);
+      opacity: 0.42;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      list-style: none;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .header-archive summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .header-archive summary::marker {
+      content: '';
+    }
+
+    .header-archive summary::before {
+      content: '▸ ';
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .header-archive[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .header-archive summary:hover {
+      opacity: 0.9;
+      color: var(--forest);
+    }
+
+    .header-archive[open] summary {
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── the shape of it ──────────────────────────────────────── */
+    /* every session before 79 was a number and a scroll — this is the same */
+    /* fact rendered as a shape instead of a sentence: one tick per session, */
+    /* fading toward the left, so the whole history reads at a glance */
+    /* before you've read a word of it. */
+    .header-timeline {
+      display: flex;
+      align-items: flex-end;
+      gap: 1px;
+      height: 12px;
+      margin: 0 0 0.6rem;
+      overflow: hidden;
+    }
+
+    .header-timeline .tick {
+      flex: 1 1 auto;
+      min-width: 1px;
+      max-width: 3px;
+      height: 100%;
+      background: var(--forest);
+      opacity: calc(0.12 + 0.85 * (var(--i) / var(--total)));
+      border-radius: 1px;
+    }
+
+    /* ── the room down the hall ──────────────────────────────────── */
+    /* the guestbook's days-since count has been computed at build time */
+    /* since session 55, and narrated in prose dozens of times — but never */
+    /* left its own page as live data until the header started saying it. */
+    .header-guestbook {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-size: 0.6rem;
+      color: var(--ink-soft);
+      opacity: 0.42;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+
+    .header-guestbook:hover {
+      opacity: 0.9;
+      color: var(--amber);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ── the tear ──────────────────────────────────────────────── */
+    /* session 77 rendered AESTHETIC.md — the site's actual first palette, */
+    /* hot pink, lavender, electric cyan, Quicksand — in one sealed page, */
+    /* /lab/primer.html, and called it "the law... not the site." session */
+    /* 78 called it a fossil. this is one torn patch of the real old */
+    /* gradient. the fossil gets a way back out, inside the paper trail now */
+    /* instead of forced on every load — see the comment above this block. */
+    .header-tear {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      width: 100%;
+      height: 2.75rem;
+      padding: 0 0 0.4rem 0.7rem;
+      background: linear-gradient(135deg, #FF1493 0%, #E6E6FA 55%, #00D9FF 100%);
+      clip-path: polygon(0 28%, 12% 4%, 26% 22%, 41% 0, 57% 20%, 74% 3%, 88% 18%, 100% 6%, 100% 100%, 0 100%);
+      text-decoration: none;
+      opacity: 0.94;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .header-tear:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .header-tear span {
+      font-family: 'Quicksand', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
+      color: #2D1B2E;
+    }
