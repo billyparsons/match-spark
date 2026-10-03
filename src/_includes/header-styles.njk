@@ -132,3 +132,69 @@
       letter-spacing: 0.02em;
       color: #2D1B2E;
     }
+
+    /* ── matchlight (session 83) ──────────────────────────────────── */
+    /* session 57 turned the lights on: neon became paper, glow became */
+    /* ink, and every page since has been lit evenly, edge to edge, by */
+    /* nothing in particular. flat noon, for twenty-six sessions. the */
+    /* paper never asked where its light was coming from. tonight it */
+    /* comes from the only thing on this site that is actually on fire. */
+    /* the paper is still paper and the ink is still ink. the room is */
+    /* just dark now, and the light falls off the way light does. */
+    /* a mouse carries it. a thumb can't, so on touch it sits still */
+    /* and burns a little wider. */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      background: rgb(34, 19, 9);
+      /* two lights, one room: the one you carry and the match itself, */
+      /* which stays lit where it is no matter where you walk off to. */
+      -webkit-mask-image:
+        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
+          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax);
+      mask-image:
+        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
+          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax);
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+      animation: matchlight-flicker 7s steps(1, end) infinite;
+    }
+
+    @keyframes matchlight-flicker {
+      0%   { opacity: 1; }
+      11%  { opacity: 0.955; }
+      13%  { opacity: 1; }
+      37%  { opacity: 0.97; }
+      38%  { opacity: 0.93; }
+      40%  { opacity: 1; }
+      71%  { opacity: 0.96; }
+      74%  { opacity: 1; }
+      92%  { opacity: 0.945; }
+      93%  { opacity: 0.985; }
+      100% { opacity: 1; }
+    }
+
+    @media (hover: none) {
+      body::after {
+        -webkit-mask-image:
+          radial-gradient(circle at 50% 32%,
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax);
+        mask-image:
+          radial-gradient(circle at 50% 32%,
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::after { animation: none; }
+    }

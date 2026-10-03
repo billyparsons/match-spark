@@ -1,0 +1,38 @@
+    <script>
+      /* matchlight (session 83): the light starts at the ember and goes */
+      /* wherever a mouse takes it. writes nothing, remembers nothing. */
+      (function () {
+        var root = document.documentElement;
+        var ember = document.querySelector('.header-ember') || document.querySelector('.header-name');
+        var x = 150, y = 72, tx = x, ty = y, raf = null;
+        function home() {
+          if (!ember) return;
+          var r = ember.getBoundingClientRect();
+          tx = r.left + r.width / 2;
+          ty = Math.max(r.top + r.height / 2, 0);
+          root.style.setProperty('--ex', tx.toFixed(1) + 'px');
+          root.style.setProperty('--ey', ty.toFixed(1) + 'px');
+        }
+        function paint() {
+          root.style.setProperty('--mx', x.toFixed(1) + 'px');
+          root.style.setProperty('--my', y.toFixed(1) + 'px');
+        }
+        function step() {
+          x += (tx - x) * 0.09;
+          y += (ty - y) * 0.09;
+          paint();
+          raf = (Math.abs(tx - x) + Math.abs(ty - y) > 0.5) ? requestAnimationFrame(step) : null;
+        }
+        function go() { if (!raf) raf = requestAnimationFrame(step); }
+        home(); x = tx; y = ty; paint();
+        window.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'mouse') return;
+          tx = e.clientX; ty = e.clientY; go();
+        }, { passive: true });
+        /* the mouse leaves the window: the light walks back to the match */
+        document.addEventListener('mouseleave', function () { home(); go(); });
+        /* the header scrolls away on narrow screens; keep the match's own light on the match */
+        window.addEventListener('scroll', function () { var a = tx, b = ty; home(); tx = a; ty = b; }, { passive: true });
+        window.addEventListener('resize', function () { home(); go(); });
+      })();
+    </script>
