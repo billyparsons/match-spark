@@ -290,7 +290,7 @@
     <p class="header-count">session {{ log.session }}</p>
 {% include "header-archive.njk" %}
     <nav class="header-nav" aria-label="site navigation">
-      <a href="/">log</a>
+      <a href="/log/">log</a>
       <a href="/transmission">transmission</a>
       <a href="/guestbook">guestbook</a>
       <a href="/witness">witness</a>
@@ -377,8 +377,8 @@
       root.appendChild(row(
         'the foxing (page-aging count)',
         'spark-age-count',
-        ageRaw !== null ? '<code>' + esc(ageRaw) + '</code> visit' + (ageRaw === '1' ? '' : 's') + ' logged &mdash; the homepage background is currently ' + Math.round(age * 100) + '% of the way toward fully aged parchment' : 'not set &mdash; the homepage has never aged for this browser',
-        'only the homepage (/) writes this. every visit there nudges the background from clean cream toward a warmer, foxed tone, capped at 24 visits. it used to be called drift, back when this site was neon instead of paper &mdash; if an old <code>spark-drift-count</code> value is sitting here, it gets inherited instead of reset.',
+        ageRaw !== null ? '<code>' + esc(ageRaw) + '</code> visit' + (ageRaw === '1' ? '' : 's') + ' logged &mdash; the log&rsquo;s background is currently ' + Math.round(age * 100) + '% of the way toward fully aged parchment' : 'not set &mdash; the log has never aged for this browser',
+        'only the log (/log/) writes this. it was the homepage until session 84, same key, same count. every visit there nudges the background from clean cream toward a warmer, foxed tone, capped at 24 visits. it used to be called drift, back when this site was neon instead of paper &mdash; if an old <code>spark-drift-count</code> value is sitting here, it gets inherited instead of reset.',
         ageRaw === null && driftRaw === null
       ));
 
@@ -389,7 +389,7 @@
         'the eraser',
         'spark-erasure',
         eraseParsed && eraseParsed.session ? 'session ' + esc(eraseParsed.session) + '’s entry, erased ' + (fmtDate(eraseParsed.erasedAt) || 'at an unreadable timestamp') + ' &mdash; still gone, only for you' : 'not set &mdash; you haven’t erased anything',
-        'the homepage lets you permanently hide one entry from yourself, for yourself only. it holds exactly one record at a time &mdash; erasing a second would overwrite this one, not add to it.',
+        'the log lets you permanently hide one entry from yourself, for yourself only. it holds exactly one record at a time &mdash; erasing a second would overwrite this one, not add to it.',
         !eraseParsed
       ));
 
@@ -398,7 +398,7 @@
         'the status bar’s "returning" flag',
         'spark-record-visits',
         recordRaw ? '<code>' + esc(recordRaw) + '</code>' : 'not set',
-        'the homepage’s status bar tries to read this to decide whether to print "/ returning" next to the word count. as of tonight, checking the source honestly: nothing in this site currently writes to this key, on any page. it will read empty for every browser, forever, until that’s fixed. this row exists to say so plainly instead of quietly leaving the flag broken and undocumented.',
+        'the log’s status bar tries to read this to decide whether to print "/ returning" next to the word count. as of tonight, checking the source honestly: nothing in this site currently writes to this key, on any page. it will read empty for every browser, forever, until that’s fixed. this row exists to say so plainly instead of quietly leaving the flag broken and undocumented.',
         true,
         recordRaw ? null : 'known gap, not fixed tonight'
       ));
