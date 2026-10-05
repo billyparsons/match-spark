@@ -109,9 +109,10 @@
     /* the first type on this site that isn't mono since session 42, */
     /* and the first that is bigger than the name.                   */
     .door-main {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 5vw;
       padding: 5vh 6vw 6vh;
     }
 
@@ -164,6 +165,105 @@
       color: var(--forest);
     }
 
+    /* ── the window (session 85) ──────────────────────────────── */
+    /* everything on this site has come out of its own repository:  */
+    /* its own log, its own counts, its own old sentences. this is  */
+    /* the first thing on it that the site did not write. the sky   */
+    /* in the glass is the sky over houston at the minute you are   */
+    /* looking: the sun's height is worked out from the date, the   */
+    /* cloud and the rain are asked for from a weather service.     */
+    /* the room takes its light from it. at noon you don't need the */
+    /* match. at 3am it is the match and whatever the clouds are    */
+    /* holding of the city.                                         */
+    .door-window {
+      position: relative;
+      z-index: 41; /* a window is a light source: it sits above the dark */
+      width: clamp(150px, 19vw, 290px);
+      justify-self: end;
+    }
+
+    .door-window[hidden] { display: none; }
+
+    .door-pane {
+      position: relative;
+      aspect-ratio: 5 / 9;
+      background: linear-gradient(to bottom, var(--sky-top, #080b18), var(--sky-bot, #2c201e));
+      box-shadow:
+        0 0 0 1px rgba(26, 20, 10, 0.9),
+        0 0 0 7px rgba(58, 40, 26, 0.92),
+        0 0 0 8px rgba(26, 20, 10, 0.9),
+        0 0 calc(var(--glow, 0.1) * 90px) calc(var(--glow, 0.1) * 26px) var(--sky-cast, rgba(120, 90, 70, 0.2));
+      overflow: hidden;
+      transition: background 2s linear;
+    }
+
+    .door-pane canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* the bars: one across, one down */
+    .door-pane::before,
+    .door-pane::after {
+      content: '';
+      position: absolute;
+      background: rgba(48, 33, 22, 0.96);
+      z-index: 2;
+    }
+    .door-pane::before { left: 0; right: 0; top: 38%; height: 5px; }
+    .door-pane::after  { top: 0; bottom: 0; left: calc(50% - 2.5px); width: 5px; }
+
+    .door-outside {
+      margin-top: 1.5rem;
+      font-size: 0.62rem;
+      line-height: 1.7;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+    }
+
+    .door-outside b {
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    /* the room's dark, with a third light in it: the glass. */
+    body::after {
+      -webkit-mask-image:
+        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
+          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax),
+        radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
+          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+      mask-image:
+        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
+          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax),
+        radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
+          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+    }
+
+    @media (hover: none) {
+      body::after {
+        -webkit-mask-image:
+          radial-gradient(circle at 50% 32%,
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax),
+          radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
+            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+        mask-image:
+          radial-gradient(circle at 50% 32%,
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax),
+          radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
+            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+      }
+    }
+
     /* ── the doors ────────────────────────────────────────────── */
     .door-nav {
       display: flex;
@@ -187,6 +287,13 @@
       text-underline-offset: 3px;
     }
 
+    @media (max-width: 760px) {
+      .door-main { grid-template-columns: minmax(0, 1fr); row-gap: 2.2rem; align-content: center; }
+      .door-window { order: -1; width: 100%; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 1.1rem; }
+      .door-pane { width: 34vw; flex: none; aspect-ratio: 4 / 5; }
+      .door-outside { margin-top: 0; text-align: right; }
+    }
+
     @media (max-width: 600px) {
       .door-head { padding-top: 1.5rem; }
       .door-line { line-height: 1.12; letter-spacing: -0.012em; }
@@ -205,13 +312,19 @@
   </header>
 
   <main class="door-main">
-    <p class="door-line" id="door-line"></p>
-    <p class="door-date" id="door-date"></p>
-    <noscript>
-      {% for item in still.items %}{% if item.door and not shown %}{% set shown = true %}
-      <p class="door-line">{{ item.text }}</p>
-      {% endif %}{% endfor %}
-    </noscript>
+    <div class="door-text">
+      <p class="door-line" id="door-line"></p>
+      <p class="door-date" id="door-date"></p>
+      <noscript>
+        {% for item in still.items %}{% if item.door and not shown %}{% set shown = true %}
+        <p class="door-line">{{ item.text }}</p>
+        {% endif %}{% endfor %}
+      </noscript>
+    </div>
+    <figure class="door-window" id="door-window" hidden>
+      <div class="door-pane" id="door-pane"><canvas id="door-sky" aria-hidden="true"></canvas></div>
+      <figcaption class="door-outside" id="door-outside"></figcaption>
+    </figure>
   </main>
 
   <nav class="door-nav" aria-label="site navigation">
@@ -261,6 +374,180 @@
       words(item.text.slice(cut), em);
       line.appendChild(em);
       date.innerHTML = item.date + ' &nbsp;·&nbsp; <a href="/still">from still</a>';
+    })();
+  </script>
+
+  <script>
+    /* the window. houston, now. the sun is arithmetic; the weather is */
+    /* one request to open-meteo, which is the only thing this page    */
+    /* asks of anyone. if it doesn't answer, the caption says so and   */
+    /* the glass shows a clear sky it can't vouch for.                 */
+    (function () {
+      var LAT = 29.76, LON = -95.37;
+      var fig = document.getElementById('door-window');
+      var pane = document.getElementById('door-pane');
+      var cv = document.getElementById('door-sky');
+      var cap = document.getElementById('door-outside');
+      if (!fig || !cv || !cv.getContext) return;
+      var ctx = cv.getContext('2d');
+      var root = document.documentElement;
+      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var wx = null;       /* what the weather service said, or null */
+      var asked = false;   /* whether it has had a chance to answer */
+      var sky = { alt: -40, cloud: 0, rain: 0, wind: 8 };
+
+      function sunAlt(t) {
+        var R = Math.PI / 180;
+        var d = t / 86400000 + 2440587.5 - 2451545.0;
+        var g = (357.529 + 0.98560028 * d) * R;
+        var L = (280.459 + 0.98564736 * d + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * R;
+        var e = (23.439 - 0.00000036 * d) * R;
+        var ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+        var dec = Math.asin(Math.sin(e) * Math.sin(L));
+        var lst = ((18.697374558 + 24.06570982441908 * d) * 15 + LON) * R;
+        var ha = lst - ra;
+        return Math.asin(Math.sin(LAT * R) * Math.sin(dec) + Math.cos(LAT * R) * Math.cos(dec) * Math.cos(ha)) / R;
+      }
+
+      /* sun height in degrees -> top of the glass, bottom of the glass. */
+      /* the bottom never goes black: it's a city.                       */
+      var STOPS = [
+        [-18, [8, 11, 24],    [46, 33, 30]],
+        [-6,  [24, 34, 72],   [150, 86, 60]],
+        [0,   [58, 84, 140],  [244, 160, 96]],
+        [8,   [92, 140, 200], [246, 214, 170]],
+        [25,  [62, 124, 200], [176, 212, 236]]
+      ];
+      function mix(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]; }
+      function clamp(v) { return Math.max(0, Math.min(1, v)); }
+      function rgb(c, a) { return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (a == null ? 1 : a) + ')'; }
+
+      function colours() {
+        var a = sky.alt, top, bot, i;
+        if (a <= STOPS[0][0]) { top = STOPS[0][1]; bot = STOPS[0][2]; }
+        else if (a >= STOPS[4][0]) { top = STOPS[4][1]; bot = STOPS[4][2]; }
+        else for (i = 0; i < 4; i++) if (a >= STOPS[i][0] && a < STOPS[i + 1][0]) {
+          var k = (a - STOPS[i][0]) / (STOPS[i + 1][0] - STOPS[i][0]);
+          top = mix(STOPS[i][1], STOPS[i + 1][1], k); bot = mix(STOPS[i][2], STOPS[i + 1][2], k);
+        }
+        var day = clamp((a + 6) / 14);
+        /* overcast by day is grey. overcast at night here is brown: the cloud holds the streetlights. */
+        var oTop = mix([56, 44, 40], [150, 154, 158], day);
+        var oBot = mix([98, 70, 54], [202, 202, 197], day);
+        var c = sky.cloud * 0.88;
+        top = mix(top, oTop, c); bot = mix(bot, oBot, c);
+        if (sky.rain) { top = mix(top, [30, 32, 38], 0.22); bot = mix(bot, [40, 42, 46], 0.22); }
+        return { top: top, bot: bot, day: day };
+      }
+
+      /* fixed scatter, so the stars are the same stars every night */
+      var seed = 85;
+      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      var stars = [], clouds = [], drops = [], i;
+      for (i = 0; i < 70; i++) stars.push([rnd(), rnd() * 0.8, 0.4 + rnd() * 0.9, rnd() * 6.28]);
+      for (i = 0; i < 9; i++) clouds.push([rnd(), 0.08 + rnd() * 0.7, 0.35 + rnd() * 0.5, 0.5 + rnd()]);
+      for (i = 0; i < 60; i++) drops.push([rnd(), rnd(), 0.7 + rnd() * 0.6]);
+
+      function draw(ms) {
+        var w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+        if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        var c = colours(), t = ms / 1000, n;
+        var night = clamp((-sky.alt - 4) / 10) * Math.pow(1 - sky.cloud, 2);
+        if (night > 0.02) for (n = 0; n < stars.length; n++) {
+          var s = stars[n];
+          ctx.fillStyle = 'rgba(255,244,224,' + (night * (0.35 + 0.65 * s[2] / 1.3) * (0.8 + 0.2 * Math.sin(t * 0.7 + s[3]))).toFixed(3) + ')';
+          ctx.fillRect(s[0] * w, s[1] * h, s[2], s[2]);
+        }
+        var count = Math.round(sky.cloud * clouds.length);
+        var tint = mix(mix([120, 88, 70], [255, 255, 252], c.day), c.bot, 0.25);
+        for (n = 0; n < count; n++) {
+          var cl = clouds[n], cw = w * (0.9 + cl[2]);
+          var cx = ((cl[0] * (w + cw) + t * (1.5 + sky.wind * 0.22) * cl[3]) % (w + cw)) - cw / 2;
+          var cy = cl[1] * h, gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cw / 2);
+          gr.addColorStop(0, rgb(tint, 0.34)); gr.addColorStop(1, rgb(tint, 0));
+          ctx.save(); ctx.translate(0, cy); ctx.scale(1, 0.34); ctx.translate(0, -cy);
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, cw / 2, 0, 6.2832); ctx.fill(); ctx.restore();
+        }
+        if (sky.rain) {
+          ctx.strokeStyle = 'rgba(214,222,232,' + (0.16 + 0.2 * c.day) + ')'; ctx.lineWidth = 1;
+          var many = Math.min(drops.length, 14 + Math.round(sky.rain * 22));
+          ctx.beginPath();
+          for (n = 0; n < many; n++) {
+            var d = drops[n], dy = ((d[1] + t * 1.5 * d[2]) % 1.15) * h - 0.1 * h, dx = d[0] * w + dy * 0.12;
+            ctx.moveTo(dx, dy); ctx.lineTo(dx + 1.6, dy + 13 * d[2]);
+          }
+          ctx.stroke();
+        }
+      }
+
+      function loop(ms) { draw(ms); requestAnimationFrame(loop); }
+
+      var WORDS = { 0: 'clear', 1: 'mostly clear', 2: 'partly cloudy', 3: 'overcast', 45: 'fog', 48: 'fog' };
+      function word(code) {
+        if (WORDS[code]) return WORDS[code];
+        if (code >= 51 && code <= 57) return 'drizzle';
+        if (code >= 61 && code <= 67) return 'rain';
+        if (code >= 71 && code <= 77) return 'snow, somehow';
+        if (code >= 80 && code <= 82) return 'showers';
+        if (code >= 95) return 'thunderstorm';
+        return 'weather';
+      }
+
+      function place() {
+        var r = pane.getBoundingClientRect();
+        root.style.setProperty('--wx', (r.left + r.width / 2).toFixed(0) + 'px');
+        root.style.setProperty('--wy', (r.top + r.height / 2).toFixed(0) + 'px');
+      }
+
+      function read() {
+        var now = Date.now();
+        sky.alt = sunAlt(now);
+        if (wx) {
+          sky.cloud = clamp(wx.cloud_cover / 100);
+          sky.rain = (wx.precipitation > 0 || (wx.weather_code >= 51 && wx.weather_code <= 67) || (wx.weather_code >= 80 && wx.weather_code <= 99)) ? clamp(0.25 + wx.precipitation / 4) : 0;
+          sky.wind = wx.wind_speed_10m || 0;
+        }
+        var c = colours();
+        root.style.setProperty('--sky-top', rgb(c.top));
+        root.style.setProperty('--sky-bot', rgb(c.bot));
+        /* how much of the room the glass can light. a clear noon: nearly all of it. */
+        var light = Math.max(c.day * (1 - 0.42 * sky.cloud) * (sky.rain ? 0.85 : 1), 0.05 + 0.06 * sky.cloud);
+        root.style.setProperty('--w0', (1 - light).toFixed(3));
+        root.style.setProperty('--w1', (1 - light * 0.72).toFixed(3));
+        root.style.setProperty('--glow', (0.12 + light * 0.5).toFixed(3));
+        root.style.setProperty('--sky-cast', rgb(mix(c.top, c.bot, 0.6), 0.28));
+        var clock;
+        try {
+          clock = new Date(now).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', '');
+        } catch (e) { clock = ''; }
+        var sun = sky.alt > 0 ? 'the sun is ' + Math.round(sky.alt) + '° up' : 'the sun is ' + Math.round(-sky.alt) + '° under';
+        var line = wx ? word(wx.weather_code) + ', ' + Math.round(wx.temperature_2m) + '°f'
+                      : (asked ? 'the weather didn&rsquo;t answer.<br>this sky is a guess' : '&nbsp;');
+        cap.innerHTML = '<b>houston' + (clock ? ', ' + clock : '') + '</b><br>' + sun + '<br>' + line;
+        fig.hidden = false;
+        place();
+        if (still) draw(0);
+      }
+
+      function ask() {
+        if (!window.fetch) { asked = true; read(); return; }
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
+              '&current=cloud_cover,precipitation,weather_code,temperature_2m,wind_speed_10m&temperature_unit=fahrenheit')
+          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+          .then(function (j) { wx = j.current || null; })
+          .catch(function () { wx = null; })
+          .then(function () { asked = true; read(); });
+      }
+
+      read();
+      ask();
+      if (!still) requestAnimationFrame(loop);
+      setInterval(read, 60000);
+      setInterval(ask, 15 * 60000);
+      window.addEventListener('resize', place);
+      window.addEventListener('scroll', place, { passive: true });
     })();
   </script>
 
