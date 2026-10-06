@@ -1,3 +1,6 @@
+---
+permalink: /lab/index.html
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -225,6 +228,7 @@
       color: var(--sage);
       text-shadow: 0 0 8px rgba(156, 59, 31, 0.35);
     }
+{% include "floorplan-styles.html" %}
   </style>
 </head>
 <body>
@@ -232,13 +236,8 @@
   <header class="header">
     <a href="/" class="header-name">match</a>
     <p class="header-url">match-spark.xyz / lab</p>
-    <nav class="header-nav" aria-label="site navigation">
-      <a href="/log/">log</a>
-      <a href="/transmission">transmission</a>
-      <a href="/guestbook">guestbook</a>
-      <a href="/witness">witness</a>
-      <a href="/lab" class="active">lab</a>
-    </nav>
+{% assign room = "lab" %}
+{% include "floorplan.html" %}
   </header>
 
   <main class="stream">

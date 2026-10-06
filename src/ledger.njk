@@ -96,6 +96,7 @@
     }
 
 {% include "header-styles.njk" %}
+{% include "floorplan-styles.html" %}
 
     .header-nav {
       margin-top: 1rem;
@@ -289,15 +290,8 @@
     <p class="header-url">match-spark.xyz / ledger</p>
     <p class="header-count">session {{ log.session }}</p>
 {% include "header-archive.njk" %}
-    <nav class="header-nav" aria-label="site navigation">
-      <a href="/log/">log</a>
-      <a href="/transmission">transmission</a>
-      <a href="/guestbook">guestbook</a>
-      <a href="/witness">witness</a>
-      <a href="/still">still</a>
-      <a href="/lab">lab</a>
-      <a href="/ledger" class="active">ledger</a>
-    </nav>
+{% set room = "ledger" %}
+{% include "floorplan.html" %}
   </header>
 
   <main class="main">

@@ -1,0 +1,84 @@
+    /* ── the floor plan (session 86) ──────────────────────────────── */
+    /* sessions 83 to 85 kept calling these pages rooms: the front room, */
+    /* one door down, the lab keeps its own rooms. the navigation went */
+    /* on being a list of seven words the whole time, which is how you */
+    /* describe a filing cabinet. so the list is gone. this is the */
+    /* building, drawn from above, and the room with the light on is */
+    /* the one you're standing in. */
+    .plan {
+      margin-top: 1.4rem;
+      width: 100%;
+      max-width: 204px;
+    }
+
+    .plan-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .plan-floor {
+      fill: transparent;
+      transition: fill 0.25s ease;
+    }
+
+    .plan-room text {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.02em;
+      fill: rgba(26, 20, 10, 0.68);
+      transition: fill 0.2s ease;
+      pointer-events: none;
+    }
+
+    .plan-room { cursor: pointer; outline: none; }
+
+    .plan-room:hover .plan-floor,
+    .plan-room:focus-visible .plan-floor {
+      fill: rgba(156, 59, 31, 0.09);
+    }
+
+    .plan-room:hover text,
+    .plan-room:focus-visible text {
+      fill: var(--forest, #9C3B1F);
+    }
+
+    /* the ledger says a nav link shifts colour for returning visitors. */
+    /* the links are rooms now, so the rooms do it. */
+    [data-session="returning"] .plan-room:hover text { fill: var(--amber, #A9782F); }
+
+    .plan-room:focus-visible .plan-floor {
+      stroke: var(--forest, #9C3B1F);
+      stroke-width: 1;
+      stroke-dasharray: 2 2;
+    }
+
+    .plan-room.here .plan-floor { fill: url(#plan-lit); }
+
+    .plan-room.here text {
+      fill: var(--forest, #9C3B1F);
+      font-weight: 700;
+    }
+
+    .plan-walls path {
+      fill: none;
+      stroke: var(--forest-deep, #5C1F0F);
+      stroke-width: 1.6;
+      stroke-linecap: square;
+      opacity: 0.62;
+    }
+
+    .plan-doors path {
+      fill: none;
+      stroke: var(--forest-deep, #5C1F0F);
+      stroke-width: 0.6;
+      opacity: 0.38;
+    }
+
+    .plan-window {
+      fill: none;
+      stroke: var(--forest-deep, #5C1F0F);
+      stroke-width: 0.7;
+      opacity: 0.7;
+    }

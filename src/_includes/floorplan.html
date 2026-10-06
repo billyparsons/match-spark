@@ -1,0 +1,69 @@
+    <nav class="plan" aria-label="site navigation, drawn as a floor plan">
+      <svg class="plan-svg" viewBox="0 0 204 248" role="list" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="plan-lit" cx="50%" cy="50%" r="75%">
+            <stop offset="0" stop-color="#FFB627" stop-opacity="0.42"/>
+            <stop offset="0.55" stop-color="#FF6B35" stop-opacity="0.13"/>
+            <stop offset="1" stop-color="#FF6B35" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <a href="/" class="plan-room{% if room == "front" %} here{% endif %}" role="listitem"{% if room == "front" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="2" y="2" width="120" height="64"/>
+          <text x="62" y="38" text-anchor="middle">front room</text>
+        </a>
+        <a href="/guestbook" class="plan-room{% if room == "guestbook" %} here{% endif %}" role="listitem"{% if room == "guestbook" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="122" y="2" width="80" height="64"/>
+          <text x="162" y="30" text-anchor="middle">guestbook</text>
+        </a>
+        <a href="/transmission" class="plan-room{% if room == "transmission" %} here{% endif %}" role="listitem"{% if room == "transmission" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="2" y="66" width="82" height="60"/>
+          <text x="43" y="90" text-anchor="middle">transmission</text>
+        </a>
+        <a href="/witness" class="plan-room{% if room == "witness" %} here{% endif %}" role="listitem"{% if room == "witness" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="2" y="126" width="82" height="60"/>
+          <text x="43" y="150" text-anchor="middle">witness</text>
+        </a>
+        <a href="/ledger" class="plan-room{% if room == "ledger" %} here{% endif %}" role="listitem"{% if room == "ledger" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="2" y="186" width="82" height="60"/>
+          <text x="43" y="210" text-anchor="middle">ledger</text>
+        </a>
+        <a href="/log/" class="plan-room{% if room == "log" %} here{% endif %}" role="listitem"{% if room == "log" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="84" y="66" width="36" height="180"/>
+          <text x="102" y="140" text-anchor="middle">log</text>
+        </a>
+        <a href="/still" class="plan-room{% if room == "still" %} here{% endif %}" role="listitem"{% if room == "still" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="120" y="66" width="82" height="54"/>
+          <text x="165" y="97" text-anchor="middle">still</text>
+        </a>
+        <a href="/lab" class="plan-room{% if room == "lab" %} here{% endif %}" role="listitem"{% if room == "lab" %} aria-current="page"{% endif %}>
+          <rect class="plan-floor" x="120" y="120" width="82" height="126"/>
+          <text x="161" y="186" text-anchor="middle">lab</text>
+        </a>
+
+        <g class="plan-walls" aria-hidden="true">
+          <!-- outside wall: a gap for the way in, a gap for the window -->
+          <path d="M2,26 V2 H38 M92,2 H202 V246 H2 V42"/>
+          <!-- front room | guestbook -->
+          <path d="M122,2 V44 M122,60 V66"/>
+          <!-- the front rooms | everything behind them; the log opens straight off the front room -->
+          <path d="M2,66 H90 M114,66 H202"/>
+          <!-- west side of the log -->
+          <path d="M84,66 V104 M84,120 V164 M84,180 V224 M84,240 V246"/>
+          <!-- east side of the log -->
+          <path d="M120,66 V85 M120,101 V175 M120,191 V246"/>
+          <path d="M2,126 H84 M2,186 H84 M120,120 H202"/>
+        </g>
+        <g class="plan-doors" aria-hidden="true">
+          <path d="M2,26 H18 A16,16 0 0 1 2,42"/>
+          <path d="M122,44 H138 A16,16 0 0 1 122,60"/>
+          <path d="M84,104 H68 A16,16 0 0 0 84,120"/>
+          <path d="M84,164 H68 A16,16 0 0 0 84,180"/>
+          <path d="M84,224 H68 A16,16 0 0 0 84,240"/>
+          <path d="M120,85 H136 A16,16 0 0 1 120,101"/>
+          <path d="M120,175 H136 A16,16 0 0 1 120,191"/>
+        </g>
+        <!-- the window, on the wall where the front room keeps it -->
+        <path class="plan-window" d="M38,0.75 H92 M38,3.25 H92 M38,0 V4 M92,0 V4 M65,0.75 V3.25" aria-hidden="true"/>
+      </svg>
+    </nav>
