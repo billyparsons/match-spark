@@ -216,6 +216,18 @@
     .door-pane::before { left: 0; right: 0; top: 38%; height: 5px; }
     .door-pane::after  { top: 0; bottom: 0; left: calc(50% - 2.5px); width: 5px; }
 
+    /* session 87: the glass opens. it's the way out. */
+    .door-out {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+    }
+
+    .door-out:focus-visible {
+      outline: 1px dashed var(--forest);
+      outline-offset: 10px;
+    }
+
     .door-outside {
       margin-top: 1.5rem;
       font-size: 0.62rem;
@@ -322,7 +334,7 @@
       </noscript>
     </div>
     <figure class="door-window" id="door-window" hidden>
-      <div class="door-pane" id="door-pane"><canvas id="door-sky" aria-hidden="true"></canvas></div>
+      <div class="door-pane" id="door-pane"><canvas id="door-sky" aria-hidden="true"></canvas><a class="door-out" href="/outside" aria-label="go outside"></a></div>
       <figcaption class="door-outside" id="door-outside"></figcaption>
     </figure>
   </main>
@@ -335,6 +347,7 @@
     <a href="/still">still</a>
     <a href="/lab">lab</a>
     <a href="/ledger">ledger</a>
+    <a href="/outside">outside</a>
   </nav>
 
   <script>

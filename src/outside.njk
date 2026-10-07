@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>outside</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── outside (session 87) ─────────────────────────────────── */
+    /* every other page on this site is a room: cream paper, the    */
+    /* same dark, the name in the corner. this one is not in the    */
+    /* house. it has no paper, no match, no name and no sentences.  */
+    /* you are standing on the north side looking south at the      */
+    /* building, under the sky the front room's window shows a      */
+    /* strip of. the sun and the moon are arithmetic. the cloud,    */
+    /* the wind and the rain are one request to open-meteo. the     */
+    /* stars and the skyline are made up. it reads no storage and   */
+    /* writes none.                                                 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #0b0d16;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+    }
+
+    #sky {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* the house is the way back in */
+    .house {
+      position: fixed;
+      display: block;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .house:focus-visible {
+      outline: 1px dashed rgba(243, 236, 220, 0.7);
+      outline-offset: 6px;
+    }
+
+    .readings {
+      position: fixed;
+      left: 6vw;
+      bottom: 2rem;
+      font-size: 0.62rem;
+      line-height: 1.75;
+      letter-spacing: 0.08em;
+      color: rgba(243, 236, 220, 0.74);
+      text-shadow: 0 0 6px rgba(10, 8, 6, 0.75), 0 1px 1px rgba(10, 8, 6, 0.6);
+    }
+
+    .readings b {
+      font-weight: 400;
+      color: rgba(243, 236, 220, 0.96);
+    }
+
+    .readings a {
+      display: inline-block;
+      margin-top: 0.7rem;
+      color: rgba(243, 236, 220, 0.96);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(243, 236, 220, 0.35);
+    }
+
+    .readings a:hover {
+      color: #FFB627;
+    }
+
+    @media (max-width: 600px) {
+      .readings { bottom: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="sky" aria-hidden="true"></canvas>
+
+  <a class="house" id="house" href="/" aria-label="the house. go back in"></a>
+
+  <p class="readings"><span id="readings"></span><br><a href="/">back inside</a></p>
+
+  <script>
+    (function () {
+      var LAT = 29.76, LON = -95.37, R = Math.PI / 180;
+      var cv = document.getElementById('sky');
+      var out = document.getElementById('readings');
+      var door = document.getElementById('house');
+      if (!cv || !cv.getContext) return;
+      var ctx = cv.getContext('2d');
+      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var wx = null;       /* what the weather service said, or null */
+      var asked = false;   /* whether it has had a chance to answer */
+      var sky = { cloud: 0, rain: 0, wind: 6, from: 135 };
+      var sun = { alt: -40, az: 0 }, moon = { alt: -40, az: 0, lit: 0, waxing: true };
+      var hover = 0;
+      var pretend = false; /* true when the address bar asked for a different sky */
+
+      /* ── where things are ───────────────────────────────────── */
+      function altaz(ra, dec, d) {
+        var lst = ((18.697374558 + 24.06570982441908 * d) * 15 + LON) * R;
+        var ha = lst - ra, p = LAT * R;
+        var alt = Math.asin(Math.sin(p) * Math.sin(dec) + Math.cos(p) * Math.cos(dec) * Math.cos(ha));
+        var az = Math.atan2(Math.sin(ha), Math.cos(ha) * Math.sin(p) - Math.tan(dec) * Math.cos(p)) / R + 180;
+        return { alt: alt / R, az: ((az % 360) + 360) % 360 };
+      }
+
+      function sunLon(d) {
+        var g = (357.529 + 0.98560028 * d) * R;
+        return (280.459 + 0.98564736 * d + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * R;
+      }
+
+      function sunAt(t) {
+        var d = t / 86400000 + 2440587.5 - 2451545.0;
+        var L = sunLon(d), e = (23.439 - 0.00000036 * d) * R;
+        return altaz(Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L)), Math.asin(Math.sin(e) * Math.sin(L)), d);
+      }
+
+      /* low-precision moon: good to a degree or two, which is less than its own width twice over */
+      function moonAt(t) {
+        var d = t / 86400000 + 2440587.5 - 2451545.0;
+        var M = (134.963 + 13.064993 * d) * R, F = (93.272 + 13.229350 * d) * R;
+        var lon = (218.316 + 13.176396 * d) * R + 6.289 * R * Math.sin(M);
+        var lat = 5.128 * R * Math.sin(F), e = 23.439 * R;
+        var ra = Math.atan2(Math.sin(lon) * Math.cos(e) - Math.tan(lat) * Math.sin(e), Math.cos(lon));
+        var dec = Math.asin(Math.sin(lat) * Math.cos(e) + Math.cos(lat) * Math.sin(e) * Math.sin(lon));
+        var m = altaz(ra, dec, d);
+        var el = (((lon - sunLon(d)) / R) % 360 + 360) % 360;
+        m.lit = (1 - Math.cos(el * R)) / 2;
+        m.waxing = el < 180;
+        return m;
+      }
+
+      /* ── colour ─────────────────────────────────────────────── */
+      /* the same sky the window uses: sun height -> top, bottom */
+      var STOPS = [
+        [-18, [8, 11, 24],    [46, 33, 30]],
+        [-6,  [24, 34, 72],   [150, 86, 60]],
+        [0,   [58, 84, 140],  [244, 160, 96]],
+        [8,   [92, 140, 200], [246, 214, 170]],
+        [25,  [62, 124, 200], [176, 212, 236]]
+      ];
+      function mix(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]; }
+      function clamp(v) { return Math.max(0, Math.min(1, v)); }
+      function rgb(c, a) { return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (a == null ? 1 : a) + ')'; }
+
+      function colours() {
+        var a = sun.alt, top, bot, i;
+        if (a <= STOPS[0][0]) { top = STOPS[0][1]; bot = STOPS[0][2]; }
+        else if (a >= STOPS[4][0]) { top = STOPS[4][1]; bot = STOPS[4][2]; }
+        else for (i = 0; i < 4; i++) if (a >= STOPS[i][0] && a < STOPS[i + 1][0]) {
+          var k = (a - STOPS[i][0]) / (STOPS[i + 1][0] - STOPS[i][0]);
+          top = mix(STOPS[i][1], STOPS[i + 1][1], k); bot = mix(STOPS[i][2], STOPS[i + 1][2], k);
+        }
+        var day = clamp((a + 6) / 14);
+        var oTop = mix([56, 44, 40], [150, 154, 158], day);
+        var oBot = mix([98, 70, 54], [202, 202, 197], day);
+        var c = sky.cloud * 0.88;
+        top = mix(top, oTop, c); bot = mix(bot, oBot, c);
+        if (sky.rain) { top = mix(top, [30, 32, 38], 0.22); bot = mix(bot, [40, 42, 46], 0.22); }
+        /* how much light there is to see the ground by */
+        var amb = Math.max(day * (1 - 0.45 * sky.cloud) * (sky.rain ? 0.85 : 1), 0.07 + 0.05 * sky.cloud);
+        if (moon.alt > 0) amb += 0.07 * moon.lit * (1 - sky.cloud) * (1 - day);
+        return { top: top, bot: bot, day: day, amb: clamp(amb) };
+      }
+
+      /* ── the made-up parts: fixed scatter, same every visit ──── */
+      var seed = 87;
+      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      var stars = [], clouds = [], drops = [], roofs = [], towers = [], blades = [], i;
+      for (i = 0; i < 260; i++) stars.push([rnd(), rnd(), 0.5 + rnd() * 1.1, rnd() * 6.28]);
+      for (i = 0; i < 22; i++) clouds.push([rnd(), 0.06 + rnd() * 0.8, 0.5 + rnd() * 0.7, 0.5 + rnd()]);
+      for (i = 0; i < 260; i++) drops.push([rnd(), rnd(), 0.7 + rnd() * 0.6]);
+      var x = 0;
+      while (x < 1) { var rw = 0.008 + rnd() * 0.03; roofs.push([x, rw, 2 + rnd() * 8, rnd()]); x += rw * 0.8; }
+      for (i = 0; i < 9; i++) towers.push([0.13 + i * 0.011 + rnd() * 0.006, 0.006 + rnd() * 0.006, 14 + rnd() * 36, rnd(), rnd()]);
+      for (i = 0; i < 190; i++) blades.push([rnd(), 16 + rnd() * 46, rnd() * 6.28, 0.6 + rnd() * 0.8]);
+
+      /* ── layout ─────────────────────────────────────────────── */
+      var W = 0, H = 0, HZ = 0, S = 1, hs = {};
+      function layout() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        HZ = Math.round(H * 0.7);
+        S = Math.max(0.6, Math.min(1.3, H / 900));
+        /* the building on the plan, seen from the north: west is on your right, */
+        /* so the window sits right of centre and the way in is round the corner. */
+        var hw = Math.min(W * 0.62, 440 * S), wall = hw * 0.25, roof = hw * 0.11;
+        var x0 = Math.round(W * 0.5 - hw * 0.5), base = HZ + Math.round(H * 0.045);
+        var ww = hw * 0.105, wh = ww * 1.5;
+        hs = { x: x0, w: hw, base: base, wall: wall, roof: roof,
+               wx: x0 + hw * 0.675 - ww / 2, wy: base - wall * 0.5 - wh / 2 - wall * 0.04, ww: ww, wh: wh };
+        door.style.left = x0 + 'px';
+        door.style.top = (base - wall - roof) + 'px';
+        door.style.width = hw + 'px';
+        door.style.height = (wall + roof) + 'px';
+      }
+
+      /* facing south: east at the left edge, west at the right, straight up at the top */
+      function px(az) { return (az - 90) / 180 * W; }
+      function py(alt) { return HZ - alt / 90 * HZ; }
+
+      /* ── drawing ────────────────────────────────────────────── */
+      function draw(ms) {
+        var t = ms / 1000, c = colours(), n, g;
+        var veil = 1 - Math.pow(sky.cloud, 1.5) * 0.92;
+        var sx = px(sun.az), sy = py(sun.alt);
+
+        g = ctx.createLinearGradient(0, 0, 0, HZ);
+        g.addColorStop(0, rgb(c.top)); g.addColorStop(1, rgb(c.bot));
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, HZ + 2);
+
+        var night = clamp((-sun.alt - 4) / 10) * Math.pow(1 - sky.cloud, 2);
+        if (night > 0.02) for (n = 0; n < stars.length; n++) {
+          var s = stars[n], fade = 1 - Math.pow(s[1], 3) * 0.8;
+          ctx.fillStyle = 'rgba(255,244,224,' + (night * fade * (0.3 + 0.7 * s[2] / 1.6) * (0.8 + 0.2 * Math.sin(t * 0.7 + s[3]))).toFixed(3) + ')';
+          ctx.fillRect(s[0] * W, s[1] * HZ, s[2], s[2]);
+        }
+
+        /* the stain the sun leaves on the horizon on its way up or down */
+        var tw = clamp(1 - Math.abs(sun.alt + 1) / 11) * veil;
+        if (tw > 0.01) {
+          g = ctx.createRadialGradient(sx, HZ, 0, sx, HZ, W * 0.55);
+          g.addColorStop(0, 'rgba(255,170,90,' + (0.55 * tw).toFixed(3) + ')');
+          g.addColorStop(0.4, 'rgba(240,110,70,' + (0.22 * tw).toFixed(3) + ')');
+          g.addColorStop(1, 'rgba(240,110,70,0)');
+          ctx.save(); ctx.translate(0, HZ); ctx.scale(1, 0.45); ctx.translate(0, -HZ);
+          ctx.fillStyle = g; ctx.fillRect(0, HZ - W * 1.3, W, W * 1.3); ctx.restore();
+        }
+
+        if (sun.alt > -1.5) {
+          var low = clamp(1 - sun.alt / 14), sc = mix([255, 252, 236], [255, 150, 70], low), sr = 15 * S;
+          g = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr * 9);
+          g.addColorStop(0, rgb(sc, 0.5 * veil)); g.addColorStop(0.25, rgb(sc, 0.16 * veil)); g.addColorStop(1, rgb(sc, 0));
+          ctx.fillStyle = g; ctx.fillRect(sx - sr * 9, sy - sr * 9, sr * 18, sr * 18);
+          ctx.fillStyle = rgb(sc, veil); ctx.beginPath(); ctx.arc(sx, sy, sr, 0, 6.2832); ctx.fill();
+        }
+
+        if (moon.alt > -1.5) {
+          var mx = px(moon.az), my = py(moon.alt), mr = 13 * S;
+          var ma = veil * (0.3 + 0.7 * (1 - c.day));
+          var rx = mr * (1 - 2 * moon.lit);
+          ctx.save(); ctx.translate(mx, my); ctx.rotate(Math.atan2(sy - my, sx - mx));
+          /* the dark part, faintly, when it's night enough for earthshine */
+          ctx.fillStyle = 'rgba(190,196,214,' + (0.09 * ma * (1 - c.day)).toFixed(3) + ')';
+          ctx.beginPath(); ctx.arc(0, 0, mr, 0, 6.2832); ctx.fill();
+          ctx.fillStyle = 'rgba(250,246,232,' + ma.toFixed(3) + ')';
+          ctx.beginPath(); ctx.arc(0, 0, mr, -Math.PI / 2, Math.PI / 2);
+          for (n = 0; n <= 24; n++) { var th = Math.PI / 2 - n / 24 * Math.PI; ctx.lineTo(rx * Math.cos(th), mr * Math.sin(th)); }
+          ctx.closePath(); ctx.fill(); ctx.restore();
+        }
+
+        /* cloud goes where the wind sends it. the wind is named for where it comes from. */
+        var drift = Math.sin(sky.from * R) * sky.wind * 0.9;
+        if (Math.abs(drift) < 1.2) drift = drift < 0 ? -1.2 : 1.2;
+        var count = Math.round(sky.cloud * clouds.length);
+        var tint = mix(mix([120, 88, 70], [255, 255, 252], c.day), c.bot, 0.25);
+        for (n = 0; n < count; n++) {
+          var cl = clouds[n], cw = W * (0.35 + cl[2] * 0.5), span = W + cw;
+          var cx = ((((cl[0] * span + t * drift * cl[3]) % span) + span) % span) - cw / 2;
+          var cy = cl[1] * HZ;
+          g = ctx.createRadialGradient(cx, cy, 0, cx, cy, cw / 2);
+          g.addColorStop(0, rgb(tint, 0.36)); g.addColorStop(1, rgb(tint, 0));
+          ctx.save(); ctx.translate(0, cy); ctx.scale(1, 0.3); ctx.translate(0, -cy);
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, cw / 2, 0, 6.2832); ctx.fill(); ctx.restore();
+        }
+
+        /* the far edge of things: roofs and trees, and a few towers */
+        var far = mix(mix([26, 21, 20], [104, 112, 92], c.amb), c.bot, 0.3);
+        ctx.fillStyle = rgb(far);
+        ctx.beginPath(); ctx.moveTo(0, HZ + 2);
+        for (n = 0; n < roofs.length; n++) {
+          var rf = roofs[n], ry = HZ - rf[2] * S;
+          ctx.lineTo(rf[0] * W, ry); ctx.lineTo((rf[0] + rf[1]) * W, ry + (rf[3] - 0.5) * 3);
+        }
+        ctx.lineTo(W, HZ + 2); ctx.closePath(); ctx.fill();
+        for (n = 0; n < towers.length; n++) {
+          var tr = towers[n];
+          ctx.fillRect(tr[0] * W, HZ - tr[2] * S, Math.max(3, tr[1] * W), tr[2] * S + 2);
+        }
+        var lamps = clamp(1.2 - c.amb * 2.2);
+        if (lamps > 0.02) {
+          ctx.fillStyle = 'rgba(255,196,120,' + (0.7 * lamps).toFixed(3) + ')';
+          for (n = 0; n < towers.length; n++) {
+            var tl = towers[n], k;
+            for (k = 0; k < 5; k++) if ((tl[3] * 7 + k * tl[4] * 3) % 1 > 0.45)
+              ctx.fillRect(tl[0] * W + 1, HZ - tl[2] * S + 3 + k * tl[2] * S / 6, 1, 1);
+          }
+          for (n = 0; n < roofs.length; n += 3) ctx.fillRect(roofs[n][0] * W + 2, HZ - 1, 1, 1);
+        }
+
+        /* ground */
+        var gFar = mix(mix([24, 20, 18], [128, 130, 82], c.amb), c.bot, 0.12);
+        var gNear = mix([9, 8, 8], [66, 82, 44], c.amb);
+        g = ctx.createLinearGradient(0, HZ, 0, H);
+        g.addColorStop(0, rgb(gFar)); g.addColorStop(1, rgb(gNear));
+        ctx.fillStyle = g; ctx.fillRect(0, HZ, W, H - HZ);
+
+        /* the path round to the way in, on the west wall */
+        var hx1 = hs.x + hs.w;
+        ctx.fillStyle = rgb(mix(gFar, [214, 200, 170], 0.07 + 0.16 * c.amb), 0.75);
+        ctx.beginPath();
+        ctx.moveTo(hx1 + 3, hs.base);
+        ctx.quadraticCurveTo(hx1 + hs.w * 0.16, hs.base + (H - hs.base) * 0.3, hx1 - hs.w * 0.04, H);
+        ctx.lineTo(hx1 + hs.w * 0.1, H);
+        ctx.quadraticCurveTo(hx1 + hs.w * 0.23, hs.base + (H - hs.base) * 0.25, hx1 + 9 * S, hs.base);
+        ctx.closePath(); ctx.fill();
+
+        /* by day the sun is behind the house, so its shadow falls toward you */
+        var shade = clamp(sun.alt / 6) * veil * c.day;
+        if (shade > 0.02) {
+          var len = Math.min((H - hs.base) * 0.9, hs.wall / Math.tan(Math.max(sun.alt, 8) * R) * 0.55);
+          var lean = (hs.x + hs.w / 2 - sx) / (W * 0.5) * len * 1.3;
+          ctx.fillStyle = 'rgba(12,14,10,' + (0.28 * shade).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(hs.x, hs.base); ctx.lineTo(hx1, hs.base);
+          ctx.lineTo(hx1 + lean, hs.base + len); ctx.lineTo(hs.x + lean, hs.base + len); ctx.closePath(); ctx.fill();
+        }
+
+        /* the house. the walls are the paper every room in it is written on; the roof is the rust. */
+        var wallC = mix(mix([27, 22, 19], [198, 189, 168], c.amb), c.bot, 0.1);
+        var roofC = mix(mix([17, 12, 10], [134, 54, 31], c.amb), c.bot, 0.08);
+        ctx.fillStyle = rgb(wallC); ctx.fillRect(hs.x, hs.base - hs.wall, hs.w, hs.wall + 1);
+        ctx.fillStyle = rgb(mix(wallC, [0, 0, 0], 0.22)); ctx.fillRect(hs.x, hs.base - hs.wall, hs.w, 3 * S);
+        ctx.fillStyle = rgb(roofC);
+        ctx.beginPath();
+        ctx.moveTo(hs.x - 9 * S, hs.base - hs.wall);
+        ctx.lineTo(hs.x + hs.w * 0.12, hs.base - hs.wall - hs.roof);
+        ctx.lineTo(hx1 - hs.w * 0.12, hs.base - hs.wall - hs.roof);
+        ctx.lineTo(hx1 + 9 * S, hs.base - hs.wall);
+        ctx.closePath(); ctx.fill();
+
+        /* the window, from the far side. what's lit in there is a match. */
+        var fl = 0.82 + 0.1 * Math.sin(t * 7.3) + 0.06 * Math.sin(t * 13.1 + 1.7) + 0.04 * Math.sin(t * 23.7);
+        if (still) fl = 0.9;
+        var glow = clamp(1.08 - c.amb * 1.15 + hover * 0.25) * fl;
+        var wcx = hs.wx + hs.ww / 2, wcy = hs.wy + hs.wh / 2;
+        ctx.fillStyle = rgb(mix([14, 11, 10], c.top, 0.22 * c.amb));
+        ctx.fillRect(hs.wx, hs.wy, hs.ww, hs.wh);
+        g = ctx.createRadialGradient(wcx, hs.wy + hs.wh * 0.7, 0, wcx, hs.wy + hs.wh * 0.7, hs.wh * 0.9);
+        g.addColorStop(0, 'rgba(255,196,80,' + clamp(0.25 + glow).toFixed(3) + ')');
+        g.addColorStop(0.5, 'rgba(255,107,53,' + clamp(glow * 0.85).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(156,59,31,' + clamp(glow * 0.6).toFixed(3) + ')');
+        ctx.fillStyle = g; ctx.fillRect(hs.wx, hs.wy, hs.ww, hs.wh);
+        var frame = rgb(mix([10, 7, 6], [58, 40, 26], c.amb));
+        ctx.strokeStyle = frame; ctx.lineWidth = Math.max(1.5, 2.5 * S);
+        ctx.strokeRect(hs.wx, hs.wy, hs.ww, hs.wh);
+        ctx.fillStyle = frame;
+        ctx.fillRect(hs.wx, hs.wy + hs.wh * 0.38 - 1, hs.ww, Math.max(1.5, 2 * S));
+        ctx.fillRect(wcx - 1, hs.wy, Math.max(1.5, 2 * S), hs.wh);
+        if (glow > 0.03) {
+          ctx.save(); ctx.globalCompositeOperation = 'lighter';
+          g = ctx.createRadialGradient(wcx, wcy, 0, wcx, wcy, hs.w * 0.42);
+          g.addColorStop(0, 'rgba(255,140,60,' + (0.2 * glow).toFixed(3) + ')');
+          g.addColorStop(0.45, 'rgba(255,120,55,' + (0.055 * glow).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,107,53,0)');
+          ctx.fillStyle = g; ctx.fillRect(wcx - hs.w * 0.42, wcy - hs.w * 0.42, hs.w * 0.84, hs.w * 0.84);
+          /* and what it throws on the grass */
+          var gy = hs.base + hs.wall * 0.3;
+          g = ctx.createRadialGradient(wcx, gy, 0, wcx, gy, hs.w * 0.3);
+          g.addColorStop(0, 'rgba(255,150,70,' + (0.16 * glow).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,107,53,0)');
+          ctx.translate(0, gy); ctx.scale(1, 0.32); ctx.translate(0, -gy);
+          ctx.fillStyle = g; ctx.fillRect(wcx - hs.w * 0.3, gy - hs.w * 0.3, hs.w * 0.6, hs.w * 0.6);
+          ctx.restore();
+        }
+
+        /* grass at your feet */
+        ctx.strokeStyle = rgb(mix([5, 5, 5], [44, 60, 30], c.amb)); ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        var push = (drift > 0 ? 1 : -1) * Math.min(14, sky.wind * 0.6);
+        for (n = 0; n < blades.length; n++) {
+          var b = blades[n], bx = b[0] * W, bh = b[1] * S;
+          var sway = push * b[3] + Math.sin(t * (0.9 + sky.wind * 0.06) * b[3] + b[2]) * (1.5 + sky.wind * 0.25);
+          ctx.moveTo(bx, H + 2); ctx.quadraticCurveTo(bx, H - bh * 0.6, bx + sway, H - bh);
+        }
+        ctx.stroke();
+
+        if (sky.rain) {
+          ctx.strokeStyle = 'rgba(214,222,232,' + (0.14 + 0.18 * c.day) + ')'; ctx.lineWidth = 1;
+          var many = Math.min(drops.length, Math.round((40 + sky.rain * 120) * Math.max(1, W / 700)));
+          var slant = push * 0.02;
+          ctx.beginPath();
+          for (n = 0; n < many; n++) {
+            var d = drops[n], dy = ((d[1] + t * 1.4 * d[2]) % 1.1) * H - 0.05 * H, dx = d[0] * W * 1.2 - W * 0.1 + dy * slant;
+            ctx.moveTo(dx, dy); ctx.lineTo(dx + 18 * d[2] * slant, dy + 18 * d[2]);
+          }
+          ctx.stroke();
+        }
+      }
+
+      var last = 0;
+      function loop(ms) {
+        if (ms - last > 30) { last = ms; draw(ms); }
+        requestAnimationFrame(loop);
+      }
+
+      /* ── the readings ───────────────────────────────────────── */
+      var WORDS = { 0: 'clear', 1: 'mostly clear', 2: 'partly cloudy', 3: 'overcast', 45: 'fog', 48: 'fog' };
+      function word(code) {
+        if (WORDS[code]) return WORDS[code];
+        if (code >= 51 && code <= 57) return 'drizzle';
+        if (code >= 61 && code <= 67) return 'rain';
+        if (code >= 71 && code <= 77) return 'snow, somehow';
+        if (code >= 80 && code <= 82) return 'showers';
+        if (code >= 95) return 'thunderstorm';
+        return 'weather';
+      }
+      var ROSE = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
+      function rose(az) { return ROSE[Math.round(az / 45) % 8]; }
+      /* you're facing south. anything in the northern half of the sky is over your shoulder. */
+      function where(az) { return (az < 80 || az > 280) ? rose(az) + ', behind you' : rose(az); }
+
+      function read() {
+        var now = Date.now();
+        sun = sunAt(now); moon = moonAt(now);
+        if (wx) {
+          sky.cloud = clamp(wx.cloud_cover / 100);
+          sky.rain = (wx.precipitation > 0 || (wx.weather_code >= 51 && wx.weather_code <= 67) || (wx.weather_code >= 80 && wx.weather_code <= 99)) ? clamp(0.25 + wx.precipitation / 4) : 0;
+          sky.wind = wx.wind_speed_10m || 0;
+          if (wx.wind_direction_10m != null) sky.from = wx.wind_direction_10m;
+        }
+        if (qc) sky.cloud = clamp(qc[1] / 100);
+        if (qr) sky.rain = clamp(qr[1] / 100);
+        var clock;
+        try {
+          clock = new Date(now).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', '');
+        } catch (e) { clock = ''; }
+        var lines = ['<b>houston' + (clock ? ', ' + clock : '') + '</b>' + (pretend ? ' (not now. you asked for this one)' : '')];
+        lines.push(sun.alt > 0 ? 'sun ' + Math.round(sun.alt) + '° up, ' + where(sun.az) : 'sun ' + Math.round(-sun.alt) + '° under');
+        var pct = Math.round(moon.lit * 100) + '% lit, ' + (moon.waxing ? 'waxing' : 'waning');
+        lines.push(moon.alt > 0 ? 'moon ' + pct + ', ' + Math.round(moon.alt) + '° up, ' + where(moon.az) : 'moon ' + pct + ', down');
+        if (wx) {
+          lines.push(sky.wind < 1 ? 'no wind' : 'wind ' + Math.round(sky.wind) + ' mph out of the ' + rose(sky.from));
+          if (!pretend) lines.push(word(wx.weather_code) + ', ' + Math.round(wx.temperature_2m) + '°f');
+        } else if (asked) {
+          lines.push('the weather didn&rsquo;t answer');
+          lines.push('the cloud and wind are a guess');
+        }
+        out.innerHTML = lines.join('<br>');
+        if (still) draw(0);
+      }
+
+      function ask() {
+        if (!window.fetch) { asked = true; read(); return; }
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
+              '&current=cloud_cover,precipitation,weather_code,temperature_2m,wind_speed_10m,wind_direction_10m' +
+              '&temperature_unit=fahrenheit&wind_speed_unit=mph')
+          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+          .then(function (j) { wx = j.current || null; })
+          .catch(function () { wx = null; })
+          .then(function () { asked = true; read(); });
+      }
+
+      /* for looking at a sky that isn't happening: /outside/?at=2026-10-07T19:00:00-05:00&cloud=40&rain=50 */
+      /* the readings say so when you do. */
+      var q = /[?&]at=([^&]+)/.exec(location.search);
+      if (q && !isNaN(Date.parse(decodeURIComponent(q[1])))) {
+        var fake = Date.parse(decodeURIComponent(q[1])), real = Date.now;
+        var off = fake - real.call(Date);
+        Date.now = function () { return real.call(Date) + off; };
+        pretend = true;
+      }
+      var qc = /[?&]cloud=(\d+)/.exec(location.search), qr = /[?&]rain=(\d+)/.exec(location.search);
+      if (qc || qr) pretend = true;
+
+      layout();
+      read();
+      ask();
+      if (!still) requestAnimationFrame(loop);
+      setInterval(read, 60000);
+      setInterval(ask, 15 * 60000);
+      window.addEventListener('resize', function () { layout(); if (still) draw(0); });
+      door.addEventListener('pointerenter', function () { hover = 1; });
+      door.addEventListener('pointerleave', function () { hover = 0; });
+      door.addEventListener('focus', function () { hover = 1; });
+      door.addEventListener('blur', function () { hover = 0; });
+    })();
+  </script>
+
+  <noscript>
+    <p class="readings">it's drawn with a script, and the script is off. <a href="/">back inside</a></p>
+  </noscript>
+
+</body>
+</html>

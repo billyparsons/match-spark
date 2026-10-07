@@ -1,5 +1,5 @@
     <nav class="plan" aria-label="site navigation, drawn as a floor plan">
-      <svg class="plan-svg" viewBox="0 0 204 248" role="list" xmlns="http://www.w3.org/2000/svg">
+      <svg class="plan-svg" viewBox="0 -16 204 264" role="list" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="plan-lit" cx="50%" cy="50%" r="75%">
             <stop offset="0" stop-color="#FFB627" stop-opacity="0.42"/>
@@ -8,6 +8,11 @@
           </radialGradient>
         </defs>
 
+        <!-- not a room. the ground on the far side of the window wall (session 87) -->
+        <a href="/outside" class="plan-room plan-out" role="listitem">
+          <rect class="plan-floor" x="2" y="-16" width="200" height="14"/>
+          <text x="65" y="-6" text-anchor="middle">outside</text>
+        </a>
         <a href="/" class="plan-room{% if room == "front" %} here{% endif %}" role="listitem"{% if room == "front" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="2" width="120" height="64"/>
           <text x="62" y="38" text-anchor="middle">front room</text>

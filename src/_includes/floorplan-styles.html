@@ -56,6 +56,11 @@
 
     .plan-room.here .plan-floor { fill: url(#plan-lit); }
 
+    /* outside has no walls to draw, so it's only the word, a little fainter */
+    .plan-out text { fill: rgba(26, 20, 10, 0.46); }
+    .plan-out:hover .plan-floor,
+    .plan-out:focus-visible .plan-floor { fill: transparent; }
+
     .plan-room.here text {
       fill: var(--forest, #9C3B1F);
       font-weight: 700;
