@@ -13,7 +13,9 @@
     /* about the site, in 0.875rem mono. this page is not the log.  */
     /* it holds one sentence about something else, set as large as  */
     /* the window allows, and the doors to everything that used to  */
-    /* be here. it reads no storage and writes none.                */
+    /* be here. it read no storage and wrote none until session 88. */
+    /* now it keeps, for as long as the tab is open, when the match */
+    /* was struck and how many have burned out.                     */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -245,18 +247,18 @@
     body::after {
       -webkit-mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
-          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
+          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
         radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
           rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
       mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
-          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
+          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax),
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
         radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
           rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
     }
@@ -265,12 +267,12 @@
       body::after {
         -webkit-mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax),
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
           radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
             rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
         mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax),
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
           radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
             rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
       }

@@ -155,16 +155,16 @@
       /* which stays lit where it is no matter where you walk off to. */
       -webkit-mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
-          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
+          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax);
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1)));
       mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) 16vmax, rgba(0,0,0,0.42) 40vmax,
-          rgba(0,0,0,0.80) 84vmax, rgba(0,0,0,0.92) 120vmax),
+          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
+          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) 9vmax, #000 20vmax);
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1)));
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
       animation: matchlight-flicker 7s steps(1, end) infinite;
@@ -188,13 +188,102 @@
       body::after {
         -webkit-mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax);
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1)));
         mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) 28vmax, rgba(0,0,0,0.36) 64vmax, rgba(0,0,0,0.66) 110vmax);
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1)));
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       body::after { animation: none; }
+    }
+
+    /* ── the match burns down (session 88) ────────────────────────── */
+    /* for five sessions the light in here was permanent. a match that */
+    /* never gets shorter is a lamp with a nicer name. this one lasts  */
+    /* two and a half minutes. --lr is how far its light still reaches: */
+    /* 1 when it's fresh, less as it burns toward your fingers, 0 when */
+    /* it's out. you carry it from room to room and it keeps burning   */
+    /* while you walk. when it goes, the room is as dark as a room is, */
+    /* and the only thing you can find is the box.                     */
+    .match-box {
+      position: fixed;
+      z-index: 45;
+      left: clamp(1rem, calc(var(--ex, 150px) + 1.5rem), 55vw);
+      top: calc(max(var(--ey, 72px), 0.9rem) - 0.6rem);
+      max-width: min(20rem, 82vw);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem;
+      line-height: 1.8;
+      letter-spacing: 0.08em;
+      color: rgba(243, 236, 220, 0.46);
+      opacity: 0;
+      animation: match-box-in 2.6s ease 0.9s both;
+    }
+
+    .match-box[hidden] { display: none; }
+
+    /* your eyes take a second */
+    @keyframes match-box-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .match-box button {
+      display: block;
+      margin-top: 0.35rem;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      letter-spacing: inherit;
+      color: rgba(255, 138, 76, 0.9);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: rgba(255, 138, 76, 0.35);
+      cursor: pointer;
+    }
+
+    .match-box button:hover,
+    .match-box button:focus-visible {
+      color: #FFB627;
+      outline: none;
+      text-decoration-color: currentColor;
+    }
+
+    .match-spent {
+      display: block;
+      margin-top: 0.9rem;
+      height: 18px;
+      overflow: visible;
+    }
+
+    .match-spent line { stroke: rgba(243, 236, 220, 0.26); stroke-width: 1.4; stroke-linecap: round; }
+    .match-spent circle { fill: rgba(243, 236, 220, 0.12); stroke: rgba(243, 236, 220, 0.3); stroke-width: 0.6; }
+
+    html.match-out body { cursor: pointer; }
+
+    /* lit, the dark multiplies: ink stays ink, paper dims. out, there's */
+    /* nothing left to multiply, so it just sits on top of everything.   */
+    html.match-out body::after { mix-blend-mode: normal; animation: none; }
+
+    /* you walked in holding one that was already lit: nothing gets struck */
+    html.match-carried .header-name::before { animation: none; opacity: 0; }
+    html.match-carried .header-ember { animation: ember-breathe 4s ease-in-out infinite; opacity: 0.85; }
+
+    /* a new one, struck in the dark: the head flares before it settles */
+    html.match-struck .header-name::before {
+      animation: match-restrike 1.9s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes match-restrike {
+      0%   { opacity: 1; filter: brightness(1.6); }
+      60%  { opacity: 0.8; filter: brightness(1.1); }
+      100% { opacity: 0; filter: brightness(1); }
+    }
+
+    /* if you've asked your machine for more contrast, the match is a lamp again. */
+    @media (prefers-contrast: more), (forced-colors: active) {
+      .match-box { display: none; }
     }

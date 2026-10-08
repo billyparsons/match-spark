@@ -299,7 +299,7 @@
     <section class="intro">
       <h1 class="intro-title">the ledger</h1>
       <p class="intro-body">for twenty-five sessions this site has told you, in prose, that it remembers you: a page that ages the longer you keep visiting, an archive that opens differently depending on when you last came by, a nav link that shifts color for returning visitors, one entry anyone can erase for themselves and never get back. all of that is real. none of it has ever been shown to you as what it actually is.</p>
-      <p class="intro-body">it's five small values in this browser's localStorage. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
+      <p class="intro-body">it's five small values in this browser's localStorage, and since session 88 three more that last only as long as the tab. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
     </section>
 
     <hr class="divider">
@@ -315,7 +315,7 @@
     <section aria-label="what leaves this browser">
       <p class="entries-title">what leaves this browser</p>
       <p class="intro-body">since session 85 the front door has a window, and to fill it the page asks open-meteo.com what the weather is in houston. the question is the same for everyone and has nothing of yours in it. the asking still comes from your browser, so that service sees what any server sees: an address and a user agent. the same has always been true of the font files, which come from google, and of the guestbook form, which goes through formspree if you sign it. none of it was in this ledger before tonight because the ledger only counted what stays. this is the other column.</p>
-      <p class="intro-body">since session 87 there is an <a href="/outside">outside</a>, and it asks the same service the same question, plus which way the wind is coming from. it stores nothing and reads nothing from this browser. it is the one page here with no row above.</p>
+      <p class="intro-body">since session 87 there is an <a href="/outside">outside</a>, and it asks the same service the same question, plus which way the wind is coming from. it stores nothing in this browser. since session 88 it reads one thing, the time the match was struck, to know whether the window should be lit.</p>
     </section>
 
   </main>    </section>
@@ -405,6 +405,18 @@
         'the log’s status bar tries to read this to decide whether to print "/ returning" next to the word count. as of tonight, checking the source honestly: nothing in this site currently writes to this key, on any page. it will read empty for every browser, forever, until that’s fixed. this row exists to say so plainly instead of quietly leaving the flag broken and undocumented.',
         true,
         recordRaw ? null : 'known gap, not fixed tonight'
+      ));
+
+      var struckRaw = null, spentRaw = null;
+      try { struckRaw = sessionStorage.getItem('match-struck'); spentRaw = sessionStorage.getItem('match-spent'); } catch (e) {}
+      var struckAt = struckRaw ? parseInt(struckRaw, 10) : 0;
+      var left = struckAt ? Math.round((150000 - (Date.now() - struckAt)) / 1000) : 0;
+      root.appendChild(row(
+        'the match',
+        'match-struck, match-spent, match-counted',
+        struckAt ? 'struck at <code>' + esc(fmtDate(struckAt) || struckRaw) + '</code>. ' + (left > 0 ? 'about ' + left + ' seconds of it were left when this row was written' : 'it is out') + '. ' + (spentRaw ? '<code>' + esc(spentRaw) + '</code>' : 'none') + ' burned out in this tab so far.' : 'not set',
+        'since session 88 the light in every room is a match that lasts two and a half minutes. these are not in localStorage like the rows above. they are in sessionStorage, which belongs to this tab and is thrown away when the tab closes. the first is the time the match you&rsquo;re holding was struck, so it keeps burning when you walk to another room. the second is how many have gone out. the third is only there so one match isn&rsquo;t counted twice. this page is a room, so it is burning one too.',
+        !struckAt
       ));
 
       root.appendChild(row(
