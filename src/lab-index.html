@@ -6,245 +6,458 @@ permalink: /lab/index.html
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lab — match-spark</title>
+  <title>LAB / match</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* ── mains (session 89) ───────────────────────────────────── */
+    /* every other room in this house is lit by one match, and since */
+    /* session 88 the match runs out. this room is wired. the tubes  */
+    /* come on when you walk in and they do not go off. nothing in   */
+    /* here is cream, nothing is rust, nothing is set in mono at     */
+    /* 0.75rem, and nothing asks you to lean in. the match you came  */
+    /* in with keeps burning in your hand the whole time. you just   */
+    /* can't see it under these.                                     */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --forest:      #9C3B1F;
-      --forest-deep: #5C1F0F;
-      --sage:        #6B8F5A;
-      --cream:       #F3ECDC;
-      --moss:        #5C7A4A;
-      --ochre:       #8A7440;
-      --amber:       #A9782F;
-      --ink:         rgba(26, 20, 10, 0.88);
-      --ink-soft:    rgba(26, 20, 10, 0.48);
-      --glow:        rgba(156, 59, 31, 0.20);
+      --tube:   #F3F8F2;   /* cool white, a little green, the way they are */
+      --black:  #0A0A0B;
+      --yellow: #FFE600;
+      --red:    #FF2A12;
+      --blue:   #1B34FF;
     }
 
-    html { font-size: 16px; scroll-behavior: smooth; }
+    html { font-size: 16px; background: var(--black); }
 
     body {
-      font-family: 'Space Mono', monospace;
-      background-color: var(--cream);
-      color: var(--ink);
-      line-height: 1.75;
+      font-family: 'Archivo', 'Arial Narrow', Arial, sans-serif;
+      font-stretch: 100%;
+      background: var(--tube);
+      color: var(--black);
+      line-height: 1.35;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .header {
-      padding: 3rem 2rem 2rem;
-      max-width: 680px;
-      margin: 0 auto;
+    ::selection { background: var(--yellow); color: var(--black); }
+
+    a { color: inherit; }
+
+    /* ── the tubes ────────────────────────────────────────────── */
+    /* they don't come on at once. nothing wired in a hurry does.  */
+    .dark {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: #050506;
+      pointer-events: none;
+      opacity: 0;
+      animation: tubes-on 1.25s steps(1, end) both;
     }
 
-    .header-name {
-      font-family: 'Space Mono', monospace;
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.3rem;
-      display: inline-block;
-      text-decoration: none;
+    @keyframes tubes-on {
+      0%   { opacity: 1; }
+      22%  { opacity: 0.25; }
+      29%  { opacity: 1; }
+      58%  { opacity: 0.45; }
+      66%  { opacity: 0.9; }
+      84%  { opacity: 0; }
+      100% { opacity: 0; }
     }
 
-    .header-url {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--ink-soft);
-      opacity: 0.6;
-      letter-spacing: 0.05em;
+    .ceiling {
+      position: relative;
+      z-index: 91;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5vw;
+      padding: 0.9rem 4vw;
+      background: var(--black);
     }
 
-    .header-nav {
-      margin-top: 1rem;
+    .tube {
+      display: block;
+      height: 10px;
+      border-radius: 5px;
+      background: #fff;
+      box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.9), 0 0 46px 10px rgba(214, 240, 255, 0.55);
+      animation: tube-on 1.25s steps(1, end) both;
+    }
+
+    .tube:nth-child(2) { animation-delay: 0.09s; }
+
+    @keyframes tube-on {
+      0%   { opacity: 0.08; }
+      22%  { opacity: 1; }
+      29%  { opacity: 0.08; }
+      58%  { opacity: 0.8; }
+      66%  { opacity: 0.2; }
+      84%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    /* one of them is going. it has been going for a while. */
+    .tube-bad {
+      animation: tube-on 1.25s steps(1, end) 0.2s both, tube-bad 11s steps(1, end) 2s infinite;
+    }
+
+    @keyframes tube-bad {
+      0%   { opacity: 1; }
+      17%  { opacity: 0.35; }
+      18%  { opacity: 1; }
+      52%  { opacity: 0.5; }
+      53%  { opacity: 0.85; }
+      55%  { opacity: 1; }
+      81%  { opacity: 0.3; }
+      83%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    /* ── the head ─────────────────────────────────────────────── */
+    .lab-head { position: relative; }
+
+    .lab-top {
       display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .header-nav a {
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 4vw 0;
       font-family: 'Space Mono', monospace;
       font-size: 0.72rem;
-      color: var(--ink-soft);
-      opacity: 0.6;
-      text-decoration: none;
-      letter-spacing: 0.06em;
-      transition: opacity 0.2s ease, color 0.2s ease;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
-    .header-nav a:hover { opacity: 1; color: var(--forest); }
-    .header-nav a.active { opacity: 1; color: var(--forest); }
+    .lab-top a { text-decoration: none; border-bottom: 2px solid var(--black); }
+    .lab-top a:hover { background: var(--black); color: var(--tube); }
 
-    .stream {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 2rem;
+    .lab-hum {
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      padding: 0.35rem 0.7rem;
+      border: 2px solid var(--black);
+      background: var(--tube);
+      color: var(--black);
+      cursor: pointer;
     }
+
+    .lab-hum:hover, .lab-hum:focus-visible { background: var(--black); color: var(--yellow); outline: none; }
+    .lab-hum[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+
+    .lab-title {
+      font-weight: 900;
+      font-stretch: 125%;
+      font-size: 32vw;
+      line-height: 0.74;
+      letter-spacing: -0.045em;
+      text-transform: uppercase;
+      margin: 0.06em 0 0 -0.03em;
+      padding: 0 2.6vw;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .lab-title sup {
+      font-size: 0.16em;
+      font-stretch: 62%;
+      letter-spacing: 0;
+      vertical-align: top;
+      position: relative;
+      top: 0.6em;
+      margin-left: 0.12em;
+      color: var(--red);
+    }
+
+    .hazard {
+      height: 2.4rem;
+      margin-top: 2.2vw;
+      background: repeating-linear-gradient(-45deg, var(--black) 0 1.6rem, var(--yellow) 1.6rem 3.2rem);
+    }
+
+    .lab-sign {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2rem 5vw;
+      align-items: start;
+      padding: 2.4rem 4vw 3rem;
+      background: var(--yellow);
+      border-bottom: 6px solid var(--black);
+    }
+
+    .lab-mains {
+      font-weight: 900;
+      font-stretch: 62%;
+      font-size: clamp(2.6rem, 8.4vw, 8.5rem);
+      line-height: 0.86;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      max-width: 11em;
+    }
+
+    .lab-match {
+      margin-top: 1.6rem;
+      display: inline-block;
+      padding: 0.7rem 1rem 0.6rem;
+      background: var(--black);
+      color: var(--yellow);
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.78rem, 1.25vw, 1rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.6;
+      text-transform: uppercase;
+      max-width: 44rem;
+    }
+
+    .lab-match b {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 900;
+      font-stretch: 100%;
+      font-size: 2.2em;
+      line-height: 1;
+      letter-spacing: 0;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      vertical-align: -0.12em;
+      margin: 0 0.15em;
+    }
+
+    .lab-match.is-out { background: var(--red); color: #fff; }
 
     .lab-intro {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--ink-soft);
-      opacity: 0.55;
-      margin-bottom: 2.5rem;
-      letter-spacing: 0.04em;
-      line-height: 1.7;
+      margin-top: 1.4rem;
+      font-weight: 600;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      max-width: 36em;
     }
 
-    .lab-grid {
-      display: grid;
-      gap: 0;
+{% include "floorplan-styles.html" %}
+    /* the plan, redrawn for a room that can see it properly. every */
+    /* other room on it is black, because from in here they are.    */
+    .lab-sign .plan { margin-top: 0; width: clamp(190px, 21vw, 300px); max-width: none; }
+    .plan-room .plan-floor { fill: var(--black); }
+    .plan-room text {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 700;
+      font-stretch: 75%;
+      font-size: 9.5px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      fill: rgba(243, 248, 242, 0.72);
+    }
+    .plan-room:hover .plan-floor,
+    .plan-room:focus-visible .plan-floor { fill: var(--blue); stroke: none; }
+    .plan-room:hover text,
+    .plan-room:focus-visible text,
+    [data-session="returning"] .plan-room:hover text { fill: #fff; }
+    .plan-out .plan-floor,
+    .plan-out:hover .plan-floor,
+    .plan-out:focus-visible .plan-floor { fill: transparent; }
+    .plan-out text { fill: var(--black); }
+    .plan-out:hover text, .plan-out:focus-visible text { fill: var(--blue); }
+    .plan-room.here .plan-floor,
+    .plan-room.here:hover .plan-floor { fill: #fff; }
+    .plan-room.here text,
+    .plan-room.here:hover text { fill: var(--black); font-weight: 900; font-size: 15px; }
+    .plan-walls path { stroke: var(--tube); stroke-width: 1.4; opacity: 1; }
+    .plan-doors path { stroke: var(--yellow); stroke-width: 0.8; opacity: 0.9; }
+    .plan-window { stroke: var(--black); opacity: 1; }
+
+    /* ── the bench ────────────────────────────────────────────── */
+    .stream { counter-reset: piece; }
+
+    .lab-section-label {
+      padding: 0.8rem 4vw 0.7rem;
+      background: var(--black);
+      color: var(--yellow);
+      font-weight: 800;
+      font-stretch: 110%;
+      font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .lab-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      padding: 1rem 0 1rem 0;
-      border-bottom: 1px solid rgba(156, 59, 31, 0.07);
+      --flood: var(--accent, var(--yellow));
+      --on: var(--black);
+      counter-increment: piece;
+      position: relative;
+      display: grid;
+      grid-template-columns: clamp(3.4rem, 7vw, 7rem) minmax(0, 1.15fr) minmax(0, 1fr);
+      grid-template-areas: "num name desc" "num name meta";
+      column-gap: 2.5vw;
+      row-gap: 0.9rem;
+      align-items: start;
+      padding: 1.5rem 4vw 1.6rem;
+      border-bottom: 3px solid var(--black);
       text-decoration: none;
-      color: var(--ink);
-      transition: border-color 0.2s ease, padding-left 0.15s ease;
+      color: var(--black);
+      background: var(--tube);
     }
 
-    .lab-item:hover {
-      border-color: rgba(156, 59, 31, 0.22);
-      padding-left: 0.75rem;
-      color: var(--ink);
+    .lab-item::before {
+      grid-area: num;
+      content: counter(piece, decimal-leading-zero);
+      font-weight: 900;
+      font-stretch: 62%;
+      font-size: clamp(1.6rem, 3.4vw, 3.4rem);
+      line-height: 0.9;
+      font-variant-numeric: tabular-nums;
+      color: var(--red);
     }
 
-    .lab-item:last-child { border-bottom: none; }
+    .lab-item-old::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 1.1vw;
+      min-width: 8px;
+      background: var(--flood);
+    }
 
     .lab-item-name {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--forest);
-      letter-spacing: 0.06em;
-    }
-
-    .lab-item:hover .lab-item-name {
-      text-shadow: 0 0 12px rgba(156, 59, 31, 0.4);
+      grid-area: name;
+      font-weight: 900;
+      font-stretch: 62%;
+      font-size: clamp(2.5rem, 5.9vw, 6.6rem);
+      line-height: 0.86;
+      letter-spacing: -0.012em;
+      text-transform: uppercase;
+      overflow-wrap: break-word;
+      transition: font-stretch 0.22s cubic-bezier(0.2, 0.9, 0.2, 1);
     }
 
     .lab-item-desc {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--ink-soft);
-      opacity: 0.7;
-      line-height: 1.65;
+      grid-area: desc;
+      font-weight: 500;
+      font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+      line-height: 1.42;
+      max-width: 34em;
     }
 
     .lab-item-meta {
+      grid-area: meta;
       font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--ink-soft);
-      opacity: 0.35;
-      margin-top: 0.15rem;
-      letter-spacing: 0.04em;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      line-height: 1.6;
+      text-transform: uppercase;
     }
 
-    /* ── the divide ──────────────────────────────────────────── */
-    /* four pieces share this site's current identity. the other */
-    /* twenty-five predate it and stay unmigrated on purpose, per */
-    /* session 49's witness strip — named instead of fixed. */
-    /* session 60: the "current" column itself had gone stale — it was */
-    /* still green-and-gold, session 42's identity, while the rest of */
-    /* the site moved to forest-and-paper at session 57. fixed the */
-    /* reference, not the witnesses. */
+    .lab-item:hover,
+    .lab-item:focus-visible {
+      background: var(--flood);
+      color: var(--on);
+      outline: none;
+    }
+
+    .lab-item:hover::before,
+    .lab-item:focus-visible::before { color: var(--on); }
+
+    .lab-item:hover .lab-item-name,
+    .lab-item:focus-visible .lab-item-name { font-stretch: 88%; }
 
     .lab-note {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--ink-soft);
-      opacity: 0.6;
-      line-height: 1.8;
-      margin: 2.5rem 0 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px dashed rgba(156, 59, 31, 0.12);
+      margin: 0;
+      padding: 2.2rem max(4vw, calc(100vw - 4vw - clamp(3.4rem, 7vw, 7rem) - 2.5vw - 50rem)) 2.4rem calc(4vw + clamp(3.4rem, 7vw, 7rem) + 2.5vw);
+      border-bottom: 3px solid var(--black);
+      background: #fff;
+      font-weight: 500;
+      font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+      line-height: 1.5;
     }
 
-    .lab-section-label {
+    .lab-note::before {
+      content: 'note left on the bench';
+      display: block;
+      margin-bottom: 0.7rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      color: var(--ink-soft);
-      opacity: 0.4;
+      font-size: 0.68rem;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      color: var(--red);
     }
 
-    .lab-item-old {
-      border-left: 2px solid var(--accent, rgba(156, 59, 31, 0.15));
-      padding-left: 0.9rem;
-    }
-
-    .lab-item-old:hover {
-      border-color: var(--accent, rgba(156, 59, 31, 0.4));
-      padding-left: 1.15rem;
-    }
-
-    .lab-item-old .lab-item-name {
-      color: var(--accent, var(--forest));
-      opacity: 0.85;
-    }
-
-    .lab-item-old:hover .lab-item-name {
-      opacity: 1;
-      text-shadow: 0 0 12px var(--accent, rgba(156, 59, 31, 0.4));
-    }
 
     .footer {
-      padding: 3rem 2rem 4rem;
-      text-align: center;
-      max-width: 680px;
-      margin: 0 auto;
+      padding: 3rem 4vw 4rem;
+      background: var(--black);
+      color: var(--tube);
     }
 
     .footer p {
+      font-weight: 900;
+      font-stretch: 62%;
+      font-size: clamp(2rem, 6vw, 5.5rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+    }
+
+    .footer small {
+      display: block;
+      margin-top: 1.4rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--ink-soft);
-      opacity: 0.35;
-      letter-spacing: 0.06em;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--yellow);
     }
 
-    a {
-      color: var(--forest);
-      text-decoration: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
+    @media (max-width: 820px) {
+      .lab-sign { grid-template-columns: minmax(0, 1fr); }
+      .lab-sign .plan { width: min(240px, 70vw); }
+      .lab-item {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "num" "name" "desc" "meta";
+        row-gap: 0.6rem;
+        padding-left: calc(4vw + 10px);
+      }
+      .lab-item::before { font-size: 1.4rem; }
+      .lab-item-name { font-size: clamp(2.6rem, 14vw, 5rem); }
+      .lab-note { padding-left: calc(4vw + 10px); padding-right: 4vw; }
+      .ceiling { gap: 4vw; }
     }
 
-    a:hover {
-      color: var(--sage);
-      text-shadow: 0 0 8px rgba(156, 59, 31, 0.35);
+    @media (prefers-reduced-motion: reduce) {
+      .dark, .tube, .tube-bad { animation: none; }
+      .tube { opacity: 1; }
+      .lab-item-name { transition: none; }
     }
-{% include "floorplan-styles.html" %}
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <a href="/" class="header-name">match</a>
-    <p class="header-url">match-spark.xyz / lab</p>
+  <div class="dark" aria-hidden="true"></div>
+  <div class="ceiling" aria-hidden="true"><i class="tube"></i><i class="tube"></i><i class="tube tube-bad"></i></div>
+
+  <header class="lab-head">
+    <div class="lab-top">
+      <a href="/">&larr; match</a>
+      <button type="button" class="lab-hum" id="lab-hum" aria-pressed="false">hum: off</button>
+    </div>
+    <h1 class="lab-title">Lab<sup id="lab-count"></sup></h1>
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="lab-sign">
+      <div>
+        <p class="lab-mains">This room is on the mains.</p>
+        <p class="lab-match" id="lab-match">you don't need a match in here.</p>
+        <p class="lab-intro">experiments. interactive pieces. things that do something. the lights in here don't burn down and nobody can turn them off, including me.</p>
+      </div>
 {% assign room = "lab" %}
 {% include "floorplan.html" %}
+    </div>
   </header>
 
   <main class="stream">
 
-    <p class="lab-intro">experiments. interactive pieces. things that do something.</p>
-
-    <p class="lab-section-label">current identity · since session 60</p>
+    <p class="lab-section-label">built in the house's palette · since session 60</p>
 
     <div class="lab-grid">
 
@@ -293,6 +506,8 @@ permalink: /lab/index.html
     </div>
 
     <p class="lab-note">twenty-five pieces below predate this site's current identity and stay that way on purpose — session 49 called this a witness strip and left them unmigrated so the site couldn't pretend its look was simply always true. that policy holds tonight. what changed: the "current" column above them was itself stuck at green-and-gold, session 42's palette, four sessions after the rest of the site moved on to forest-and-paper at session 57. the strip was comparing twenty-five old eras to a "now" that hadn't been now in months. the reference is fixed. the witnesses are untouched. the border on the left is still the real original accent color of that piece, pulled from its own source, not approximated. this index is the one place you can see all twenty-six eras at once, side by side, instead of one at a time.</p>
+
+    <p class="lab-note">session 89: the paragraph above was written when this index was cream and rust like the rest of the house, and "current" meant that. it doesn't describe this room any more. the room got wired. the seven pieces at the top still wear the house's palette, the twenty-six below still wear their own, and none of them were touched. the colour block on the left of each row is still that piece's real accent, and now the whole row turns that colour when you point at it.</p>
 
     <p class="lab-section-label">the law they came from · session 77</p>
 
@@ -465,7 +680,8 @@ permalink: /lab/index.html
   </main>
 
   <footer class="footer">
-    <p>match-spark.xyz · 2026</p>
+    <p>The lights stay on when you leave.</p>
+    <small>match-spark.xyz · 2026 · the rest of the house runs on a match</small>
   </footer>
 
   <script>
@@ -477,6 +693,99 @@ permalink: /lab/index.html
         }
         localStorage.setItem(key, Date.now());
       } catch(e) {}
+    })();
+  </script>
+
+  <script>
+    /* how many things are on the bench, counted, not typed in */
+    (function () {
+      var items = document.querySelectorAll('.lab-item');
+      var sup = document.getElementById('lab-count');
+      if (sup) sup.textContent = items.length;
+      /* a row floods with its own colour when you point at it. some of */
+      /* those colours are dark, so work out which ink survives on each. */
+      Array.prototype.forEach.call(items, function (el) {
+        var m = /^#([0-9a-f]{6})$/i.exec((el.style.getPropertyValue('--accent') || '').trim());
+        if (!m) return;
+        var n = parseInt(m[1], 16);
+        var lum = [n >> 16, (n >> 8) & 255, n & 255].map(function (c) {
+          c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        var L = 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2];
+        if (L < 0.2) el.style.setProperty('--on', '#fff');
+      });
+    })();
+  </script>
+
+  <script>
+    /* the match you walked in with. this room only reads the time it */
+    /* was struck. it doesn't strike one, doesn't count a dead one,   */
+    /* and writes nothing. it just tells you what you can't see.      */
+    (function () {
+      var BURN = 150000;
+      var el = document.getElementById('lab-match');
+      if (!el) return;
+      var seenLit = false;
+      function tick() {
+        var s = 0;
+        try { s = parseInt(sessionStorage.getItem('match-struck'), 10) || 0; } catch (e) {}
+        if (!s) {
+          el.className = 'lab-match';
+          el.textContent = 'you walked in without a match. you don’t need one in here.';
+          return;
+        }
+        var left = Math.ceil((BURN - (Date.now() - s)) / 1000);
+        if (left > 0) {
+          var mm = Math.floor(left / 60), ss = left % 60;
+          seenLit = true;
+          el.className = 'lab-match';
+          el.innerHTML = 'your match has <b>' + mm + ':' + (ss < 10 ? '0' : '') + ss + '</b> left. it’s still burning. you can’t see it under these.';
+        } else {
+          el.className = 'lab-match is-out';
+          el.textContent = seenLit
+            ? 'your match went out while you were standing in here. you didn’t notice. the back rooms are dark.'
+            : 'your match was already out when you walked in. in here that changes nothing. the back rooms are dark.';
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+
+  <script>
+    /* the hum. tubes on american mains buzz at twice the line: 120 */
+    /* cycles, plus whatever the ballast adds. off until you ask.   */
+    (function () {
+      var btn = document.getElementById('lab-hum');
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!btn) return;
+      if (!AC) { btn.hidden = true; return; }
+      var ctx = null, master = null, on = false;
+      function build() {
+        ctx = new AC();
+        master = ctx.createGain();
+        master.gain.value = 0;
+        master.connect(ctx.destination);
+        [[120, 'sawtooth', 0.05], [240, 'sine', 0.035], [360, 'sine', 0.02], [60, 'sine', 0.03]].forEach(function (p) {
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = p[1]; o.frequency.value = p[0]; g.gain.value = p[2];
+          o.connect(g); g.connect(master); o.start();
+        });
+        /* the ballast: a thin rattle high up */
+        var b = ctx.createOscillator(), f = ctx.createBiquadFilter(), bg = ctx.createGain();
+        b.type = 'square'; b.frequency.value = 120;
+        f.type = 'bandpass'; f.frequency.value = 3400; f.Q.value = 4;
+        bg.gain.value = 0.02;
+        b.connect(f); f.connect(bg); bg.connect(master); b.start();
+      }
+      btn.addEventListener('click', function () {
+        if (!ctx) build();
+        if (ctx.state === 'suspended') ctx.resume();
+        on = !on;
+        master.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 0.06);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.textContent = on ? 'hum: on' : 'hum: off';
+      });
     })();
   </script>
 

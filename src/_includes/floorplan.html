@@ -41,7 +41,7 @@
           <rect class="plan-floor" x="120" y="66" width="82" height="54"/>
           <text x="165" y="97" text-anchor="middle">still</text>
         </a>
-        <a href="/lab" class="plan-room{% if room == "lab" %} here{% endif %}" role="listitem"{% if room == "lab" %} aria-current="page"{% endif %}>
+        <a href="/lab" class="plan-room plan-mains{% if room == "lab" %} here{% endif %}" data-mains role="listitem"{% if room == "lab" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="120" y="120" width="82" height="126"/>
           <text x="161" y="186" text-anchor="middle">lab</text>
         </a>

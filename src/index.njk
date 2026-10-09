@@ -301,6 +301,30 @@
       text-underline-offset: 3px;
     }
 
+    /* session 89: the lab is on the mains. its door is the one thing */
+    /* in this room that isn't lit by the match or the sky, so it sits */
+    /* above the dark like the window does, and it stays on when the   */
+    /* match is out.                                                   */
+    .door-nav a.door-mains {
+      position: relative;
+      z-index: 41;
+      margin: -0.3rem 0;
+      padding: 0.3rem 0.6rem 0.25rem;
+      background: #F3F8F2;
+      color: #0A0A0B;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      box-shadow: 0 0 14px 2px rgba(226, 244, 255, 0.55), 0 0 60px 12px rgba(214, 240, 255, 0.22);
+      transition: none;
+    }
+
+    .door-nav a.door-mains:hover {
+      background: #FFE600;
+      color: #0A0A0B;
+      text-decoration: none;
+    }
+
     @media (max-width: 760px) {
       .door-main { grid-template-columns: minmax(0, 1fr); row-gap: 2.2rem; align-content: center; }
       .door-window { order: -1; width: 100%; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 1.1rem; }
@@ -347,7 +371,7 @@
     <a href="/guestbook">guestbook</a>
     <a href="/witness">witness</a>
     <a href="/still">still</a>
-    <a href="/lab">lab</a>
+    <a href="/lab" class="door-mains" data-mains>lab</a>
     <a href="/ledger">ledger</a>
     <a href="/outside">outside</a>
   </nav>

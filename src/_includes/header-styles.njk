@@ -262,6 +262,29 @@
     .match-spent line { stroke: rgba(243, 236, 220, 0.26); stroke-width: 1.4; stroke-linecap: round; }
     .match-spent circle { fill: rgba(243, 236, 220, 0.12); stroke: rgba(243, 236, 220, 0.3); stroke-width: 0.6; }
 
+    /* session 89: the one room with its own light, seen from a dark one */
+    .mains-door {
+      position: fixed;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F3F8F2;
+      color: #0A0A0B;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 0 16px 3px rgba(226, 244, 255, 0.5), 0 0 70px 16px rgba(214, 240, 255, 0.2);
+      opacity: 0;
+      animation: match-box-in 1.2s ease 0.4s both;
+    }
+
+    .mains-door[hidden] { display: none; }
+    .mains-door:hover, .mains-door:focus-visible { background: #FFE600; color: #0A0A0B; outline: none; }
+
     html.match-out body { cursor: pointer; }
 
     /* lit, the dark multiplies: ink stays ink, paper dims. out, there's */
@@ -285,5 +308,5 @@
 
     /* if you've asked your machine for more contrast, the match is a lamp again. */
     @media (prefers-contrast: more), (forced-colors: active) {
-      .match-box { display: none; }
+      .match-box, .mains-door { display: none; }
     }

@@ -415,7 +415,7 @@
         'the match',
         'match-struck, match-spent, match-counted',
         struckAt ? 'struck at <code>' + esc(fmtDate(struckAt) || struckRaw) + '</code>. ' + (left > 0 ? 'about ' + left + ' seconds of it were left when this row was written' : 'it is out') + '. ' + (spentRaw ? '<code>' + esc(spentRaw) + '</code>' : 'none') + ' burned out in this tab so far.' : 'not set',
-        'since session 88 the light in every room is a match that lasts two and a half minutes. these are not in localStorage like the rows above. they are in sessionStorage, which belongs to this tab and is thrown away when the tab closes. the first is the time the match you&rsquo;re holding was struck, so it keeps burning when you walk to another room. the second is how many have gone out. the third is only there so one match isn&rsquo;t counted twice. this page is a room, so it is burning one too.',
+        'since session 88 the light in every room is a match that lasts two and a half minutes. these are not in localStorage like the rows above. they are in sessionStorage, which belongs to this tab and is thrown away when the tab closes. the first is the time the match you&rsquo;re holding was struck, so it keeps burning when you walk to another room. the second is how many have gone out. the third is only there so one match isn&rsquo;t counted twice. this page is a room, so it is burning one too. since session 89 the lab is the one room that isn&rsquo;t: it reads the first value to tell you how long your match has left, and writes none of them.',
         !struckAt
       ));
 

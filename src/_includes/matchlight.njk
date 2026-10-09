@@ -54,7 +54,7 @@
 
         var struck = parseInt(get('match-struck'), 10);
         var spent = parseInt(get('match-spent'), 10) || 0;
-        var flare = 0, out = false, box = null, timer = null;
+        var flare = 0, out = false, box = null, timer = null, lab = null;
 
         if (!struck || struck > Date.now()) { struck = Date.now(); set('match-struck', struck); }
         else root.classList.add('match-carried');
@@ -94,6 +94,30 @@
           finish();
         }
 
+        /* session 89: the lab is on the mains. in the dark its room on the */
+        /* plan is the one thing still lit, so it gets drawn over the dark. */
+        function mains() {
+          var room = document.querySelector('.plan-mains .plan-floor');
+          if (!room) return;
+          if (!lab) {
+            lab = document.createElement('a');
+            lab.className = 'mains-door';
+            lab.href = '/lab';
+            lab.textContent = 'lab';
+            lab.setAttribute('data-mains', '');
+            lab.setAttribute('aria-label', 'the lab. its lights are on');
+            document.body.appendChild(lab);
+          }
+          var r = room.getBoundingClientRect();
+          lab.style.left = r.left + 'px'; lab.style.top = r.top + 'px';
+          lab.style.width = r.width + 'px'; lab.style.height = r.height + 'px';
+          lab.hidden = !out;
+        }
+        /* this script is parsed before the plan is on some pages */
+        document.addEventListener('DOMContentLoaded', function () { if (out) mains(); });
+        window.addEventListener('scroll', function () { if (out) mains(); }, { passive: true });
+        window.addEventListener('resize', function () { if (out) mains(); });
+
         function finish() {
           out = true;
           root.style.setProperty('--lr', '0');
@@ -107,6 +131,7 @@
           }
           box.innerHTML = 'the match is out.<button type="button">strike another</button>' + sticks(spent);
           box.hidden = false;
+          mains();
         }
 
         function strike() {
@@ -114,6 +139,7 @@
           struck = Date.now(); set('match-struck', struck);
           flare = calm ? 0 : 0.55;
           if (box) box.hidden = true;
+          if (lab) lab.hidden = true;
           root.classList.remove('match-out', 'match-carried');
           root.classList.remove('match-struck');
           void root.offsetWidth;
@@ -133,6 +159,8 @@
         /* in the dark there is one thing to do, and anything you press does it */
         document.addEventListener('click', function (e) {
           if (!out) return;
+          /* except the lab. it has its own light and you can always find its door (session 89) */
+          if (e.target && e.target.closest && e.target.closest('[data-mains]')) return;
           e.preventDefault(); e.stopPropagation();
           strike();
         }, true);
