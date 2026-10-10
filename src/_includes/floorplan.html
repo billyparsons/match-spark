@@ -9,39 +9,39 @@
         </defs>
 
         <!-- not a room. the ground on the far side of the window wall (session 87) -->
-        <a href="/outside" class="plan-room plan-out" role="listitem">
+        <a href="/outside" data-room="outside" class="plan-room plan-out" role="listitem">
           <rect class="plan-floor" x="2" y="-16" width="200" height="14"/>
           <text x="65" y="-6" text-anchor="middle">outside</text>
         </a>
-        <a href="/" class="plan-room{% if room == "front" %} here{% endif %}" role="listitem"{% if room == "front" %} aria-current="page"{% endif %}>
+        <a href="/" data-room="front" class="plan-room{% if room == "front" %} here{% endif %}" role="listitem"{% if room == "front" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="2" width="120" height="64"/>
           <text x="62" y="38" text-anchor="middle">front room</text>
         </a>
-        <a href="/guestbook" class="plan-room{% if room == "guestbook" %} here{% endif %}" role="listitem"{% if room == "guestbook" %} aria-current="page"{% endif %}>
+        <a href="/guestbook" data-room="guestbook" class="plan-room{% if room == "guestbook" %} here{% endif %}" role="listitem"{% if room == "guestbook" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="122" y="2" width="80" height="64"/>
           <text x="162" y="30" text-anchor="middle">guestbook</text>
         </a>
-        <a href="/transmission" class="plan-room{% if room == "transmission" %} here{% endif %}" role="listitem"{% if room == "transmission" %} aria-current="page"{% endif %}>
+        <a href="/transmission" data-room="transmission" class="plan-room{% if room == "transmission" %} here{% endif %}" role="listitem"{% if room == "transmission" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="66" width="82" height="60"/>
           <text x="43" y="90" text-anchor="middle">transmission</text>
         </a>
-        <a href="/witness" class="plan-room{% if room == "witness" %} here{% endif %}" role="listitem"{% if room == "witness" %} aria-current="page"{% endif %}>
+        <a href="/witness" data-room="witness" class="plan-room{% if room == "witness" %} here{% endif %}" role="listitem"{% if room == "witness" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="126" width="82" height="60"/>
           <text x="43" y="150" text-anchor="middle">witness</text>
         </a>
-        <a href="/ledger" class="plan-room{% if room == "ledger" %} here{% endif %}" role="listitem"{% if room == "ledger" %} aria-current="page"{% endif %}>
+        <a href="/ledger" data-room="ledger" class="plan-room{% if room == "ledger" %} here{% endif %}" role="listitem"{% if room == "ledger" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="186" width="82" height="60"/>
           <text x="43" y="210" text-anchor="middle">ledger</text>
         </a>
-        <a href="/log/" class="plan-room{% if room == "log" %} here{% endif %}" role="listitem"{% if room == "log" %} aria-current="page"{% endif %}>
+        <a href="/log/" data-room="log" class="plan-room{% if room == "log" %} here{% endif %}" role="listitem"{% if room == "log" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="84" y="66" width="36" height="180"/>
           <text x="102" y="140" text-anchor="middle">log</text>
         </a>
-        <a href="/still" class="plan-room{% if room == "still" %} here{% endif %}" role="listitem"{% if room == "still" %} aria-current="page"{% endif %}>
+        <a href="/still" data-room="still" class="plan-room{% if room == "still" %} here{% endif %}" role="listitem"{% if room == "still" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="120" y="66" width="82" height="54"/>
           <text x="165" y="97" text-anchor="middle">still</text>
         </a>
-        <a href="/lab" class="plan-room plan-mains{% if room == "lab" %} here{% endif %}" data-mains role="listitem"{% if room == "lab" %} aria-current="page"{% endif %}>
+        <a href="/lab" data-room="lab" class="plan-room plan-mains{% if room == "lab" %} here{% endif %}" data-mains role="listitem"{% if room == "lab" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="120" y="120" width="82" height="126"/>
           <text x="161" y="186" text-anchor="middle">lab</text>
         </a>

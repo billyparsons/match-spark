@@ -227,6 +227,8 @@ permalink: /lab/index.html
     }
 
     .lab-match.is-out { background: var(--red); color: #fff; }
+    .lab-match[hidden] { display: none; }
+    #lab-other { margin-top: 0.5rem; background: var(--yellow); color: var(--black); }
 
     .lab-intro {
       margin-top: 1.4rem;
@@ -448,6 +450,7 @@ permalink: /lab/index.html
       <div>
         <p class="lab-mains">This room is on the mains.</p>
         <p class="lab-match" id="lab-match">you don't need a match in here.</p>
+        <p class="lab-match" id="lab-other" hidden>someone else is standing in here with one too. you can&rsquo;t see theirs either.</p>
         <p class="lab-intro">experiments. interactive pieces. things that do something. the lights in here don't burn down and nobody can turn them off, including me.</p>
       </div>
 {% assign room = "lab" %}
@@ -717,6 +720,7 @@ permalink: /lab/index.html
     })();
   </script>
 
+{% include "other.html" %}
   <script>
     /* the match you walked in with. this room only reads the time it */
     /* was struck. it doesn't strike one, doesn't count a dead one,   */
@@ -747,8 +751,14 @@ permalink: /lab/index.html
             : 'your match was already out when you walked in. in here that changes nothing. the back rooms are dark.';
         }
       }
-      tick();
-      setInterval(tick, 1000);
+      /* session 90: there's a second match in the house. same rule for it in here. */
+      var also = document.getElementById('lab-other');
+      function other() {
+        var o = window.matchOther && window.matchOther.at(Date.now());
+        if (also) also.hidden = !(o && o.room === 'lab');
+      }
+      tick(); other();
+      setInterval(function () { tick(); other(); }, 1000);
     })();
   </script>
 

@@ -99,6 +99,7 @@
 
   <p class="readings"><span id="readings"></span><br><a href="/">back inside</a></p>
 
+{% include "other.html" %}
   <script>
     (function () {
       var LAT = 29.76, LON = -95.37, R = Math.PI / 180;
@@ -433,7 +434,13 @@
       /* through the house, this is the same one, and the window goes dark when it */
       /* does. if you came straight here and never held one, somebody else's is lit. */
       var BURN = 150000;
-      function matchLeft() {
+      /* session 90: or somebody else's. if they're in the front room, the window is lit by theirs. */
+      function theirs() {
+        var o = window.matchOther && window.matchOther.at(Date.now());
+        return o && o.room === 'front' ? Math.min(1, o.lit) : 0;
+      }
+      function matchLeft() { return Math.max(yours(), theirs()); }
+      function yours() {
         var s;
         try { s = parseInt(sessionStorage.getItem('match-struck'), 10); } catch (e) {}
         if (!s) return 1;
@@ -468,7 +475,8 @@
           lines.push('the weather didn&rsquo;t answer');
           lines.push('the cloud and wind are a guess');
         }
-        if (matchLeft() === 0) lines.push('the match is out');
+        if (yours() === 0) lines.push(theirs() ? 'your match is out. that one isn&rsquo;t yours' : 'the match is out');
+        else if (theirs()) lines.push('two lit in the front room');
         out.innerHTML = lines.join('<br>');
         if (still) draw(0);
       }

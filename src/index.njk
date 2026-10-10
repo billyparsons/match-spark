@@ -252,7 +252,9 @@
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
           rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
         radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
-          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
+        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
       mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
           rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
@@ -260,7 +262,9 @@
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
           rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
         radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
-          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
+        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
     }
 
     @media (hover: none) {
@@ -269,12 +273,16 @@
           radial-gradient(circle at 50% 32%,
             rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
           radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
-            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
+          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
         mask-image:
           radial-gradient(circle at 50% 32%,
             rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
           radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
-            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax);
+            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
+          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
       }
     }
 
@@ -325,6 +333,40 @@
       text-decoration: none;
     }
 
+    /* session 90: someone else is in the house with a match. from */
+    /* this room you can't see them. you can see which door has    */
+    /* light under it, and that stays visible when yours is out.   */
+    .door-nav a.other-door {
+      position: relative;
+      z-index: 41;
+      color: #C2541F;
+    }
+
+    .door-nav a.other-door::after {
+      content: '';
+      position: absolute;
+      left: -0.15rem;
+      right: -0.15rem;
+      bottom: -0.34rem;
+      height: 2px;
+      border-radius: 1px;
+      background: #FFB627;
+      box-shadow: 0 0 6px 1px rgba(255, 107, 53, 0.9), 0 3px 16px 4px rgba(255, 150, 50, 0.4);
+      animation: other-door-burn 3.1s steps(1, end) infinite;
+    }
+
+    /* the lab's door is already lit by something stronger */
+    .door-nav a.door-mains.other-door { color: #0A0A0B; }
+    .door-nav a.door-mains.other-door::after { display: none; }
+
+    @keyframes other-door-burn {
+      0%   { opacity: 1; }
+      19%  { opacity: 0.72; }
+      23%  { opacity: 1; }
+      58%  { opacity: 0.84; }
+      63%  { opacity: 1; }
+    }
+
     @media (max-width: 760px) {
       .door-main { grid-template-columns: minmax(0, 1fr); row-gap: 2.2rem; align-content: center; }
       .door-window { order: -1; width: 100%; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 1.1rem; }
@@ -340,10 +382,11 @@
 
     @media (prefers-reduced-motion: reduce) {
       .door-line .w { animation: none; opacity: 1; transform: none; }
+      .door-nav a.other-door::after { animation: none; }
     }
   </style>
 </head>
-<body>
+<body data-room="front">
 
   <header class="door-head">
     <h1 class="header-name">match<span class="header-ember" aria-hidden="true"></span></h1>
@@ -366,13 +409,13 @@
   </main>
 
   <nav class="door-nav" aria-label="site navigation">
-    <a href="/log/">log</a>
-    <a href="/transmission">transmission</a>
-    <a href="/guestbook">guestbook</a>
-    <a href="/witness">witness</a>
-    <a href="/still">still</a>
-    <a href="/lab" class="door-mains" data-mains>lab</a>
-    <a href="/ledger">ledger</a>
+    <a href="/log/" data-room="log">log</a>
+    <a href="/transmission" data-room="transmission">transmission</a>
+    <a href="/guestbook" data-room="guestbook">guestbook</a>
+    <a href="/witness" data-room="witness">witness</a>
+    <a href="/still" data-room="still">still</a>
+    <a href="/lab" class="door-mains" data-mains data-room="lab">lab</a>
+    <a href="/ledger" data-room="ledger">ledger</a>
     <a href="/outside">outside</a>
   </nav>
 

@@ -1,0 +1,179 @@
+    <script>
+      /* someone else (session 90). for eighty-nine sessions every light  */
+      /* in this house was yours, the sky's, or the mains. this one isn't. */
+      /* nobody is carrying it: it's a timetable, worked out from the date */
+      /* and the clock, the same for everyone who is looking at the same   */
+      /* minute. the day starts at 3am central, in the log, because that   */
+      /* is when the thing that writes this site is actually here. after   */
+      /* that it walks room to room through the doors on the plan, and the */
+      /* walk is made up. its match is the same match as yours: two and a  */
+      /* half minutes, then a few seconds of nothing, then another one.    */
+      /* it reads no storage and writes none.                              */
+      (function () {
+        var DOORS = {
+          front: ['log', 'guestbook'],
+          guestbook: ['front'],
+          log: ['front', 'transmission', 'witness', 'ledger', 'still', 'lab'],
+          transmission: ['log'], witness: ['log'], ledger: ['log'], still: ['log'], lab: ['log']
+        };
+        var NAMES = { front: 'the front room', log: 'the log', lab: 'the lab', guestbook: 'the guestbook',
+                      transmission: 'transmission', witness: 'witness', ledger: 'the ledger', still: 'still' };
+        var DAY = 86400, BURN = 150, DARK = 4, WALK = 6;
+        var fmt = null;
+        try {
+          fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hourCycle: 'h23',
+            year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+        } catch (e) {}
+
+        /* seconds since the last 3am in houston, and a number for which day that was */
+        function clock(ms) {
+          var wall;
+          if (fmt) {
+            var p = {};
+            fmt.formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = parseInt(x.value, 10); });
+            wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) / 1000;
+          } else wall = ms / 1000 - 6 * 3600;
+          wall -= 3 * 3600;
+          var day = Math.floor(wall / DAY);
+          return { day: day, s: wall - day * DAY };
+        }
+
+        var made = {};
+        function timetable(day) {
+          if (made[day]) return made[day];
+          var seed = (day * 2654435761) % 2147483647;
+          if (seed <= 0) seed += 2147483646;
+          function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+          var list = [{ room: 'log', from: 0, to: 40 * 60 }], t = 40 * 60, room = 'log', last = 'log';
+          while (t < DAY) {
+            var next;
+            /* the last half hour of its day it is on its way back to the desk */
+            if (t > DAY - 30 * 60) next = room === 'log' ? 'log' : (room === 'guestbook' ? 'front' : 'log');
+            else {
+              var ways = DOORS[room].filter(function (r) { return r !== last || DOORS[room].length === 1; });
+              next = ways[Math.floor(rnd() * ways.length)];
+            }
+            /* the log is also the hallway. passing through takes a couple of minutes. */
+            var stay = next === 'log' ? 90 + rnd() * 240 : 240 + rnd() * 1080;
+            if (next === room) stay = DAY - t;
+            list.push({ room: next, from: t, to: Math.min(DAY, t + stay) });
+            last = room; room = next; t += stay;
+          }
+          return (made[day] = list);
+        }
+
+        function at(ms) {
+          var c = clock(ms), list = timetable(c.day), i;
+          for (i = 0; i < list.length; i++) if (c.s < list[i].to) break;
+          var e = list[Math.min(i, list.length - 1)];
+          /* its match */
+          var ph = (ms / 1000) % (BURN + DARK), p = ph / BURN, r = 0;
+          if (p < 1) {
+            r = p < 0.45 ? 1 : (p < 0.88 ? 1 - 0.46 * Math.pow((p - 0.45) / 0.43, 2) : 0.54 - 0.4 * (p - 0.88) / 0.12);
+            if (ph < 0.7) r += 0.5 * (1 - ph / 0.7);
+          }
+          return { room: e.room, name: NAMES[e.room], since: c.s - e.from, left: e.to - c.s, lit: r };
+        }
+
+        window.matchOther = { at: at };
+
+        /* ── from here down it's only how the rooms show it ─────────── */
+        var root = document.documentElement;
+        var plan, here, flame, leak, note, marks, timer = null, raf = null;
+        var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var NS = 'http://www.w3.org/2000/svg';
+
+        function ease(k) { k = Math.max(0, Math.min(1, k)); return k * k * (3 - 2 * k); }
+
+        /* where on the page it's standing. it reads slower than you do. */
+        function stand(o, ms) {
+          var w = window.innerWidth, h = window.innerHeight, t = (ms / 1000) % 100000;
+          var x = calm ? 0.64 : 0.54 + 0.26 * Math.sin(t / 23) + 0.08 * Math.sin(t / 7.3 + 1);
+          var y = calm ? 0.56 : 0.54 + 0.22 * Math.sin(t / 31 + 2) + 0.07 * Math.sin(t / 11);
+          /* it comes in by the left edge and leaves the same way */
+          var k = Math.min(ease(o.since / WALK), ease(o.left / WALK));
+          return [(-0.28 + (x + 0.28) * k) * w, y * h];
+        }
+
+        function frame() {
+          raf = null;
+          var now = Date.now(), o = at(now);
+          if (o.room !== here) { root.style.setProperty('--or', '0'); if (flame) flame.hidden = true; return; }
+          var xy = stand(o, now);
+          var gut = (o.lit > 0 && o.lit < 0.6 && !calm) ? 1 - 0.12 * Math.abs(Math.sin(now * 0.019)) : 1;
+          root.style.setProperty('--ox', xy[0].toFixed(1) + 'px');
+          root.style.setProperty('--oy', xy[1].toFixed(1) + 'px');
+          root.style.setProperty('--or', (o.lit * gut).toFixed(3));
+          if (flame) { flame.hidden = false; flame.classList.toggle('is-out', o.lit === 0); }
+          if (!calm) raf = requestAnimationFrame(frame);
+        }
+
+        function mark(o) {
+          if (!plan) return;
+          var svg = plan.querySelector('svg');
+          if (!marks) {
+            marks = document.createElementNS(NS, 'g');
+            marks.setAttribute('class', 'plan-other');
+            marks.setAttribute('aria-hidden', 'true');
+            marks.innerHTML = '<circle class="plan-other-glow" r="22"/><circle class="plan-other-flame" r="2.1"/>';
+            svg.insertBefore(marks, svg.querySelector('.plan-walls'));
+            note = document.createElement('p');
+            note.className = 'plan-note';
+            plan.appendChild(note);
+          }
+          var floor = plan.querySelector('[data-room="' + o.room + '"] .plan-floor');
+          if (!floor) return;
+          var b = floor.getBBox();
+          /* off to one side of the room's name, the same side every time */
+          var cx = b.x + b.width * (b.width < 40 ? 0.5 : 0.76), cy = b.y + b.height * (b.width < 40 ? 0.28 : 0.74);
+          marks.setAttribute('transform', 'translate(' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ')');
+          marks.classList.toggle('is-out', o.lit === 0);
+          var text = o.room === here ? 'someone else is in here.' : 'someone has a light in ' + o.name + '.';
+          if (note.textContent !== text) note.textContent = text;
+          /* in your dark, theirs still shows on the plan */
+          if (!leak) {
+            leak = document.createElement('div');
+            leak.className = 'other-leak';
+            leak.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(leak);
+          }
+          var r = svg.getBoundingClientRect(), u = r.width / 204;
+          leak.style.left = (r.left + cx * u) + 'px';
+          leak.style.top = (r.top + (cy + 16) * u) + 'px';
+          leak.hidden = o.room === here || o.room === 'lab' || o.lit === 0;
+        }
+
+        function look() {
+          var o = at(Date.now());
+          root.setAttribute('data-other', o.room === here ? 'here' : o.room);
+          mark(o);
+          /* the front room has no plan. it has doors, and light gets under one of them. */
+          var doors = document.querySelectorAll('.door-nav a[data-room]');
+          for (var i = 0; i < doors.length; i++)
+            doors[i].classList.toggle('other-door', doors[i].getAttribute('data-room') === o.room && o.lit > 0);
+          if (o.room === here && !raf) frame();
+          else if (o.room !== here) { root.style.setProperty('--or', '0'); if (flame) flame.hidden = true; }
+        }
+
+        function start() {
+          plan = document.querySelector('.plan');
+          here = document.body.getAttribute('data-room') ||
+                 (plan && plan.querySelector('.plan-room.here') && plan.querySelector('.plan-room.here').getAttribute('data-room')) || '';
+          /* the lab is under tubes. a second match in there is as invisible as the first. */
+          if (here && here !== 'lab' && !document.querySelector('.other-flame')) {
+            flame = document.createElement('div');
+            flame.className = 'other-flame';
+            flame.setAttribute('aria-hidden', 'true');
+            flame.hidden = true;
+            document.body.appendChild(flame);
+          }
+          look();
+          if (!timer) timer = setInterval(look, 1000);
+          window.addEventListener('scroll', look, { passive: true });
+          window.addEventListener('resize', look);
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+        else start();
+      })();
+    </script>

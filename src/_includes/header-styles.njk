@@ -158,13 +158,17 @@
           rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
           rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1)));
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
+        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
       mask-image:
         radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
           rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
           rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
         radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1)));
+          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
+        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
       animation: matchlight-flicker 7s steps(1, end) infinite;
@@ -188,10 +192,14 @@
       body::after {
         -webkit-mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1)));
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
+          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
         mask-image:
           radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1)));
+            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
+          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
+            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
       }
     }
 
@@ -285,6 +293,54 @@
     .mains-door[hidden] { display: none; }
     .mains-door:hover, .mains-door:focus-visible { background: #FFE600; color: #0A0A0B; outline: none; }
 
+    /* ── someone else (session 90) ────────────────────────────────── */
+    /* a second match in the house, and it isn't yours. when it's in   */
+    /* the room you're in, it lights its own patch of the page and you */
+    /* can read by it after yours is gone. this is the head of it.     */
+    .other-flame {
+      position: fixed;
+      z-index: 41;
+      left: var(--ox, -400px);
+      top: var(--oy, -400px);
+      width: 5px;
+      height: 7px;
+      margin: -4px 0 0 -2.5px;
+      border-radius: 50% 50% 45% 45%;
+      background: #FFB627;
+      box-shadow: 0 0 5px 1px rgba(255, 107, 53, 0.85), 0 0 22px 6px rgba(255, 182, 39, 0.3);
+      pointer-events: none;
+    }
+
+    /* the stick, held from below */
+    .other-flame::after {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 6px;
+      width: 1px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(26, 20, 10, 0.75), rgba(92, 31, 15, 0.5));
+    }
+
+    .other-flame[hidden] { display: none; }
+    .other-flame.is-out { background: rgba(92, 31, 15, 0.4); box-shadow: none; }
+
+    /* your match is out and theirs is in another room: it shows on the plan */
+    .other-leak {
+      position: fixed;
+      z-index: 45;
+      width: 4px;
+      height: 4px;
+      margin: -2px 0 0 -2px;
+      border-radius: 50%;
+      background: #FFB627;
+      box-shadow: 0 0 6px 2px rgba(255, 107, 53, 0.8), 0 0 34px 16px rgba(255, 150, 50, 0.22);
+      pointer-events: none;
+      display: none;
+    }
+
+    html.match-out .other-leak:not([hidden]) { display: block; }
+
     html.match-out body { cursor: pointer; }
 
     /* lit, the dark multiplies: ink stays ink, paper dims. out, there's */
@@ -308,5 +364,5 @@
 
     /* if you've asked your machine for more contrast, the match is a lamp again. */
     @media (prefers-contrast: more), (forced-colors: active) {
-      .match-box, .mains-door { display: none; }
+      .match-box, .mains-door, .other-flame, .other-leak { display: none; }
     }
