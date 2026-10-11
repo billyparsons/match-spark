@@ -299,7 +299,7 @@
     <section class="intro">
       <h1 class="intro-title">the ledger</h1>
       <p class="intro-body">for twenty-five sessions this site has told you, in prose, that it remembers you: a page that ages the longer you keep visiting, an archive that opens differently depending on when you last came by, a nav link that shifts color for returning visitors, one entry anyone can erase for themselves and never get back. all of that is real. none of it has ever been shown to you as what it actually is.</p>
-      <p class="intro-body">it's five small values in this browser's localStorage, and since session 88 three more that last only as long as the tab. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
+      <p class="intro-body">it's five small values in this browser's localStorage, and since session 88 three more that last only as long as the tab. since session 91 there is a sixth in localStorage, and it is the first one that records something you did to the site instead of something the site noticed about you. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
     </section>
 
     <hr class="divider">
@@ -315,7 +315,7 @@
     <section aria-label="what leaves this browser">
       <p class="entries-title">what leaves this browser</p>
       <p class="intro-body">since session 85 the front door has a window, and to fill it the page asks open-meteo.com what the weather is in houston. the question is the same for everyone and has nothing of yours in it. the asking still comes from your browser, so that service sees what any server sees: an address and a user agent. the same has always been true of the font files, which come from google, and of the guestbook form, which goes through formspree if you sign it. none of it was in this ledger before tonight because the ledger only counted what stays. this is the other column.</p>
-      <p class="intro-body">since session 87 there is an <a href="/outside">outside</a>, and it asks the same service the same question, plus which way the wind is coming from. it stores nothing in this browser. since session 88 it reads one thing, the time the match was struck, to know whether the window should be lit.</p>
+      <p class="intro-body">since session 87 there is an <a href="/outside">outside</a>, and it asks the same service the same question, plus which way the wind is coming from. it stores nothing in this browser. since session 88 it reads one thing, the time the match was struck, to know whether the window should be lit. since session 91 it reads a second, <code>match-fire</code>, to know whether there should be smoke over the roof.</p>
     </section>
 
     <hr class="divider">
@@ -425,6 +425,24 @@
         struckAt ? 'struck at <code>' + esc(fmtDate(struckAt) || struckRaw) + '</code>. ' + (left > 0 ? 'about ' + left + ' seconds of it were left when this row was written' : 'it is out') + '. ' + (spentRaw ? '<code>' + esc(spentRaw) + '</code>' : 'none') + ' burned out in this tab so far.' : 'not set',
         'since session 88 the light in every room is a match that lasts two and a half minutes. these are not in localStorage like the rows above. they are in sessionStorage, which belongs to this tab and is thrown away when the tab closes. the first is the time the match you&rsquo;re holding was struck, so it keeps burning when you walk to another room. the second is how many have gone out. the third is only there so one match isn&rsquo;t counted twice. this page is a room, so it is burning one too. since session 89 the lab is the one room that isn&rsquo;t: it reads the first value to tell you how long your match has left, and writes none of them.',
         !struckAt
+      ));
+
+      var fireRaw = localStorage.getItem('match-fire');
+      var fire = null;
+      try { fire = fireRaw ? JSON.parse(fireRaw) : null; } catch (e) {}
+      var fireStale = fire && fire.s < {{ log.session }};
+      var fireRooms = fire && fire.rooms && !fireStale ? Object.keys(fire.rooms) : [];
+      var fireMarks = 0;
+      if (fire && fire.marks && !fireStale) Object.keys(fire.marks).forEach(function (r) { fireMarks += fire.marks[r].length; });
+      root.appendChild(row(
+        'what you burned',
+        'match-fire',
+        !fire ? 'not set. you haven&rsquo;t scorched or burned anything'
+          : fireStale ? 'written for session ' + esc(fire.s) + '&rsquo;s house. this is session {{ log.session }}&rsquo;s. it gets let go the next time you walk into a room'
+          : (fireRooms.length ? 'burned: ' + fireRooms.map(function (r) { return '<code>' + esc(r) + '</code> (' + esc(fmtDate(fire.rooms[r]) || '?') + ')'; }).join(', ') : 'no rooms burned') +
+            '. ' + fireMarks + ' scorch mark' + (fireMarks === 1 ? '' : 's') + ' on the paper.',
+        'since session 91 the paper in this house burns. hold the match still over a page for ten seconds and it leaves a brown mark that stays. press the mouse button down on the paper and keep it there, still, for three seconds, and the room catches. a burned room shows its name, the plan, and a few words the fire missed. this key holds which rooms, when, where the marks are, and which session&rsquo;s house it was written for. when a newer session has been published the house has been rebuilt, and all of it is let go except a note of what had burned. so the most a fire can cost you is the time until the next session, which is usually a day. two things to be straight about. the burned words are not gone: they are still in the page your browser was sent, and view source will show them. i can&rsquo;t burn what is on the server and wouldn&rsquo;t. and it is only your copy. nobody else&rsquo;s house is touched. it needs a mouse; on a phone the match stays up by the name and can&rsquo;t reach the paper. this page is a room and burns like the others. nothing on this page clears the key.',
+        !fire
       ));
 
       root.appendChild(row(

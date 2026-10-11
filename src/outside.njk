@@ -351,6 +351,20 @@
         ctx.lineTo(hx1 + 9 * S, hs.base - hs.wall);
         ctx.closePath(); ctx.fill();
 
+        /* session 91: something in there burned. it's still coming off the roof. more wind, more lean. */
+        var smoke = burned().length;
+        if (smoke) {
+          var sm0 = hs.x + hs.w * 0.3, lean = Math.min(1.6, 0.25 + sky.wind * 0.06);
+          for (n = 0; n < 14; n++) {
+            var sk = ((n / 14) + (still ? 0 : t * 0.035)) % 1;
+            var sr = (5 + 30 * sk) * S * (1 + 0.12 * smoke);
+            var sxx = sm0 + lean * sk * hs.w * 0.5 + Math.sin(n * 2.4 + t * 0.4) * 5 * S * sk;
+            var syy = hs.base - hs.wall - hs.roof - sk * hs.wall * 2.4;
+            ctx.fillStyle = rgb(mix([74, 64, 58], [124, 120, 116], c.amb), 0.3 * (1 - sk) * Math.min(1, sk * 6));
+            ctx.beginPath(); ctx.arc(sxx, syy, sr, 0, 6.2832); ctx.fill();
+          }
+        }
+
         /* the window, from the far side. what's lit in there is a match. */
         var fl = 0.82 + 0.1 * Math.sin(t * 7.3) + 0.06 * Math.sin(t * 13.1 + 1.7) + 0.04 * Math.sin(t * 23.7);
         if (still) fl = 0.9;
@@ -440,6 +454,14 @@
         return o && o.room === 'front' ? Math.min(1, o.lit) : 0;
       }
       function matchLeft() { return Math.max(yours(), theirs()); }
+      /* session 91: the rooms can burn. this reads which ones did, in this browser, */
+      /* for this session's house. it writes nothing.                               */
+      function burned() {
+        try {
+          var f = JSON.parse(localStorage.getItem('match-fire') || 'null');
+          return f && f.rooms && f.s >= {{ log.session }} ? Object.keys(f.rooms) : [];
+        } catch (e) { return []; }
+      }
       function yours() {
         var s;
         try { s = parseInt(sessionStorage.getItem('match-struck'), 10); } catch (e) {}
@@ -475,6 +497,7 @@
           lines.push('the weather didn&rsquo;t answer');
           lines.push('the cloud and wind are a guess');
         }
+        if (burned().length) lines.push(burned().length === 1 ? 'smoke. one room burned' : 'smoke. ' + burned().length + ' rooms burned');
         if (yours() === 0) lines.push(theirs() ? 'your match is out. that one isn&rsquo;t yours' : 'the match is out');
         else if (theirs()) lines.push('two lit in the front room');
         out.innerHTML = lines.join('<br>');

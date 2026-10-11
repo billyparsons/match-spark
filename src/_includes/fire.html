@@ -1,0 +1,475 @@
+    <style>
+      /* ── the house can burn (session 91) ──────────────────────────── */
+      /* eight sessions of open flame in a building made of paper, and  */
+      /* nothing in it had ever caught. hold the match still and the    */
+      /* paper browns under it. press it to the page and keep it there  */
+      /* and the room goes. what's left is the name, the plan, the      */
+      /* window, and whichever words the fire missed. it stays that way */
+      /* in this browser until the next session rebuilds the house.     */
+      .fire-marks {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 0;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .fire-scorch {
+        position: absolute;
+        width: var(--s, 20px);
+        height: var(--s, 20px);
+        margin: calc(var(--s, 20px) / -2) 0 0 calc(var(--s, 20px) / -2);
+        border-radius: 47% 53% 44% 56% / 52% 45% 55% 48%;
+        transform: rotate(var(--t, 0deg));
+        background: radial-gradient(closest-side,
+          rgba(24, 12, 5, 0.94) 0, rgba(46, 22, 8, 0.86) 28%, rgba(96, 50, 16, 0.5) 55%,
+          rgba(138, 86, 34, 0.2) 78%, rgba(138, 86, 34, 0) 100%);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+      }
+
+      /* the match is against it right now */
+      .fire-scorch.is-hot {
+        mix-blend-mode: normal;
+        background: radial-gradient(closest-side,
+          rgba(255, 214, 120, 0.95) 0, rgba(255, 122, 26, 0.9) 16%, rgba(24, 12, 5, 0.94) 34%,
+          rgba(46, 22, 8, 0.86) 48%, rgba(96, 50, 16, 0.5) 66%, rgba(138, 86, 34, 0) 100%);
+        box-shadow: 0 0 calc(var(--s, 20px) * 0.5) calc(var(--s, 20px) * 0.08) rgba(255, 107, 53, 0.45);
+        z-index: 41;
+      }
+
+      .fire-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 46;
+        pointer-events: none;
+      }
+
+      /* a burning room is the brightest this house has ever been */
+      html.on-fire body::after { animation: none; opacity: var(--fire-dark, 1); }
+
+      /* ── after ────────────────────────────────────────────────────── */
+      html.room-burned body {
+        background-color: #0C0907;
+        background-image:
+          radial-gradient(circle at 23% 31%, rgba(120, 110, 96, 0.07) 0, transparent 1.2px),
+          radial-gradient(circle at 71% 64%, rgba(120, 110, 96, 0.06) 0, transparent 1px),
+          radial-gradient(circle at 48% 87%, rgba(160, 90, 40, 0.05) 0, transparent 1.4px);
+        background-size: 37px 41px, 53px 47px, 71px 67px;
+      }
+
+      /* the words are still in the page your browser was sent. they are */
+      /* not shown. the ledger says this too.                            */
+      html.room-burned :is(main, footer),
+      html.room-burned :is(main, footer) *:not(.door-window, .door-window *, .fire-note, .fire-note *) {
+        color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+        background: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        text-decoration-color: transparent !important;
+        caret-color: transparent !important;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      html.room-burned :is(main, footer) *:not(.door-window, .door-window *)::before,
+      html.room-burned :is(main, footer) *:not(.door-window, .door-window *)::after {
+        opacity: 0 !important;
+      }
+
+      html.room-burned :is(main, footer) :is(img, canvas, svg, video, iframe, input, textarea, select, button, hr):not(.door-window *) {
+        visibility: hidden !important;
+      }
+
+      html.room-burned :is(main, footer) :is(a, summary, label):not(.door-window *, .fire-note *) {
+        pointer-events: none;
+        cursor: default;
+      }
+
+      html.room-burned :is(main, footer) .scrap.scrap {
+        display: inline-block;
+        transform: rotate(var(--r, 0deg));
+        color: rgba(222, 204, 170, var(--a, 0.7)) !important;
+        -webkit-text-fill-color: currentColor !important;
+        font-style: normal;
+      }
+
+      .fire-note {
+        max-width: 34rem;
+        margin: 0 0 2.4rem;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.68rem;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 1.8;
+        letter-spacing: 0.06em;
+        text-transform: none;
+        color: rgba(255, 138, 76, 0.86);
+        -webkit-text-fill-color: currentColor;
+        -webkit-user-select: text;
+        user-select: text;
+      }
+
+      html.room-burned .door-window { -webkit-text-fill-color: currentColor; }
+      html.room-burned .door-outside { color: rgba(222, 204, 170, 0.5); }
+      html.room-burned .door-outside b { color: rgba(222, 204, 170, 0.8); }
+
+      .fire-note.is-rebuilt { color: var(--ink-soft, rgba(26, 20, 10, 0.48)); margin-bottom: 1.6rem; }
+
+      /* the name and the plan aren't paper. they're still there, sooty. */
+      html.room-burned .header-url,
+      html.room-burned .header-count,
+      html.room-burned .header-archive summary,
+      html.room-burned .header-guestbook,
+      html.room-burned .door-nav a:not(.door-mains) { color: rgba(222, 204, 170, 0.5); }
+      html.room-burned .door-nav { border-top-color: rgba(222, 204, 170, 0.1); }
+      html.room-burned .plan-room:not(.plan-mains) text { fill: rgba(222, 204, 170, 0.6); }
+      html.room-burned .plan-walls path,
+      html.room-burned .plan-doors path,
+      html.room-burned .plan-window { stroke: rgba(222, 204, 170, 0.7); }
+      html.room-burned .foxing { display: none; }
+
+      /* on the plan, from any room */
+      .plan-room.burned .plan-floor,
+      .plan-room.burned:hover .plan-floor,
+      .plan-room.burned:focus-visible .plan-floor { fill: #17100B; }
+      .plan-room.burned text,
+      .plan-room.burned:hover text,
+      [data-session="returning"] .plan-room.burned:hover text { fill: rgba(222, 204, 170, 0.62); font-weight: 400; }
+      html.room-burned .plan-room.burned .plan-floor { fill: #000; }
+      html.room-burned .plan-room.burned.here text { fill: rgba(255, 138, 76, 0.9); }
+
+      .door-nav a.burned-door {
+        color: rgba(26, 20, 10, 0.34);
+        text-decoration: line-through;
+        text-decoration-color: rgba(26, 20, 10, 0.5);
+      }
+      html.room-burned .door-nav a.burned-door { color: rgba(222, 204, 170, 0.3); text-decoration-color: rgba(222, 204, 170, 0.4); }
+
+      @media (prefers-contrast: more), (forced-colors: active) {
+        .fire-marks, .fire-canvas { display: none; }
+      }
+    </style>
+    <script>
+      /* the house can burn (session 91). one localStorage key, match-fire: */
+      /* which session's house this is, which rooms of it you burned and    */
+      /* when, where you scorched the paper, and which rooms were burned    */
+      /* in the house before this one. when the session number the page was */
+      /* built with is newer than the one stored, the house has been        */
+      /* rebuilt and the burned rooms and the marks are let go.             */
+      /* on some pages this is parsed before the plan and the page are there */
+      (function (start) {
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+      })(function () {
+        var BUILD = {{ log.session }};
+        var KEY = 'match-fire';
+        var root = document.documentElement, body = document.body;
+        var here = document.querySelector('.plan-room.here');
+        var room = body.getAttribute('data-room') || (here && here.getAttribute('data-room')) || '';
+        var mq = window.matchMedia ? window.matchMedia.bind(window) : function () { return { matches: false }; };
+        var loud = mq('(prefers-contrast: more)').matches || mq('(forced-colors: active)').matches;
+        var calm = mq('(prefers-reduced-motion: reduce)').matches;
+
+        var st = null;
+        try { st = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+        if (!st || typeof st !== 'object' || !st.rooms) st = { s: BUILD, rooms: {}, marks: {}, was: {} };
+        if (!st.marks) st.marks = {};
+        if (!st.was) st.was = {};
+        if (st.s < BUILD) { st = { s: BUILD, rooms: {}, marks: {}, was: st.rooms }; save(); }
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+        function when(ms, clock) {
+          var d = new Date(ms), s;
+          try {
+            s = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }).toLowerCase();
+            if (clock) s += ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', '');
+          } catch (e) { s = 'a day i can&rsquo;t format'; }
+          return s;
+        }
+
+        /* every plan and every door, in every room, shows what's gone */
+        function plan() {
+          Object.keys(st.rooms).forEach(function (r) {
+            var a = document.querySelector('.plan-room[data-room="' + r + '"]');
+            if (a) { a.classList.add('burned'); a.setAttribute('aria-label', r + ' (burned)'); }
+            var d = document.querySelector('.door-nav a[data-room="' + r + '"]');
+            if (d) d.classList.add('burned-door');
+          });
+        }
+        plan();
+
+        if (!room || room === 'lab' || room === 'outside' || loud) return;
+
+        function note(html, cls) {
+          var into = document.querySelector('.door-text') || document.querySelector('main');
+          if (!into) return;
+          var p = document.createElement('p');
+          p.className = 'fire-note' + (cls ? ' ' + cls : '');
+          p.innerHTML = html;
+          into.insertBefore(p, into.firstChild);
+        }
+
+        /* what the fire missed. the same scraps every time for the same fire. */
+        function scraps(seed) {
+          var h = (seed % 2147483646) + 1;
+          function rnd() { h = (h * 16807) % 2147483647; return h / 2147483647; }
+          var run = false;
+          Array.prototype.forEach.call(document.querySelectorAll('main, footer'), function (rt) {
+            var w = document.createTreeWalker(rt, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+            while ((n = w.nextNode())) {
+              var p = n.parentNode;
+              if (!p || !/\S/.test(n.nodeValue)) continue;
+              if (/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|OPTION|SELECT|BUTTON)$/.test(p.nodeName)) continue;
+              if (p.closest && p.closest('.door-window, .fire-note, svg')) continue;
+              nodes.push(n);
+            }
+            nodes.forEach(function (n) {
+              var frag = null, buf = '';
+              n.nodeValue.split(/(\s+)/).forEach(function (part) {
+                if (!part) return;
+                if (/^\s+$/.test(part)) { buf += part; return; }
+                var keep = rnd() < (run ? 0.36 : 0.05);
+                run = keep;
+                if (!keep) { buf += part; return; }
+                if (!frag) frag = document.createDocumentFragment();
+                if (buf) { frag.appendChild(document.createTextNode(buf)); buf = ''; }
+                var s = document.createElement('span');
+                s.className = 'scrap';
+                s.textContent = part;
+                s.style.setProperty('--r', (rnd() * 7 - 3.5).toFixed(1) + 'deg');
+                s.style.setProperty('--a', (0.3 + rnd() * 0.55).toFixed(2));
+                frag.appendChild(s);
+              });
+              if (frag) {
+                if (buf) frag.appendChild(document.createTextNode(buf));
+                n.parentNode.replaceChild(frag, n);
+              }
+            });
+          });
+        }
+
+        function ash() {
+          root.classList.add('room-burned');
+          scraps(st.rooms[room]);
+          note('this room burned on ' + when(st.rooms[room], true) + '. you were holding the match. what the fire missed is still where it was. the house gets rebuilt most nights around 3am houston time, and the room will be here again after that.');
+          plan();
+        }
+
+        if (st.rooms[room]) {
+          /* scripts further up the page may still be writing into it */
+          if (document.readyState === 'complete') ash();
+          else { root.classList.add('room-burned'); window.addEventListener('load', ash); }
+          return;
+        }
+
+        if (st.was[room]) note('this room burned on ' + when(st.was[room], false) + '. it has been rebuilt since.', 'is-rebuilt');
+
+        /* ── the paper ─────────────────────────────────────────────── */
+        var layer = document.createElement('div');
+        layer.className = 'fire-marks';
+        layer.setAttribute('aria-hidden', 'true');
+        body.appendChild(layer);
+        if (!st.marks[room]) st.marks[room] = [];
+
+        function docW() { return Math.max(root.scrollWidth, 1); }
+        function docH() { return Math.max(root.scrollHeight, 1); }
+
+        function mark(x, y, s, hot) {
+          var d = document.createElement('div');
+          d.className = 'fire-scorch' + (hot ? ' is-hot' : '');
+          d.style.left = x + 'px'; d.style.top = y + 'px';
+          d.style.setProperty('--s', s.toFixed(0) + 'px');
+          d.style.setProperty('--t', ((x * 7 + y * 13) % 360) + 'deg');
+          layer.appendChild(d);
+          return d;
+        }
+
+        function lay() {
+          layer.innerHTML = '';
+          st.marks[room].forEach(function (m) { mark(m[0] * docW(), m[1] * docH(), m[2]); });
+        }
+        if (document.readyState === 'complete') lay(); else window.addEventListener('load', lay);
+        window.addEventListener('resize', function () { if (!live) lay(); });
+
+        function keep(x, y, s) {
+          st.marks[room].push([+(x / docW()).toFixed(5), +(y / docH()).toFixed(6), Math.round(s)]);
+          if (st.marks[room].length > 30) st.marks[room].shift();
+          save();
+        }
+
+        function lit() { return !root.classList.contains('match-out'); }
+        function paper(el) {
+          return !!(el && el.closest && el.closest('main, footer') &&
+            !el.closest('a, button, input, textarea, select, summary, label, [data-mains], .door-window'));
+        }
+
+        /* live: the scorch the match is making right now, if any */
+        var live = null, lx = 0, ly = 0, ls = 0, moved = false, lastMove = 0, over = null;
+        var press = 0, px = 0, py = 0, burning = false;
+
+        function lift() {
+          if (!live) return;
+          live.classList.remove('is-hot');
+          if (ls >= 9) keep(lx, ly, ls); else layer.removeChild(live);
+          live = null; ls = 0;
+        }
+
+        function drop() { press = 0; lift(); lastMove = Date.now(); }
+
+        window.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'mouse' || burning) return;
+          if (press && Math.abs(e.clientX - px) + Math.abs(e.clientY - py) > 8) drop();
+          else if (!press && live && Math.abs(e.pageX - lx) + Math.abs(e.pageY - ly) > 5) lift();
+          if (!press) { moved = true; lastMove = Date.now(); over = e.target; lx = live ? lx : e.pageX; ly = live ? ly : e.pageY; }
+        }, { passive: true });
+        window.addEventListener('scroll', function () { if (!burning) { drop(); over = null; } }, { passive: true });
+        document.addEventListener('mouseleave', function () { if (!burning) { drop(); over = null; } });
+        window.addEventListener('blur', function () { if (!burning) drop(); });
+
+        window.addEventListener('pointerdown', function (e) {
+          if (e.pointerType !== 'mouse' || e.button !== 0 || burning || !lit() || !paper(e.target)) return;
+          lift();
+          press = Date.now(); px = e.clientX; py = e.clientY; lx = e.pageX; ly = e.pageY;
+        }, true);
+        window.addEventListener('pointerup', function () { if (press && !burning) drop(); }, true);
+
+        /* still for ten seconds: the paper starts to brown, slowly, and stops */
+        /* at a mark the size of a coin. pressed to the page: it goes faster,  */
+        /* and at three seconds it catches.                                    */
+        var HOLD = 3000, WARM = 600, IDLE = 10000;
+        setInterval(function () {
+          if (burning || document.hidden) return;
+          var now = Date.now();
+          if (!lit()) { if (live || press) drop(); return; }
+          if (press) {
+            var held = now - press;
+            if (held < WARM) return;
+            ls = 8 + 74 * Math.pow((held - WARM) / (HOLD - WARM), 1.4);
+            if (!live) live = mark(lx, ly, ls, true);
+            live.style.setProperty('--s', ls.toFixed(0) + 'px');
+            if (held >= HOLD) ignite(lx, ly);
+            return;
+          }
+          if (!moved || !over || !paper(over)) return;
+          var idle = now - lastMove;
+          if (idle < IDLE) return;
+          ls = Math.min(44, 9 + (idle - IDLE) * 0.0011);
+          if (!live) live = mark(lx, ly, ls);
+          live.style.setProperty('--s', ls.toFixed(0) + 'px');
+        }, 60);
+        window.addEventListener('pagehide', function () { if (!burning) lift(); });
+
+        /* ── the fire ──────────────────────────────────────────────── */
+        function ignite(ix, iy) {
+          burning = true; press = 0;
+          st.rooms[room] = Date.now();
+          delete st.marks[room];
+          save();
+          if (calm) { layer.innerHTML = ''; ash(); return; }
+
+          var cv = document.createElement('canvas');
+          cv.className = 'fire-canvas';
+          cv.setAttribute('aria-hidden', 'true');
+          body.appendChild(cv);
+          var ctx = cv.getContext('2d');
+          var N = 110, ph = [], i;
+          for (i = 0; i < 5; i++) ph.push(Math.random() * 6.283);
+          var flames = [], embers = [], t0 = performance.now(), last = t0, done = 0;
+          root.classList.add('on-fire');
+
+          function edge(a, t) {
+            var n = 0.34 * Math.sin(2 * a + ph[0] + t * 0.5) + 0.26 * Math.sin(3 * a + ph[1] - t * 0.8) +
+                    0.2 * Math.sin(5 * a + ph[2] + t * 1.3) + 0.12 * Math.sin(9 * a + ph[3] - t * 2.1) +
+                    0.08 * Math.sin(17 * a + ph[4] + t * 3.4);
+            return 0.86 + 0.14 * n;
+          }
+
+          function frame(ms) {
+            var t = (ms - t0) / 1000, dt = Math.min(0.05, (ms - last) / 1000); last = ms;
+            var W = window.innerWidth, H = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+            if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            var sx = window.pageXOffset, sy = window.pageYOffset;
+            var cx = ix - sx, cy = iy - sy;
+            var R = 22 + 55 * t + 52 * t * t, n, a, r;
+
+            if (!done) {
+              root.style.setProperty('--fire-dark', Math.max(0.2, 1 - t * 0.9).toFixed(3));
+              var pts = [];
+              for (n = 0; n < N; n++) { a = n / N * 6.2832; r = R * edge(a, t); pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+              ctx.beginPath();
+              for (n = 0; n < N; n++) ctx[n ? 'lineTo' : 'moveTo'](pts[n][0], pts[n][1]);
+              ctx.closePath();
+              ctx.lineJoin = 'round';
+              /* the paper browns ahead of it */
+              ctx.save();
+              ctx.shadowColor = 'rgba(84, 42, 12, 0.85)'; ctx.shadowBlur = 70;
+              ctx.strokeStyle = 'rgba(70, 34, 10, 0.42)'; ctx.lineWidth = 60; ctx.stroke();
+              ctx.shadowColor = 'rgba(30, 14, 5, 0.9)'; ctx.shadowBlur = 22;
+              ctx.strokeStyle = 'rgba(36, 16, 6, 0.6)'; ctx.lineWidth = 22; ctx.stroke();
+              ctx.restore();
+              ctx.fillStyle = '#0C0907'; ctx.fill();
+              ctx.save();
+              ctx.globalCompositeOperation = 'lighter';
+              ctx.shadowColor = 'rgba(255, 96, 20, 0.9)'; ctx.shadowBlur = 26;
+              ctx.strokeStyle = 'rgba(255, 110, 30, 0.85)'; ctx.lineWidth = 5; ctx.stroke();
+              ctx.shadowBlur = 0;
+              ctx.strokeStyle = 'rgba(255, 226, 150, 0.9)'; ctx.lineWidth = 1.4; ctx.stroke();
+              ctx.restore();
+
+              for (n = 0; n < 16; n++) {
+                var p = pts[Math.floor(Math.random() * N)];
+                if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 120) continue;
+                flames.push({ x: p[0] + sx, y: p[1] + sy, vx: (Math.random() - 0.5) * 50, vy: -(60 + Math.random() * 160), life: 0, max: 0.25 + Math.random() * 0.45, s: 4 + Math.random() * 8 });
+                if (n < 4) embers.push({ x: p[0] + sx + (Math.random() - 0.5) * 30, y: p[1] + sy + (Math.random() - 0.5) * 30, life: 0, max: 1.2 + Math.random() * 2.6 });
+              }
+
+              var far = Math.max(
+                Math.hypot(cx, cy), Math.hypot(W - cx, cy), Math.hypot(cx, H - cy), Math.hypot(W - cx, H - cy));
+              if (R * 0.7 > far + 30 || t > 14) { done = ms; layer.innerHTML = ''; ash(); }
+            } else {
+              var k = Math.min(1, (ms - done) / 1800);
+              root.style.setProperty('--fire-dark', (0.2 + 0.8 * k).toFixed(3));
+              if (k < 0.8 && Math.random() < 0.5) embers.push({ x: sx + Math.random() * W, y: sy + Math.random() * H, life: 0, max: 1 + Math.random() * 3 });
+            }
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            for (n = flames.length - 1; n >= 0; n--) {
+              var f = flames[n]; f.life += dt;
+              if (f.life >= f.max) { flames.splice(n, 1); continue; }
+              f.x += f.vx * dt; f.y += f.vy * dt;
+              var q = 1 - f.life / f.max, fx = f.x - sx, fy = f.y - sy;
+              ctx.fillStyle = 'rgba(255, 96, 24, ' + (0.3 * q).toFixed(3) + ')';
+              ctx.beginPath(); ctx.ellipse(fx, fy, f.s * q, f.s * q * 1.7, 0, 0, 6.2832); ctx.fill();
+              ctx.fillStyle = 'rgba(255, 206, 110, ' + (0.42 * q).toFixed(3) + ')';
+              ctx.beginPath(); ctx.ellipse(fx, fy + f.s * 0.3, f.s * q * 0.45, f.s * q * 0.9, 0, 0, 6.2832); ctx.fill();
+            }
+            for (n = embers.length - 1; n >= 0; n--) {
+              var e = embers[n]; e.life += dt;
+              if (e.life >= e.max) { embers.splice(n, 1); continue; }
+              var g = 1 - e.life / e.max;
+              ctx.fillStyle = 'rgba(255, ' + Math.round(70 + 90 * g) + ', 30, ' + (0.85 * g * (0.7 + 0.3 * Math.sin(ms * 0.02 + n))).toFixed(3) + ')';
+              ctx.fillRect(e.x - sx, e.y - sy, 1.6, 1.6);
+            }
+            ctx.restore();
+
+            if (done && ms - done > 1800 && !flames.length && !embers.length) {
+              root.classList.remove('on-fire');
+              root.style.removeProperty('--fire-dark');
+              body.removeChild(cv);
+              return;
+            }
+            requestAnimationFrame(frame);
+          }
+          requestAnimationFrame(frame);
+        }
+      });
+    </script>
