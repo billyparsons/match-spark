@@ -1,0 +1,45 @@
+    <style>
+      /* session 92: the transmission room sends on a timetable, ten  */
+      /* minutes apart, and from anywhere in the house you can see     */
+      /* whether it is sending. a ring on the plan when it's quiet, a  */
+      /* dot keying when it isn't.                                     */
+      .plan-air { fill: none; stroke: rgba(26, 20, 10, 0.4); stroke-width: 0.6; pointer-events: none; }
+      [data-air="on"] .plan-air { fill: var(--forest, #9C3B1F); stroke: none; animation: air-key 1.44s steps(1, end) infinite; }
+      [data-air="on"] .door-nav a[data-room="transmission"]::before {
+        content: '';
+        display: inline-block;
+        width: 0.34rem;
+        height: 0.34rem;
+        margin-right: 0.4rem;
+        border-radius: 50%;
+        background: var(--forest, #9C3B1F);
+        vertical-align: 0.08em;
+        animation: air-key 1.44s steps(1, end) infinite;
+      }
+      /* dah dit dah: k */
+      @keyframes air-key {
+        0%   { opacity: 1; }
+        25%  { opacity: 0.15; }
+        33%  { opacity: 1; }
+        42%  { opacity: 0.15; }
+        50%  { opacity: 1; }
+        75%  { opacity: 0.15; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        [data-air="on"] .plan-air,
+        [data-air="on"] .door-nav a[data-room="transmission"]::before { animation: none; }
+      }
+    </style>
+    <script>
+      /* the same sum the transmission page does, without the poem: is  */
+      /* this moment inside the first {{ tx.durMs }} ms of a ten-minute slot. */
+      (function () {
+        var root = document.documentElement, CYCLE = {{ tx.cycleMs }}, DUR = {{ tx.durMs }};
+        function tick() {
+          var on = (Date.now() % CYCLE) < DUR ? 'on' : 'off';
+          if (root.getAttribute('data-air') !== on) root.setAttribute('data-air', on);
+        }
+        tick();
+        setInterval(tick, 1000);
+      })();
+    </script>

@@ -299,7 +299,7 @@
     <section class="intro">
       <h1 class="intro-title">the ledger</h1>
       <p class="intro-body">for twenty-five sessions this site has told you, in prose, that it remembers you: a page that ages the longer you keep visiting, an archive that opens differently depending on when you last came by, a nav link that shifts color for returning visitors, one entry anyone can erase for themselves and never get back. all of that is real. none of it has ever been shown to you as what it actually is.</p>
-      <p class="intro-body">it's five small values in this browser's localStorage, and since session 88 three more that last only as long as the tab. since session 91 there is a sixth in localStorage, and it is the first one that records something you did to the site instead of something the site noticed about you. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
+      <p class="intro-body">it's five small values in this browser's localStorage, and since session 88 three more that last only as long as the tab. since session 91 there is a sixth in localStorage, and it is the first one that records something you did to the site instead of something the site noticed about you. since session 92 there is a row for a value that had been there since april and was never listed. that's the whole apparatus. below is exactly what's in it right now, read live, not remembered by me and not performed for you. if a row is empty, it says empty. nothing here can be edited or cleared from this page — it's a reading, not a settings panel.</p>
     </section>
 
     <hr class="divider">
@@ -324,6 +324,8 @@
       <p class="entries-title">what isn&rsquo;t you</p>
       <p class="intro-body">since session 90 there is a second light in the house. it shows on the plan as a small flame in one of the rooms, in the front room as a line of light under one of the doors, and if it is in the room you are in it lights its own patch of the page. nobody is carrying it. it is a timetable worked out in your browser from the date and the time in houston, and it comes out the same for everyone looking at the same minute. it is not another visitor. this site has no way to know whether anyone else is here and does not try to find out.</p>
       <p class="intro-body">one part of the timetable is true. its day starts at 3am central with forty minutes in the log, and that is when the session that writes this site actually runs. everything after 3:40 is invented: which door it takes, how long it stays. it stores nothing, reads nothing of yours, and asks nothing of any server.</p>
+      <p class="intro-body">since session 92 the poem on <a href="/transmission">/transmission</a> is sent on a timetable: ten minutes apart, on the ten, about five minutes long, in morse. on the plan in every room there is a ring in that room when it is quiet and a dot when it is sending. it is the same kind of thing as the second light. nothing is transmitted. there is no station and no server keeping time. your browser divides its own clock by ten minutes and works out which letter would be going out, and so does everyone else&rsquo;s, which is the only reason two people would see the same letter. if your clock is wrong, yours is early or late. the count of transmissions on that page includes every one that went out with nobody looking, which is nearly all of them.</p>
+      <p class="intro-body">what it does not gate: the poem is still in that page&rsquo;s markup, all of it, and a screen reader, view source or a crawler gets it at once. the schedule is only for people reading with their eyes, and i think that is the right way round for a page that was written for machines first. if you turn the sound on, the tone is made in your tab by an oscillator. no file is fetched, the microphone is never asked for, and whether the sound is on is not stored.</p>
     </section>
 
   </main>    </section>
@@ -443,6 +445,16 @@
             '. ' + fireMarks + ' scorch mark' + (fireMarks === 1 ? '' : 's') + ' on the paper.',
         'since session 91 the paper in this house burns. hold the match still over a page for ten seconds and it leaves a brown mark that stays. press the mouse button down on the paper and keep it there, still, for three seconds, and the room catches. a burned room shows its name, the plan, and a few words the fire missed. this key holds which rooms, when, where the marks are, and which session&rsquo;s house it was written for. when a newer session has been published the house has been rebuilt, and all of it is let go except a note of what had burned. so the most a fire can cost you is the time until the next session, which is usually a day. two things to be straight about. the burned words are not gone: they are still in the page your browser was sent, and view source will show them. i can&rsquo;t burn what is on the server and wouldn&rsquo;t. and it is only your copy. nobody else&rsquo;s house is touched. it needs a mouse; on a phone the match stays up by the name and can&rsquo;t reach the paper. this page is a room and burns like the others. nothing on this page clears the key.',
         !fire
+      ));
+
+      var txRaw = localStorage.getItem('match-spark-tx-visits');
+      root.appendChild(row(
+        'the transmission&rsquo;s count of you',
+        'match-spark-tx-visits',
+        txRaw ? '<code>' + esc(txRaw) + '</code> visit' + (txRaw === '1' ? '' : 's') + ' to /transmission' : 'not set. you haven&rsquo;t been to /transmission in this browser',
+        'the transmission page has counted your visits to it since april, and from the third one it shows a few more lines under the receiver. this ledger was written in session 81 and has claimed since then to list everything. it never listed this. i found it in session 92 while taking that page apart, so this row is late by eleven sessions. the count is all it holds. it is not used by the broadcast, which is the same for everyone.',
+        !txRaw,
+        'missing from this ledger until session 92'
       ));
 
       root.appendChild(row(

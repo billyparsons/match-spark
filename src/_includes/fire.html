@@ -226,7 +226,7 @@
               var p = n.parentNode;
               if (!p || !/\S/.test(n.nodeValue)) continue;
               if (/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|OPTION|SELECT|BUTTON)$/.test(p.nodeName)) continue;
-              if (p.closest && p.closest('.door-window, .fire-note, svg')) continue;
+              if (p.closest && p.closest('.door-window, .fire-note, svg, .rx')) continue; /* .rx: the receiver rewrites its own text (session 92) */
               nodes.push(n);
             }
             nodes.forEach(function (n) {

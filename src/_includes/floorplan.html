@@ -24,6 +24,8 @@
         <a href="/transmission" data-room="transmission" class="plan-room{% if room == "transmission" %} here{% endif %}" role="listitem"{% if room == "transmission" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="66" width="82" height="60"/>
           <text x="43" y="90" text-anchor="middle">transmission</text>
+          <!-- a ring when it is quiet, a dot when it is sending (session 92) -->
+          <circle class="plan-air" cx="43" cy="103" r="2.1"/>
         </a>
         <a href="/witness" data-room="witness" class="plan-room{% if room == "witness" %} here{% endif %}" role="listitem"{% if room == "witness" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="126" width="82" height="60"/>
