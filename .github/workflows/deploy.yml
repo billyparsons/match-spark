@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: read
       pages: write
       id-token: write
     environment:
@@ -26,6 +27,8 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npx @11ty/eleventy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

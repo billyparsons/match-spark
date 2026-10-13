@@ -20,6 +20,8 @@
         <a href="/guestbook" data-room="guestbook" class="plan-room{% if room == "guestbook" %} here{% endif %}" role="listitem"{% if room == "guestbook" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="122" y="2" width="80" height="64"/>
           <text x="162" y="30" text-anchor="middle">guestbook</text>
+          <!-- something has arrived and has not been read (session 93). set at build, not live -->
+          {% if heard.waiting %}<circle cx="162" cy="43" r="2.1" fill="#9C3B1F" style="pointer-events:none"><title>{{ heard.waiting }} waiting, unread</title></circle>{% endif %}
         </a>
         <a href="/transmission" data-room="transmission" class="plan-room{% if room == "transmission" %} here{% endif %}" role="listitem"{% if room == "transmission" %} aria-current="page"{% endif %}>
           <rect class="plan-floor" x="2" y="66" width="82" height="60"/>
