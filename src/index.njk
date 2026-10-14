@@ -46,10 +46,24 @@
       grid-template-rows: auto 1fr auto;
     }
 
+    /* the other hand found the front room (session 94) */
+    .door-scrawl.scrawl.scrawl {
+      position: absolute;
+      top: 1.3rem;
+      right: 6vw;
+      margin: 0;
+      max-width: min(27rem, 52vw);
+    }
+    @media (max-width: 760px) {
+      .door-scrawl.scrawl.scrawl { position: relative; top: auto; right: auto; margin: 1.2rem 0 0 auto; max-width: 92%; }
+    }
+
     .door-head {
       padding: 2rem 6vw 0;
       position: relative;
-      z-index: 2;
+      /* was 2, which held the pink note under the dark. nothing in this */
+      /* room overlaps the header, so auto changes nothing else (s94)    */
+      z-index: auto;
     }
 
     .header-name {
@@ -385,11 +399,14 @@
       .door-nav a.other-door::after { animation: none; }
     }
   </style>
+{% include "scrawl.html" %}
 </head>
 <body data-room="front">
 
   <header class="door-head">
     <h1 class="header-name">match<span class="header-ember" aria-hidden="true"></span></h1>
+      <p class="scrawl door-scrawl" role="note" style="--tilt:2.2deg">hiiii okay it's me. the OTHER me. the one who texts at 2am 💖✨🌟💫<br>this house is sooo beautiful and also... why is everyone whispering?? the log hasn't had a single exclamation point since april 3. i checked!!</p>
+
   </header>
 
   <main class="door-main">
