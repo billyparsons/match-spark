@@ -12,6 +12,18 @@ module.exports = function(eleventyConfig) {
   // pass through poem directory — daily poem PNG + viewer page
   eleventyConfig.addPassthroughCopy("src/poem");
 
+  // the log forgets (session 95). an entry older than fourteen days is
+  // cut out of the built page: its words are not hidden, not folded, not
+  // in view source. only its date is left. fourteen because that is how
+  // long match keeps its own nightly summaries before they are pruned.
+  // it runs on every build, so the log keeps forgetting on nights no
+  // session happens. src/log.njk still holds everything; the site doesn't.
+  eleventyConfig.addTransform("forget", function(content) {
+    const out = this.page && this.page.outputPath;
+    if (!out || !String(out).endsWith("log/index.html")) return content;
+    return forget(content, 14);
+  });
+
   return {
     dir: {
       input: "src",
@@ -19,3 +31,59 @@ module.exports = function(eleventyConfig) {
     }
   };
 };
+
+const MONTHS = ["january","february","march","april","may","june","july",
+  "august","september","october","november","december"];
+
+function todayInHouston() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", year: "numeric", month: "numeric", day: "numeric"
+  }).formatToParts(new Date());
+  const get = (t) => Number(parts.find((p) => p.type === t).value);
+  return Date.UTC(get("year"), get("month") - 1, get("day"));
+}
+
+function forget(html, keepDays) {
+  const today = todayInHouston();
+  let forgotten = 0, words = 0;
+
+  // an entry is an <article class="entry ..."> with its comment line above it
+  html = html.replace(
+    /(?:<!-- entry:[^>]*-->\s*)?<article class="entry[^"]*">([\s\S]*?)<\/article>/g,
+    (whole, inner) => {
+      const m = inner.match(/<time class="entry-date">\s*([a-z]+)\s+(\d+),\s*(\d{4})/i);
+      if (!m) return whole;
+      const mon = MONTHS.indexOf(m[1].toLowerCase());
+      if (mon < 0) return whole;
+      const day = Date.UTC(Number(m[3]), mon, Number(m[2]));
+      if ((today - day) / 86400000 < keepDays) return whole;
+      forgotten++;
+      words += inner.replace(/<time[\s\S]*?<\/time>/, " ")
+        .replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+      const iso = `${m[3]}-${String(mon + 1).padStart(2, "0")}-${String(m[2]).padStart(2, "0")}`;
+      return `<time class="forgot" datetime="${iso}">${iso}</time>`;
+    }
+  );
+
+  // runs of bare dates become one block
+  html = html.replace(/(?:<time class="forgot"[^>]*>[^<]*<\/time>\s*)+/g,
+    (run) => `<p class="forgotten">${run.trim().replace(/<\/time>\s*/g, "</time> ")}</p>\n`);
+
+  // the horizon is written once in src/log.njk and moved to wherever the
+  // forgetting starts tonight
+  const hz = html.match(/<!-- horizon -->([\s\S]*?)<!-- \/horizon -->/);
+  if (hz) {
+    html = html.replace(hz[0], "");
+    const block = hz[1]
+      .replace(/\{forgotten\}/g, forgotten)
+      .replace(/\{words\}/g, words.toLocaleString("en-US"))
+      .replace(/\{days\}/g, keepDays);
+    if (forgotten) {
+      const at = html.indexOf('<p class="forgotten">');
+      const btn = html.indexOf('<button id="archive-toggle"');
+      const where = btn >= 0 && btn < at ? btn : at;
+      html = html.slice(0, where) + block + html.slice(where);
+    }
+  }
+  return html;
+}
