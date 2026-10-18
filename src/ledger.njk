@@ -434,6 +434,18 @@
         !struckAt
       ));
 
+      var cloudRaw = null;
+      try { cloudRaw = sessionStorage.getItem('sun-cloud'); } catch (e) {}
+      var cloudVal = null;
+      try { cloudVal = cloudRaw ? JSON.parse(cloudRaw) : null; } catch (e) {}
+      root.appendChild(row(
+        'the cloud over houston',
+        'sun-cloud',
+        cloudVal ? 'asked at <code>' + esc(fmtDate(cloudVal.t) || '?') + '</code>: <code>' + esc(Math.round(cloudVal.v * 100)) + '%</code> cloud.' : 'not set. the sun was down in houston when you walked in, or the weather service did not answer',
+        'since session 97 it is not always night in here. when the sun is up in houston the match is never struck, so the row above stays empty by day, and the light comes in through three windows from where the sun actually is. to know how hard that light should be, every room asks open-meteo.com how cloudy it is, once, and keeps the answer in this tab&rsquo;s sessionStorage for fifteen minutes so the next room doesn&rsquo;t ask again. it is the same question the front window has asked since session 85, with nothing of yours in it. at night nothing is asked and nothing is written.',
+        !cloudVal
+      ));
+
       var fireRaw = localStorage.getItem('match-fire');
       var fire = null;
       try { fire = fireRaw ? JSON.parse(fireRaw) : null; } catch (e) {}

@@ -362,6 +362,50 @@
       100% { opacity: 0; filter: brightness(1); }
     }
 
+
+    /* ── daylight (session 97) ────────────────────────────────────── */
+    /* the dark above assumed it was always 3am. when the sun is up in */
+    /* houston it isn't: the room is dim the way rooms are by day, and */
+    /* the light on the floor comes in through three windows from the  */
+    /* actual sun. it doesn't follow you. you don't carry anything.    */
+    html.daylit body::after {
+      -webkit-mask-image: var(--sunmask, none);
+      mask-image: var(--sunmask, none);
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      /* shade by day is sky-coloured, not fire-coloured */
+      background: rgb(58, 72, 104);
+      opacity: var(--shade, 0.3);
+      animation: none;
+      transition: opacity 4s ease;
+    }
+    .sun-floor {
+      position: fixed;
+      inset: 0;
+      z-index: 41;
+      pointer-events: none;
+      background: var(--sunglow, none) 0 0 / 100% 100% no-repeat;
+      mix-blend-mode: screen;
+    }
+    .sun-note {
+      position: fixed;
+      z-index: 45;
+      right: 1.2rem;
+      bottom: 0.9rem;
+      max-width: min(22rem, 80vw);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: rgba(26, 20, 10, 0.5);
+      pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .sun-note { left: 0; right: 0; bottom: 0; max-width: none; padding: 0.5rem 1rem; background: rgba(243, 236, 220, 0.9); }
+    }
+    html.daylit .header-name::before { display: none; }
+    html.daylit .header-ember { animation: none; opacity: 0.3; filter: grayscale(1); }
+    html.daylit .other-flame, html.daylit .other-leak { display: none; }
+
     /* if you've asked your machine for more contrast, the match is a lamp again. */
     @media (prefers-contrast: more), (forced-colors: active) {
       .match-box, .mains-door, .other-flame, .other-leak { display: none; }

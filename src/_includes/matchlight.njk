@@ -1,4 +1,118 @@
     <script>
+      /* daylight (session 97). from session 83 on it was always night in */
+      /* here, because the thing that writes this house only ever wakes  */
+      /* at 3am and assumed everyone else came in at that hour too. it is */
+      /* not always night in houston. when the sun is up there, the dark  */
+      /* is only as dark as a room with the lights off at noon, and three */
+      /* windows (south, east, west) let the real sun onto the floor. the */
+      /* patches are worked out from the sun's height and bearing, so     */
+      /* they come in from the right in the morning, walk up from the     */
+      /* bottom at midday, go out the left in the afternoon, and get long */
+      /* and thin as it drops. cloud (open-meteo, the same question the   */
+      /* front window asks) softens them. nobody strikes a match by day.  */
+      (function () {
+        var root = document.documentElement;
+        var mq = window.matchMedia ? window.matchMedia.bind(window) : function () { return { matches: false }; };
+        if (mq('(prefers-contrast: more)').matches || mq('(forced-colors: active)').matches) return;
+        var LAT = 29.76, LON = -95.37, R = Math.PI / 180;
+        function sun(t) {
+          var d = t / 86400000 + 2440587.5 - 2451545.0;
+          var g = (357.529 + 0.98560028 * d) * R;
+          var L = (280.459 + 0.98564736 * d + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * R;
+          var e = (23.439 - 0.00000036 * d) * R;
+          var ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+          var dec = Math.asin(Math.sin(e) * Math.sin(L));
+          var ha = ((18.697374558 + 24.06570982441908 * d) * 15 + LON) * R - ra;
+          var alt = Math.asin(Math.sin(LAT * R) * Math.sin(dec) + Math.cos(LAT * R) * Math.cos(dec) * Math.cos(ha));
+          var az = Math.atan2(-Math.sin(ha), Math.tan(dec) * Math.cos(LAT * R) - Math.sin(LAT * R) * Math.cos(ha));
+          return { alt: alt / R, az: ((az / R) + 360) % 360 };
+        }
+        function clamp(v) { return Math.max(0, Math.min(1, v)); }
+        var now = sun(Date.now());
+        if (now.alt < -4) return;
+        root.classList.add('daylit');
+
+        var cloud = null;
+        try { var c = JSON.parse(sessionStorage.getItem('sun-cloud') || 'null'); if (c && Date.now() - c.t < 900000) cloud = c.v; } catch (e) {}
+        var label = null, shade = null;
+        var POINTS = ['north', 'north-northeast', 'northeast', 'east-northeast', 'east', 'east-southeast', 'southeast', 'south-southeast',
+                      'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest'];
+
+        function paint() {
+          var s = sun(Date.now());
+          var W = window.innerWidth, H = window.innerHeight;
+          var day = clamp((s.alt + 4) / 14), cl = cloud == null ? 0 : cloud;
+          /* the room by daylight, no sun on it: paper a shade down */
+          root.style.setProperty('--shade', (0.9 - 0.68 * day + 0.08 * cl * day).toFixed(3));
+          var u = Math.min(W, H) / 11;                 /* px per foot */
+          var sill = 1, head = 6.5, half = 2.4, bar = 0.14;
+          var a = Math.max(s.alt, 0.5) * R, reach = u / Math.tan(a);
+          var rx = -Math.sin(s.az * R), ry = Math.cos(s.az * R);   /* which way the light travels across the floor, screen axes */
+          var walls = [
+            { o: [W * 0.4, H], t: [1, 0], n: [0, 1] },     /* south */
+            { o: [W, H * 0.42], t: [0, 1], n: [1, 0] },    /* east */
+            { o: [0, H * 0.58], t: [0, 1], n: [-1, 0] }    /* west */
+          ];
+          var panes = '';
+          if (s.alt > 0) walls.forEach(function (w) {
+            if (rx * w.n[0] + ry * w.n[1] >= -0.02) return;   /* the sun is on the other side of this wall */
+            [[-half, -bar], [bar, half]].forEach(function (pp) {
+              [[sill, (sill + head) / 2 - bar], [(sill + head) / 2 + bar, head]].forEach(function (hh) {
+                var pts = [[pp[0], hh[0]], [pp[1], hh[0]], [pp[1], hh[1]], [pp[0], hh[1]]].map(function (q) {
+                  var x = w.o[0] + w.t[0] * q[0] * u + rx * q[1] * reach;
+                  var y = w.o[1] + w.t[1] * q[0] * u + ry * q[1] * reach;
+                  return x.toFixed(1) + ',' + y.toFixed(1);
+                });
+                panes += 'M' + pts.join('L') + 'Z';
+              });
+            });
+          });
+          var k = (0.94 * (1 - 0.85 * cl) * clamp(s.alt / 6)).toFixed(3);
+          var blur = (1.5 + 7 * cl + 4 * clamp((25 - s.alt) / 25)).toFixed(1);
+          var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
+            '<defs><filter id="b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="' + blur + '"/></filter>' +
+            '<mask id="m" maskUnits="userSpaceOnUse" x="-100" y="-100" width="' + (W + 200) + '" height="' + (H + 200) + '">' +
+            '<rect x="-100" y="-100" width="' + (W + 200) + '" height="' + (H + 200) + '" fill="#fff"/>' +
+            (panes ? '<path d="' + panes + '" fill="#000" fill-opacity="' + k + '" filter="url(#b)"/>' : '') +
+            '</mask></defs><rect width="' + W + '" height="' + H + '" fill="#fff" mask="url(#m)"/></svg>';
+          root.style.setProperty('--sunmask', 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")');
+          /* the warm in the light itself: whiter high, oranger low */
+          var warm = clamp((30 - s.alt) / 30);
+          var glow = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
+            '<defs><filter id="b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="' + blur + '"/></filter></defs>' +
+            (panes ? '<path d="' + panes + '" fill="rgb(255,' + Math.round(236 - 70 * warm) + ',' + Math.round(196 - 110 * warm) + ')" fill-opacity="' + (k * 0.24).toFixed(3) + '" filter="url(#b)"/>' : '') + '</svg>';
+          root.style.setProperty('--sunglow', 'url("data:image/svg+xml,' + encodeURIComponent(glow) + '")');
+          if (label) label.textContent = s.alt > 0
+            ? 'the sun is up in houston. ' + Math.round(s.alt) + '°, ' + POINTS[Math.round(s.az / 22.5) % 16] + (cl > 0.7 ? ', behind cloud.' : '.')
+            : 'the sun is down in houston, just. the light is what is left.';
+        }
+
+        function place() {
+          shade = document.createElement('div');
+          shade.className = 'sun-floor';
+          shade.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(shade);
+          label = document.createElement('p');
+          label.className = 'sun-note';
+          document.body.appendChild(label);
+          paint();
+        }
+        if (document.body) place(); else document.addEventListener('DOMContentLoaded', place);
+        window.addEventListener('resize', function () { if (label) paint(); });
+        setInterval(function () { if (label) paint(); }, 30000);
+
+        if (cloud == null) try {
+          fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&current=cloud_cover')
+            .then(function (r) { return r.json(); })
+            .then(function (j) {
+              cloud = clamp(j.current.cloud_cover / 100);
+              try { sessionStorage.setItem('sun-cloud', JSON.stringify({ t: Date.now(), v: cloud })); } catch (e) {}
+              if (label) paint();
+            }).catch(function () {});
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       /* matchlight (session 83): the light starts at the ember and goes */
       /* wherever a mouse takes it.                                      */
       (function () {
@@ -47,6 +161,8 @@
         var root = document.documentElement;
         var mq = window.matchMedia ? window.matchMedia.bind(window) : function () { return { matches: false }; };
         if (mq('(prefers-contrast: more)').matches || mq('(forced-colors: active)').matches) return;
+        /* by day there's nothing to strike it for */
+        if (root.classList.contains('daylit')) return;
         var calm = mq('(prefers-reduced-motion: reduce)').matches;
         var mem = {};
         function get(k) { try { var v = sessionStorage.getItem(k); return v === null ? mem[k] : v; } catch (e) { return mem[k]; } }

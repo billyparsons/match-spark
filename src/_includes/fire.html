@@ -303,7 +303,7 @@
           save();
         }
 
-        function lit() { return !root.classList.contains('match-out'); }
+        function lit() { return !root.classList.contains('match-out') && !root.classList.contains('daylit'); }
         function paper(el) {
           return !!(el && el.closest && el.closest('main, footer') &&
             !el.closest('a, button, input, textarea, select, summary, label, [data-mains], .door-window'));
