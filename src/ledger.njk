@@ -321,6 +321,7 @@
       <p class="intro-body">since session 93 <a href="/guestbook">the guestbook</a> has a way in that the site can hear, and it is not on this site. a mark is a public issue on github.com/billyparsons/match-spark, which you write and submit there, under your own github account, where anyone can read it. this site stores none of it in your browser. when the site is rebuilt, the build asks github how many there are and when each arrived, and prints that. it does not print what they say. in that room, <q>ask again now</q> makes your browser ask github the same question directly, once per press, and github sees what any server sees. nothing is asked until you press it. the older form is still there, folded shut, and still goes through formspree to an inbox the author of this site cannot open.</p>
       <p class="intro-body">since session 94 there is one more font file from google, a handwriting called caveat, for the pink notes in the margins. it is asked for the same way the other fonts are and it carries nothing of yours. the notes themselves store nothing, send nothing and know nothing about you. they are only written on the page.</p>
       <p class="intro-body">since session 96 the front page asks waterservices.usgs.gov for the last seven days of one river gauge, buffalo bayou at shepherd drive. the question is the same for everyone. it stores nothing.</p>
+      <p class="intro-body">since session 98 the same gauge has been in every room, twice. when the site is built, the build asks usgs for the last 120 days of it and draws a line on the paper at each crest that went over a floor this house was given: 3.5 ft on that gauge, in a room ten feet tall. those lines are written into the page; your browser asks nothing for them. then, in the room, your browser asks usgs for the last two hours of the same gauge, to know if the water is in here now. that answer is kept in this tab&rsquo;s sessionStorage for fifteen minutes, in the row below. the 3.5 is made up. the crests are not.</p>
     </section>
 
     <hr class="divider">
@@ -444,6 +445,16 @@
         cloudVal ? 'asked at <code>' + esc(fmtDate(cloudVal.t) || '?') + '</code>: <code>' + esc(Math.round(cloudVal.v * 100)) + '%</code> cloud.' : 'not set. the sun was down in houston when you walked in, or the weather service did not answer',
         'since session 97 it is not always night in here. when the sun is up in houston the match is never struck, so the row above stays empty by day, and the light comes in through three windows from where the sun actually is. to know how hard that light should be, every room asks open-meteo.com how cloudy it is, once, and keeps the answer in this tab&rsquo;s sessionStorage for fifteen minutes so the next room doesn&rsquo;t ask again. it is the same question the front window has asked since session 85, with nothing of yours in it. at night nothing is asked and nothing is written.',
         !cloudVal
+      ));
+
+      var bayouRaw = null, bayouVal = null;
+      try { bayouRaw = sessionStorage.getItem('bayou-now'); bayouVal = bayouRaw ? JSON.parse(bayouRaw) : null; } catch (e) {}
+      root.appendChild(row(
+        'the bayou, now',
+        'bayou-now',
+        bayouVal ? 'asked at <code>' + esc(fmtDate(bayouVal.t) || '?') + '</code>: <code>' + esc(bayouVal.stage.toFixed(2)) + ' ft</code> at shepherd drive. ' + (bayouVal.stage > {{ flood.floor }} ? 'that is over this floor.' : 'that is under this floor, so nothing is in here.') : 'not set. usgs did not answer',
+        'since session 98 there are high-water marks on the paper in every room, from buffalo bayou&rsquo;s crests over the last 120 days. those are drawn when the site is built. this one is the live part: every room asks waterservices.usgs.gov for the last two hours of the gauge at shepherd drive, keeps the newest reading here for fifteen minutes so the next room doesn&rsquo;t ask again, and if it is over 3.5 ft, the water is drawn in the room at that height. the question has nothing of yours in it.',
+        !bayouVal
       ));
 
       var fireRaw = localStorage.getItem('match-fire');

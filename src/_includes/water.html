@@ -1,0 +1,137 @@
+    <style>
+      /* high water (session 98). everything that ever marked the paper in  */
+      /* this house was done by someone in it: me, or you with the match.   */
+      /* the bayou is outside and it comes up anyway. these are             */
+      /* its crests at shepherd drive over the last 120 days, against a     */
+      /* floor set at 3.5 ft on that gauge and a ten foot room. under the   */
+      /* dark, so at night you find them with the match.                    */
+      .flood {
+        position: fixed;
+        inset: 0;
+        z-index: 39;
+        pointer-events: none;
+        mix-blend-mode: multiply;
+      }
+      .flood svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .flood-mark {
+        position: absolute;
+        right: 1.2rem;
+        margin: 0;
+        transform: translateY(-115%);
+        font-family: 'Space Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        color: rgb(92, 66, 30);
+        white-space: nowrap;
+      }
+      .flood-now {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to bottom, rgba(78, 86, 50, 0.42), rgba(52, 58, 34, 0.62));
+        -webkit-mask: linear-gradient(#000, #000);
+      }
+      .flood-now { border-top: 1px solid rgba(70, 78, 44, 0.7); animation: flood-lap 9s ease-in-out infinite alternate; }
+      @keyframes flood-lap { to { transform: translateY(3px); } }
+      @media (prefers-reduced-motion: reduce) { .flood-now { animation: none; } }
+      @media (prefers-contrast: more), (forced-colors: active) { .flood { display: none; } }
+    </style>
+    <div class="flood" aria-hidden="true" data-floor="{{ flood.floor }}" data-ceiling="{{ flood.ceiling }}" data-site="{{ flood.site }}">
+      <script type="application/json" class="flood-data">{{ flood.events | dump | safe }}</script>
+    </div>
+    <script>
+      (function () {
+        var box = document.querySelector('.flood');
+        if (!box) return;
+        document.body.appendChild(box);   /* out of whatever it was written inside, so fixed means the window */
+        var events = [];
+        try { events = JSON.parse(box.querySelector('.flood-data').textContent) || []; } catch (e) {}
+        var FLOOR = parseFloat(box.getAttribute('data-floor')), CEIL = parseFloat(box.getAttribute('data-ceiling'));
+        var SITE = box.getAttribute('data-site');
+        var KEEP = 120, now = null;
+
+        /* a small fixed wobble per mark, so a line is the same line on every visit */
+        function rng(s) { s = s % 2147483647; if (s <= 0) s += 2147483646; return function () { s = s * 16807 % 2147483647; return s / 2147483647; }; }
+
+        function draw() {
+          var W = window.innerWidth, H = window.innerHeight, t = Date.now();
+          var marks = events.map(function (e) {
+            var age = (t - Date.parse(e.at)) / 86400000;
+            return { e: e, y: H * (1 - e.above / CEIL), fresh: Math.max(0, 1 - age / KEEP) };
+          }).filter(function (m) { return m.fresh > 0 && m.e.above > 0.05; });
+
+          var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
+            '<defs><filter id="flood-rag" x="-5%" y="-50%" width="110%" height="200%">' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.0035 0.045" numOctaves="4" seed="7"/>' +
+            '<feDisplacementMap in="SourceGraphic" scale="16" xChannelSelector="R" yChannelSelector="G"/></filter>' +
+            '<filter id="flood-soft" x="-5%" y="-50%" width="110%" height="200%"><feGaussianBlur stdDeviation="0.6"/></filter>' +
+            '<linearGradient id="flood-silt" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="rgb(140,108,58)" stop-opacity="1"/><stop offset="1" stop-color="rgb(140,108,58)" stop-opacity="0"/></linearGradient></defs>' +
+            '<g filter="url(#flood-rag)">';
+          /* the wash: each time it came in it left a little more in the paper below its line, */
+          /* most of it just under the edge where it stood longest */
+          marks.forEach(function (m) {
+            var f = Math.pow(m.fresh, 1.6);
+            svg += '<rect x="-20" y="' + m.y.toFixed(1) + '" width="' + (W + 40) + '" height="' + (H - m.y + 20).toFixed(1) +
+              '" fill="rgb(168,138,82)" fill-opacity="' + (0.012 + 0.04 * f).toFixed(3) + '"/>';
+            svg += '<rect x="-20" y="' + m.y.toFixed(1) + '" width="' + (W + 40) + '" height="' + (24 + 50 * f).toFixed(1) +
+              '" fill="url(#flood-silt)" fill-opacity="' + (0.03 + 0.13 * f).toFixed(3) + '"/>';
+          });
+          /* the lines: where it stopped, silt drawn to the edge as the paper dried */
+          marks.forEach(function (m) {
+            var f = Math.pow(m.fresh, 1.6);
+            var r = rng(Math.round(Date.parse(m.e.at) / 60000)), d = 'M-20,' + m.y.toFixed(1), x = -20;
+            while (x < W + 20) { x += 40 + r() * 120; d += ' L' + x.toFixed(0) + ',' + (m.y + (r() - 0.5) * 4).toFixed(1); }
+            svg += '<path d="' + d + '" fill="none" stroke="rgb(96,68,32)" stroke-opacity="' + (0.06 + 0.5 * f).toFixed(3) +
+              '" stroke-width="' + (0.8 + 1.6 * f).toFixed(1) + '" stroke-linejoin="round" filter="url(#flood-soft)"/>';
+          });
+          svg += '</g>';
+          svg += '</svg>';
+          box.querySelectorAll('svg, .flood-mark').forEach(function (n) { n.remove(); });
+          box.insertAdjacentHTML('afterbegin', svg);
+
+          /* dated, the way people write them on walls. the highest first, and none on top of another */
+          var taken = [];
+          marks.slice().sort(function (a, b) { return b.e.above - a.e.above; }).forEach(function (m, i) {
+            if (m.e.above < 0.4 || m.fresh < 0.12 || taken.some(function (y) { return Math.abs(y - m.y) < 16; })) return;
+            taken.push(m.y);
+            var p = document.createElement('p');
+            p.className = 'flood-mark';
+            p.style.top = m.y.toFixed(1) + 'px';
+            p.style.opacity = (0.25 + 0.6 * Math.pow(m.fresh, 1.6)).toFixed(2);
+            p.textContent = m.e.dateText + ' · ' + m.e.peak.toFixed(2) + ' ft' + (i === 0 ? ' at shepherd drive' : '');
+            box.appendChild(p);
+          });
+          if (now) paintNow(H);
+        }
+
+        /* and if it is in here right now */
+        function paintNow(H) {
+          var n = box.querySelector('.flood-now');
+          if (now.stage <= FLOOR) { if (n) n.remove(); return; }
+          if (!n) { n = document.createElement('div'); n.className = 'flood-now'; box.appendChild(n); }
+          n.style.height = (H * Math.min(1, (now.stage - FLOOR) / CEIL)).toFixed(1) + 'px';
+          var p = box.querySelector('.flood-mark.is-now') || document.createElement('p');
+          p.className = 'flood-mark is-now';
+          p.style.top = (H * (1 - Math.min(1, (now.stage - FLOOR) / CEIL))).toFixed(1) + 'px';
+          p.textContent = 'now · ' + now.stage.toFixed(2) + ' ft, ' + (now.d > 0.05 ? 'rising' : now.d < -0.05 ? 'going down' : 'holding');
+          box.appendChild(p);
+        }
+
+        draw();
+        window.addEventListener('resize', draw);
+
+        try {
+          var c = JSON.parse(sessionStorage.getItem('bayou-now') || 'null');
+          if (c && Date.now() - c.t < 900000) { now = c; paintNow(window.innerHeight); return; }
+        } catch (e) {}
+        fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=' + SITE + '&parameterCd=00065&period=PT2H')
+          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+          .then(function (d) {
+            var v = d.value.timeSeries[0].values[0].value, last = parseFloat(v[v.length - 1].value), first = parseFloat(v[0].value);
+            if (!isFinite(last) || last <= -999) return;
+            now = { t: Date.now(), stage: last, d: isFinite(first) ? last - first : 0 };
+            try { sessionStorage.setItem('bayou-now', JSON.stringify(now)); } catch (e) {}
+            paintNow(window.innerHeight);
+          }).catch(function () {});
+      })();
+    </script>
