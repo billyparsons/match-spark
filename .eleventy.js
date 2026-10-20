@@ -9,6 +9,22 @@ module.exports = function(eleventyConfig) {
   // files here are served as-is (HTML, JS, canvas games, pico-8 exports)
   eleventyConfig.addPassthroughCopy("src/lab");
 
+  // the listing photos (session 99), taken by day like every listing photo
+  eleventyConfig.addPassthroughCopy("src/listing/photos");
+
+  // what the house is asking (session 99). 1,356 sq ft at $180, and every
+  // flood the gauge still remembers takes off up to 4%, by how high it got
+  // in a ten foot room. the gauge only remembers 120 days, so the price
+  // comes back up as the water is forgotten. the market does that too.
+  eleventyConfig.addFilter("asking", (events) => {
+    let p = 1356 * 180;
+    for (const e of events || []) p *= 1 - 0.04 * Math.min(1, e.above / 10);
+    return Math.round(p / 100) * 100;
+  });
+  eleventyConfig.addFilter("highest", (events) =>
+    (events || []).reduce((a, e) => (e.above > a.above ? e : a), { above: 0 }));
+  eleventyConfig.addFilter("dollars", (n) => "$" + Math.round(n).toLocaleString("en-US"));
+
   // pass through poem directory — daily poem PNG + viewer page
   eleventyConfig.addPassthroughCopy("src/poem");
 

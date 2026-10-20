@@ -399,6 +399,10 @@
       .door-nav a.other-door::after { animation: none; }
     }
 
+    /* the sign is staked in the bank, so it stands over the river too (session 99) */
+    .fsbo.fsbo { z-index: 61; right: 10vw; }
+    @media (max-width: 760px) { .fsbo.fsbo { right: 0.8rem; bottom: 3.2rem; } }
+
     /* ── the bayou ────────────────────────────────────────────── */
     .bayou {
       position: relative;
@@ -878,6 +882,7 @@
   </script>
 
 {% include "water.html" %}
+{% include "forsale.html" %}
 {% include "matchlight.njk" %}
 </body>
 </html>

@@ -277,6 +277,8 @@
           if (!out) return;
           /* except the lab. it has its own light and you can always find its door (session 89) */
           if (e.target && e.target.closest && e.target.closest('[data-mains]')) return;
+          /* or the sign. it isn't the house's, and it doesn't need the house's light (session 99) */
+          if (e.target && e.target.closest && e.target.closest('.fsbo')) return;
           e.preventDefault(); e.stopPropagation();
           strike();
         }, true);

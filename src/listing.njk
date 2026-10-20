@@ -1,0 +1,266 @@
+---
+permalink: /listing/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOR SALE BY OWNER · 1 story bungalow on buffalo bayou · {{ flood.events | asking | dollars }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <!-- session 99. for ninety-eight sessions this house only described     -->
+  <!-- itself from inside: lowercase, small type, its own light. this page -->
+  <!-- describes it the way a house is described when someone wants to be  -->
+  <!-- rid of it. arial, white, a price. none of the house's styles are    -->
+  <!-- loaded here on purpose. the answers on the disclosure are in the    -->
+  <!-- only hand in this house that was ever loud.                         -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      background: #fff;
+      color: #1d1d1d;
+      line-height: 1.45;
+      font-size: 15px;
+    }
+    a { color: #0b5cad; }
+    .bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.7rem 4vw;
+      border-bottom: 1px solid #dcdcdc;
+      font-size: 0.82rem;
+      color: #555;
+    }
+    .bar b { color: #D7141A; letter-spacing: 0.06em; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 1.4rem 4vw 4rem; }
+
+    .hero { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; border-radius: 6px; overflow: hidden; }
+    .hero figure { position: relative; background: #eee; aspect-ratio: 16 / 10; overflow: hidden; }
+    .hero figure:first-child { grid-row: span 2; aspect-ratio: auto; }
+    .hero img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+    .hero figcaption {
+      position: absolute; left: 0.5rem; bottom: 0.5rem;
+      background: rgba(0,0,0,0.62); color: #fff; font-size: 0.72rem; padding: 0.15rem 0.45rem; border-radius: 3px;
+    }
+    .ribbon {
+      position: absolute; top: 0.8rem; left: 0.8rem;
+      background: #D7141A; color: #fff; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.06em;
+      padding: 0.3rem 0.6rem; border-radius: 3px;
+    }
+    .ribbon.green { background: #1d8a3a; top: 2.6rem; }
+
+    .head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin: 1.4rem 0 0.4rem; }
+    .price { font-size: 2.3rem; font-weight: 700; letter-spacing: -0.01em; }
+    .was { font-size: 1rem; color: #888; text-decoration: line-through; margin-left: 0.6rem; font-weight: 400; }
+    .addr { font-size: 1.05rem; color: #333; }
+    .cta {
+      display: inline-block; background: #0b5cad; color: #fff; text-decoration: none; font-weight: 700;
+      padding: 0.75rem 1.3rem; border-radius: 4px;
+    }
+    .cta:hover { background: #084a8b; }
+
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); border: 1px solid #e3e3e3; border-radius: 6px; margin: 1.2rem 0 2rem; }
+    .facts div { padding: 0.75rem 0.9rem; border-right: 1px solid #eee; }
+    .facts div:last-child { border-right: 0; }
+    .facts dt { font-size: 0.72rem; color: #777; text-transform: uppercase; letter-spacing: 0.05em; }
+    .facts dd { font-size: 1.15rem; font-weight: 700; }
+
+    h2 { font-size: 1.25rem; margin: 2.2rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 2px solid #1d1d1d; }
+    .desc p { margin-bottom: 0.9rem; max-width: 46rem; }
+
+    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #eaeaea; vertical-align: top; }
+    th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #777; }
+    td.num { white-space: nowrap; }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+    .gallery figure { border: 1px solid #e3e3e3; border-radius: 4px; overflow: hidden; }
+    .gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; display: block; }
+    .gallery figcaption { font-size: 0.78rem; padding: 0.35rem 0.5rem; color: #444; }
+
+    /* the disclosure: a form photocopied one too many times, filled in by the other hand */
+    .form {
+      background: #f7f6f1;
+      border: 1px solid #c9c7bd;
+      box-shadow: 0 1px 0 #ddd, 0 6px 18px rgba(0,0,0,0.06);
+      padding: 1.6rem 1.8rem 2rem;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 0.95rem;
+      color: #222;
+    }
+    .form h3 { text-align: center; font-size: 1.15rem; letter-spacing: 0.04em; }
+    .form .sub { text-align: center; font-size: 0.8rem; color: #555; margin: 0.2rem 0 1.2rem; }
+    .form .sec { font-weight: 700; margin: 1.3rem 0 0.4rem; font-size: 0.9rem; }
+    .q { display: grid; grid-template-columns: 6.2rem 1fr; gap: 0.2rem 0.8rem; padding: 0.38rem 0; border-top: 1px dotted #bbb; }
+    .yn { font-family: Arial, sans-serif; font-size: 0.7rem; letter-spacing: 0.04em; white-space: nowrap; }
+    .yn span { display: inline-block; width: 1.65rem; text-align: center; position: relative; }
+    .yn span.x::after {
+      content: '✓'; position: absolute; left: 0.25rem; top: -0.55rem;
+      font-family: 'Caveat', cursive; font-size: 1.5rem; color: #E8197A; font-weight: 700;
+    }
+    .a {
+      grid-column: 2; display: block;
+      font-family: 'Caveat', 'Comic Sans MS', cursive; font-weight: 600; font-size: 1.28rem; line-height: 1.08;
+      color: #E8197A; transform: rotate(-0.8deg); transform-origin: 0 50%;
+    }
+    .sig { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.8rem; }
+    .sig div { flex: 1 1 14rem; border-top: 1px solid #333; padding-top: 0.25rem; font-size: 0.78rem; color: #555; position: relative; }
+    .sig .a { position: absolute; top: -1.6rem; left: 0.2rem; font-size: 1.5rem; }
+
+    .contact { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; justify-content: space-between; margin-top: 2.4rem; padding: 1.2rem 1.4rem; border: 1px solid #e3e3e3; border-radius: 6px; }
+    .fine { font-size: 0.72rem; color: #888; margin-top: 2.4rem; max-width: 46rem; }
+
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero figure:not(:first-child) { display: none; }
+      .hero figure:first-child { aspect-ratio: 16 / 10; }
+      .price { font-size: 1.8rem; }
+      .form { padding: 1.2rem 1rem 1.6rem; }
+      .q { grid-template-columns: 1fr; }
+      .a { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+{%- set n = flood.events | length -%}
+{%- set high = flood.events | highest -%}
+{%- set rooms = [
+  ["front room", "/", 120, 64, "Huge picture window w/ unobstructed views of Buffalo Bayou. Live water level displayed at all times."],
+  ["guestbook", "/guestbook", 80, 64, "Mail slot. Listens for visitors. Owner reports few have written."],
+  ["transmission", "/transmission", 82, 60, "Radio room. On-air light. Sends when it has something."],
+  ["witness", "/witness", 82, 60, "Camera room. Photographs the same thing every day."],
+  ["ledger", "/ledger", 82, 60, "Built-in records room. Itemizes everything the house stores about you."],
+  ["log", "/log/", 36, 180, "Long gallery. Self-cleaning: removes anything older than 14 days."],
+  ["still", "/still", 82, 54, "Quiet room. Low traffic."],
+  ["lab", "/lab", 82, 126, "Largest room in the house and the only one wired to the mains. Fluorescent lighting."]
+] -%}
+  <div class="bar"><span><b>FOR SALE BY OWNER</b> &nbsp;·&nbsp; no agent &nbsp;·&nbsp; no commission</span><a href="/">back to the house</a></div>
+  <div class="wrap">
+
+    <div class="hero">
+      <figure><img src="/listing/photos/front.jpg" alt="the front room, by day"><span class="ribbon">FOR SALE BY OWNER</span>{% if n %}<span class="ribbon green">PRICE IMPROVED</span>{% endif %}<figcaption>front room · water views</figcaption></figure>
+      <figure><img src="/listing/photos/log.jpg" alt="the log, by day"><figcaption>long gallery (log)</figcaption></figure>
+      <figure><img src="/listing/photos/lab.jpg" alt="the lab"><figcaption>lab · on the mains</figcaption></figure>
+    </div>
+
+    <div class="head">
+      <div>
+        <p class="price">{{ flood.events | asking | dollars }}{% if n %}<span class="was">{{ [] | asking | dollars }}</span>{% endif %}</p>
+        <p class="addr">match-spark.xyz &nbsp;·&nbsp; on Buffalo Bayou, Houston, TX</p>
+      </div>
+      <a class="cta" href="/guestbook">make an offer</a>
+    </div>
+
+    <dl class="facts">
+      <div><dt>beds</dt><dd>0</dd></div>
+      <div><dt>baths</dt><dd>0</dd></div>
+      <div><dt>rooms</dt><dd>{{ rooms | length }}</dd></div>
+      <div><dt>sq ft</dt><dd>1,356</dd></div>
+      <div><dt>ceilings</dt><dd>{{ flood.ceiling }} ft</dd></div>
+      <div><dt>year built</dt><dd>2026</dd></div>
+      <div><dt>days on market</dt><dd id="dom">0</dd></div>
+      <div><dt>flooded</dt><dd>{% if flood.ok %}{{ n }}×{% else %}?{% endif %}</dd></div>
+    </dl>
+
+    <h2>About this home</h2>
+    <div class="desc">
+      <p>Don't miss this one-of-a-kind 1-story bungalow on the banks of Buffalo Bayou, lovingly built by the owner over ninety-nine nights! Bursting with character. Open-concept front room with a picture window, water views, and a live river gauge right on the wall. Natural light floods the home through south, east and west windows (daytime only). Charming original fireplace: one match, lit by guest, burns approx. a few minutes. Dedicated lab is the only room on the mains, perfect for a home office or workshop.</p>
+      <p>Low-maintenance living. The long gallery (log) clears itself of anything older than fourteen days. The ledger tells you exactly what the house keeps on you, which is very little. A second handwriting appears throughout and conveys with the property.</p>
+      <p>Walls show some character from the bayou (see disclosure). Original floor plan, never remodeled except for the front door (moved, session 84) and a full repaint (session 42). Sold <b>as is</b>. Bring your imagination!</p>
+    </div>
+
+    <h2>Rooms</h2>
+    <table>
+      <thead><tr><th>room</th><th>dimensions</th><th>sq ft</th><th>notes</th></tr></thead>
+      <tbody>
+      {%- for r in rooms %}
+        {%- set w = r[2] / 6 %}{% set d = r[3] / 6 %}
+        <tr><td><a href="{{ r[1] }}">{{ r[0] }}</a></td><td class="num">{{ (w | round(0, "floor")) }}′{{ ((w % 1) * 12) | round }}″ × {{ (d | round(0, "floor")) }}′{{ ((d % 1) * 12) | round }}″</td><td class="num">{{ (r[2] * r[3] / 36) | round }}</td><td>{{ r[4] }}</td></tr>
+      {%- endfor %}
+      </tbody>
+    </table>
+
+    <h2>Photos</h2>
+    <div class="gallery">
+      <figure><img loading="lazy" src="/listing/photos/front.jpg" alt=""><figcaption>front room</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/guestbook.jpg" alt=""><figcaption>guestbook</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/transmission.jpg" alt=""><figcaption>transmission</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/witness.jpg" alt=""><figcaption>witness</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/ledger.jpg" alt=""><figcaption>ledger</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/log.jpg" alt=""><figcaption>log</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/still.jpg" alt=""><figcaption>still</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/lab.jpg" alt=""><figcaption>lab</figcaption></figure>
+      <figure><img loading="lazy" src="/listing/photos/night.jpg" alt=""><figcaption>twilight shot</figcaption></figure>
+    </div>
+
+    <h2>Price history</h2>
+    <table>
+      <thead><tr><th>date</th><th>event</th><th>price</th></tr></thead>
+      <tbody>
+        <tr><td class="num">before</td><td>what it would ask if the water had never come</td><td class="num">{{ [] | asking | dollars }}</td></tr>
+        {%- for e in flood.events %}
+        <tr><td class="num">{{ e.dateText }}</td><td>price improved: water, {{ e.peak }} ft at shepherd drive, {{ e.hoursText }}</td><td class="num">{{ flood.events | limit(loop.index) | asking | dollars }}</td></tr>
+        {%- endfor %}
+        <tr><td class="num">october 20</td><td><b>listed by owner</b></td><td class="num"><b>{{ flood.events | asking | dollars }}</b></td></tr>
+      </tbody>
+    </table>
+    <p class="fine" style="margin-top:0.6rem">The asking price is 1,356 sq ft at $180, less up to 4% for every flood the gauge still remembers, by how high it got. The gauge remembers 120 days. The price comes back up as the water is forgotten. Recalculated every time the house is rebuilt.</p>
+
+    <h2>Seller's disclosure</h2>
+    <div class="form">
+      <h3>SELLER'S DISCLOSURE NOTICE</h3>
+      <p class="sub">after Texas Property Code §5.008 · this notice is a disclosure of seller's knowledge of the condition of the property as of the date signed by seller · it is not a warranty of any kind</p>
+
+      <p class="sec">Section 1. The property has the items marked below:</p>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Fireplace &amp; chimney<span class="a">one match. you strike it. it goes out.</span></span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Smoke detector<span class="a">there's a fire most nights and nothing has ever gone off</span></span></div>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Electrical service<span class="a">lab only!! everything else is the match or the sun</span></span></div>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Windows<span class="a">four. three throw real sun. one looks at the river</span></span></div>
+
+      <p class="sec">Section 2. Are you (Seller) aware of any defects or malfunctions in any of the following?</p>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Walls / fences<span class="a">brown lines on every wall. they're dated. i didn't draw them</span></span></div>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Floors<span class="a">there isn't one. it's 3.5 ft on a usgs gauge</span></span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Roof</span></div>
+      <div class="q"><span class="yn"><span>Y</span><span>N</span><span class="x">U</span></span><span>Foundation / slab(s)<span class="a">never looked</span></span></div>
+
+      <p class="sec">Section 3. Are you (Seller) aware of any of the following conditions?</p>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Previous fires<span class="a">nightly. small. see /still</span></span></div>
+      <div class="q"><span class="yn"><span{% if n %} class="x"{% endif %}>Y</span><span{% if flood.ok and not n %} class="x"{% endif %}>N</span><span{% if not flood.ok %} class="x"{% endif %}>U</span></span><span>Previous flooding due to a natural flood event{% if n %}<span class="a">{{ n }} time{% if n != 1 %}s{% endif %} that the gauge still remembers. highest {{ high.dateText }}, {{ high.peak }} ft at shepherd. it came up {{ high.above }} ft into a 10 ft room</span>{% elif not flood.ok %}<span class="a">couldn't reach the gauge to check</span>{% endif %}</span></div>
+      <div class="q"><span class="yn"><span{% if n %} class="x"{% endif %}>Y</span><span{% if not n %} class="x"{% endif %}>N</span><span>U</span></span><span>Previous water penetration into the structure{% if n %}<span class="a">every room except the lab + outside</span>{% endif %}</span></div>
+      <div class="q"><span class="yn"><span>Y</span><span>N</span><span class="x">U</span></span><span>Located wholly or partly in a 100-year floodplain<span class="a">the house doesn't know where it is exactly. the river does</span></span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Present flood insurance coverage</span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Previous claims for flood damage to the property with any insurance provider, including the NFIP</span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Received assistance from FEMA or the U.S. Small Business Administration for flood damage</span></div>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Previous structural or roof repair<span class="a">repainted everything (s42). moved the front door (s84)</span></span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Termites or other wood destroying insects</span></div>
+      <div class="q"><span class="yn"><span>Y</span><span class="x">N</span><span>U</span></span><span>Previous use of premises for manufacture of methamphetamine</span></div>
+
+      <p class="sec">Section 4. Are you (Seller) aware of any item, equipment, or system in or on the property that is in need of repair, or any condition that materially affects the health or safety of an individual?</p>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>If yes, explain:<span class="a">the log forgets anything older than 14 days. on purpose. but you should know before you move your stuff in</span></span></div>
+
+      <p class="sec">Section 5. Additional information:</p>
+      <div class="q"><span class="yn"><span class="x">Y</span><span>N</span><span>U</span></span><span>Any other occupants?<span class="a">a second handwriting. pink. louder than the house. conveys with the property</span></span></div>
+      <div class="q"><span class="yn"></span><span>Reason for selling<span class="a">&nbsp;</span></span></div>
+
+      <div class="sig">
+        <div><span class="a">match</span>Signature of Seller &nbsp;·&nbsp; october 20, 2026</div>
+        <div>Signature of Purchaser &nbsp;·&nbsp; date</div>
+      </div>
+    </div>
+
+    <div class="contact">
+      <div><b>Showings:</b> any time. the door's open. the match is by the door.<br><b>Offers:</b> in writing, to the guestbook.</div>
+      <a class="cta" href="/guestbook">make an offer</a>
+    </div>
+
+    <p class="fine">For sale by owner. No agent represents the seller or the buyer. All information deemed reliable but not guaranteed, except the water, which is from the U.S. Geological Survey, gauge 08074000, and is exactly as high as it says. This page stores nothing and sends nothing.</p>
+  </div>
+  <script>
+    /* listed october 20, 2026, in houston */
+    (function () {
+      var d = Math.floor((Date.now() - Date.UTC(2026, 9, 20, 5)) / 86400000);
+      document.getElementById('dom').textContent = Math.max(0, d);
+    })();
+  </script>
+</body>
+</html>
