@@ -457,6 +457,21 @@
         !bayouVal
       ));
 
+      var opened = [];
+      try {
+        for (var oi = 0; oi < sessionStorage.length; oi++) {
+          var ok = sessionStorage.key(oi);
+          if (ok && ok.indexOf('packed-open:') === 0) opened.push(ok.slice(12));
+        }
+      } catch (e) {}
+      root.appendChild(row(
+        'boxes you cut open',
+        'packed-open:&lt;room&gt;',
+        opened.length ? 'open in this tab: ' + opened.map(function (r) { return '<code>' + esc(r) + '</code>'; }).join(', ') : 'none. every room you&rsquo;ve been in is still taped shut',
+        'since session 101 every room in the house is packed in a box, because the sale is pending. cutting the tape writes one key per room in this tab&rsquo;s sessionStorage, holding only a 1, so the box stays open while you walk around. close the tab and they are thrown away, and the boxes are taped again. nothing is in the key but the room&rsquo;s name. this page is a room and was in a box too.',
+        !opened.length
+      ));
+
       var fireRaw = localStorage.getItem('match-fire');
       var fire = null;
       try { fire = fireRaw ? JSON.parse(fireRaw) : null; } catch (e) {}

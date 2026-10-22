@@ -53,6 +53,33 @@
         color: #1b1b1b;
         padding: 0.2rem 0.3rem 0;
       }
+      /* the rider (session 101). hung off the top of the board on two */
+      /* s-hooks, the way they come from the hardware store            */
+      .fsbo-rider {
+        display: block;
+        position: relative;
+        margin: 0 0.5rem 0.55rem;
+        background: #fff;
+        border: 2px solid #D7141A;
+        color: #D7141A;
+        font-weight: 900;
+        font-size: 0.86rem;
+        letter-spacing: 0.1em;
+        padding: 0.12rem 0 0.08rem;
+        text-align: center;
+        transform: rotate(2.2deg);
+      }
+      .fsbo-rider::before, .fsbo-rider::after {
+        content: '';
+        position: absolute;
+        bottom: -0.62rem;
+        width: 0.3rem;
+        height: 0.6rem;
+        border: 1.5px solid #6b6b6b;
+        border-radius: 0.3rem;
+      }
+      .fsbo-rider::before { left: 1.2rem; }
+      .fsbo-rider::after { right: 1.2rem; }
       .fsbo-stake {
         display: block;
         margin: 0 auto;
@@ -68,11 +95,13 @@
         .fsbo-top { font-size: 0.88rem; }
         .fsbo-by { font-size: 0.56rem; }
         .fsbo-hand { font-size: 0.95rem; }
+        .fsbo-rider { font-size: 0.5rem; letter-spacing: 0.04em; white-space: nowrap; margin: 0 0.2rem 0.4rem; }
         .fsbo-stake { height: 1.6rem; }
       }
       @media print { .fsbo { display: none; } }
     </style>
-    <a class="fsbo" href="/listing/" aria-label="for sale by owner. the listing">
+    <a class="fsbo" href="/listing/" aria-label="for sale by owner. sale pending. the listing">
+      <span class="fsbo-rider">SALE PENDING</span>
       <span class="fsbo-board">
         <span class="fsbo-top">FOR SALE</span>
         <span class="fsbo-by">BY OWNER</span>
