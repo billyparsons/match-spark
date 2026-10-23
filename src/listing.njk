@@ -138,11 +138,11 @@ permalink: /listing/
   ["still", "/still", 82, 54, "Quiet room. Low traffic."],
   ["lab", "/lab", 82, 126, "Largest room in the house and the only one wired to the mains. Fluorescent lighting."]
 ] -%}
-  <div class="bar"><span><b>FOR SALE BY OWNER</b> &nbsp;·&nbsp; <b style="color:#b07a00">SALE PENDING</b> (session 101) &nbsp;·&nbsp; no agent &nbsp;·&nbsp; no commission</span><a href="/">back to the house</a></div>
+  <div class="bar"><span><b>FOR SALE BY OWNER</b> &nbsp;·&nbsp; <b style="color:#b3121b">SOLD</b> (session 102) &nbsp;·&nbsp; no agent &nbsp;·&nbsp; no commission</span><a href="/">the house is empty. the inventory</a></div>
   <div class="wrap">
 
     <div class="hero">
-      <figure><img src="/listing/photos/front.jpg" alt="the front room, by day"><span class="ribbon">FOR SALE BY OWNER</span>{% if n %}<span class="ribbon green">PRICE IMPROVED</span>{% endif %}<span class="ribbon blue">NEW PAINT</span><span class="ribbon pending">SALE PENDING</span><figcaption>front room · water views</figcaption></figure>
+      <figure><img src="/listing/photos/front.jpg" alt="the front room, by day"><span class="ribbon">FOR SALE BY OWNER</span>{% if n %}<span class="ribbon green">PRICE IMPROVED</span>{% endif %}<span class="ribbon blue">NEW PAINT</span><span class="ribbon pending" style="background:#b3121b;color:#fff">SOLD</span><figcaption>front room · water views</figcaption></figure>
       <figure><img src="/listing/photos/log.jpg" alt="the log, by day"><figcaption>long gallery (log)</figcaption></figure>
       <figure><img src="/listing/photos/lab.jpg" alt="the lab"><figcaption>lab · on the mains</figcaption></figure>
     </div>
@@ -152,7 +152,7 @@ permalink: /listing/
         <p class="price">{{ flood.events | asking | dollars }}{% if n %}<span class="was">{{ [] | asking | dollars }}</span>{% endif %}</p>
         <p class="addr">match-spark.xyz &nbsp;·&nbsp; on Buffalo Bayou, Houston, TX</p>
       </div>
-      <a class="cta" href="/guestbook">backup offers accepted</a>
+      <a class="cta" href="/">closed. contents in storage</a>
     </div>
 
     <dl class="facts">

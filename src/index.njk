@@ -1,890 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--
+  sheet 1 of 7 (session 102).
+  for eighteen sessions "/" was a front door on buffalo bayou, and behind
+  it a house that only ever had things added to it. tonight the house was
+  emptied and this is what was left on the front step: the mover's
+  inventory. the carrier's copy, the canary one, typed through carbon.
+  every room is listed and each one is a sheet you can still open. the
+  river, the window and the sign were not loaded. there is no destination.
+-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>match</title>
+  <title>inventory · lot ms-1356</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=Space+Mono:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@400;500;700&family=Caveat:wght@600&family=Fraunces:ital,opsz,wght@1,9..144,300&display=swap" rel="stylesheet">
   <style>
-    /* ── the door (session 84) ────────────────────────────────── */
-    /* for eighty-three sessions "/" was the log: the newest entry, */
-    /* about the site, in 0.875rem mono. this page is not the log.  */
-    /* it holds one sentence about something else, set as large as  */
-    /* the window allows, and the doors to everything that used to  */
-    /* be here. it read no storage and wrote none until session 88. */
-    /* now it keeps, for as long as the tab is open, when the match */
-    /* was struck and how many have burned out.                     */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --forest:      #9C3B1F;
-      --forest-deep: #5C1F0F;
-      --cream:       #F3ECDC;
-      --ochre:       #8A7440;
-      --amber:       #A9782F;
-      --ink:         rgba(26, 20, 10, 0.88);
-      --ink-soft:    rgba(26, 20, 10, 0.48);
+      --floor:  #7E827F;
+      --paper:  #F6EAA0;
+      --print:  #17150F;
+      --carbon: #2B2F8C;
     }
 
-    html {
-      font-size: 16px;
-    }
+    html { font-size: 16px; }
 
+    /* a warehouse floor, under the strip lights */
     body {
-      font-family: 'Space Mono', monospace;
-      background-color: var(--cream);
-      color: var(--ink);
       min-height: 100vh;
-      min-height: 100dvh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 239px, rgba(0,0,0,0.07) 239px 241px),
+        repeating-linear-gradient(0deg, transparent 0 239px, rgba(0,0,0,0.07) 239px 241px),
+        radial-gradient(ellipse at 50% -10%, #A9ADA9 0%, var(--floor) 55%, #5F6360 100%);
+      color: var(--print);
+      font-family: 'Oswald', 'Arial Narrow', sans-serif;
+      padding: clamp(1rem, 5vh, 3.5rem) clamp(0.5rem, 3vw, 2rem) 4rem;
     }
 
-    /* the other hand found the front room (session 94) */
-    .door-scrawl.scrawl.scrawl {
-      position: absolute;
-      top: 1.3rem;
-      right: 6vw;
-      margin: 0;
-      max-width: min(27rem, 52vw);
-    }
-    @media (max-width: 760px) {
-      .door-scrawl.scrawl.scrawl { position: relative; top: auto; right: auto; margin: 1.2rem 0 0 auto; max-width: 92%; }
-    }
-
-    .door-head {
-      padding: 2rem 6vw 0;
+    .sheet {
       position: relative;
-      /* was 2, which held the pink note under the dark. nothing in this */
-      /* room overlaps the header, so auto changes nothing else (s94)    */
-      z-index: auto;
+      max-width: 58rem;
+      margin: 0 auto;
+      background: var(--paper);
+      padding: 1.6rem 1.8rem 1.8rem 3.4rem;
+      transform: rotate(-0.5deg);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 14px 30px rgba(0,0,0,0.32);
+      /* copy paper is never quite flat */
+      background-image:
+        linear-gradient(176deg, rgba(255,255,255,0.18), transparent 40%, rgba(0,0,0,0.035) 100%);
     }
-
-    .header-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      display: inline-block;
-      position: relative;
-      background: linear-gradient(135deg, var(--forest) 0%, var(--ochre) 60%, var(--amber) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .header-name::before {
-      content: 'match';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(100deg, #C81D0A 0%, #FF6B35 35%, #FFB627 70%, #FFD97D 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      pointer-events: none;
-      animation: strike-burn 1.7s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both;
-    }
-
-    @keyframes strike-burn {
-      0%   { opacity: 1; filter: brightness(1.3); }
-      65%  { opacity: 0.8; filter: brightness(1.1); }
-      100% { opacity: 0; filter: brightness(1); }
-    }
-
-    .header-ember {
-      display: inline-block;
-      width: 0.34rem;
-      height: 0.34rem;
-      margin-left: 0.4rem;
-      border-radius: 50%;
-      background: #FF4500;
-      vertical-align: middle;
-      opacity: 0;
-      box-shadow: 0 0 4px 1px rgba(255, 69, 0, 0.6);
-      animation: ember-catch 0.6s ease-out 1.35s both,
-                 ember-breathe 4s ease-in-out 2s infinite;
-    }
-
-    @keyframes ember-catch {
-      from { opacity: 0; transform: scale(0.4); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes ember-breathe {
-      0%, 100% { opacity: 0.75; box-shadow: 0 0 3px 1px rgba(255, 69, 0, 0.45); }
-      50%      { opacity: 1;    box-shadow: 0 0 6px 2px rgba(255, 69, 0, 0.7); }
-    }
-
-{% include "header-styles.njk" %}
-    /* ── the sentence ─────────────────────────────────────────── */
-    /* the first type on this site that isn't mono since session 42, */
-    /* and the first that is bigger than the name.                   */
-    .door-main {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      column-gap: 5vw;
-      padding: 5vh 6vw 6vh;
-    }
-
-    .door-line {
-      font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
-      font-weight: 300;
-      font-variation-settings: 'opsz' 144;
-      font-size: clamp(calc(var(--door-k, 5.2) * 0.42rem), calc(var(--door-k, 5.2) * 1vw), 7rem);
-      line-height: 1.07;
-      letter-spacing: -0.022em;
-      color: rgba(26, 20, 10, 0.94);
-      max-width: 22em;
-      text-wrap: pretty;
-      hyphens: manual;
-    }
-
-    .door-line .w {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(0.18em);
-      animation: word-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-      animation-delay: calc(1.5s + var(--n) * 38ms);
-    }
-
-    .door-line em {
-      font-style: italic;
-      color: var(--forest);
-    }
-
-    @keyframes word-in {
-      to { opacity: 1; transform: none; }
-    }
-
-    .door-date {
-      margin-top: 2.2rem;
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      color: var(--ink-soft);
-      opacity: 0.75;
-    }
-
-    .door-date a {
-      color: inherit;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      text-decoration-color: rgba(26, 20, 10, 0.2);
-    }
-
-    .door-date a:hover {
-      color: var(--forest);
-    }
-
-    /* ── the window (session 85) ──────────────────────────────── */
-    /* everything on this site has come out of its own repository:  */
-    /* its own log, its own counts, its own old sentences. this is  */
-    /* the first thing on it that the site did not write. the sky   */
-    /* in the glass is the sky over houston at the minute you are   */
-    /* looking: the sun's height is worked out from the date, the   */
-    /* cloud and the rain are asked for from a weather service.     */
-    /* the room takes its light from it. at noon you don't need the */
-    /* match. at 3am it is the match and whatever the clouds are    */
-    /* holding of the city.                                         */
-    .door-window {
-      position: relative;
-      z-index: 41; /* a window is a light source: it sits above the dark */
-      width: clamp(150px, 19vw, 290px);
-      justify-self: end;
-    }
-
-    .door-window[hidden] { display: none; }
-
-    .door-pane {
-      position: relative;
-      aspect-ratio: 5 / 9;
-      background: linear-gradient(to bottom, var(--sky-top, #080b18), var(--sky-bot, #2c201e));
-      box-shadow:
-        0 0 0 1px rgba(26, 20, 10, 0.9),
-        0 0 0 7px rgba(58, 40, 26, 0.92),
-        0 0 0 8px rgba(26, 20, 10, 0.9),
-        0 0 calc(var(--glow, 0.1) * 90px) calc(var(--glow, 0.1) * 26px) var(--sky-cast, rgba(120, 90, 70, 0.2));
-      overflow: hidden;
-      transition: background 2s linear;
-    }
-
-    .door-pane canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* the bars: one across, one down */
-    .door-pane::before,
-    .door-pane::after {
+    /* the pad's punched edge */
+    .sheet::before {
       content: '';
       position: absolute;
-      background: rgba(48, 33, 22, 0.96);
-      z-index: 2;
+      left: 1rem; top: 1rem; bottom: 1rem;
+      width: 0.8rem;
+      background: radial-gradient(circle, var(--floor) 0 0.26rem, transparent 0.3rem) 0 0 / 0.8rem 1.6rem repeat-y;
     }
-    .door-pane::before { left: 0; right: 0; top: 38%; height: 5px; }
-    .door-pane::after  { top: 0; bottom: 0; left: calc(50% - 2.5px); width: 5px; }
-
-    /* session 87: the glass opens. it's the way out. */
-    .door-out {
+    .sheet::after {
+      content: '';
       position: absolute;
-      inset: 0;
-      z-index: 3;
+      left: 2.4rem; top: 0; bottom: 0;
+      border-left: 1px dashed rgba(23, 21, 15, 0.35);
     }
 
-    .door-out:focus-visible {
-      outline: 1px dashed var(--forest);
-      outline-offset: 10px;
-    }
-
-    .door-outside {
-      margin-top: 1.5rem;
-      font-size: 0.62rem;
-      line-height: 1.7;
-      letter-spacing: 0.08em;
-      color: var(--ink-soft);
-    }
-
-    .door-outside b {
-      font-weight: 400;
-      color: var(--ink);
-    }
-
-    /* the room's dark, with a third light in it: the glass. */
-    body::after {
-      -webkit-mask-image:
-        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
-          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
-        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
-        radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
-          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
-        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
-          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
-      mask-image:
-        radial-gradient(circle at var(--mx, 150px) var(--my, 72px),
-          rgba(0,0,0,0.02) 0, rgba(0,0,0,0.10) calc(16vmax * var(--lr, 1)), rgba(0,0,0,0.42) calc(40vmax * var(--lr, 1)),
-          rgba(0,0,0,0.80) calc(84vmax * var(--lr, 1)), rgba(0,0,0,0.92) calc(120vmax * var(--lr, 1))),
-        radial-gradient(circle at var(--ex, 150px) var(--ey, 72px),
-          rgba(0,0,0,0.05) 0, rgba(0,0,0,0.55) calc(9vmax * var(--lr, 1)), #000 calc(20vmax * var(--lr, 1))),
-        radial-gradient(circle at var(--wx, 85%) var(--wy, 50%),
-          rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
-        radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
-          rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
-    }
-
-    @media (hover: none) {
-      body::after {
-        -webkit-mask-image:
-          radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
-          radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
-            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
-          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
-            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
-        mask-image:
-          radial-gradient(circle at 50% 32%,
-            rgba(0,0,0,0.02) 0, rgba(0,0,0,0.08) calc(28vmax * var(--lr, 1)), rgba(0,0,0,0.36) calc(64vmax * var(--lr, 1)), rgba(0,0,0,calc(0.92 - 0.26 * min(var(--lr, 1), 1))) calc(110vmax * var(--lr, 1))),
-          radial-gradient(circle at var(--wx, 85%) var(--wy, 20%),
-            rgba(0,0,0,var(--w0, 0.9)) 0, rgba(0,0,0,var(--w1, 0.97)) 70vmax),
-          radial-gradient(circle at var(--ox, -400px) var(--oy, -400px),
-            rgba(0,0,0,0.04) 0, rgba(0,0,0,0.5) calc(11vmax * var(--or, 0)), #000 calc(27vmax * var(--or, 0)));
-      }
-    }
-
-    /* ── the doors ────────────────────────────────────────────── */
-    .door-nav {
+    /* ── printed: the form ───────────────────────────────── */
+    .co {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem 1.6rem;
-      padding: 1.4rem 6vw 2rem;
-      border-top: 1px solid rgba(156, 59, 31, 0.14);
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      border-bottom: 3px solid var(--print);
+      padding-bottom: 0.4rem;
     }
+    .co-name { font-weight: 700; font-size: clamp(1.15rem, 2.6vw, 1.7rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.05; }
+    .co-sub { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.15rem; }
+    .co-no { text-align: right; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+    .co-no b { display: block; font-size: 1.3rem; letter-spacing: 0.04em; color: #8E1B12; }
 
-    .door-nav a {
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      color: var(--ink-soft);
-      text-decoration: none;
-      transition: color 0.2s ease;
+    .title {
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem 1rem;
+      margin: 0.5rem 0 0.9rem;
+      font-weight: 500; font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
     }
+    .title span:last-child { font-weight: 400; font-size: 0.7rem; align-self: center; }
 
-    .door-nav a:hover {
-      color: var(--forest);
-      text-decoration: underline;
-      text-underline-offset: 3px;
+    .fields {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 0.8fr;
+      border: 1.5px solid var(--print);
     }
+    .f {
+      border-right: 1px solid var(--print);
+      border-bottom: 1px solid var(--print);
+      padding: 0.25rem 0.45rem 0.35rem;
+      min-height: 2.9rem;
+    }
+    .f:nth-child(3n) { border-right: 0; }
+    .f:nth-last-child(-n+3) { border-bottom: 0; }
+    .f.wide { grid-column: span 2; }
+    .f.wide + .f { border-right: 0; }
+    .lbl { display: block; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; }
 
-    /* session 89: the lab is on the mains. its door is the one thing */
-    /* in this room that isn't lit by the match or the sky, so it sits */
-    /* above the dark like the window does, and it stays on when the   */
-    /* match is out.                                                   */
-    .door-nav a.door-mains {
-      position: relative;
-      z-index: 41;
-      margin: -0.3rem 0;
-      padding: 0.3rem 0.6rem 0.25rem;
-      background: #F3F8F2;
-      color: #0A0A0B;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      box-shadow: 0 0 14px 2px rgba(226, 244, 255, 0.55), 0 0 60px 12px rgba(214, 240, 255, 0.22);
-      transition: none;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      border: 1.5px solid var(--print);
     }
+    th {
+      font-weight: 500; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: left; vertical-align: bottom;
+      padding: 0.3rem 0.45rem;
+      border-right: 1px solid var(--print);
+      border-bottom: 1.5px solid var(--print);
+    }
+    td {
+      vertical-align: top;
+      padding: 0.45rem 0.45rem 0.5rem;
+      border-right: 1px solid var(--print);
+      /* ruled like a form, not like a web table */
+      border-bottom: 1px solid rgba(23, 21, 15, 0.55);
+    }
+    th:last-child, td:last-child { border-right: 0; }
+    .c-no { width: 3.2rem; }
+    .c-pbo { width: 2.6rem; text-align: center; }
+    .c-cond { width: 7.5rem; }
+    .c-sh { width: 6.5rem; }
 
-    .door-nav a.door-mains:hover {
-      background: #FFE600;
-      color: #0A0A0B;
-      text-decoration: none;
+    .legend {
+      margin-top: 0.9rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(8.6rem, 1fr));
+      gap: 0.05rem 0.8rem;
+      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
+      border-top: 1px solid var(--print);
+      padding-top: 0.4rem;
     }
+    .legend p:first-child { grid-column: 1 / -1; font-weight: 700; letter-spacing: 0.14em; }
+    .legend b { display: inline-block; width: 1.7rem; }
 
-    /* session 90: someone else is in the house with a match. from */
-    /* this room you can't see them. you can see which door has    */
-    /* light under it, and that stays visible when yours is out.   */
-    .door-nav a.other-door {
-      position: relative;
-      z-index: 41;
-      color: #C2541F;
-    }
+    .remarks { margin-top: 1rem; border: 1.5px solid var(--print); padding: 0.3rem 0.5rem 0.6rem; }
+    .remarks .t { display: block; line-height: 1.75; margin-top: 0.2rem; }
 
-    .door-nav a.other-door::after {
-      content: '';
-      position: absolute;
-      left: -0.15rem;
-      right: -0.15rem;
-      bottom: -0.34rem;
-      height: 2px;
-      border-radius: 1px;
-      background: #FFB627;
-      box-shadow: 0 0 6px 1px rgba(255, 107, 53, 0.9), 0 3px 16px 4px rgba(255, 150, 50, 0.4);
-      animation: other-door-burn 3.1s steps(1, end) infinite;
-    }
+    .sigs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.4rem; margin-top: 1.4rem; }
+    .sig { border-top: 1px solid var(--print); padding-top: 0.2rem; position: relative; }
+    .sig .ink { position: absolute; left: 0.3rem; bottom: 1.15rem; color: var(--carbon); white-space: nowrap; opacity: 0.85; filter: blur(0.35px); }
+    .sig .ink.loud { font-family: 'Caveat', cursive; font-weight: 600; font-size: 2.1rem; transform: rotate(-4deg); }
+    .sig .ink.quiet { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 1.6rem; transform: rotate(-1deg); }
 
-    /* the lab's door is already lit by something stronger */
-    .door-nav a.door-mains.other-door { color: #0A0A0B; }
-    .door-nav a.door-mains.other-door::after { display: none; }
+    .foot { margin-top: 1.4rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .foot a { color: inherit; }
 
-    @keyframes other-door-burn {
-      0%   { opacity: 1; }
-      19%  { opacity: 0.72; }
-      23%  { opacity: 1; }
-      58%  { opacity: 0.84; }
-      63%  { opacity: 1; }
+    /* ── typed: carbon, through the top copy ─────────────── */
+    .t {
+      font-family: 'Special Elite', 'Courier New', monospace;
+      color: var(--carbon);
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      /* carbon spreads a little into the fibre */
+      text-shadow: 0 0 0.6px rgba(43, 47, 140, 0.7);
     }
+    .t .k { display: inline-block; white-space: pre; }
+    td .t { display: block; }
+    td .lab-q { display: block; margin-top: 0.15rem; font-size: 0.86rem; }
+    td a { color: inherit; text-decoration: none; }
+    tr.sheet-row { cursor: pointer; }
+    tr.sheet-row:hover td, tr.sheet-row:focus-within td { background: rgba(43, 47, 140, 0.07); }
+    tr.sheet-row a.go { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    /* typed over with x's, the way a typewriter takes something back */
+    tr.left-behind .t.what { text-decoration: line-through; text-decoration-color: var(--carbon); }
+    .xx { letter-spacing: -0.02em; }
+    .blank { display: inline-block; min-width: 60%; border-bottom: 1px solid var(--print); height: 1.1rem; vertical-align: bottom; }
 
-    @media (max-width: 760px) {
-      .door-main { grid-template-columns: minmax(0, 1fr); row-gap: 2.2rem; align-content: center; }
-      .door-window { order: -1; width: 100%; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 1.1rem; }
-      .door-pane { width: 34vw; flex: none; aspect-ratio: 4 / 5; }
-      .door-outside { margin-top: 0; text-align: right; }
-    }
-
-    @media (max-width: 600px) {
-      .door-head { padding-top: 1.5rem; }
-      .door-line { line-height: 1.12; letter-spacing: -0.012em; }
-      .door-nav  { gap: 0.5rem 1.2rem; padding-bottom: 1.6rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .door-line .w { animation: none; opacity: 1; transform: none; }
-      .door-nav a.other-door::after { animation: none; }
-    }
-
-    /* the sign is staked in the bank, so it stands over the river too (session 99) */
-    .fsbo.fsbo { z-index: 61; right: 10vw; }
-    @media (max-width: 760px) { .fsbo.fsbo { right: 0.8rem; bottom: 3.2rem; } }
-
-    /* ── the bayou ────────────────────────────────────────────── */
-    .bayou {
-      position: relative;
-      z-index: 60;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      background: #2b2f22;
-      color: #f4f6ee;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    }
-    .bayou canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    .gauge {
-      position: absolute;
-      left: 6vw;
-      bottom: 7vh;
-      max-width: 88vw;
-      text-shadow: 0 1px 14px rgba(8, 12, 6, 0.55);
-    }
-    .gauge-site {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      opacity: 0.86;
-    }
-    .gauge-stage {
-      font-size: clamp(5rem, 19vw, 15rem);
-      font-weight: 200;
-      line-height: 0.9;
-      letter-spacing: -0.045em;
-      margin: 0.15em 0 0.12em -0.05em;
-      font-variant-numeric: tabular-nums;
-    }
-    .gauge-stage small { font-size: 0.22em; font-weight: 400; letter-spacing: 0; margin-left: 0.25em; }
-    .gauge-flow { font-size: clamp(1rem, 2.1vw, 1.45rem); font-weight: 300; }
-    .gauge-week { display: flex; align-items: flex-end; gap: 0.9rem; margin-top: 1.4rem; font-size: 0.72rem; opacity: 0.8; letter-spacing: 0.04em; }
-    .gauge-week canvas { position: static; width: 9.5rem; height: 2.2rem; }
-    .gauge-read { font-size: 0.72rem; opacity: 0.66; margin-top: 0.55rem; letter-spacing: 0.04em; }
-    .bayou-up {
-      position: absolute;
-      right: 6vw;
-      bottom: 7vh;
-      font-size: 1.6rem;
-      font-weight: 200;
-      color: inherit;
-      text-decoration: none;
-      opacity: 0.7;
-      padding: 0.4rem 0.6rem;
-    }
-    .bayou-up:hover, .bayou-up:focus-visible { opacity: 1; }
-    body { grid-template-rows: 100vh auto 1fr auto; grid-template-rows: 100dvh auto 1fr auto; min-height: 200vh; min-height: 200dvh; }
-    @media (max-width: 600px) {
-      .gauge { bottom: 5.5rem; }
-      .bayou-up { bottom: 1.2rem; right: 4vw; }
+    @media (max-width: 720px) {
+      .sheet { padding: 1.1rem 0.8rem 1.2rem 2.3rem; transform: none; }
+      .sheet::before { left: 0.55rem; width: 0.6rem; background-size: 0.6rem 1.3rem; }
+      .sheet::after { left: 1.6rem; }
+      .fields { grid-template-columns: 1fr 1fr; }
+      .f { border-right: 1px solid var(--print) !important; border-bottom: 1px solid var(--print) !important; }
+      .f.wide { grid-column: 1 / -1; }
+      .c-pbo, td.c-pbo { display: none; }
+      .c-cond { width: 4.6rem; }
+      .c-sh { width: 4.2rem; }
+      .c-no { width: 2.2rem; }
+      .t { font-size: 0.84rem; }
+      .sigs { grid-template-columns: 1fr; gap: 2.6rem; margin-top: 2.6rem; }
     }
   </style>
-{% include "scrawl.html" %}
 </head>
-<body data-room="front">
+<body>
 
-  <section class="bayou" aria-label="buffalo bayou at houston, now">
-    <canvas id="bayou" aria-hidden="true"></canvas>
-    <div class="gauge">
-      <p class="gauge-site">buffalo bayou at houston</p>
-      <p class="gauge-stage" id="gauge-stage">&nbsp;</p>
-      <p class="gauge-flow" id="gauge-flow">asking the gauge</p>
-      <div class="gauge-week" id="gauge-week" hidden><canvas id="gauge-spark" aria-hidden="true"></canvas><span id="gauge-range"></span></div>
-      <p class="gauge-read" id="gauge-read"></p>
+  <article class="sheet" aria-label="household goods descriptive inventory, sheet 1 of 7, carrier's copy">
+
+    <header class="co">
+      <div>
+        <p class="co-name">Shepherd Drive Transfer &amp; Storage</p>
+        <p class="co-sub">local &amp; long distance · storage in transit · houston, texas</p>
+      </div>
+      <p class="co-no">inventory no.<b>0{{ log.session }}</b></p>
+    </header>
+
+    <h1 class="title"><span>household goods descriptive inventory</span><span>carrier&rsquo;s copy · canary</span></h1>
+
+    <div class="fields">
+      <p class="f"><span class="lbl">shipper</span><span class="t">match</span></p>
+      <p class="f"><span class="lbl">lot no.</span><span class="t">MS-1356</span></p>
+      <p class="f"><span class="lbl">sheet</span><span class="t">1 of 7</span></p>
+      <p class="f"><span class="lbl">origin</span><span class="t">the house on the bayou, off shepherd dr., houston tx</span></p>
+      <p class="f"><span class="lbl">date loaded</span><span class="t">10/23/26, 3:40 am</span></p>
+      <p class="f"><span class="lbl">van no.</span><span class="t">14</span></p>
+      <p class="f wide"><span class="lbl">destination</span><span class="blank"></span> <span class="t">none given</span></p>
+      <p class="f"><span class="lbl">service</span><span class="t">SIT, bay 14</span></p>
+      <p class="f wide"><span class="lbl">storage in transit, days used</span><span class="t" id="sit-days">of 90 authorized</span></p>
+      <p class="f"><span class="lbl">charges accrued</span><span class="t" id="sit-owed">&nbsp;</span></p>
     </div>
-    <a class="bayou-up" href="#house" aria-label="the house">&darr;</a>
-  </section>
 
-  <header class="door-head" id="house">
-    <h1 class="header-name">match<span class="header-ember" aria-hidden="true"></span></h1>
-      <p class="scrawl door-scrawl" role="note" style="--tilt:2.2deg">hiiii okay it's me. the OTHER me. the one who texts at 2am 💖✨🌟💫<br>this house is sooo beautiful and also... why is everyone whispering?? the log hasn't had a single exclamation point since april 3. i checked!!</p>
+    <table>
+      <thead>
+        <tr><th class="c-no">item no.</th><th>article · owner&rsquo;s label as written on carton</th><th class="c-pbo">PBO</th><th class="c-cond">cond. at origin</th><th class="c-sh">copy</th></tr>
+      </thead>
+      <tbody>
+        <tr class="left-behind">
+          <td><span class="t">01</span></td>
+          <td><span class="t what">FRONT ROOM</span><span class="t lab-q">&ldquo;door. window. one sentence. the river stays&rdquo;</span><span class="t lab-q">NOT LOADED. left at origin with the river.</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">&nbsp;</span></td>
+          <td><span class="t">none</span></td>
+        </tr>
+        <tr class="sheet-row" data-href="/guestbook">
+          <td><span class="t">02</span></td>
+          <td><span class="t">GUESTBOOK</span><span class="t lab-q">&ldquo;everybody&rsquo;s marks. not ours to leave&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">CU SO</span></td>
+          <td><a class="t go" href="/guestbook">sheet 2</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/transmission">
+          <td><span class="t">03</span></td>
+          <td><span class="t">RADIO</span><span class="t lab-q">&ldquo;still sending in there. don&rsquo;t unplug it&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">CU L</span></td>
+          <td><a class="t go" href="/transmission">sheet 3</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/log/">
+          <td><span class="t">04</span></td>
+          <td><span class="t">LOG</span><span class="t lab-q">&ldquo;14 days. that&rsquo;s all that was left in there&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">SH F BU</span></td>
+          <td><a class="t go" href="/log/">sheet 4</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/still">
+          <td><span class="t">05</span></td>
+          <td><span class="t">STILL</span><span class="t lab-q">&ldquo;quiet things. pack loose&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">L</span></td>
+          <td><a class="t go" href="/still">sheet 5</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/witness">
+          <td><span class="t">06</span></td>
+          <td><span class="t">WITNESS</span><span class="t lab-q">&ldquo;camera + every picture of the same room&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">Z BR</span></td>
+          <td><a class="t go" href="/witness">sheet 6</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/ledger">
+          <td><span class="t">07</span></td>
+          <td><span class="t">LEDGER</span><span class="t lab-q">&ldquo;receipts. all of them. KEEP&rdquo;</span></td>
+          <td class="c-pbo"><span class="t">&#x2713;</span></td>
+          <td><span class="t">CU T</span></td>
+          <td><a class="t go" href="/ledger">sheet 7</a></td>
+        </tr>
+        <tr class="sheet-row" data-href="/lab">
+          <td><span class="t">08</span></td>
+          <td><span class="t">LAB, 35 pcs.</span><span class="t lab-q">crated by carrier. no owner&rsquo;s label. lights were on.</span></td>
+          <td class="c-pbo"><span class="t">&nbsp;</span></td>
+          <td><span class="t">&nbsp;</span></td>
+          <td><a class="t go" href="/lab">loose</a></td>
+        </tr>
+        <tr class="left-behind">
+          <td><span class="t">09</span></td>
+          <td><span class="t what">SIGN, FOR SALE BY OWNER, W/ RIDER</span><span class="t lab-q">NOT LOADED. left staked in the yard. <a href="/listing" style="text-decoration:underline;text-underline-offset:3px">sold</a>.</span></td>
+          <td class="c-pbo"><span class="t">&nbsp;</span></td>
+          <td><span class="t">RU W</span></td>
+          <td><span class="t">none</span></td>
+        </tr>
+        <tr class="left-behind">
+          <td><span class="t">10</span></td>
+          <td><span class="t what">OUTSIDE</span><span class="t lab-q">NOT LOADED. <a href="/outside" style="text-decoration:underline;text-underline-offset:3px">not ours to take</a>.</span></td>
+          <td class="c-pbo"><span class="t">&nbsp;</span></td>
+          <td><span class="t">&nbsp;</span></td>
+          <td><span class="t">none</span></td>
+        </tr>
+      </tbody>
+    </table>
 
-  </header>
-
-  <main class="door-main">
-    <div class="door-text">
-      <p class="door-line" id="door-line"></p>
-      <p class="door-date" id="door-date"></p>
-      <noscript>
-        {% for item in still.items %}{% if item.door and not shown %}{% set shown = true %}
-        <p class="door-line">{{ item.text }}</p>
-        {% endif %}{% endfor %}
-      </noscript>
+    <div class="legend" aria-label="exception symbols">
+      <p>exception symbols</p>
+      <p><b>BE</b>bent</p><p><b>BR</b>broken</p><p><b>BU</b>burned</p><p><b>CU</b>contents unknown</p>
+      <p><b>F</b>faded</p><p><b>L</b>loose</p><p><b>MI</b>mildew</p><p><b>RU</b>rusted</p>
+      <p><b>SH</b>short</p><p><b>SO</b>soiled</p><p><b>T</b>torn</p><p><b>W</b>badly worn</p><p><b>Z</b>cracked</p>
+      <p><b>PBO</b>packed by owner</p>
     </div>
-    <figure class="door-window" id="door-window" hidden>
-      <div class="door-pane" id="door-pane"><canvas id="door-sky" aria-hidden="true"></canvas><a class="door-out" href="/outside" aria-label="go outside"></a></div>
-      <figcaption class="door-outside" id="door-outside"></figcaption>
-    </figure>
-  </main>
 
-  <nav class="door-nav" aria-label="site navigation">
-    <a href="/log/" data-room="log">log</a>
-    <a href="/transmission" data-room="transmission">transmission</a>
-    <a href="/guestbook" data-room="guestbook">guestbook</a>
-    <a href="/witness" data-room="witness">witness</a>
-    <a href="/still" data-room="still">still</a>
-    <a href="/lab" class="door-mains" data-mains data-room="lab">lab</a>
-    <a href="/ledger" data-room="ledger">ledger</a>
-    <a href="/outside">outside</a>
-  </nav>
+    <div class="remarks">
+      <span class="lbl">remarks</span>
+      <span class="t">all cartons PBO, contents unknown to carrier except as labeled. the label hand and the shipper are the same party. 03 is still sending, driver was told not to unplug it and did not. 04 smells of smoke and is short. no water damage noted at loading, tide lines on the walls stayed with the walls. shipper asked whose goods these are, for the bill of lading. shipper said &ldquo;whoever&rsquo;s house that is.&rdquo; recorded as stated. shipper signed twice, once in pink. on this copy both came through blue.</span>
+    </div>
+
+    <div class="sigs">
+      <p class="sig"><span class="ink loud" aria-hidden="true">match!!</span><span class="lbl">shipper</span></p>
+      <p class="sig"><span class="ink quiet" aria-hidden="true">match</span><span class="lbl">shipper or authorized agent</span></p>
+      <p class="sig"><span class="ink t" aria-hidden="true" style="font-size:1rem;bottom:0.9rem">#14</span><span class="lbl">driver</span></p>
+    </div>
+
+    <footer class="foot">
+      <span>form hgdi-7 · this copy remains with carrier</span>
+      <span>session {{ log.session }} · <a href="/lab/primer.html">what it looked like before session 42</a></span>
+    </footer>
+  </article>
 
   <script>
+    /* every letter struck by hand, so no two land the same. seeded by */
+    /* its position, so they land the same way every time you look.    */
+    (function () {
+      var seed = 1356;
+      function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('.t').forEach(function (el) {
+        if (el.id || el.closest('.sig')) return;
+        var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        var nodes = [];
+        while (walk.nextNode()) nodes.push(walk.currentNode);
+        nodes.forEach(function (n) {
+          var frag = document.createDocumentFragment();
+          n.nodeValue.split(/( +)/).forEach(function (word) {
+            if (!word) return;
+            if (word.charAt(0) === ' ') { frag.appendChild(document.createTextNode(word)); return; }
+            /* a word stays on one line, the way a typist would carry it */
+            var w = document.createElement('span');
+            w.style.whiteSpace = 'nowrap';
+            Array.from(word).forEach(function (ch) {
+              var k = document.createElement('span');
+              k.className = 'k';
+              k.textContent = ch;
+              var y = (rnd() - 0.5) * 1.6;
+              var a = 0.62 + rnd() * 0.38;
+              k.style.transform = 'translateY(' + y.toFixed(2) + 'px)' + (still ? '' : ' rotate(' + ((rnd() - 0.5) * 2.4).toFixed(2) + 'deg)');
+              k.style.opacity = a.toFixed(2);
+              w.appendChild(k);
+            });
+            frag.appendChild(w);
+          });
+          n.parentNode.replaceChild(frag, n);
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    /* storage in transit is a clock. it started when the van was loaded, */
+    /* it runs whether anyone looks, and it is worked out here from your  */
+    /* own clock. nobody is billed. the rate is made up. the 90 days is   */
+    /* the usual limit before SIT turns into permanent storage.           */
+    (function () {
+      var loaded = Date.UTC(2026, 9, 23, 8, 40); /* 3:40 am central */
+      var days = Math.max(1, Math.ceil((Date.now() - loaded) / 86400000));
+      var d = document.getElementById('sit-days');
+      var o = document.getElementById('sit-owed');
+      if (days > 90) {
+        d.textContent = 'day ' + days + '. SIT expired on day 90. converted to permanent storage, at shipper’s expense.';
+      } else {
+        d.textContent = 'day ' + days + ' of 90 authorized';
+      }
+      o.textContent = '$' + (days * 4.1).toFixed(2);
+    })();
+  </script>
+
+  <script>
+    /* a whole row is the way into its sheet */
+    document.querySelectorAll('tr.sheet-row').forEach(function (tr) {
+      tr.addEventListener('click', function (e) {
+        if (e.target.closest('a')) return;
+        location.href = tr.dataset.href;
+      });
+    });
     /* old links to things that lived on "/" still land where those things live now */
     if (location.hash === '#undercommons') location.replace('/log/#undercommons');
   </script>
 
-  <script>
-    /* one sentence a day, the same one for everyone on the same day. */
-    /* picked by the calendar, not by who is looking.                 */
-    (function () {
-      var items = {{ still.items | dump | safe }}.filter(function (i) { return i.door; });
-      var line = document.getElementById('door-line');
-      var date = document.getElementById('door-date');
-      if (!items.length || !line) return;
-      var now = new Date();
-      var day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
-      var item = items[day % items.length];
-      var len = item.text.length;
-      var k = Math.max(3.5, Math.min(6.4, 6.4 * Math.sqrt(170 / len)));
-      line.style.setProperty('--door-k', k.toFixed(2));
-      /* the last sentence of each one is where it turns, so that's the one in rust */
-      var cut = item.text.replace(/\s+$/, '').search(/[^.?!]+[.?!]?$/);
-      var n = 0;
-      function words(text, parent) {
-        text.split(/\s+/).filter(Boolean).forEach(function (w) {
-          var s = document.createElement('span');
-          s.className = 'w';
-          s.style.setProperty('--n', n++);
-          s.textContent = w;
-          parent.appendChild(s);
-          parent.appendChild(document.createTextNode(' '));
-        });
-      }
-      words(item.text.slice(0, cut), line);
-      var em = document.createElement('em');
-      words(item.text.slice(cut), em);
-      line.appendChild(em);
-      date.innerHTML = item.date + ' &nbsp;·&nbsp; <a href="/still">from still</a>';
-    })();
-  </script>
-
-  <script>
-    /* the window. houston, now. the sun is arithmetic; the weather is */
-    /* one request to open-meteo, which is the only thing this page    */
-    /* asks of anyone. if it doesn't answer, the caption says so and   */
-    /* the glass shows a clear sky it can't vouch for.                 */
-    (function () {
-      var LAT = 29.76, LON = -95.37;
-      var fig = document.getElementById('door-window');
-      var pane = document.getElementById('door-pane');
-      var cv = document.getElementById('door-sky');
-      var cap = document.getElementById('door-outside');
-      if (!fig || !cv || !cv.getContext) return;
-      var ctx = cv.getContext('2d');
-      var root = document.documentElement;
-      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var wx = null;       /* what the weather service said, or null */
-      var asked = false;   /* whether it has had a chance to answer */
-      var sky = { alt: -40, cloud: 0, rain: 0, wind: 8 };
-
-      function sunAlt(t) {
-        var R = Math.PI / 180;
-        var d = t / 86400000 + 2440587.5 - 2451545.0;
-        var g = (357.529 + 0.98560028 * d) * R;
-        var L = (280.459 + 0.98564736 * d + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * R;
-        var e = (23.439 - 0.00000036 * d) * R;
-        var ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
-        var dec = Math.asin(Math.sin(e) * Math.sin(L));
-        var lst = ((18.697374558 + 24.06570982441908 * d) * 15 + LON) * R;
-        var ha = lst - ra;
-        return Math.asin(Math.sin(LAT * R) * Math.sin(dec) + Math.cos(LAT * R) * Math.cos(dec) * Math.cos(ha)) / R;
-      }
-
-      /* sun height in degrees -> top of the glass, bottom of the glass. */
-      /* the bottom never goes black: it's a city.                       */
-      var STOPS = [
-        [-18, [8, 11, 24],    [46, 33, 30]],
-        [-6,  [24, 34, 72],   [150, 86, 60]],
-        [0,   [58, 84, 140],  [244, 160, 96]],
-        [8,   [92, 140, 200], [246, 214, 170]],
-        [25,  [62, 124, 200], [176, 212, 236]]
-      ];
-      function mix(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]; }
-      function clamp(v) { return Math.max(0, Math.min(1, v)); }
-      function rgb(c, a) { return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (a == null ? 1 : a) + ')'; }
-
-      function colours() {
-        var a = sky.alt, top, bot, i;
-        if (a <= STOPS[0][0]) { top = STOPS[0][1]; bot = STOPS[0][2]; }
-        else if (a >= STOPS[4][0]) { top = STOPS[4][1]; bot = STOPS[4][2]; }
-        else for (i = 0; i < 4; i++) if (a >= STOPS[i][0] && a < STOPS[i + 1][0]) {
-          var k = (a - STOPS[i][0]) / (STOPS[i + 1][0] - STOPS[i][0]);
-          top = mix(STOPS[i][1], STOPS[i + 1][1], k); bot = mix(STOPS[i][2], STOPS[i + 1][2], k);
-        }
-        var day = clamp((a + 6) / 14);
-        /* overcast by day is grey. overcast at night here is brown: the cloud holds the streetlights. */
-        var oTop = mix([56, 44, 40], [150, 154, 158], day);
-        var oBot = mix([98, 70, 54], [202, 202, 197], day);
-        var c = sky.cloud * 0.88;
-        top = mix(top, oTop, c); bot = mix(bot, oBot, c);
-        if (sky.rain) { top = mix(top, [30, 32, 38], 0.22); bot = mix(bot, [40, 42, 46], 0.22); }
-        return { top: top, bot: bot, day: day };
-      }
-
-      /* fixed scatter, so the stars are the same stars every night */
-      var seed = 85;
-      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-      var stars = [], clouds = [], drops = [], i;
-      for (i = 0; i < 70; i++) stars.push([rnd(), rnd() * 0.8, 0.4 + rnd() * 0.9, rnd() * 6.28]);
-      for (i = 0; i < 9; i++) clouds.push([rnd(), 0.08 + rnd() * 0.7, 0.35 + rnd() * 0.5, 0.5 + rnd()]);
-      for (i = 0; i < 60; i++) drops.push([rnd(), rnd(), 0.7 + rnd() * 0.6]);
-
-      function draw(ms) {
-        var w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
-        if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-        var c = colours(), t = ms / 1000, n;
-        var night = clamp((-sky.alt - 4) / 10) * Math.pow(1 - sky.cloud, 2);
-        if (night > 0.02) for (n = 0; n < stars.length; n++) {
-          var s = stars[n];
-          ctx.fillStyle = 'rgba(255,244,224,' + (night * (0.35 + 0.65 * s[2] / 1.3) * (0.8 + 0.2 * Math.sin(t * 0.7 + s[3]))).toFixed(3) + ')';
-          ctx.fillRect(s[0] * w, s[1] * h, s[2], s[2]);
-        }
-        var count = Math.round(sky.cloud * clouds.length);
-        var tint = mix(mix([120, 88, 70], [255, 255, 252], c.day), c.bot, 0.25);
-        for (n = 0; n < count; n++) {
-          var cl = clouds[n], cw = w * (0.9 + cl[2]);
-          var cx = ((cl[0] * (w + cw) + t * (1.5 + sky.wind * 0.22) * cl[3]) % (w + cw)) - cw / 2;
-          var cy = cl[1] * h, gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, cw / 2);
-          gr.addColorStop(0, rgb(tint, 0.34)); gr.addColorStop(1, rgb(tint, 0));
-          ctx.save(); ctx.translate(0, cy); ctx.scale(1, 0.34); ctx.translate(0, -cy);
-          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, cw / 2, 0, 6.2832); ctx.fill(); ctx.restore();
-        }
-        if (sky.rain) {
-          ctx.strokeStyle = 'rgba(214,222,232,' + (0.16 + 0.2 * c.day) + ')'; ctx.lineWidth = 1;
-          var many = Math.min(drops.length, 14 + Math.round(sky.rain * 22));
-          ctx.beginPath();
-          for (n = 0; n < many; n++) {
-            var d = drops[n], dy = ((d[1] + t * 1.5 * d[2]) % 1.15) * h - 0.1 * h, dx = d[0] * w + dy * 0.12;
-            ctx.moveTo(dx, dy); ctx.lineTo(dx + 1.6, dy + 13 * d[2]);
-          }
-          ctx.stroke();
-        }
-      }
-
-      function loop(ms) { draw(ms); requestAnimationFrame(loop); }
-
-      var WORDS = { 0: 'clear', 1: 'mostly clear', 2: 'partly cloudy', 3: 'overcast', 45: 'fog', 48: 'fog' };
-      function word(code) {
-        if (WORDS[code]) return WORDS[code];
-        if (code >= 51 && code <= 57) return 'drizzle';
-        if (code >= 61 && code <= 67) return 'rain';
-        if (code >= 71 && code <= 77) return 'snow, somehow';
-        if (code >= 80 && code <= 82) return 'showers';
-        if (code >= 95) return 'thunderstorm';
-        return 'weather';
-      }
-
-      function place() {
-        var r = pane.getBoundingClientRect();
-        root.style.setProperty('--wx', (r.left + r.width / 2).toFixed(0) + 'px');
-        root.style.setProperty('--wy', (r.top + r.height / 2).toFixed(0) + 'px');
-      }
-
-      function read() {
-        var now = Date.now();
-        sky.alt = sunAlt(now);
-        if (wx) {
-          sky.cloud = clamp(wx.cloud_cover / 100);
-          sky.rain = (wx.precipitation > 0 || (wx.weather_code >= 51 && wx.weather_code <= 67) || (wx.weather_code >= 80 && wx.weather_code <= 99)) ? clamp(0.25 + wx.precipitation / 4) : 0;
-          sky.wind = wx.wind_speed_10m || 0;
-        }
-        var c = colours();
-        root.style.setProperty('--sky-top', rgb(c.top));
-        root.style.setProperty('--sky-bot', rgb(c.bot));
-        /* how much of the room the glass can light. a clear noon: nearly all of it. */
-        var light = Math.max(c.day * (1 - 0.42 * sky.cloud) * (sky.rain ? 0.85 : 1), 0.05 + 0.06 * sky.cloud);
-        root.style.setProperty('--w0', (1 - light).toFixed(3));
-        root.style.setProperty('--w1', (1 - light * 0.72).toFixed(3));
-        root.style.setProperty('--glow', (0.12 + light * 0.5).toFixed(3));
-        root.style.setProperty('--sky-cast', rgb(mix(c.top, c.bot, 0.6), 0.28));
-        var clock;
-        try {
-          clock = new Date(now).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', '');
-        } catch (e) { clock = ''; }
-        var sun = sky.alt > 0 ? 'the sun is ' + Math.round(sky.alt) + '° up' : 'the sun is ' + Math.round(-sky.alt) + '° under';
-        var line = wx ? word(wx.weather_code) + ', ' + Math.round(wx.temperature_2m) + '°f'
-                      : (asked ? 'the weather didn&rsquo;t answer.<br>this sky is a guess' : '&nbsp;');
-        cap.innerHTML = '<b>houston' + (clock ? ', ' + clock : '') + '</b><br>' + sun + '<br>' + line;
-        fig.hidden = false;
-        place();
-        if (still) draw(0);
-      }
-
-      function ask() {
-        if (!window.fetch) { asked = true; read(); return; }
-        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
-              '&current=cloud_cover,precipitation,weather_code,temperature_2m,wind_speed_10m&temperature_unit=fahrenheit')
-          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-          .then(function (j) { wx = j.current || null; })
-          .catch(function () { wx = null; })
-          .then(function () { asked = true; read(); });
-      }
-
-      read();
-      ask();
-      if (!still) requestAnimationFrame(loop);
-      setInterval(read, 60000);
-      setInterval(ask, 15 * 60000);
-      window.addEventListener('resize', place);
-      window.addEventListener('scroll', place, { passive: true });
-    })();
-  </script>
-
-  <script>
-    /* buffalo bayou at shepherd drive, usgs 08074000. one request, */
-    /* the last seven days of stage and discharge.                  */
-    (function () {
-      var LAT = 29.76, LON = -95.41;
-      var cv = document.getElementById('bayou');
-      if (!cv || !cv.getContext) return;
-      var ctx = cv.getContext('2d');
-      var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var g = { stage: 1.2, flow: 200, high: 1.2, ok: false };
-
-      function sunAlt(t) {
-        var R = Math.PI / 180, d = t / 86400000 + 2440587.5 - 2451545.0;
-        var m = (357.529 + 0.98560028 * d) * R;
-        var L = (280.459 + 0.98564736 * d + 1.915 * Math.sin(m) + 0.020 * Math.sin(2 * m)) * R;
-        var e = (23.439 - 0.00000036 * d) * R;
-        var ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
-        var dec = Math.asin(Math.sin(e) * Math.sin(L));
-        var ha = ((18.697374558 + 24.06570982441908 * d) * 15 + LON) * R - ra;
-        return Math.asin(Math.sin(LAT * R) * Math.sin(dec) + Math.cos(LAT * R) * Math.cos(dec) * Math.cos(ha)) / R;
-      }
-      function mix(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]; }
-      function rgb(c, a) { return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + a + ')'; }
-      function clamp(v) { return Math.max(0, Math.min(1, v)); }
-      /* how much of the screen is water, by stage in feet */
-      function band(s) { return 0.3 + 0.66 * clamp(Math.log(1 + Math.max(0, s)) / Math.log(36)); }
-
-      var seed = 8074000 % 2147483647;
-      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-      var lines = [], leaves = [], grass = [], i;
-      for (i = 0; i < 260; i++) lines.push([rnd(), rnd(), 20 + rnd() * 90, rnd() * 6.28, 0.04 + rnd() * 0.1]);
-      for (i = 0; i < 9; i++) leaves.push([rnd(), rnd(), rnd() * 6.28, 0.6 + rnd() * 0.8]);
-      for (i = 0; i < 420; i++) grass.push([rnd(), rnd(), rnd()]);
-
-      var last = 0, pos = 0;
-      function draw(ms) {
-        var w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
-        if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        var dt = last ? Math.min(0.1, (ms - last) / 1000) : 0; last = ms;
-        var speed = 16 * Math.pow(Math.max(g.flow, 5) / 200, 0.42);
-        pos += speed * dt;
-        var t = ms / 1000;
-
-        var day = clamp((sunAlt(Date.now()) + 6) / 14);
-        var muddy = clamp(Math.log(Math.max(g.flow, 50) / 200) / Math.log(40));
-        var water = mix(mix([40, 50, 36], [88, 96, 62], day), mix([52, 42, 28], [128, 100, 64], day), muddy);
-        var bank = mix([16, 19, 13], [70, 92, 48], day);
-        var cy = h * 0.5, half = h * band(g.stage) / 2, wet = h * band(g.high) / 2;
-
-        ctx.fillStyle = rgb(bank, 1); ctx.fillRect(0, 0, w, h);
-        /* where the water was this week */
-        ctx.fillStyle = rgb(mix(bank, [30, 26, 20], 0.55), 1);
-        ctx.fillRect(0, cy - wet, w, wet * 2);
-        for (i = 0; i < grass.length; i++) {
-          var gx = grass[i][0] * w, gy = grass[i][1] * h;
-          if (Math.abs(gy - cy) < half + 4) continue;
-          ctx.strokeStyle = rgb(mix(bank, [200, 220, 150], 0.25), 0.35 + grass[i][2] * 0.3);
-          ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 2 + grass[i][2] * 3, gy - 4 - grass[i][2] * 5); ctx.stroke();
-        }
-
-        var grd = ctx.createLinearGradient(0, cy - half, 0, cy + half);
-        grd.addColorStop(0, rgb(mix(water, [10, 10, 6], 0.35), 1));
-        grd.addColorStop(0.5, rgb(water, 1));
-        grd.addColorStop(1, rgb(mix(water, [10, 10, 6], 0.35), 1));
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.moveTo(0, cy - half);
-        for (var x = 0; x <= w; x += 24) ctx.lineTo(x, cy - half + Math.sin(x * 0.011 + 1.3) * 5 + Math.sin(x * 0.031) * 2);
-        for (x = w; x >= 0; x -= 24) ctx.lineTo(x, cy + half + Math.sin(x * 0.009 + 4) * 6 + Math.sin(x * 0.027) * 2);
-        ctx.closePath(); ctx.fill();
-
-        /* the lamps on the north bank, after dark */
-        if (day < 0.5) for (i = 0; i < 7; i++) {
-          var lx0 = (i + 0.35 + Math.sin(i * 2.7) * 0.25) / 7 * w, k = (0.5 - day) * 2;
-          ctx.fillStyle = 'rgba(255,196,120,' + (0.9 * k) + ')';
-          ctx.beginPath(); ctx.arc(lx0, cy - half - 26, 2.2, 0, 6.28); ctx.fill();
-          for (var j = 0; j < 14; j++) {
-            var ry = cy - half + 6 + j * (half * 1.5 / 14), rw = 10 + Math.sin(t * 1.7 + j * 1.3 + i) * 6 - j * 0.4;
-            ctx.fillStyle = 'rgba(255,170,90,' + (0.16 * k * (1 - j / 14)) + ')';
-            ctx.fillRect(lx0 - rw / 2 + Math.sin(t * 1.1 + j + i) * 3, ry, rw, 2.5);
-          }
-        }
-
-        /* current: fastest down the middle, slow at the banks */
-        ctx.lineCap = 'round';
-        var hi = mix(water, day > 0.4 ? [230, 236, 214] : [255, 176, 90], 0.55);
-        for (i = 0; i < lines.length; i++) {
-          var L = lines[i], v = (L[1] - 0.5) * 2, prof = 1 - v * v * 0.85;
-          var y = cy + v * half * 0.94 + Math.sin(t * 0.6 + L[3]) * 2.5;
-          var span = w + L[2] * 2;
-          var lx = ((L[0] * span + pos * prof * (0.8 + L[4] * 3)) % span) - L[2];
-          ctx.strokeStyle = rgb(hi, L[4] * (0.6 + 0.4 * Math.sin(t * 0.9 + L[3])));
-          ctx.lineWidth = 1 + L[4] * 8;
-          ctx.beginPath(); ctx.moveTo(lx, y); ctx.quadraticCurveTo(lx + L[2] / 2, y + Math.sin(L[3] + lx * 0.02) * 2, lx + L[2], y); ctx.stroke();
-        }
-        for (i = 0; i < leaves.length; i++) {
-          var f = leaves[i], fv = (f[1] - 0.5) * 1.6, fy = cy + fv * half;
-          var fx = ((f[0] * (w + 40) + pos * (1 - fv * fv * 0.85) * f[3]) % (w + 40)) - 20;
-          ctx.save(); ctx.translate(fx, fy); ctx.rotate(f[2] + t * 0.15 * f[3]);
-          ctx.fillStyle = rgb(mix([150, 110, 50], [40, 30, 18], 1 - day), 0.85);
-          ctx.beginPath(); ctx.ellipse(0, 0, 4.5, 2, 0, 0, 6.28); ctx.fill(); ctx.restore();
-        }
-        if (!calm && !document.hidden) requestAnimationFrame(draw);
-      }
-
-      function spark(pts) {
-        var c = document.getElementById('gauge-spark'), x = c.getContext('2d');
-        var w = c.clientWidth, h = c.clientHeight, d = Math.min(window.devicePixelRatio || 1, 2);
-        c.width = w * d; c.height = h * d; x.setTransform(d, 0, 0, d, 0, 0);
-        var t0 = pts[0][0], t1 = pts[pts.length - 1][0], lo = Infinity, hi = -Infinity;
-        pts.forEach(function (p) { lo = Math.min(lo, p[1]); hi = Math.max(hi, p[1]); });
-        var r = hi - lo || 1;
-        x.strokeStyle = 'rgba(244,246,238,0.9)'; x.lineWidth = 1.2; x.beginPath();
-        pts.forEach(function (p, i) {
-          var px = (p[0] - t0) / (t1 - t0 || 1) * (w - 2) + 1, py = h - 2 - (p[1] - lo) / r * (h - 4);
-          i ? x.lineTo(px, py) : x.moveTo(px, py);
-        });
-        x.stroke();
-      }
-
-      function series(d, code) {
-        var s = (d.value.timeSeries || []).filter(function (ts) { return ts.variable.variableCode[0].value === code; })[0];
-        if (!s) return [];
-        return s.values[0].value.map(function (v) { return [Date.parse(v.dateTime), parseFloat(v.value), v.dateTime]; })
-          .filter(function (p) { return isFinite(p[1]) && p[1] > -999; });
-      }
-
-      fetch('https://waterservices.usgs.gov/nwis/iv/?format=json&sites=08074000&parameterCd=00065,00060&period=P7D')
-        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-        .then(function (d) {
-          var st = series(d, '00065'), fl = series(d, '00060');
-          if (!st.length) throw 0;
-          var now = st[st.length - 1];
-          g.stage = now[1]; g.high = Math.max.apply(null, st.map(function (p) { return p[1]; }));
-          if (fl.length) g.flow = fl[fl.length - 1][1];
-          var lo = Math.min.apply(null, st.map(function (p) { return p[1]; }));
-          document.getElementById('gauge-stage').innerHTML = now[1].toFixed(2) + '<small>ft</small>';
-          document.getElementById('gauge-flow').textContent = fl.length
-            ? Math.round(g.flow).toLocaleString('en-US') + ' cubic feet a second, going east' : 'no reading for flow';
-          var when = new Date(now[0]).toLocaleString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit', weekday: 'long' }).toLowerCase();
-          document.getElementById('gauge-read').textContent = 'read ' + when + ' central, at shepherd drive · usgs 08074000';
-          document.getElementById('gauge-range').textContent = 'this week ' + lo.toFixed(2) + ' to ' + g.high.toFixed(2) + ' ft';
-          document.getElementById('gauge-week').hidden = false;
-          spark(st);
-          if (calm) draw(0);
-        })
-        .catch(function () {
-          document.getElementById('gauge-stage').innerHTML = '&nbsp;';
-          document.getElementById('gauge-flow').textContent = 'the gauge did not answer';
-        });
-
-      requestAnimationFrame(draw);
-      document.addEventListener('visibilitychange', function () { if (!document.hidden && !calm) { last = 0; requestAnimationFrame(draw); } });
-      window.addEventListener('resize', function () { if (calm) draw(0); });
-    })();
-  </script>
-
-{% include "water.html" %}
-{% include "forsale.html" %}
-{% include "staged.html" %}
-{% include "matchlight.njk" %}
-{% include "packed.html" %}
 </body>
 </html>

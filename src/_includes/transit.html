@@ -1,0 +1,116 @@
+  <!-- storage in transit (session 102). the house was emptied tonight.      -->
+  <!-- nine things that had been stacked onto every room came out of it:    -->
+  <!-- the water, the sign, the paint, the dark and the match, the second   -->
+  <!-- light, the fire, the radio lamp, the boxes, the floor plan. none of  -->
+  <!-- them were moved. they were left behind (git has them).               -->
+  <!-- what got onto the truck is this: the carrier's copy of each room.    -->
+  <!-- one filter on the root maps every colour the room had onto two:      -->
+  <!-- the blue a carbon sheet leaves, and canary copy paper. the room is    -->
+  <!-- all here, word for word. it is a copy of itself now.                 -->
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    /* the root is the one element a filter can go on without unpinning */
+    /* everything that was position: fixed inside it                    */
+    html { filter: url(#carbon); background: #F6EAA0; }
+    html.no-carbon { filter: none; }
+
+    .sit {
+      position: relative;
+      z-index: 60;
+      margin: 0 0 1.6rem;
+      padding: 0.7rem 0.9rem 0.8rem 2.6rem;
+      border: 1.5px solid #111;
+      background: #fff;
+      color: #111;
+      font-family: 'Oswald', 'Arial Narrow', sans-serif;
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.5;
+      max-width: 46rem;
+    }
+    /* the punched margin of a pad of forms */
+    .sit::before {
+      content: '';
+      position: absolute;
+      left: 0.75rem; top: 0.6rem; bottom: 0.6rem;
+      width: 0.62rem;
+      background: radial-gradient(circle at 50% 50%, #111 0 0.2rem, transparent 0.24rem) 0 0 / 0.62rem 1.25rem repeat-y;
+    }
+    .sit-co { font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; }
+    .sit-row { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; margin-top: 0.35rem; border-top: 1px solid #111; padding-top: 0.35rem; }
+    .sit-row span { white-space: nowrap; }
+    .sit .t {
+      font-family: 'Special Elite', 'Courier New', monospace;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.86rem;
+    }
+    .sit .blank { display: inline-block; min-width: 9rem; border-bottom: 1px solid #111; }
+    .sit a { color: inherit; }
+    .sit-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.5rem; }
+    .sit-nav a { text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 760px) { .sit { font-size: 0.6rem; padding-left: 2.1rem; } .sit .t { font-size: 0.78rem; } }
+  </style>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="carbon" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <!-- lights to paper: cream and white both come out blank -->
+      <!-- and the faint greys pressed harder, or the copy can't be read -->
+      <feComponentTransfer>
+        <feFuncR type="gamma" amplitude="1.25" exponent="1.8" offset="-0.06"/>
+        <feFuncG type="gamma" amplitude="1.25" exponent="1.8" offset="-0.06"/>
+        <feFuncB type="gamma" amplitude="1.25" exponent="1.8" offset="-0.06"/>
+      </feComponentTransfer>
+      <!-- out = ink + lightness × (paper − ink). ink #2B2F8C, paper #F6EAA0 -->
+      <feColorMatrix type="matrix" values="
+        0.1692 0.5693 0.0575 0 0.169
+        0.1560 0.5250 0.0530 0 0.184
+        0.0166 0.0558 0.0056 0 0.549
+        0      0      0      1 0"/>
+    </filter>
+  </svg>
+
+  <script>
+    (function () {
+      var sheets = {
+        guestbook:    { n: 2, item: '02', art: 'GUESTBOOK', pbo: 'everybody’s marks. not ours to leave', cond: 'CU · SO' },
+        transmission: { n: 3, item: '03', art: 'RADIO', pbo: 'still sending in there. don’t unplug it', cond: 'CU · L', note: 'carrier notes: item is still sending' },
+        log:          { n: 4, item: '04', art: 'LOG', pbo: '14 days. that’s all that was left in there', cond: 'SH · F · BU', note: 'carrier notes: smells of smoke' },
+        still:        { n: 5, item: '05', art: 'STILL', pbo: 'quiet things. pack loose', cond: 'L' },
+        witness:      { n: 6, item: '06', art: 'WITNESS', pbo: 'camera + every picture of the same room', cond: 'Z · BR', note: 'carrier notes: this sheet came through as a negative' },
+        ledger:       { n: 7, item: '07', art: 'LEDGER', pbo: 'receipts. all of them. KEEP', cond: 'CU · T' }
+      };
+      var order = ['guestbook', 'transmission', 'log', 'still', 'witness', 'ledger'];
+      var room = location.pathname.replace(/^\/|\/$|\/index\.html$/g, '').split('/')[0];
+      var s = sheets[room];
+      if (!s) return;
+      var next = order[order.indexOf(room) + 1];
+      function sheet() {
+        var host = document.querySelector('main') || document.body;
+        if (!host || document.querySelector('.sit')) return;
+        var d = document.createElement('div');
+        d.className = 'sit';
+        d.setAttribute('role', 'note');
+        d.setAttribute('aria-label', 'inventory sheet ' + s.n + ' of 7. item ' + s.item + ', ' + s.art.toLowerCase() + '. packed by owner. condition at origin ' + s.cond + '. this page is the carrier’s carbon copy.');
+        d.innerHTML =
+          '<div class="sit-co">shepherd drive transfer &amp; storage · household goods descriptive inventory</div>' +
+          '<div>carrier&rsquo;s copy (canary) &nbsp;·&nbsp; lot ms-1356 &nbsp;·&nbsp; storage in transit, bay 14</div>' +
+          '<div class="sit-row">' +
+            '<span>sheet <span class="t">' + s.n + '</span> of <span class="t">7</span></span>' +
+            '<span>item no. <span class="t">' + s.item + '</span></span>' +
+            '<span>article <span class="t">' + s.art + '</span></span>' +
+            '<span>PBO <span class="t">&#x2713;</span></span>' +
+            '<span>cond. at origin <span class="t">' + s.cond + '</span></span>' +
+          '</div>' +
+          '<div class="sit-row"><span>owner&rsquo;s label <span class="t">&ldquo;' + s.pbo + '&rdquo;</span></span>' +
+            (s.note ? '<span><span class="t">' + s.note + '</span></span>' : '') + '</div>' +
+          '<div class="sit-row"><span>deliver to <span class="blank"></span> <span class="t">none given. hold.</span></span></div>' +
+          '<div class="sit-nav"><a href="/">&larr; sheet 1, the inventory</a>' +
+            (next ? '<a href="/' + next + (next === 'log' ? '/' : '') + '">sheet ' + sheets[next].n + ' &rarr;</a>' : '<span>last sheet</span>') + '</div>';
+        host.insertBefore(d, host.firstChild);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sheet);
+      else sheet();
+    })();
+  </script>

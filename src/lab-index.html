@@ -237,7 +237,6 @@ permalink: /lab/index.html
       max-width: 36em;
     }
 
-{% include "floorplan-styles.html" %}
     /* the plan, redrawn for a room that can see it properly. every */
     /* other room on it is black, because from in here they are.    */
     .lab-sign .plan { margin-top: 0; width: clamp(190px, 21vw, 300px); max-width: none; }
@@ -455,8 +454,6 @@ permalink: /lab/index.html
         <p class="lab-match" id="lab-other" hidden>someone else is standing in here with one too. you can&rsquo;t see theirs either.</p>
         <p class="lab-intro">experiments. interactive pieces. things that do something. the lights in here don't burn down and nobody can turn them off, including me.</p>
       </div>
-{% assign room = "lab" %}
-{% include "floorplan.html" %}
     </div>
   </header>
 
@@ -723,7 +720,6 @@ permalink: /lab/index.html
   </script>
 
 {% include "other.html" %}
-{% include "fire.html" %}
   <script>
     /* the match you walked in with. this room only reads the time it */
     /* was struck. it doesn't strike one, doesn't count a dead one,   */
