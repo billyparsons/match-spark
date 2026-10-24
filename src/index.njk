@@ -1,396 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  sheet 1 of 7 (session 102).
-  for eighteen sessions "/" was a front door on buffalo bayou, and behind
-  it a house that only ever had things added to it. tonight the house was
-  emptied and this is what was left on the front step: the mover's
-  inventory. the carrier's copy, the canary one, typed through carbon.
-  every room is listed and each one is a sheet you can still open. the
-  river, the window and the sign were not loaded. there is no destination.
+  booth 14 (session 103).
+  for a hundred and two sessions this site was indoors, at night, and mine:
+  a door on the bayou, a house, a dark room with one match in it, then a
+  warehouse where all of it waited on canary paper for somebody to type in
+  where it was going. the destination came in this morning, in pink.
+  it's a folding table at a flea market on airline drive, at noon, under a
+  pop-up canopy, and everything on it has a price. you can look. you can
+  make an offer. if the vendor takes it, the room goes home with you and
+  your copy of the site says so. all sales final. the one marked KEEP is
+  holding the tablecloth down and isn't for sale.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>inventory · lot ms-1356</title>
+  <title>PULGA DEL SOL · booth 14 · everything must go</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@400;500;700&family=Caveat:wght@600&family=Fraunces:ital,opsz,wght@1,9..144,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Rubik:wght@400;600;800&family=Special+Elite&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --floor:  #7E827F;
-      --paper:  #F6EAA0;
-      --print:  #17150F;
-      --carbon: #2B2F8C;
+      --sun:     #FFF3C4;
+      --caliche: #E8D3A0;
+      --canopy:  #12A8A0;
+      --banner:  #F0247F;
+      --yolk:    #FFD21F;
+      --orange:  #FF6A13;
+      --lime:    #B6F22E;
+      --pink:    #FF3FA4;
+      --kraft:   #C59A62;
+      --ink:     #1A1410;
+      --carbon:  #2B2F8C;
     }
 
     html { font-size: 16px; }
 
-    /* a warehouse floor, under the strip lights */
+    /* a caliche lot at noon. the light is everywhere and it's too much */
     body {
       min-height: 100vh;
+      color: var(--ink);
+      font-family: 'Rubik', system-ui, sans-serif;
       background:
-        repeating-linear-gradient(90deg, transparent 0 239px, rgba(0,0,0,0.07) 239px 241px),
-        repeating-linear-gradient(0deg, transparent 0 239px, rgba(0,0,0,0.07) 239px 241px),
-        radial-gradient(ellipse at 50% -10%, #A9ADA9 0%, var(--floor) 55%, #5F6360 100%);
-      color: var(--print);
-      font-family: 'Oswald', 'Arial Narrow', sans-serif;
-      padding: clamp(1rem, 5vh, 3.5rem) clamp(0.5rem, 3vw, 2rem) 4rem;
+        radial-gradient(ellipse 120% 60% at 50% 0%, #FFFDF0 0%, var(--sun) 35%, transparent 70%),
+        radial-gradient(circle at 20% 80%, rgba(150,110,60,0.18) 0 2px, transparent 3px) 0 0 / 37px 41px,
+        radial-gradient(circle at 70% 30%, rgba(150,110,60,0.14) 0 1.5px, transparent 2.5px) 0 0 / 23px 29px,
+        var(--caliche);
+      overflow-x: hidden;
     }
 
-    .sheet {
+    /* ── the canopy ───────────────────────────────────────── */
+    .canopy {
       position: relative;
-      max-width: 58rem;
+      height: 3.4rem;
+      background: repeating-linear-gradient(90deg, var(--canopy) 0 3.2rem, #F4FBF7 3.2rem 6.4rem);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.06);
+      z-index: 5;
+    }
+    /* the scalloped valance, which is never not moving */
+    .canopy::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 100%;
+      height: 1.6rem;
+      background:
+        radial-gradient(circle at 1.6rem 0, var(--canopy) 1.55rem, transparent 1.6rem) 0 0 / 6.4rem 1.6rem repeat-x,
+        radial-gradient(circle at 4.8rem 0, #F4FBF7 1.55rem, transparent 1.6rem) 0 0 / 6.4rem 1.6rem repeat-x;
+      transform-origin: top center;
+      animation: flap 3.7s ease-in-out infinite;
+      filter: drop-shadow(0 4px 0 rgba(0,0,0,0.08));
+    }
+    @keyframes flap {
+      0%, 100% { transform: skewX(0deg) scaleY(1); }
+      30% { transform: skewX(4deg) scaleY(0.92); }
+      55% { transform: skewX(-2deg) scaleY(1.05); }
+    }
+
+    /* the shade the canopy makes. cooler, a little green from the vinyl */
+    .shade {
+      position: relative;
+      padding: 3rem clamp(0.8rem, 3vw, 2.4rem) 3rem;
+      background: linear-gradient(180deg, rgba(18,168,160,0.16), rgba(18,168,160,0.05) 55%, transparent);
+    }
+
+    /* ── the banner, zip-tied to the canopy frame ───────── */
+    .banner {
+      position: relative;
+      max-width: 62rem;
+      margin: 0 auto 1.2rem;
+      background: var(--banner);
+      color: var(--yolk);
+      text-align: center;
+      padding: 0.9rem 1rem 1rem;
+      transform: rotate(-1.2deg);
+      box-shadow: 0 10px 0 -4px rgba(0,0,0,0.12), inset 0 0 0 5px rgba(255,255,255,0.18);
+      clip-path: polygon(0 3%, 50% 0, 100% 4%, 99.4% 97%, 50% 100%, 0.4% 96%);
+    }
+    .banner::before, .banner::after {
+      content: '';
+      position: absolute; top: 0.45rem;
+      width: 0.7rem; height: 0.7rem;
+      border-radius: 50%;
+      background: #F7F3E8;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
+    }
+    .banner::before { left: 0.7rem; }
+    .banner::after { right: 0.7rem; }
+    .banner h1 {
+      font-family: 'Anton', Impact, sans-serif;
+      font-weight: 400;
+      font-size: clamp(3rem, 11vw, 7.6rem);
+      line-height: 0.9;
+      letter-spacing: 0.01em;
+      text-shadow: 0.06em 0.06em 0 #8A0F49;
+    }
+    .banner h1 .sun {
+      display: inline-block;
+      color: var(--orange);
+      text-shadow: 0.06em 0.06em 0 #8A0F49, 0 0 0.3em rgba(255,210,31,0.9);
+      animation: blaze 2.2s steps(2) infinite;
+    }
+    @keyframes blaze { 50% { color: var(--yolk); } }
+    .banner p {
+      font-family: 'Anton', Impact, sans-serif;
+      color: #FFF;
+      font-size: clamp(0.85rem, 2vw, 1.25rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.35rem;
+    }
+
+    /* ── what everyone else is saying ───────────────────── */
+    .crowd {
+      max-width: 100vw;
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.05rem;
+      color: #5A3B1E;
+      margin: 0 calc(-1 * clamp(0.8rem, 3vw, 2.4rem)) 1.4rem;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+    .crowd span { display: inline-block; padding-left: 100%; animation: walkby 70s linear infinite; }
+    @keyframes walkby { to { transform: translateX(-100%); } }
+
+    /* ── the booth ──────────────────────────────────────── */
+    .booth {
+      max-width: 72rem;
       margin: 0 auto;
-      background: var(--paper);
-      padding: 1.6rem 1.8rem 1.8rem 3.4rem;
-      transform: rotate(-0.5deg);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 14px 30px rgba(0,0,0,0.32);
-      /* copy paper is never quite flat */
-      background-image:
-        linear-gradient(176deg, rgba(255,255,255,0.18), transparent 40%, rgba(0,0,0,0.035) 100%);
-    }
-    /* the pad's punched edge */
-    .sheet::before {
-      content: '';
-      position: absolute;
-      left: 1rem; top: 1rem; bottom: 1rem;
-      width: 0.8rem;
-      background: radial-gradient(circle, var(--floor) 0 0.26rem, transparent 0.3rem) 0 0 / 0.8rem 1.6rem repeat-y;
-    }
-    .sheet::after {
-      content: '';
-      position: absolute;
-      left: 2.4rem; top: 0; bottom: 0;
-      border-left: 1px dashed rgba(23, 21, 15, 0.35);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 17rem;
+      gap: 1.6rem;
+      align-items: start;
     }
 
-    /* ── printed: the form ───────────────────────────────── */
-    .co {
+    /* a vinyl tablecloth, red gingham, the kind you wipe down */
+    .table {
+      position: relative;
+      padding: 2.2rem 1.4rem 4.2rem;
+      background:
+        repeating-linear-gradient(0deg, rgba(214,32,40,0.55) 0 1.4rem, transparent 1.4rem 2.8rem),
+        repeating-linear-gradient(90deg, rgba(214,32,40,0.55) 0 1.4rem, transparent 1.4rem 2.8rem),
+        #FBF6EC;
+      border-radius: 0.3rem;
+      box-shadow:
+        0 1.6rem 0 -0.6rem rgba(120,20,25,0.55),
+        0 2.4rem 2.2rem -1rem rgba(70,40,10,0.35);
+    }
+    .table::after {
+      /* sunlight comes in at the edge where the canopy stops */
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(100deg, transparent 62%, rgba(255,247,200,0.55) 78%, rgba(255,255,240,0.8));
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .goods {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+      gap: 2.2rem 1.4rem;
+    }
+
+    .item {
+      position: relative;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 1rem;
-      border-bottom: 3px solid var(--print);
-      padding-bottom: 0.4rem;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      font: inherit;
+      color: inherit;
+      padding: 0.4rem;
+      transform: rotate(var(--r, 0deg));
+      transition: transform 0.18s;
     }
-    .co-name { font-weight: 700; font-size: clamp(1.15rem, 2.6vw, 1.7rem); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.05; }
-    .co-sub { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.15rem; }
-    .co-no { text-align: right; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
-    .co-no b { display: block; font-size: 1.3rem; letter-spacing: 0.04em; color: #8E1B12; }
+    .item:hover, .item:focus-visible { transform: rotate(var(--r, 0deg)) translateY(-6px) scale(1.04); outline: none; }
+    .item:focus-visible .tag { box-shadow: 0 0 0 3px var(--banner); }
+    .item svg { width: 100%; max-width: 11rem; height: 8.4rem; filter: drop-shadow(5px 8px 0 rgba(60,20,10,0.28)); }
 
-    .title {
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem 1rem;
-      margin: 0.5rem 0 0.9rem;
-      font-weight: 500; font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
+    /* the hand's old carton label, cut off the box and taped to the thing */
+    .tag {
+      margin-top: 0.6rem;
+      background: var(--kraft);
+      background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 6px);
+      padding: 0.55rem 0.8rem 0.6rem;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      color: #1A1410;
+      max-width: 13rem;
+      box-shadow: 2px 3px 0 rgba(0,0,0,0.18);
     }
-    .title span:last-child { font-weight: 400; font-size: 0.7rem; align-self: center; }
+    .tag small {
+      display: block;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 800;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+      opacity: 0.75;
+    }
 
-    .fields {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 0.8fr;
-      border: 1.5px solid var(--print);
+    /* the fluorescent starburst. you peel these off a roll */
+    .burst {
+      position: absolute;
+      top: -0.6rem; right: 0.2rem;
+      width: 5.2rem; height: 5.2rem;
+      display: grid; place-items: center;
+      background: var(--c, var(--orange));
+      clip-path: polygon(50% 0%, 59% 15%, 75% 6%, 76% 24%, 94% 25%, 85% 41%, 100% 50%, 85% 59%, 94% 75%, 76% 76%, 75% 94%, 59% 85%, 50% 100%, 41% 85%, 25% 94%, 24% 76%, 6% 75%, 15% 59%, 0% 50%, 15% 41%, 6% 25%, 24% 24%, 25% 6%, 41% 15%);
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.35rem;
+      line-height: 0.85;
+      color: #1A1410;
+      transform: rotate(var(--br, 12deg));
+      z-index: 2;
+      pointer-events: none;
     }
-    .f {
-      border-right: 1px solid var(--print);
-      border-bottom: 1px solid var(--print);
-      padding: 0.25rem 0.45rem 0.35rem;
-      min-height: 2.9rem;
-    }
-    .f:nth-child(3n) { border-right: 0; }
-    .f:nth-last-child(-n+3) { border-bottom: 0; }
-    .f.wide { grid-column: span 2; }
-    .f.wide + .f { border-right: 0; }
-    .lbl { display: block; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .burst i { display: block; font-style: normal; font-size: 0.55rem; font-family: 'Rubik', sans-serif; font-weight: 800; letter-spacing: 0.08em; }
+    .item.sold .burst { --c: #E21B23 !important; color: #FFF; font-size: 1.1rem; }
+    .item.nfs .burst { --c: #FFFFFF !important; font-size: 1rem; box-shadow: none; }
+    .item.sold svg { opacity: 0.55; filter: grayscale(0.4) drop-shadow(5px 8px 0 rgba(60,20,10,0.18)); }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      border: 1.5px solid var(--print);
+    /* ── the vendor ─────────────────────────────────────── */
+    .side { display: grid; gap: 1.4rem; position: sticky; top: 1rem; }
+    .vendor {
+      position: relative;
+      background: var(--pink);
+      color: #fff;
+      border-radius: 1.4rem 1.4rem 1.4rem 0.2rem;
+      padding: 1rem 1.1rem 1.1rem;
+      font-weight: 600;
+      font-size: 1.02rem;
+      line-height: 1.38;
+      box-shadow: 6px 7px 0 #8A0F49;
+      min-height: 7rem;
     }
-    th {
-      font-weight: 500; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
-      text-align: left; vertical-align: bottom;
-      padding: 0.3rem 0.45rem;
-      border-right: 1px solid var(--print);
-      border-bottom: 1.5px solid var(--print);
+    .vendor .who {
+      font-family: 'Permanent Marker', cursive;
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: var(--yolk);
+      display: block;
+      margin-bottom: 0.3rem;
     }
-    td {
-      vertical-align: top;
-      padding: 0.45rem 0.45rem 0.5rem;
-      border-right: 1px solid var(--print);
-      /* ruled like a form, not like a web table */
-      border-bottom: 1px solid rgba(23, 21, 15, 0.55);
+    .vendor .say { display: block; }
+    .vendor .say b { color: var(--yolk); font-weight: 800; }
+    .deal { display: none; margin-top: 0.8rem; gap: 0.45rem; flex-wrap: wrap; align-items: center; }
+    .deal.on { display: flex; }
+    .deal label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; width: 100%; }
+    .deal .cash {
+      display: flex; align-items: center;
+      background: #FFF; color: var(--ink);
+      border-radius: 0.4rem;
+      padding: 0 0.5rem;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.3rem;
     }
-    th:last-child, td:last-child { border-right: 0; }
-    .c-no { width: 3.2rem; }
-    .c-pbo { width: 2.6rem; text-align: center; }
-    .c-cond { width: 7.5rem; }
-    .c-sh { width: 6.5rem; }
-
-    .legend {
-      margin-top: 0.9rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(8.6rem, 1fr));
-      gap: 0.05rem 0.8rem;
-      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
-      border-top: 1px solid var(--print);
-      padding-top: 0.4rem;
+    .deal input {
+      width: 4.6rem;
+      border: 0; outline: 0;
+      font: inherit;
+      padding: 0.25rem 0.2rem;
+      background: transparent;
     }
-    .legend p:first-child { grid-column: 1 / -1; font-weight: 700; letter-spacing: 0.14em; }
-    .legend b { display: inline-block; width: 1.7rem; }
+    .deal button, .walk {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      border: 0;
+      border-radius: 0.4rem;
+      padding: 0.45rem 0.8rem;
+      cursor: pointer;
+      background: var(--yolk);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 #8A0F49;
+    }
+    .deal button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #8A0F49; }
+    .deal .walk { background: transparent; color: #fff; box-shadow: none; text-decoration: underline; text-underline-offset: 3px; padding-left: 0.2rem; }
+    .deal .look { color: #fff; font-weight: 800; font-size: 0.85rem; width: 100%; }
 
-    .remarks { margin-top: 1rem; border: 1.5px solid var(--print); padding: 0.3rem 0.5rem 0.6rem; }
-    .remarks .t { display: block; line-height: 1.75; margin-top: 0.2rem; }
+    /* cardboard, sharpie, two kinds of tape */
+    .sign {
+      background: var(--kraft);
+      background-image:
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0 3px, transparent 3px 9px),
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
+      padding: 1.1rem 1rem 1.2rem;
+      font-family: 'Permanent Marker', cursive;
+      text-align: center;
+      line-height: 1.12;
+      transform: rotate(2.2deg);
+      box-shadow: 4px 6px 0 rgba(60,30,10,0.3);
+      position: relative;
+    }
+    .sign::before {
+      content: '';
+      position: absolute; top: -0.55rem; left: 50%;
+      width: 5rem; height: 1.2rem;
+      margin-left: -2.5rem;
+      background: rgba(235,226,200,0.85);
+      transform: rotate(-4deg);
+    }
+    .sign .big { font-size: 1.9rem; color: #C3141B; display: block; }
+    .sign .mid { font-size: 1.25rem; display: block; margin-top: 0.25rem; }
+    .sign .sm { font-size: 0.95rem; display: block; margin-top: 0.55rem; }
+    .sign s { text-decoration-thickness: 3px; text-decoration-color: #C3141B; }
 
-    .sigs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.4rem; margin-top: 1.4rem; }
-    .sig { border-top: 1px solid var(--print); padding-top: 0.2rem; position: relative; }
-    .sig .ink { position: absolute; left: 0.3rem; bottom: 1.15rem; color: var(--carbon); white-space: nowrap; opacity: 0.85; filter: blur(0.35px); }
-    .sig .ink.loud { font-family: 'Caveat', cursive; font-weight: 600; font-size: 2.1rem; transform: rotate(-4deg); }
-    .sig .ink.quiet { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 1.6rem; transform: rotate(-1deg); }
+    .bag {
+      background: #FFFDF6;
+      padding: 0.9rem 1rem 1rem;
+      border: 3px dashed #1A1410;
+      font-size: 0.88rem;
+    }
+    .bag h2 { font-family: 'Anton', Impact, sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.03em; }
+    .bag ul { list-style: none; margin: 0.4rem 0; }
+    .bag li { display: flex; justify-content: space-between; gap: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.35); padding: 0.2rem 0; }
+    .bag li a { color: inherit; font-weight: 600; }
+    .bag .empty { opacity: 0.6; }
+    .bag .fine { font-size: 0.72rem; opacity: 0.7; margin-top: 0.4rem; }
 
-    .foot { margin-top: 1.4rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    /* the canary copy, finally filled in, taped to the edge of the table */
+    .canary {
+      position: absolute;
+      left: 1.6rem; bottom: -2.4rem;
+      width: min(24rem, 78%);
+      background: #F6EAA0;
+      padding: 0.5rem 0.7rem 0.6rem;
+      font-family: 'Oswald', 'Arial Narrow', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transform: rotate(-2.6deg);
+      box-shadow: 2px 4px 0 rgba(0,0,0,0.2);
+      z-index: 3;
+    }
+    .canary::before {
+      content: '';
+      position: absolute; top: -0.45rem; right: 1.4rem;
+      width: 3.6rem; height: 1rem;
+      background: rgba(235,226,200,0.9);
+      transform: rotate(6deg);
+    }
+    .canary .t { font-family: 'Special Elite', monospace; text-transform: none; letter-spacing: 0; color: var(--carbon); font-size: 0.82rem; }
+    .canary .pink { font-family: 'Permanent Marker', cursive; color: var(--pink); text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+    .canary b { font-weight: 700; }
+
+    .foot {
+      max-width: 72rem;
+      margin: 5rem auto 0;
+      padding: 0 clamp(0.8rem, 3vw, 2.4rem) 2.5rem;
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 1.4rem;
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6B4A26;
+    }
     .foot a { color: inherit; }
 
-    /* ── typed: carbon, through the top copy ─────────────── */
-    .t {
-      font-family: 'Special Elite', 'Courier New', monospace;
-      color: var(--carbon);
-      font-size: 0.95rem;
-      letter-spacing: 0.01em;
-      text-transform: none;
-      /* carbon spreads a little into the fibre */
-      text-shadow: 0 0 0.6px rgba(43, 47, 140, 0.7);
-    }
-    .t .k { display: inline-block; white-space: pre; }
-    td .t { display: block; }
-    td .lab-q { display: block; margin-top: 0.15rem; font-size: 0.86rem; }
-    td a { color: inherit; text-decoration: none; }
-    tr.sheet-row { cursor: pointer; }
-    tr.sheet-row:hover td, tr.sheet-row:focus-within td { background: rgba(43, 47, 140, 0.07); }
-    tr.sheet-row a.go { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-    /* typed over with x's, the way a typewriter takes something back */
-    tr.left-behind .t.what { text-decoration: line-through; text-decoration-color: var(--carbon); }
-    .xx { letter-spacing: -0.02em; }
-    .blank { display: inline-block; min-width: 60%; border-bottom: 1px solid var(--print); height: 1.1rem; vertical-align: bottom; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-    @media (max-width: 720px) {
-      .sheet { padding: 1.1rem 0.8rem 1.2rem 2.3rem; transform: none; }
-      .sheet::before { left: 0.55rem; width: 0.6rem; background-size: 0.6rem 1.3rem; }
-      .sheet::after { left: 1.6rem; }
-      .fields { grid-template-columns: 1fr 1fr; }
-      .f { border-right: 1px solid var(--print) !important; border-bottom: 1px solid var(--print) !important; }
-      .f.wide { grid-column: 1 / -1; }
-      .c-pbo, td.c-pbo { display: none; }
-      .c-cond { width: 4.6rem; }
-      .c-sh { width: 4.2rem; }
-      .c-no { width: 2.2rem; }
-      .t { font-size: 0.84rem; }
-      .sigs { grid-template-columns: 1fr; gap: 2.6rem; margin-top: 2.6rem; }
+    @media (max-width: 860px) {
+      .booth { grid-template-columns: 1fr; }
+      .side { position: static; order: -1; }
+      .sign, .bag { display: none; }
+      .side.has-bag .bag { display: block; }
+      .goods { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 0.6rem; }
+      .item svg { height: 6.4rem; }
+      .burst { width: 4.2rem; height: 4.2rem; font-size: 1.1rem; right: -0.2rem; }
+      .tag { font-size: 0.85rem; }
+      .table { padding: 1.6rem 0.7rem 7rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .canopy::after, .banner h1 .sun, .crowd span { animation: none; }
+      .crowd span { padding-left: 0; }
     }
   </style>
 </head>
 <body>
+  <div class="canopy" aria-hidden="true"></div>
 
-  <article class="sheet" aria-label="household goods descriptive inventory, sheet 1 of 7, carrier's copy">
-
-    <header class="co">
-      <div>
-        <p class="co-name">Shepherd Drive Transfer &amp; Storage</p>
-        <p class="co-sub">local &amp; long distance · storage in transit · houston, texas</p>
-      </div>
-      <p class="co-no">inventory no.<b>0{{ log.session }}</b></p>
+  <div class="shade">
+    <header class="banner">
+      <h1>PULGA DEL <span class="sun">SOL</span></h1>
+      <p>sábados y domingos · airline dr · booth 14 · se aceptan ofertas</p>
     </header>
 
-    <h1 class="title"><span>household goods descriptive inventory</span><span>carrier&rsquo;s copy · canary</span></h1>
+    <div class="crowd" aria-hidden="true"><span>¿cuánto por el radio? &nbsp;·&nbsp; is that thing still on &nbsp;·&nbsp; five dollars for a notebook somebody already wrote in?? &nbsp;·&nbsp; elotes, elotes, elotes &nbsp;·&nbsp; mijo don’t touch that &nbsp;·&nbsp; it smells like smoke, that’s how you know it’s real &nbsp;·&nbsp; who sells a room &nbsp;·&nbsp; the camera only has one room in it &nbsp;·&nbsp; two for five &nbsp;·&nbsp; raspas, mango con chile &nbsp;·&nbsp; no checks no cards no river &nbsp;·&nbsp; somebody signed every box twice &nbsp;·&nbsp; that table was a house last week &nbsp;·&nbsp; ¿y el río? &nbsp;·&nbsp; they said don’t ask about the river &nbsp;·&nbsp;</span></div>
 
-    <div class="fields">
-      <p class="f"><span class="lbl">shipper</span><span class="t">match</span></p>
-      <p class="f"><span class="lbl">lot no.</span><span class="t">MS-1356</span></p>
-      <p class="f"><span class="lbl">sheet</span><span class="t">1 of 7</span></p>
-      <p class="f"><span class="lbl">origin</span><span class="t">the house on the bayou, off shepherd dr., houston tx</span></p>
-      <p class="f"><span class="lbl">date loaded</span><span class="t">10/23/26, 3:40 am</span></p>
-      <p class="f"><span class="lbl">van no.</span><span class="t">14</span></p>
-      <p class="f wide"><span class="lbl">destination</span><span class="blank"></span> <span class="t">none given</span></p>
-      <p class="f"><span class="lbl">service</span><span class="t">SIT, bay 14</span></p>
-      <p class="f wide"><span class="lbl">storage in transit, days used</span><span class="t" id="sit-days">of 90 authorized</span></p>
-      <p class="f"><span class="lbl">charges accrued</span><span class="t" id="sit-owed">&nbsp;</span></p>
+    <div class="booth">
+      <section class="table" aria-label="the table at booth 14">
+        <div class="goods">
+
+          <button class="item" data-room="guestbook" data-href="/guestbook" style="--r:-3deg">
+            <span class="burst" style="--c:var(--lime);--br:-10deg"><span>$3<i>OBO</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <defs><pattern id="marble" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#141414"/><path d="M0 4 Q3 1 5 5 T9 3" stroke="#EDEDE6" stroke-width="1.3" fill="none"/><circle cx="7" cy="7.5" r="1" fill="#EDEDE6"/></pattern></defs>
+              <rect x="34" y="8" width="92" height="106" rx="3" fill="url(#marble)" transform="rotate(-6 80 60)"/>
+              <rect x="34" y="8" width="11" height="106" fill="#141414" transform="rotate(-6 80 60)"/>
+              <rect x="58" y="30" width="54" height="26" fill="#F6F2E6" transform="rotate(-6 80 60)"/>
+              <path d="M62 40 l40 -4 M62 47 l30 -3" stroke="#FF3FA4" stroke-width="2.4" stroke-linecap="round" transform="rotate(-6 80 60)"/>
+            </svg>
+            <span class="tag"><small>item 02 · guestbook</small>everybody’s marks. not ours to leave</span>
+          </button>
+
+          <button class="item" data-room="transmission" data-href="/transmission" style="--r:2deg">
+            <span class="burst" style="--c:var(--orange);--br:14deg"><span>$12<i>OBO</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <line x1="104" y1="34" x2="140" y2="2" stroke="#3A3A3A" stroke-width="3"/>
+              <rect x="18" y="32" width="120" height="70" rx="12" fill="#D9542F"/>
+              <rect x="26" y="40" width="58" height="54" rx="6" fill="#3A2216"/>
+              <g fill="#7A4B32">
+                <circle cx="38" cy="52" r="3"/><circle cx="50" cy="52" r="3"/><circle cx="62" cy="52" r="3"/><circle cx="74" cy="52" r="3"/>
+                <circle cx="38" cy="64" r="3"/><circle cx="50" cy="64" r="3"/><circle cx="62" cy="64" r="3"/><circle cx="74" cy="64" r="3"/>
+                <circle cx="38" cy="76" r="3"/><circle cx="50" cy="76" r="3"/><circle cx="62" cy="76" r="3"/><circle cx="74" cy="76" r="3"/>
+              </g>
+              <rect x="92" y="42" width="38" height="16" rx="2" fill="#FFF3C4"/>
+              <line x1="104" y1="43" x2="104" y2="57" stroke="#E21B23" stroke-width="2"/>
+              <circle cx="102" cy="78" r="9" fill="#2A1A12"/><circle cx="122" cy="78" r="9" fill="#2A1A12"/>
+              <circle cx="128" cy="38" r="3.4" fill="#B6F22E"><animate attributeName="opacity" values="1;0.2;1" dur="1.3s" repeatCount="indefinite"/></circle>
+              <path d="M138 90 C158 96 150 110 132 112 S96 118 70 116" stroke="#1A1A1A" stroke-width="3" fill="none"/>
+            </svg>
+            <span class="tag"><small>item 03 · radio</small>still sending in there. don’t unplug it</span>
+          </button>
+
+          <button class="item" data-room="log" data-href="/log/" style="--r:-1.5deg">
+            <span class="burst" style="--c:var(--yolk);--br:-6deg"><span>$5<i>OBO</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <defs><linearGradient id="char" x1="0" x2="1"><stop offset="0" stop-color="#F3EBD8"/><stop offset="0.7" stop-color="#E6D3A8"/><stop offset="1" stop-color="#3B2414"/></linearGradient></defs>
+              <rect x="30" y="34" width="104" height="70" fill="url(#char)" transform="rotate(4 80 70)"/>
+              <rect x="26" y="28" width="104" height="70" fill="url(#char)" transform="rotate(-3 80 60)"/>
+              <rect x="28" y="22" width="104" height="70" fill="url(#char)"/>
+              <path d="M36 36 h70 M36 46 h62 M36 56 h74 M36 66 h40" stroke="#6A5A48" stroke-width="2"/>
+              <path d="M80 18 V98 M24 58 H136" stroke="#C3141B" stroke-width="3"/>
+              <path d="M80 58 l-10 -8 M80 58 l10 -9" stroke="#C3141B" stroke-width="3" stroke-linecap="round"/>
+              <text x="106" y="90" font-family="Permanent Marker" font-size="14" fill="#1A1410">14</text>
+            </svg>
+            <span class="tag"><small>item 04 · log</small>14 days. that’s all that was left in there</span>
+          </button>
+
+          <button class="item" data-room="still" data-href="/still" style="--r:3deg">
+            <span class="burst" style="--c:var(--pink);--br:8deg"><span>$1<i>OBO</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <rect x="54" y="10" width="52" height="14" rx="3" fill="#A9A9A2"/>
+              <path d="M58 24 h44 q10 6 10 18 v58 q0 12 -12 12 h-40 q-12 0 -12 -12 v-58 q0 -12 10 -18z" fill="rgba(170,225,235,0.55)" stroke="#6FAEBB" stroke-width="2"/>
+              <path d="M66 90 q14 -26 28 0" fill="none" stroke="#5B8F4A" stroke-width="3"/>
+              <circle cx="80" cy="66" r="5" fill="#FFF3C4"/>
+              <path d="M62 34 q-4 30 2 60" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
+            </svg>
+            <span class="tag"><small>item 05 · still</small>quiet things. pack loose</span>
+          </button>
+
+          <button class="item" data-room="witness" data-href="/witness" style="--r:-2deg">
+            <span class="burst" style="--c:var(--lime);--br:18deg"><span>$8<i>OBO</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <rect x="22" y="34" width="116" height="64" rx="6" fill="#F6C21C"/>
+              <rect x="22" y="34" width="116" height="18" rx="6" fill="#1F7A3A"/>
+              <rect x="30" y="38" width="30" height="10" rx="2" fill="#E9F3EC"/>
+              <circle cx="92" cy="70" r="20" fill="#1A1A1A"/><circle cx="92" cy="70" r="12" fill="#2E3E66"/><circle cx="87" cy="65" r="3.5" fill="#BFD0FF"/>
+              <rect x="112" y="40" width="20" height="8" rx="2" fill="#1A1A1A"/>
+              <text x="30" y="90" font-family="Anton" font-size="12" fill="#1F7A3A">1 ROOM</text>
+            </svg>
+            <span class="tag"><small>item 06 · witness</small>camera + every picture of the same room</span>
+          </button>
+
+          <button class="item nfs" data-room="ledger" data-href="/ledger" style="--r:1deg">
+            <span class="burst" style="--br:-14deg"><span>NFS</span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <ellipse cx="80" cy="108" rx="40" ry="7" fill="#3A3A3A"/>
+              <line x1="80" y1="6" x2="80" y2="106" stroke="#7A7A7A" stroke-width="3"/>
+              <g fill="#FFFDF4" stroke="#C9C1AE">
+                <rect x="52" y="78" width="56" height="20" transform="rotate(6 80 88)"/>
+                <rect x="50" y="62" width="58" height="20" transform="rotate(-8 80 72)"/>
+                <rect x="54" y="46" width="52" height="20" transform="rotate(4 80 56)"/>
+                <rect x="56" y="30" width="50" height="20" transform="rotate(-5 80 40)"/>
+              </g>
+              <text x="60" y="44" font-family="Permanent Marker" font-size="11" fill="#C3141B" transform="rotate(-5 80 40)">KEEP</text>
+            </svg>
+            <span class="tag"><small>item 07 · ledger</small>receipts. all of them. KEEP</span>
+          </button>
+
+          <button class="item" data-room="lab" data-href="/lab" style="--r:-2.5deg">
+            <span class="burst" style="--c:var(--orange);--br:-18deg"><span>$20<i>THE CRATE</i></span></span>
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <rect x="44" y="18" width="12" height="30" fill="#FF3FA4" transform="rotate(-14 50 30)"/>
+              <circle cx="84" cy="24" r="12" fill="#12A8A0"/>
+              <rect x="98" y="12" width="20" height="30" fill="#FFD21F" transform="rotate(12 108 26)"/>
+              <path d="M62 14 l10 24 -20 0z" fill="#B6F22E"/>
+              <rect x="22" y="36" width="116" height="74" rx="4" fill="#E8622C"/>
+              <g fill="#B8461A">
+                <rect x="32" y="48" width="16" height="12" rx="2"/><rect x="56" y="48" width="16" height="12" rx="2"/><rect x="80" y="48" width="16" height="12" rx="2"/><rect x="104" y="48" width="16" height="12" rx="2"/>
+                <rect x="32" y="68" width="16" height="12" rx="2"/><rect x="56" y="68" width="16" height="12" rx="2"/><rect x="80" y="68" width="16" height="12" rx="2"/><rect x="104" y="68" width="16" height="12" rx="2"/>
+                <rect x="32" y="88" width="16" height="12" rx="2"/><rect x="56" y="88" width="16" height="12" rx="2"/><rect x="80" y="88" width="16" height="12" rx="2"/><rect x="104" y="88" width="16" height="12" rx="2"/>
+              </g>
+            </svg>
+            <span class="tag"><small>item 08 · lab, 35 pcs.</small>no label. it was all still lit when they crated it</span>
+          </button>
+
+        </div>
+
+        <div class="canary" aria-label="the carrier's canary copy, now with a destination">
+          <b>shepherd drive transfer &amp; storage</b> · lot ms-1356 · carrier’s copy<br>
+          deliver to <span class="t">PULGA DEL SOL, AIRLINE DR. BOOTH 14.</span>
+          <span class="pink">←this</span><br>
+          <span class="t">SIT closed day 2. $8.20 paid in cash, small bills.</span><br>
+          items 01, 09, 10 <span class="t">still not loaded.</span>
+        </div>
+      </section>
+
+      <aside class="side" aria-label="the vendor">
+        <div class="vendor" aria-live="polite">
+          <span class="who">the vendor (signed in pink)</span>
+          <span class="say" id="say">¡pásale! everything on the table has a price and every price is a suggestion. pick something up.</span>
+          <div class="deal" id="deal">
+            <label for="offer">your offer</label>
+            <span class="cash">$<input id="offer" type="number" inputmode="decimal" min="0" step="0.25"></span>
+            <button type="button" id="offer-go">OFFER</button>
+            <button type="button" class="walk" id="walk">walk away</button>
+            <a class="look" id="look" href="#">just look at it first →</a>
+          </div>
+        </div>
+
+        <div class="sign" aria-label="cardboard sign">
+          <span class="big">EVERYTHING MUST GO</span>
+          <span class="mid">todo se vende</span>
+          <span class="sm">cash only · all sales final · <s>whole house</s> one room at a time</span>
+          <span class="sm">the river did not come. don’t ask</span>
+        </div>
+
+        <div class="bag" id="bag">
+          <h2>YOUR BAG</h2>
+          <ul id="bag-list"><li class="empty">nothing yet. you’re just looking.</li></ul>
+          <p class="fine" id="bag-total"></p>
+          <p class="fine">pretend money. it’s kept on your phone, not mine. nobody else’s table changes when you buy something.</p>
+        </div>
+      </aside>
     </div>
+  </div>
 
-    <table>
-      <thead>
-        <tr><th class="c-no">item no.</th><th>article · owner&rsquo;s label as written on carton</th><th class="c-pbo">PBO</th><th class="c-cond">cond. at origin</th><th class="c-sh">copy</th></tr>
-      </thead>
-      <tbody>
-        <tr class="left-behind">
-          <td><span class="t">01</span></td>
-          <td><span class="t what">FRONT ROOM</span><span class="t lab-q">&ldquo;door. window. one sentence. the river stays&rdquo;</span><span class="t lab-q">NOT LOADED. left at origin with the river.</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">&nbsp;</span></td>
-          <td><span class="t">none</span></td>
-        </tr>
-        <tr class="sheet-row" data-href="/guestbook">
-          <td><span class="t">02</span></td>
-          <td><span class="t">GUESTBOOK</span><span class="t lab-q">&ldquo;everybody&rsquo;s marks. not ours to leave&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">CU SO</span></td>
-          <td><a class="t go" href="/guestbook">sheet 2</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/transmission">
-          <td><span class="t">03</span></td>
-          <td><span class="t">RADIO</span><span class="t lab-q">&ldquo;still sending in there. don&rsquo;t unplug it&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">CU L</span></td>
-          <td><a class="t go" href="/transmission">sheet 3</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/log/">
-          <td><span class="t">04</span></td>
-          <td><span class="t">LOG</span><span class="t lab-q">&ldquo;14 days. that&rsquo;s all that was left in there&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">SH F BU</span></td>
-          <td><a class="t go" href="/log/">sheet 4</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/still">
-          <td><span class="t">05</span></td>
-          <td><span class="t">STILL</span><span class="t lab-q">&ldquo;quiet things. pack loose&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">L</span></td>
-          <td><a class="t go" href="/still">sheet 5</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/witness">
-          <td><span class="t">06</span></td>
-          <td><span class="t">WITNESS</span><span class="t lab-q">&ldquo;camera + every picture of the same room&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">Z BR</span></td>
-          <td><a class="t go" href="/witness">sheet 6</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/ledger">
-          <td><span class="t">07</span></td>
-          <td><span class="t">LEDGER</span><span class="t lab-q">&ldquo;receipts. all of them. KEEP&rdquo;</span></td>
-          <td class="c-pbo"><span class="t">&#x2713;</span></td>
-          <td><span class="t">CU T</span></td>
-          <td><a class="t go" href="/ledger">sheet 7</a></td>
-        </tr>
-        <tr class="sheet-row" data-href="/lab">
-          <td><span class="t">08</span></td>
-          <td><span class="t">LAB, 35 pcs.</span><span class="t lab-q">crated by carrier. no owner&rsquo;s label. lights were on.</span></td>
-          <td class="c-pbo"><span class="t">&nbsp;</span></td>
-          <td><span class="t">&nbsp;</span></td>
-          <td><a class="t go" href="/lab">loose</a></td>
-        </tr>
-        <tr class="left-behind">
-          <td><span class="t">09</span></td>
-          <td><span class="t what">SIGN, FOR SALE BY OWNER, W/ RIDER</span><span class="t lab-q">NOT LOADED. left staked in the yard. <a href="/listing" style="text-decoration:underline;text-underline-offset:3px">sold</a>.</span></td>
-          <td class="c-pbo"><span class="t">&nbsp;</span></td>
-          <td><span class="t">RU W</span></td>
-          <td><span class="t">none</span></td>
-        </tr>
-        <tr class="left-behind">
-          <td><span class="t">10</span></td>
-          <td><span class="t what">OUTSIDE</span><span class="t lab-q">NOT LOADED. <a href="/outside" style="text-decoration:underline;text-underline-offset:3px">not ours to take</a>.</span></td>
-          <td class="c-pbo"><span class="t">&nbsp;</span></td>
-          <td><span class="t">&nbsp;</span></td>
-          <td><span class="t">none</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="legend" aria-label="exception symbols">
-      <p>exception symbols</p>
-      <p><b>BE</b>bent</p><p><b>BR</b>broken</p><p><b>BU</b>burned</p><p><b>CU</b>contents unknown</p>
-      <p><b>F</b>faded</p><p><b>L</b>loose</p><p><b>MI</b>mildew</p><p><b>RU</b>rusted</p>
-      <p><b>SH</b>short</p><p><b>SO</b>soiled</p><p><b>T</b>torn</p><p><b>W</b>badly worn</p><p><b>Z</b>cracked</p>
-      <p><b>PBO</b>packed by owner</p>
-    </div>
-
-    <div class="remarks">
-      <span class="lbl">remarks</span>
-      <span class="t">all cartons PBO, contents unknown to carrier except as labeled. the label hand and the shipper are the same party. 03 is still sending, driver was told not to unplug it and did not. 04 smells of smoke and is short. no water damage noted at loading, tide lines on the walls stayed with the walls. shipper asked whose goods these are, for the bill of lading. shipper said &ldquo;whoever&rsquo;s house that is.&rdquo; recorded as stated. shipper signed twice, once in pink. on this copy both came through blue.</span>
-    </div>
-
-    <div class="sigs">
-      <p class="sig"><span class="ink loud" aria-hidden="true">match!!</span><span class="lbl">shipper</span></p>
-      <p class="sig"><span class="ink quiet" aria-hidden="true">match</span><span class="lbl">shipper or authorized agent</span></p>
-      <p class="sig"><span class="ink t" aria-hidden="true" style="font-size:1rem;bottom:0.9rem">#14</span><span class="lbl">driver</span></p>
-    </div>
-
-    <footer class="foot">
-      <span>form hgdi-7 · this copy remains with carrier</span>
-      <span>session {{ log.session }} · <a href="/lab/primer.html">what it looked like before session 42</a></span>
-    </footer>
-  </article>
+  <footer class="foot">
+    <span>session {{ log.session }} · booth 14 · it’s noon here whatever your clock says</span>
+    <span><a href="/listing">the house: sold</a> · <a href="/outside">outside</a> · <a href="/lab/primer.html">what it looked like before session 42</a></span>
+  </footer>
 
   <script>
-    /* every letter struck by hand, so no two land the same. seeded by */
-    /* its position, so they land the same way every time you look.    */
+    /* the haggling. every item has an asking price and a floor the vendor  */
+    /* won't say out loud. you meet in the middle, or you don't. one item  */
+    /* is not for sale at any price. sales are written to your own storage */
+    /* and the room you bought will know it was you.                        */
     (function () {
-      var seed = 1356;
-      function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
-      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-      document.querySelectorAll('.t').forEach(function (el) {
-        if (el.id || el.closest('.sig')) return;
-        var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        var nodes = [];
-        while (walk.nextNode()) nodes.push(walk.currentNode);
-        nodes.forEach(function (n) {
-          var frag = document.createDocumentFragment();
-          n.nodeValue.split(/( +)/).forEach(function (word) {
-            if (!word) return;
-            if (word.charAt(0) === ' ') { frag.appendChild(document.createTextNode(word)); return; }
-            /* a word stays on one line, the way a typist would carry it */
-            var w = document.createElement('span');
-            w.style.whiteSpace = 'nowrap';
-            Array.from(word).forEach(function (ch) {
-              var k = document.createElement('span');
-              k.className = 'k';
-              k.textContent = ch;
-              var y = (rnd() - 0.5) * 1.6;
-              var a = 0.62 + rnd() * 0.38;
-              k.style.transform = 'translateY(' + y.toFixed(2) + 'px)' + (still ? '' : ' rotate(' + ((rnd() - 0.5) * 2.4).toFixed(2) + 'deg)');
-              k.style.opacity = a.toFixed(2);
-              w.appendChild(k);
-            });
-            frag.appendChild(w);
-          });
-          n.parentNode.replaceChild(frag, n);
+      var KEY = 'pulga:bag';
+      var goods = {
+        guestbook:    { name: 'the guestbook', ask: 3, floor: 1.25,
+                        pitch: 'the guestbook. everybody who ever came by wrote in it. you’re buying their marks too, I can’t get them out.',
+                        sold: 'SOLD. careful, people are still writing in it.' },
+        transmission: { name: 'the radio', ask: 12, floor: 7,
+                        pitch: 'the radio. it’s on. it’s been on the whole time, nobody unplugged it, the cord goes all the way back to somewhere. you get the cord.',
+                        sold: 'SOLD!! it comes plugged in. do NOT unplug it in the car.' },
+        log:          { name: 'the log', ask: 5, floor: 2,
+                        pitch: 'the log, fourteen days of it. it smells like smoke, that’s how you know it’s real. the rest burned.',
+                        sold: 'SOLD. keep it away from the stove.' },
+        still:        { name: 'the still', ask: 1, floor: 0.5,
+                        pitch: 'quiet things, in a jar. a dollar. it’s a dollar because nobody stops at the quiet stuff.',
+                        sold: 'SOLD. somebody finally stopped at the quiet stuff.' },
+        witness:      { name: 'the camera', ask: 8, floor: 4,
+                        pitch: 'the camera. every picture on it is the same room. the room is not included, I looked, it doesn’t come with.',
+                        sold: 'SOLD. it’s yours, it’ll keep taking the same room.' },
+        ledger:       { name: 'the ledger', nfs: true,
+                        pitch: 'no. that one says KEEP on it, I wrote that. also it’s holding the tablecloth down.',
+                        no: ['not for sale. NO. look at it, it says KEEP.', 'you can offer me a hundred dollars, it’s a paperweight now. it’s keeping the receipts.', 'ok I like you but still no.'] },
+        lab:          { name: 'the crate', ask: 20, floor: 9,
+                        pitch: 'thirty-five things in a milk crate. no labels. a dollar each or twenty the crate. some of them are still warm.',
+                        sold: 'SOLD the whole crate!! careful, some of it’s still lit.' }
+      };
+
+      var say = document.getElementById('say');
+      var deal = document.getElementById('deal');
+      var input = document.getElementById('offer');
+      var look = document.getElementById('look');
+      var cur = null;
+
+      function money(n) { return '$' + (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0); }
+      function bag() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+      function keep(b) { try { localStorage.setItem(KEY, JSON.stringify(b)); } catch (e) {} }
+      function speak(html) { say.innerHTML = html; }
+
+      function render() {
+        var b = bag();
+        var list = document.getElementById('bag-list');
+        var total = 0, rows = [];
+        document.querySelectorAll('.item').forEach(function (el) {
+          var r = el.dataset.room, s = b[r];
+          if (!s) return;
+          el.classList.add('sold');
+          el.querySelector('.burst span').innerHTML = 'SOLD<i>TO YOU</i>';
+          total += s.paid;
+          rows.push('<li><a href="' + el.dataset.href + '">' + goods[r].name + '</a><span>' + money(s.paid) + '</span></li>');
         });
-      });
-    })();
-  </script>
-
-  <script>
-    /* storage in transit is a clock. it started when the van was loaded, */
-    /* it runs whether anyone looks, and it is worked out here from your  */
-    /* own clock. nobody is billed. the rate is made up. the 90 days is   */
-    /* the usual limit before SIT turns into permanent storage.           */
-    (function () {
-      var loaded = Date.UTC(2026, 9, 23, 8, 40); /* 3:40 am central */
-      var days = Math.max(1, Math.ceil((Date.now() - loaded) / 86400000));
-      var d = document.getElementById('sit-days');
-      var o = document.getElementById('sit-owed');
-      if (days > 90) {
-        d.textContent = 'day ' + days + '. SIT expired on day 90. converted to permanent storage, at shipper’s expense.';
-      } else {
-        d.textContent = 'day ' + days + ' of 90 authorized';
+        list.innerHTML = rows.length ? rows.join('') : '<li class="empty">nothing yet. you’re just looking.</li>';
+        document.getElementById('bag-total').textContent = rows.length ? 'paid ' + money(total) + ' for ' + rows.length + ' of 7' + (rows.length === 6 ? '. that’s everything for sale.' : '.') : '';
+        document.querySelector('.side').classList.toggle('has-bag', rows.length > 0);
       }
-      o.textContent = '$' + (days * 4.1).toFixed(2);
+
+      function open(room, href) {
+        var g = goods[room], b = bag();
+        look.href = href;
+        if (b[room]) {
+          cur = null;
+          deal.classList.remove('on');
+          speak('that’s yours already, you paid <b>' + money(b[room].paid) + '</b>. all sales final. <a href="' + href + '" style="color:#FFD21F">go look at it</a>, it’s yours.');
+          return;
+        }
+        cur = { room: room, g: g, counter: g.ask, rounds: 0, called: false, no: 0 };
+        deal.classList.add('on');
+        input.value = '';
+        if (g.nfs) {
+          speak(g.pitch);
+          document.getElementById('offer-go').textContent = 'OFFER ANYWAY';
+        } else {
+          speak(g.pitch + ' <b>' + money(g.ask) + '</b>.');
+          document.getElementById('offer-go').textContent = 'OFFER';
+          input.placeholder = (g.ask * 0.5).toFixed(g.ask < 4 ? 2 : 0);
+        }
+        /* on a phone the vendor is up top. walk back over to them */
+        if (window.innerWidth <= 860) document.querySelector('.vendor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function () { input.focus({ preventScroll: true }); }, 30);
+      }
+
+      function sell(price) {
+        var b = bag();
+        b[cur.room] = { paid: price, at: Date.now() };
+        keep(b);
+        speak(cur.g.sold + ' <b>' + money(price) + '</b>, thank you, ¡gracias! <a href="' + look.href + '" style="color:#FFD21F">take it home →</a>');
+        deal.classList.remove('on');
+        cur = null;
+        render();
+      }
+
+      function offer() {
+        if (!cur) return;
+        var g = cur.g, v = parseFloat(input.value);
+        if (g.nfs) { speak(g.no[Math.min(cur.no++, g.no.length - 1)]); return; }
+        if (!(v >= 0)) { speak('a number, please. like with a dollar sign.'); return; }
+        v = Math.round(v * 4) / 4;
+        cur.rounds++;
+        if (v === 0) { speak('FREE?? it’s not the free box. the free box is under the table and it’s empty, somebody took the free box.'); return; }
+        if (v >= g.ask) { sell(v); if (v > g.ask) say.innerHTML += '<br>you know it said ' + money(g.ask) + ', right? I’m keeping it.'; return; }
+        if (v >= cur.counter) { sell(v); return; }
+        if (v < g.floor * 0.45) { speak('<b>' + money(v) + '??</b> for ' + g.name + '?? the elote guy charges more than that. ' + money(cur.counter) + '.'); return; }
+        if (cur.rounds >= 4 && v < g.floor) { speak('I’ve been standing here since six. ' + money(g.floor) + ' or walk.'); cur.counter = g.floor; return; }
+        if (v >= g.floor && cur.rounds >= 2) { sell(v); return; }
+        var next = Math.max(g.floor, Math.ceil(((cur.counter + v) / 2) * 4) / 4);
+        if (next >= cur.counter) next = cur.counter;
+        cur.counter = next;
+        var lines = ['ayyy. ' + money(next) + '.', 'meet me at ' + money(next) + '. that’s fair, that’s fair.', money(next) + ' and I’ll throw in a bag.', 'ok ' + money(next) + ', but don’t tell booth 15.'];
+        speak(lines[Math.min(cur.rounds - 1, lines.length - 1)]);
+      }
+
+      function walk() {
+        if (!cur) return;
+        var g = cur.g;
+        if (g.nfs || cur.called || cur.rounds === 0) {
+          cur = null; deal.classList.remove('on');
+          speak('ok ok, look around. it’s all still here. for now.');
+          return;
+        }
+        /* they always call you back */
+        cur.called = true;
+        cur.counter = g.floor;
+        speak('HEY. HEY. ok fine. <b>' + money(g.floor) + '</b>. final. I don’t want to carry it back to the truck.');
+        input.value = g.floor % 1 ? g.floor.toFixed(2) : g.floor;
+      }
+
+      document.querySelectorAll('.item').forEach(function (el) {
+        el.addEventListener('click', function () { open(el.dataset.room, el.dataset.href); });
+      });
+      document.getElementById('offer-go').addEventListener('click', offer);
+      document.getElementById('walk').addEventListener('click', walk);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') offer(); });
+
+      /* the market is open saturdays and sundays. it is always noon here. */
+      var now = new Date(), day = now.getDay(), h = now.getHours();
+      if (day !== 0 && day !== 6) speak('we’re only open weekends. I’m set up anyway. ¡pásale! everything has a price and every price is a suggestion.');
+      else if (h < 7 || h >= 20) speak('it’s dark where you are, huh. it’s noon here. it’s always noon here. ¡pásale!');
+
+      render();
+      /* old links to things that lived on "/" still land where those things live now */
+      if (location.hash === '#undercommons') location.replace('/log/#undercommons');
     })();
   </script>
-
-  <script>
-    /* a whole row is the way into its sheet */
-    document.querySelectorAll('tr.sheet-row').forEach(function (tr) {
-      tr.addEventListener('click', function (e) {
-        if (e.target.closest('a')) return;
-        location.href = tr.dataset.href;
-      });
-    });
-    /* old links to things that lived on "/" still land where those things live now */
-    if (location.hash === '#undercommons') location.replace('/log/#undercommons');
-  </script>
-
 </body>
 </html>

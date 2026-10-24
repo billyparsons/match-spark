@@ -1,0 +1,127 @@
+  <!-- booth 14 (session 103). the carbon filter came off with the canary   -->
+  <!-- paper: the rooms are in their own colours again, under a canopy at  -->
+  <!-- noon, and each one has a tag on it. if you bought it at the table,  -->
+  <!-- the tag knows. nothing about the room changes for anyone else.      -->
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Anton&display=swap" rel="stylesheet">
+  <style>
+    /* the canopy's edge, and the light under it */
+    .pulga-valance {
+      position: fixed; left: 0; right: 0; top: 0;
+      height: 0.9rem;
+      background: repeating-linear-gradient(90deg, #12A8A0 0 2rem, #F4FBF7 2rem 4rem);
+      z-index: 9998;
+      pointer-events: none;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+    }
+    .pulga-valance::after {
+      content: '';
+      position: absolute; left: 0; right: 0; top: 100%;
+      height: 0.9rem;
+      background:
+        radial-gradient(circle at 1rem 0, #12A8A0 0.95rem, transparent 1rem) 0 0 / 4rem 1rem repeat-x,
+        radial-gradient(circle at 3rem 0, #F4FBF7 0.95rem, transparent 1rem) 0 0 / 4rem 1rem repeat-x;
+      transform-origin: top;
+      animation: pulga-flap 3.7s ease-in-out infinite;
+    }
+    @keyframes pulga-flap { 30% { transform: skewX(5deg) scaleY(0.9); } 55% { transform: skewX(-2deg); } }
+    .pulga-sun {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 9997;
+      background: linear-gradient(100deg, rgba(18,168,160,0.07), transparent 45%, rgba(255,214,90,0.13) 85%, rgba(255,240,170,0.22));
+      mix-blend-mode: multiply;
+    }
+
+    .pulga-tag {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      width: fit-content;
+      max-width: 100%;
+      margin: 1.6rem 0 1.8rem auto;
+      padding: 0.6rem 1rem 0.65rem 1.6rem;
+      background: #C59A62;
+      background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 6px);
+      color: #1A1410;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.95rem;
+      line-height: 1.2;
+      transform: rotate(-1.6deg);
+      box-shadow: 3px 4px 0 rgba(60,30,10,0.28);
+      clip-path: polygon(0.9rem 0, 100% 0, 100% 100%, 0.9rem 100%, 0 50%);
+      z-index: 60;
+    }
+    .pulga-tag::before {
+      /* the hole the string goes through */
+      content: '';
+      position: absolute; left: 0.8rem; top: 50%;
+      width: 0.42rem; height: 0.42rem; margin-top: -0.21rem;
+      border-radius: 50%;
+      background: #FBF6EC;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
+    }
+    .pulga-tag small {
+      display: block;
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .pulga-tag a { color: inherit; font-family: 'Anton', Impact, sans-serif; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .pulga-burst {
+      flex: none;
+      width: 3.6rem; height: 3.6rem;
+      display: grid; place-items: center;
+      background: var(--c, #FF6A13);
+      clip-path: polygon(50% 0%, 59% 15%, 75% 6%, 76% 24%, 94% 25%, 85% 41%, 100% 50%, 85% 59%, 94% 75%, 76% 76%, 75% 94%, 59% 85%, 50% 100%, 41% 85%, 25% 94%, 24% 76%, 6% 75%, 15% 59%, 0% 50%, 15% 41%, 6% 25%, 24% 24%, 25% 6%, 41% 15%);
+      font-size: 0.95rem;
+      transform: rotate(10deg);
+      text-align: center;
+      line-height: 0.9;
+    }
+    .pulga-tag.sold .pulga-burst { --c: #E21B23; color: #FFF; font-size: 0.72rem; }
+    @media (max-width: 760px) { .pulga-tag { font-size: 0.82rem; margin-left: 0; } }
+    @media (prefers-reduced-motion: reduce) { .pulga-valance::after { animation: none; } }
+  </style>
+
+  <script>
+    (function () {
+      var tags = {
+        guestbook:    { item: '02', name: 'guestbook', ask: '$3', c: '#B6F22E', label: 'everybody’s marks. not ours to leave' },
+        transmission: { item: '03', name: 'radio', ask: '$12', c: '#FF6A13', label: 'still sending in there. don’t unplug it' },
+        log:          { item: '04', name: 'log', ask: '$5', c: '#FFD21F', label: '14 days. that’s all that was left in there' },
+        still:        { item: '05', name: 'still', ask: '$1', c: '#FF3FA4', label: 'quiet things. pack loose' },
+        witness:      { item: '06', name: 'witness', ask: '$8', c: '#B6F22E', label: 'camera + every picture of the same room' },
+        ledger:       { item: '07', name: 'ledger', ask: 'NFS', c: '#FFFFFF', label: 'receipts. all of them. KEEP' }
+      };
+      var room = location.pathname.replace(/^\/|\/$|\/index\.html$/g, '').split('/')[0];
+      var t = tags[room];
+      function money(n) { return '$' + (n % 1 ? n.toFixed(2) : n); }
+      function hang() {
+        if (!document.body || document.querySelector('.pulga-valance')) return;
+        var v = document.createElement('div'); v.className = 'pulga-valance'; v.setAttribute('aria-hidden', 'true');
+        var s = document.createElement('div'); s.className = 'pulga-sun'; s.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(s); document.body.appendChild(v);
+        if (!t) return;
+        var bought = null;
+        try { bought = (JSON.parse(localStorage.getItem('pulga:bag')) || {})[room]; } catch (e) {}
+        var d = document.createElement('div');
+        d.className = 'pulga-tag' + (bought ? ' sold' : '');
+        d.setAttribute('role', 'note');
+        var when = bought ? new Date(bought.at).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' }) : '';
+        d.innerHTML =
+          '<span class="pulga-burst" style="--c:' + t.c + '">' + (bought ? 'SOLD<br>TO YOU' : t.ask) + '</span>' +
+          '<span><small>pulga del sol · booth 14 · item ' + t.item + ' · ' + t.name + '</small>' +
+          (bought
+            ? 'yours. you paid ' + money(bought.paid) + ' on ' + when + '. no returns.'
+            : '“' + t.label + '”' + (t.ask === 'NFS' ? ' &nbsp;not for sale.' : ' &nbsp;make an offer.')) +
+          '<br><a href="/">← back to the table</a></span>';
+        var host = document.querySelector('main') || document.body;
+        host.insertBefore(d, host.firstChild);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hang);
+      else hang();
+    })();
+  </script>
