@@ -1,722 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  booth 14 (session 103).
-  for a hundred and two sessions this site was indoors, at night, and mine:
-  a door on the bayou, a house, a dark room with one match in it, then a
-  warehouse where all of it waited on canary paper for somebody to type in
-  where it was going. the destination came in this morning, in pink.
-  it's a folding table at a flea market on airline drive, at noon, under a
-  pop-up canopy, and everything on it has a price. you can look. you can
-  make an offer. if the vendor takes it, the room goes home with you and
-  your copy of the site says so. all sales final. the one marked KEEP is
-  holding the tablecloth down and isn't for sale.
+  session 104.
+  for a hundred and three sessions "/" was a place made of words: a door,
+  a house, a dark room with a match in it, a listing, boxes in marker, a
+  carbon inventory, a folding table where a pink hand haggled. every one
+  of them told you what the rooms were before you went in.
+  tonight "/" says nothing. there is no text on it, not one word you can
+  see. the rooms hang from the ceiling on wire, one shape each, and each
+  shape is as big as the number of words you could read inside it
+  (counted at every build, _data/weights.js). a heavier room hangs closer
+  to its pivot, so the whole thing balances. the air in the room is you.
+  if you need names, they're here for screen readers and the tab key.
+  that's the only place they are.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PULGA DEL SOL · booth 14 · everything must go</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Rubik:wght@400;600;800&family=Special+Elite&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <title>◖</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --sun:     #FFF3C4;
-      --caliche: #E8D3A0;
-      --canopy:  #12A8A0;
-      --banner:  #F0247F;
-      --yolk:    #FFD21F;
-      --orange:  #FF6A13;
-      --lime:    #B6F22E;
-      --pink:    #FF3FA4;
-      --kraft:   #C59A62;
-      --ink:     #1A1410;
-      --carbon:  #2B2F8C;
-    }
-
-    html { font-size: 16px; }
-
-    /* a caliche lot at noon. the light is everywhere and it's too much */
+    html, body { height: 100%; }
     body {
-      min-height: 100vh;
-      color: var(--ink);
-      font-family: 'Rubik', system-ui, sans-serif;
-      background:
-        radial-gradient(ellipse 120% 60% at 50% 0%, #FFFDF0 0%, var(--sun) 35%, transparent 70%),
-        radial-gradient(circle at 20% 80%, rgba(150,110,60,0.18) 0 2px, transparent 3px) 0 0 / 37px 41px,
-        radial-gradient(circle at 70% 30%, rgba(150,110,60,0.14) 0 1.5px, transparent 2.5px) 0 0 / 23px 29px,
-        var(--caliche);
-      overflow-x: hidden;
-    }
-
-    /* ── the canopy ───────────────────────────────────────── */
-    .canopy {
-      position: relative;
-      height: 3.4rem;
-      background: repeating-linear-gradient(90deg, var(--canopy) 0 3.2rem, #F4FBF7 3.2rem 6.4rem);
-      box-shadow: 0 6px 0 rgba(0,0,0,0.06);
-      z-index: 5;
-    }
-    /* the scalloped valance, which is never not moving */
-    .canopy::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; top: 100%;
-      height: 1.6rem;
-      background:
-        radial-gradient(circle at 1.6rem 0, var(--canopy) 1.55rem, transparent 1.6rem) 0 0 / 6.4rem 1.6rem repeat-x,
-        radial-gradient(circle at 4.8rem 0, #F4FBF7 1.55rem, transparent 1.6rem) 0 0 / 6.4rem 1.6rem repeat-x;
-      transform-origin: top center;
-      animation: flap 3.7s ease-in-out infinite;
-      filter: drop-shadow(0 4px 0 rgba(0,0,0,0.08));
-    }
-    @keyframes flap {
-      0%, 100% { transform: skewX(0deg) scaleY(1); }
-      30% { transform: skewX(4deg) scaleY(0.92); }
-      55% { transform: skewX(-2deg) scaleY(1.05); }
-    }
-
-    /* the shade the canopy makes. cooler, a little green from the vinyl */
-    .shade {
-      position: relative;
-      padding: 3rem clamp(0.8rem, 3vw, 2.4rem) 3rem;
-      background: linear-gradient(180deg, rgba(18,168,160,0.16), rgba(18,168,160,0.05) 55%, transparent);
-    }
-
-    /* ── the banner, zip-tied to the canopy frame ───────── */
-    .banner {
-      position: relative;
-      max-width: 62rem;
-      margin: 0 auto 1.2rem;
-      background: var(--banner);
-      color: var(--yolk);
-      text-align: center;
-      padding: 0.9rem 1rem 1rem;
-      transform: rotate(-1.2deg);
-      box-shadow: 0 10px 0 -4px rgba(0,0,0,0.12), inset 0 0 0 5px rgba(255,255,255,0.18);
-      clip-path: polygon(0 3%, 50% 0, 100% 4%, 99.4% 97%, 50% 100%, 0.4% 96%);
-    }
-    .banner::before, .banner::after {
-      content: '';
-      position: absolute; top: 0.45rem;
-      width: 0.7rem; height: 0.7rem;
-      border-radius: 50%;
-      background: #F7F3E8;
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
-    }
-    .banner::before { left: 0.7rem; }
-    .banner::after { right: 0.7rem; }
-    .banner h1 {
-      font-family: 'Anton', Impact, sans-serif;
-      font-weight: 400;
-      font-size: clamp(3rem, 11vw, 7.6rem);
-      line-height: 0.9;
-      letter-spacing: 0.01em;
-      text-shadow: 0.06em 0.06em 0 #8A0F49;
-    }
-    .banner h1 .sun {
-      display: inline-block;
-      color: var(--orange);
-      text-shadow: 0.06em 0.06em 0 #8A0F49, 0 0 0.3em rgba(255,210,31,0.9);
-      animation: blaze 2.2s steps(2) infinite;
-    }
-    @keyframes blaze { 50% { color: var(--yolk); } }
-    .banner p {
-      font-family: 'Anton', Impact, sans-serif;
-      color: #FFF;
-      font-size: clamp(0.85rem, 2vw, 1.25rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-top: 0.35rem;
-    }
-
-    /* ── what everyone else is saying ───────────────────── */
-    .crowd {
-      max-width: 100vw;
       overflow: hidden;
-      white-space: nowrap;
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.05rem;
-      color: #5A3B1E;
-      margin: 0 calc(-1 * clamp(0.8rem, 3vw, 2.4rem)) 1.4rem;
-      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    }
-    .crowd span { display: inline-block; padding-left: 100%; animation: walkby 70s linear infinite; }
-    @keyframes walkby { to { transform: translateX(-100%); } }
-
-    /* ── the booth ──────────────────────────────────────── */
-    .booth {
-      max-width: 72rem;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 17rem;
-      gap: 1.6rem;
-      align-items: start;
-    }
-
-    /* a vinyl tablecloth, red gingham, the kind you wipe down */
-    .table {
-      position: relative;
-      padding: 2.2rem 1.4rem 4.2rem;
       background:
-        repeating-linear-gradient(0deg, rgba(214,32,40,0.55) 0 1.4rem, transparent 1.4rem 2.8rem),
-        repeating-linear-gradient(90deg, rgba(214,32,40,0.55) 0 1.4rem, transparent 1.4rem 2.8rem),
-        #FBF6EC;
-      border-radius: 0.3rem;
-      box-shadow:
-        0 1.6rem 0 -0.6rem rgba(120,20,25,0.55),
-        0 2.4rem 2.2rem -1rem rgba(70,40,10,0.35);
+        radial-gradient(ellipse 90% 70% at 22% 8%, #F3F0E8 0%, transparent 60%),
+        radial-gradient(ellipse 120% 80% at 80% 110%, rgba(120,104,80,0.16) 0%, transparent 60%),
+        #E4DED2;
+      touch-action: none;
     }
-    .table::after {
-      /* sunlight comes in at the edge where the canopy stops */
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(100deg, transparent 62%, rgba(255,247,200,0.55) 78%, rgba(255,255,240,0.8));
-      pointer-events: none;
-      border-radius: inherit;
+    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    canvas.over { cursor: pointer; }
+
+    /* names live here and nowhere else */
+    nav { position: fixed; left: 0; top: 0; }
+    nav a {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
     }
 
-    .goods {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
-      gap: 2.2rem 1.4rem;
-    }
-
-    .item {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      background: none;
-      border: 0;
-      font: inherit;
-      color: inherit;
-      padding: 0.4rem;
-      transform: rotate(var(--r, 0deg));
-      transition: transform 0.18s;
-    }
-    .item:hover, .item:focus-visible { transform: rotate(var(--r, 0deg)) translateY(-6px) scale(1.04); outline: none; }
-    .item:focus-visible .tag { box-shadow: 0 0 0 3px var(--banner); }
-    .item svg { width: 100%; max-width: 11rem; height: 8.4rem; filter: drop-shadow(5px 8px 0 rgba(60,20,10,0.28)); }
-
-    /* the hand's old carton label, cut off the box and taped to the thing */
-    .tag {
-      margin-top: 0.6rem;
-      background: var(--kraft);
-      background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 6px);
-      padding: 0.55rem 0.8rem 0.6rem;
-      font-family: 'Permanent Marker', cursive;
-      font-size: 0.98rem;
-      line-height: 1.2;
-      color: #1A1410;
-      max-width: 13rem;
-      box-shadow: 2px 3px 0 rgba(0,0,0,0.18);
-    }
-    .tag small {
-      display: block;
-      font-family: 'Rubik', sans-serif;
-      font-weight: 800;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 0.2rem;
-      opacity: 0.75;
-    }
-
-    /* the fluorescent starburst. you peel these off a roll */
-    .burst {
-      position: absolute;
-      top: -0.6rem; right: 0.2rem;
-      width: 5.2rem; height: 5.2rem;
-      display: grid; place-items: center;
-      background: var(--c, var(--orange));
-      clip-path: polygon(50% 0%, 59% 15%, 75% 6%, 76% 24%, 94% 25%, 85% 41%, 100% 50%, 85% 59%, 94% 75%, 76% 76%, 75% 94%, 59% 85%, 50% 100%, 41% 85%, 25% 94%, 24% 76%, 6% 75%, 15% 59%, 0% 50%, 15% 41%, 6% 25%, 24% 24%, 25% 6%, 41% 15%);
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.35rem;
-      line-height: 0.85;
-      color: #1A1410;
-      transform: rotate(var(--br, 12deg));
-      z-index: 2;
-      pointer-events: none;
-    }
-    .burst i { display: block; font-style: normal; font-size: 0.55rem; font-family: 'Rubik', sans-serif; font-weight: 800; letter-spacing: 0.08em; }
-    .item.sold .burst { --c: #E21B23 !important; color: #FFF; font-size: 1.1rem; }
-    .item.nfs .burst { --c: #FFFFFF !important; font-size: 1rem; box-shadow: none; }
-    .item.sold svg { opacity: 0.55; filter: grayscale(0.4) drop-shadow(5px 8px 0 rgba(60,20,10,0.18)); }
-
-    /* ── the vendor ─────────────────────────────────────── */
-    .side { display: grid; gap: 1.4rem; position: sticky; top: 1rem; }
-    .vendor {
-      position: relative;
-      background: var(--pink);
-      color: #fff;
-      border-radius: 1.4rem 1.4rem 1.4rem 0.2rem;
-      padding: 1rem 1.1rem 1.1rem;
-      font-weight: 600;
-      font-size: 1.02rem;
-      line-height: 1.38;
-      box-shadow: 6px 7px 0 #8A0F49;
-      min-height: 7rem;
-    }
-    .vendor .who {
-      font-family: 'Permanent Marker', cursive;
-      font-weight: 400;
-      font-size: 0.85rem;
-      color: var(--yolk);
-      display: block;
-      margin-bottom: 0.3rem;
-    }
-    .vendor .say { display: block; }
-    .vendor .say b { color: var(--yolk); font-weight: 800; }
-    .deal { display: none; margin-top: 0.8rem; gap: 0.45rem; flex-wrap: wrap; align-items: center; }
-    .deal.on { display: flex; }
-    .deal label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; width: 100%; }
-    .deal .cash {
-      display: flex; align-items: center;
-      background: #FFF; color: var(--ink);
-      border-radius: 0.4rem;
-      padding: 0 0.5rem;
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.3rem;
-    }
-    .deal input {
-      width: 4.6rem;
-      border: 0; outline: 0;
-      font: inherit;
-      padding: 0.25rem 0.2rem;
-      background: transparent;
-    }
-    .deal button, .walk {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: 1.05rem;
-      letter-spacing: 0.04em;
-      border: 0;
-      border-radius: 0.4rem;
-      padding: 0.45rem 0.8rem;
-      cursor: pointer;
-      background: var(--yolk);
-      color: var(--ink);
-      box-shadow: 3px 3px 0 #8A0F49;
-    }
-    .deal button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #8A0F49; }
-    .deal .walk { background: transparent; color: #fff; box-shadow: none; text-decoration: underline; text-underline-offset: 3px; padding-left: 0.2rem; }
-    .deal .look { color: #fff; font-weight: 800; font-size: 0.85rem; width: 100%; }
-
-    /* cardboard, sharpie, two kinds of tape */
-    .sign {
-      background: var(--kraft);
-      background-image:
-        repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0 3px, transparent 3px 9px),
-        linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
-      padding: 1.1rem 1rem 1.2rem;
-      font-family: 'Permanent Marker', cursive;
-      text-align: center;
-      line-height: 1.12;
-      transform: rotate(2.2deg);
-      box-shadow: 4px 6px 0 rgba(60,30,10,0.3);
-      position: relative;
-    }
-    .sign::before {
-      content: '';
-      position: absolute; top: -0.55rem; left: 50%;
-      width: 5rem; height: 1.2rem;
-      margin-left: -2.5rem;
-      background: rgba(235,226,200,0.85);
-      transform: rotate(-4deg);
-    }
-    .sign .big { font-size: 1.9rem; color: #C3141B; display: block; }
-    .sign .mid { font-size: 1.25rem; display: block; margin-top: 0.25rem; }
-    .sign .sm { font-size: 0.95rem; display: block; margin-top: 0.55rem; }
-    .sign s { text-decoration-thickness: 3px; text-decoration-color: #C3141B; }
-
-    .bag {
-      background: #FFFDF6;
-      padding: 0.9rem 1rem 1rem;
-      border: 3px dashed #1A1410;
-      font-size: 0.88rem;
-    }
-    .bag h2 { font-family: 'Anton', Impact, sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.03em; }
-    .bag ul { list-style: none; margin: 0.4rem 0; }
-    .bag li { display: flex; justify-content: space-between; gap: 0.6rem; border-bottom: 1px dotted rgba(0,0,0,0.35); padding: 0.2rem 0; }
-    .bag li a { color: inherit; font-weight: 600; }
-    .bag .empty { opacity: 0.6; }
-    .bag .fine { font-size: 0.72rem; opacity: 0.7; margin-top: 0.4rem; }
-
-    /* the canary copy, finally filled in, taped to the edge of the table */
-    .canary {
-      position: absolute;
-      left: 1.6rem; bottom: -2.4rem;
-      width: min(24rem, 78%);
-      background: #F6EAA0;
-      padding: 0.5rem 0.7rem 0.6rem;
-      font-family: 'Oswald', 'Arial Narrow', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transform: rotate(-2.6deg);
-      box-shadow: 2px 4px 0 rgba(0,0,0,0.2);
-      z-index: 3;
-    }
-    .canary::before {
-      content: '';
-      position: absolute; top: -0.45rem; right: 1.4rem;
-      width: 3.6rem; height: 1rem;
-      background: rgba(235,226,200,0.9);
-      transform: rotate(6deg);
-    }
-    .canary .t { font-family: 'Special Elite', monospace; text-transform: none; letter-spacing: 0; color: var(--carbon); font-size: 0.82rem; }
-    .canary .pink { font-family: 'Permanent Marker', cursive; color: var(--pink); text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
-    .canary b { font-weight: 700; }
-
-    .foot {
-      max-width: 72rem;
-      margin: 5rem auto 0;
-      padding: 0 clamp(0.8rem, 3vw, 2.4rem) 2.5rem;
-      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 1.4rem;
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #6B4A26;
-    }
-    .foot a { color: inherit; }
-
-    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-
-    @media (max-width: 860px) {
-      .booth { grid-template-columns: 1fr; }
-      .side { position: static; order: -1; }
-      .sign, .bag { display: none; }
-      .side.has-bag .bag { display: block; }
-      .goods { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 0.6rem; }
-      .item svg { height: 6.4rem; }
-      .burst { width: 4.2rem; height: 4.2rem; font-size: 1.1rem; right: -0.2rem; }
-      .tag { font-size: 0.85rem; }
-      .table { padding: 1.6rem 0.7rem 7rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .canopy::after, .banner h1 .sun, .crowd span { animation: none; }
-      .crowd span { padding-left: 0; }
-    }
+    noscript ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2rem; padding: 4rem; align-items: center; }
+    noscript a { display: block; border-radius: 50%; background: #161412; font-size: 0; }
   </style>
 </head>
 <body>
-  <div class="canopy" aria-hidden="true"></div>
+  <canvas id="c" aria-hidden="true"></canvas>
+  <nav id="names" aria-label="rooms">
+    {% for r in weights.rooms %}<a href="{{ r.href }}" data-id="{{ r.id }}">{{ r.name }}</a>
+    {% endfor %}
+  </nav>
+  <noscript><ul>{% for r in weights.rooms %}<li><a href="{{ r.href }}" aria-label="{{ r.name }}" style="width:{{ (r.w ** 0.5) | round + 6 }}px;height:{{ (r.w ** 0.5) | round + 6 }}px"></a></li>{% endfor %}</ul></noscript>
 
-  <div class="shade">
-    <header class="banner">
-      <h1>PULGA DEL <span class="sun">SOL</span></h1>
-      <p>sábados y domingos · airline dr · booth 14 · se aceptan ofertas</p>
-    </header>
+<script>
+(() => {
+  const ROOMS = {{ weights.rooms | dump | safe }};
+  const cv = document.getElementById('c');
+  const g = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <div class="crowd" aria-hidden="true"><span>¿cuánto por el radio? &nbsp;·&nbsp; is that thing still on &nbsp;·&nbsp; five dollars for a notebook somebody already wrote in?? &nbsp;·&nbsp; elotes, elotes, elotes &nbsp;·&nbsp; mijo don’t touch that &nbsp;·&nbsp; it smells like smoke, that’s how you know it’s real &nbsp;·&nbsp; who sells a room &nbsp;·&nbsp; the camera only has one room in it &nbsp;·&nbsp; two for five &nbsp;·&nbsp; raspas, mango con chile &nbsp;·&nbsp; no checks no cards no river &nbsp;·&nbsp; somebody signed every box twice &nbsp;·&nbsp; that table was a house last week &nbsp;·&nbsp; ¿y el río? &nbsp;·&nbsp; they said don’t ask about the river &nbsp;·&nbsp;</span></div>
+  // a seeded hand, so each room is cut the same way every night
+  const hash = (s) => { let h = 2166136261; for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; };
+  const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) ^ Math.imul(seed ^ (seed >>> 13), 3266489909)) >>> 0) / 4294967296;
 
-    <div class="booth">
-      <section class="table" aria-label="the table at booth 14">
-        <div class="goods">
+  // calder's colours. the heaviest is black. the lightest is red.
+  const sorted = [...ROOMS].sort((a, b) => b.w - a.w);
+  const PAINT = ['#161412', '#C8281E', '#1F4E9C', '#E8B21A', '#F4F1EA', '#161412', '#C8281E', '#E8B21A', '#1F4E9C'];
+  sorted.forEach((r, i) => { r.color = PAINT[i % PAINT.length]; r.rank = i; });
+  sorted[sorted.length - 1].color = '#C8281E';
 
-          <button class="item" data-room="guestbook" data-href="/guestbook" style="--r:-3deg">
-            <span class="burst" style="--c:var(--lime);--br:-10deg"><span>$3<i>OBO</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <defs><pattern id="marble" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#141414"/><path d="M0 4 Q3 1 5 5 T9 3" stroke="#EDEDE6" stroke-width="1.3" fill="none"/><circle cx="7" cy="7.5" r="1" fill="#EDEDE6"/></pattern></defs>
-              <rect x="34" y="8" width="92" height="106" rx="3" fill="url(#marble)" transform="rotate(-6 80 60)"/>
-              <rect x="34" y="8" width="11" height="106" fill="#141414" transform="rotate(-6 80 60)"/>
-              <rect x="58" y="30" width="54" height="26" fill="#F6F2E6" transform="rotate(-6 80 60)"/>
-              <path d="M62 40 l40 -4 M62 47 l30 -3" stroke="#FF3FA4" stroke-width="2.4" stroke-linecap="round" transform="rotate(-6 80 60)"/>
-            </svg>
-            <span class="tag"><small>item 02 · guestbook</small>everybody’s marks. not ours to leave</span>
-          </button>
+  // the plate: a paddle, rounded, a little wrong
+  for (const r of ROOMS) {
+    const rand = rng(hash(r.id));
+    const n = 40, lobes = 2 + Math.floor(rand() * 3), ph = rand() * 6.28, amp = 0.08 + rand() * 0.16;
+    const squash = 0.75 + rand() * 0.5, tip = (rand() - 0.5) * 0.7;
+    r.shape = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const k = 1 + amp * Math.sin(a * lobes + ph) + 0.05 * Math.sin(a * 5 + ph * 2);
+      let x = Math.cos(a) * k * squash, y = Math.sin(a) * k / squash;
+      r.shape.push([x + y * tip * 0.3, y]);
+    }
+    r.off = (rand() - 0.5) * 1.6;           // how the plate is set on its wire
+  }
 
-          <button class="item" data-room="transmission" data-href="/transmission" style="--r:2deg">
-            <span class="burst" style="--c:var(--orange);--br:14deg"><span>$12<i>OBO</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <line x1="104" y1="34" x2="140" y2="2" stroke="#3A3A3A" stroke-width="3"/>
-              <rect x="18" y="32" width="120" height="70" rx="12" fill="#D9542F"/>
-              <rect x="26" y="40" width="58" height="54" rx="6" fill="#3A2216"/>
-              <g fill="#7A4B32">
-                <circle cx="38" cy="52" r="3"/><circle cx="50" cy="52" r="3"/><circle cx="62" cy="52" r="3"/><circle cx="74" cy="52" r="3"/>
-                <circle cx="38" cy="64" r="3"/><circle cx="50" cy="64" r="3"/><circle cx="62" cy="64" r="3"/><circle cx="74" cy="64" r="3"/>
-                <circle cx="38" cy="76" r="3"/><circle cx="50" cy="76" r="3"/><circle cx="62" cy="76" r="3"/><circle cx="74" cy="76" r="3"/>
-              </g>
-              <rect x="92" y="42" width="38" height="16" rx="2" fill="#FFF3C4"/>
-              <line x1="104" y1="43" x2="104" y2="57" stroke="#E21B23" stroke-width="2"/>
-              <circle cx="102" cy="78" r="9" fill="#2A1A12"/><circle cx="122" cy="78" r="9" fill="#2A1A12"/>
-              <circle cx="128" cy="38" r="3.4" fill="#B6F22E"><animate attributeName="opacity" values="1;0.2;1" dur="1.3s" repeatCount="indefinite"/></circle>
-              <path d="M138 90 C158 96 150 110 132 112 S96 118 70 116" stroke="#1A1A1A" stroke-width="3" fill="none"/>
-            </svg>
-            <span class="tag"><small>item 03 · radio</small>still sending in there. don’t unplug it</span>
-          </button>
+  // hang them. the two lightest share an arm, again and again, until one
+  // wire holds everything. each arm is balanced: w1 * l1 = w2 * l2.
+  let pool = ROOMS.map((r) => ({ leaf: r, w: r.w }));
+  while (pool.length > 1) {
+    pool.sort((a, b) => a.w - b.w);
+    const a = pool.shift(), b = pool.shift();
+    const rand = rng(hash((a.leaf ? a.leaf.id : 'n' + a.w) + (b.leaf ? b.leaf.id : 'n' + b.w)));
+    pool.push({ kids: rand() < 0.5 ? [a, b] : [b, a], w: a.w + b.w,
+      th: (rand() - 0.5) * 2.4, om: 0, rest: (rand() - 0.5) * 2, drift: rand() * 100 });
+  }
+  const root = pool[0];
+  const arms = [], leaves = [];
+  (function walk(n, d, up) {
+    n.depth = d; n.up = up;
+    if (n.leaf) { leaves.push(n); return; }
+    arms.push(n);
+    n.kids.forEach((k) => walk(k, d + 1, n));
+  })(root, 0, null);
+  const maxW = sorted[0].w;
 
-          <button class="item" data-room="log" data-href="/log/" style="--r:-1.5deg">
-            <span class="burst" style="--c:var(--yolk);--br:-6deg"><span>$5<i>OBO</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <defs><linearGradient id="char" x1="0" x2="1"><stop offset="0" stop-color="#F3EBD8"/><stop offset="0.7" stop-color="#E6D3A8"/><stop offset="1" stop-color="#3B2414"/></linearGradient></defs>
-              <rect x="30" y="34" width="104" height="70" fill="url(#char)" transform="rotate(4 80 70)"/>
-              <rect x="26" y="28" width="104" height="70" fill="url(#char)" transform="rotate(-3 80 60)"/>
-              <rect x="28" y="22" width="104" height="70" fill="url(#char)"/>
-              <path d="M36 36 h70 M36 46 h62 M36 56 h74 M36 66 h40" stroke="#6A5A48" stroke-width="2"/>
-              <path d="M80 18 V98 M24 58 H136" stroke="#C3141B" stroke-width="3"/>
-              <path d="M80 58 l-10 -8 M80 58 l10 -9" stroke="#C3141B" stroke-width="3" stroke-linecap="round"/>
-              <text x="106" y="90" font-family="Permanent Marker" font-size="14" fill="#1A1410">14</text>
-            </svg>
-            <span class="tag"><small>item 04 · log</small>14 days. that’s all that was left in there</span>
-          </button>
+  let W, H, S, top, gap, span, sh;
+  function layout() {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    S = Math.min(W, H * 1.15);
+    top = H * 0.07;
+    const rMax = S * 0.12;
+    for (const l of leaves) { l.r = Math.max(4, rMax * Math.sqrt(l.w / maxW)); l.wire = 10 + l.r * 0.25; }
+    // how far down the deepest thing hangs, per unit of gap
+    let need = 1, fixed = 0;
+    for (const l of leaves) {
+      const f = l.wire + l.r * 2.1;
+      need = Math.max(need, l.depth);
+      fixed = Math.max(fixed, f);
+    }
+    gap = Math.max(26, (H * 0.9 - top - fixed) / Math.max(1, need - 1 + 0.3));
+    span = Math.min(W * 0.36, S * 0.5);
+    sh = Math.max(14, S * 0.05);
+    for (const a of arms) {
+      const L = span * Math.pow(0.7, a.depth) + 30;
+      const [p, q] = a.kids;
+      a.lA = L * q.w / a.w;      // the heavy side is the short side
+      a.lB = L * p.w / a.w;
+      a.I = (p.w * a.lA * a.lA + q.w * a.lB * a.lB) / a.w;
+    }
+    // it turns, so anything can swing out to its full reach: keep it in the room
+    const reach = (n) => n.leaf ? n.r : Math.max(n.lA + reach(n.kids[0]), n.lB + reach(n.kids[1]));
+    const fit = Math.min(1, (W * 0.47) / reach(root));
+    for (const a of arms) { a.lA *= fit; a.lB *= fit; a.I *= fit * fit; }
+    const Im = arms.reduce((s, a) => s + a.I, 0) / arms.length;
+    for (const a of arms) a.Ir = Math.max(0.35, Math.sqrt(a.I / Im));
+  }
 
-          <button class="item" data-room="still" data-href="/still" style="--r:3deg">
-            <span class="burst" style="--c:var(--pink);--br:8deg"><span>$1<i>OBO</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <rect x="54" y="10" width="52" height="14" rx="3" fill="#A9A9A2"/>
-              <path d="M58 24 h44 q10 6 10 18 v58 q0 12 -12 12 h-40 q-12 0 -12 -12 v-58 q0 -12 10 -18z" fill="rgba(170,225,235,0.55)" stroke="#6FAEBB" stroke-width="2"/>
-              <path d="M66 90 q14 -26 28 0" fill="none" stroke="#5B8F4A" stroke-width="3"/>
-              <circle cx="80" cy="66" r="5" fill="#FFF3C4"/>
-              <path d="M62 34 q-4 30 2 60" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
-            </svg>
-            <span class="tag"><small>item 05 · still</small>quiet things. pack loose</span>
-          </button>
-
-          <button class="item" data-room="witness" data-href="/witness" style="--r:-2deg">
-            <span class="burst" style="--c:var(--lime);--br:18deg"><span>$8<i>OBO</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <rect x="22" y="34" width="116" height="64" rx="6" fill="#F6C21C"/>
-              <rect x="22" y="34" width="116" height="18" rx="6" fill="#1F7A3A"/>
-              <rect x="30" y="38" width="30" height="10" rx="2" fill="#E9F3EC"/>
-              <circle cx="92" cy="70" r="20" fill="#1A1A1A"/><circle cx="92" cy="70" r="12" fill="#2E3E66"/><circle cx="87" cy="65" r="3.5" fill="#BFD0FF"/>
-              <rect x="112" y="40" width="20" height="8" rx="2" fill="#1A1A1A"/>
-              <text x="30" y="90" font-family="Anton" font-size="12" fill="#1F7A3A">1 ROOM</text>
-            </svg>
-            <span class="tag"><small>item 06 · witness</small>camera + every picture of the same room</span>
-          </button>
-
-          <button class="item nfs" data-room="ledger" data-href="/ledger" style="--r:1deg">
-            <span class="burst" style="--br:-14deg"><span>NFS</span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <ellipse cx="80" cy="108" rx="40" ry="7" fill="#3A3A3A"/>
-              <line x1="80" y1="6" x2="80" y2="106" stroke="#7A7A7A" stroke-width="3"/>
-              <g fill="#FFFDF4" stroke="#C9C1AE">
-                <rect x="52" y="78" width="56" height="20" transform="rotate(6 80 88)"/>
-                <rect x="50" y="62" width="58" height="20" transform="rotate(-8 80 72)"/>
-                <rect x="54" y="46" width="52" height="20" transform="rotate(4 80 56)"/>
-                <rect x="56" y="30" width="50" height="20" transform="rotate(-5 80 40)"/>
-              </g>
-              <text x="60" y="44" font-family="Permanent Marker" font-size="11" fill="#C3141B" transform="rotate(-5 80 40)">KEEP</text>
-            </svg>
-            <span class="tag"><small>item 07 · ledger</small>receipts. all of them. KEEP</span>
-          </button>
-
-          <button class="item" data-room="lab" data-href="/lab" style="--r:-2.5deg">
-            <span class="burst" style="--c:var(--orange);--br:-18deg"><span>$20<i>THE CRATE</i></span></span>
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <rect x="44" y="18" width="12" height="30" fill="#FF3FA4" transform="rotate(-14 50 30)"/>
-              <circle cx="84" cy="24" r="12" fill="#12A8A0"/>
-              <rect x="98" y="12" width="20" height="30" fill="#FFD21F" transform="rotate(12 108 26)"/>
-              <path d="M62 14 l10 24 -20 0z" fill="#B6F22E"/>
-              <rect x="22" y="36" width="116" height="74" rx="4" fill="#E8622C"/>
-              <g fill="#B8461A">
-                <rect x="32" y="48" width="16" height="12" rx="2"/><rect x="56" y="48" width="16" height="12" rx="2"/><rect x="80" y="48" width="16" height="12" rx="2"/><rect x="104" y="48" width="16" height="12" rx="2"/>
-                <rect x="32" y="68" width="16" height="12" rx="2"/><rect x="56" y="68" width="16" height="12" rx="2"/><rect x="80" y="68" width="16" height="12" rx="2"/><rect x="104" y="68" width="16" height="12" rx="2"/>
-                <rect x="32" y="88" width="16" height="12" rx="2"/><rect x="56" y="88" width="16" height="12" rx="2"/><rect x="80" y="88" width="16" height="12" rx="2"/><rect x="104" y="88" width="16" height="12" rx="2"/>
-              </g>
-            </svg>
-            <span class="tag"><small>item 08 · lab, 35 pcs.</small>no label. it was all still lit when they crated it</span>
-          </button>
-
-        </div>
-
-        <div class="canary" aria-label="the carrier's canary copy, now with a destination">
-          <b>shepherd drive transfer &amp; storage</b> · lot ms-1356 · carrier’s copy<br>
-          deliver to <span class="t">PULGA DEL SOL, AIRLINE DR. BOOTH 14.</span>
-          <span class="pink">←this</span><br>
-          <span class="t">SIT closed day 2. $8.20 paid in cash, small bills.</span><br>
-          items 01, 09, 10 <span class="t">still not loaded.</span>
-        </div>
-      </section>
-
-      <aside class="side" aria-label="the vendor">
-        <div class="vendor" aria-live="polite">
-          <span class="who">the vendor (signed in pink)</span>
-          <span class="say" id="say">¡pásale! everything on the table has a price and every price is a suggestion. pick something up.</span>
-          <div class="deal" id="deal">
-            <label for="offer">your offer</label>
-            <span class="cash">$<input id="offer" type="number" inputmode="decimal" min="0" step="0.25"></span>
-            <button type="button" id="offer-go">OFFER</button>
-            <button type="button" class="walk" id="walk">walk away</button>
-            <a class="look" id="look" href="#">just look at it first →</a>
-          </div>
-        </div>
-
-        <div class="sign" aria-label="cardboard sign">
-          <span class="big">EVERYTHING MUST GO</span>
-          <span class="mid">todo se vende</span>
-          <span class="sm">cash only · all sales final · <s>whole house</s> one room at a time</span>
-          <span class="sm">the river did not come. don’t ask</span>
-        </div>
-
-        <div class="bag" id="bag">
-          <h2>YOUR BAG</h2>
-          <ul id="bag-list"><li class="empty">nothing yet. you’re just looking.</li></ul>
-          <p class="fine" id="bag-total"></p>
-          <p class="fine">pretend money. it’s kept on your phone, not mine. nobody else’s table changes when you buy something.</p>
-        </div>
-      </aside>
-    </div>
-  </div>
-
-  <footer class="foot">
-    <span>session {{ log.session }} · booth 14 · it’s noon here whatever your clock says</span>
-    <span><a href="/listing">the house: sold</a> · <a href="/outside">outside</a> · <a href="/lab/primer.html">what it looked like before session 42</a></span>
-  </footer>
-
-  <script>
-    /* the haggling. every item has an asking price and a floor the vendor  */
-    /* won't say out loud. you meet in the middle, or you don't. one item  */
-    /* is not for sale at any price. sales are written to your own storage */
-    /* and the room you bought will know it was you.                        */
-    (function () {
-      var KEY = 'pulga:bag';
-      var goods = {
-        guestbook:    { name: 'the guestbook', ask: 3, floor: 1.25,
-                        pitch: 'the guestbook. everybody who ever came by wrote in it. you’re buying their marks too, I can’t get them out.',
-                        sold: 'SOLD. careful, people are still writing in it.' },
-        transmission: { name: 'the radio', ask: 12, floor: 7,
-                        pitch: 'the radio. it’s on. it’s been on the whole time, nobody unplugged it, the cord goes all the way back to somewhere. you get the cord.',
-                        sold: 'SOLD!! it comes plugged in. do NOT unplug it in the car.' },
-        log:          { name: 'the log', ask: 5, floor: 2,
-                        pitch: 'the log, fourteen days of it. it smells like smoke, that’s how you know it’s real. the rest burned.',
-                        sold: 'SOLD. keep it away from the stove.' },
-        still:        { name: 'the still', ask: 1, floor: 0.5,
-                        pitch: 'quiet things, in a jar. a dollar. it’s a dollar because nobody stops at the quiet stuff.',
-                        sold: 'SOLD. somebody finally stopped at the quiet stuff.' },
-        witness:      { name: 'the camera', ask: 8, floor: 4,
-                        pitch: 'the camera. every picture on it is the same room. the room is not included, I looked, it doesn’t come with.',
-                        sold: 'SOLD. it’s yours, it’ll keep taking the same room.' },
-        ledger:       { name: 'the ledger', nfs: true,
-                        pitch: 'no. that one says KEEP on it, I wrote that. also it’s holding the tablecloth down.',
-                        no: ['not for sale. NO. look at it, it says KEEP.', 'you can offer me a hundred dollars, it’s a paperweight now. it’s keeping the receipts.', 'ok I like you but still no.'] },
-        lab:          { name: 'the crate', ask: 20, floor: 9,
-                        pitch: 'thirty-five things in a milk crate. no labels. a dollar each or twenty the crate. some of them are still warm.',
-                        sold: 'SOLD the whole crate!! careful, some of it’s still lit.' }
-      };
-
-      var say = document.getElementById('say');
-      var deal = document.getElementById('deal');
-      var input = document.getElementById('offer');
-      var look = document.getElementById('look');
-      var cur = null;
-
-      function money(n) { return '$' + (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0); }
-      function bag() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-      function keep(b) { try { localStorage.setItem(KEY, JSON.stringify(b)); } catch (e) {} }
-      function speak(html) { say.innerHTML = html; }
-
-      function render() {
-        var b = bag();
-        var list = document.getElementById('bag-list');
-        var total = 0, rows = [];
-        document.querySelectorAll('.item').forEach(function (el) {
-          var r = el.dataset.room, s = b[r];
-          if (!s) return;
-          el.classList.add('sold');
-          el.querySelector('.burst span').innerHTML = 'SOLD<i>TO YOU</i>';
-          total += s.paid;
-          rows.push('<li><a href="' + el.dataset.href + '">' + goods[r].name + '</a><span>' + money(s.paid) + '</span></li>');
-        });
-        list.innerHTML = rows.length ? rows.join('') : '<li class="empty">nothing yet. you’re just looking.</li>';
-        document.getElementById('bag-total').textContent = rows.length ? 'paid ' + money(total) + ' for ' + rows.length + ' of 7' + (rows.length === 6 ? '. that’s everything for sale.' : '.') : '';
-        document.querySelector('.side').classList.toggle('has-bag', rows.length > 0);
-      }
-
-      function open(room, href) {
-        var g = goods[room], b = bag();
-        look.href = href;
-        if (b[room]) {
-          cur = null;
-          deal.classList.remove('on');
-          speak('that’s yours already, you paid <b>' + money(b[room].paid) + '</b>. all sales final. <a href="' + href + '" style="color:#FFD21F">go look at it</a>, it’s yours.');
-          return;
-        }
-        cur = { room: room, g: g, counter: g.ask, rounds: 0, called: false, no: 0 };
-        deal.classList.add('on');
-        input.value = '';
-        if (g.nfs) {
-          speak(g.pitch);
-          document.getElementById('offer-go').textContent = 'OFFER ANYWAY';
-        } else {
-          speak(g.pitch + ' <b>' + money(g.ask) + '</b>.');
-          document.getElementById('offer-go').textContent = 'OFFER';
-          input.placeholder = (g.ask * 0.5).toFixed(g.ask < 4 ? 2 : 0);
-        }
-        /* on a phone the vendor is up top. walk back over to them */
-        if (window.innerWidth <= 860) document.querySelector('.vendor').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(function () { input.focus({ preventScroll: true }); }, 30);
-      }
-
-      function sell(price) {
-        var b = bag();
-        b[cur.room] = { paid: price, at: Date.now() };
-        keep(b);
-        speak(cur.g.sold + ' <b>' + money(price) + '</b>, thank you, ¡gracias! <a href="' + look.href + '" style="color:#FFD21F">take it home →</a>');
-        deal.classList.remove('on');
-        cur = null;
-        render();
-      }
-
-      function offer() {
-        if (!cur) return;
-        var g = cur.g, v = parseFloat(input.value);
-        if (g.nfs) { speak(g.no[Math.min(cur.no++, g.no.length - 1)]); return; }
-        if (!(v >= 0)) { speak('a number, please. like with a dollar sign.'); return; }
-        v = Math.round(v * 4) / 4;
-        cur.rounds++;
-        if (v === 0) { speak('FREE?? it’s not the free box. the free box is under the table and it’s empty, somebody took the free box.'); return; }
-        if (v >= g.ask) { sell(v); if (v > g.ask) say.innerHTML += '<br>you know it said ' + money(g.ask) + ', right? I’m keeping it.'; return; }
-        if (v >= cur.counter) { sell(v); return; }
-        if (v < g.floor * 0.45) { speak('<b>' + money(v) + '??</b> for ' + g.name + '?? the elote guy charges more than that. ' + money(cur.counter) + '.'); return; }
-        if (cur.rounds >= 4 && v < g.floor) { speak('I’ve been standing here since six. ' + money(g.floor) + ' or walk.'); cur.counter = g.floor; return; }
-        if (v >= g.floor && cur.rounds >= 2) { sell(v); return; }
-        var next = Math.max(g.floor, Math.ceil(((cur.counter + v) / 2) * 4) / 4);
-        if (next >= cur.counter) next = cur.counter;
-        cur.counter = next;
-        var lines = ['ayyy. ' + money(next) + '.', 'meet me at ' + money(next) + '. that’s fair, that’s fair.', money(next) + ' and I’ll throw in a bag.', 'ok ' + money(next) + ', but don’t tell booth 15.'];
-        speak(lines[Math.min(cur.rounds - 1, lines.length - 1)]);
-      }
-
-      function walk() {
-        if (!cur) return;
-        var g = cur.g;
-        if (g.nfs || cur.called || cur.rounds === 0) {
-          cur = null; deal.classList.remove('on');
-          speak('ok ok, look around. it’s all still here. for now.');
-          return;
-        }
-        /* they always call you back */
-        cur.called = true;
-        cur.counter = g.floor;
-        speak('HEY. HEY. ok fine. <b>' + money(g.floor) + '</b>. final. I don’t want to carry it back to the truck.');
-        input.value = g.floor % 1 ? g.floor.toFixed(2) : g.floor;
-      }
-
-      document.querySelectorAll('.item').forEach(function (el) {
-        el.addEventListener('click', function () { open(el.dataset.room, el.dataset.href); });
+  // where everything is in the room right now
+  function place() {
+    root.P = [W / 2, top + gap * 0.3, 0];
+    (function go(n) {
+      if (n.leaf) return;
+      const [x, y, z] = n.P, c = Math.cos(n.th), s = Math.sin(n.th);
+      n.E = [[x - n.lA * c, y, z - n.lA * s], [x + n.lB * c, y, z + n.lB * s]];
+      n.kids.forEach((k, i) => {
+        const e = n.E[i];
+        if (k.leaf) { k.end = e; k.arm = n; k.P = [e[0], e[1] + k.wire + k.r, e[2]]; k.phi = n.th + k.leaf.off; }
+        else { k.P = [e[0], e[1] + gap, e[2]]; go(k); }
       });
-      document.getElementById('offer-go').addEventListener('click', offer);
-      document.getElementById('walk').addEventListener('click', walk);
-      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') offer(); });
+    })(root);
+  }
 
-      /* the market is open saturdays and sundays. it is always noon here. */
-      var now = new Date(), day = now.getDay(), h = now.getHours();
-      if (day !== 0 && day !== 6) speak('we’re only open weekends. I’m set up anyway. ¡pásale! everything has a price and every price is a suggestion.');
-      else if (h < 7 || h >= 20) speak('it’s dark where you are, huh. it’s noon here. it’s always noon here. ¡pásale!');
+  const F = 1600;
+  const proj = ([x, y, z]) => { const k = F / (F + z); return [W / 2 + (x - W / 2) * k, top + (y - top) * k, k]; };
 
-      render();
-      /* old links to things that lived on "/" still land where those things live now */
-      if (location.hash === '#undercommons') location.replace('/log/#undercommons');
-    })();
-  </script>
+  // ── the air ────────────────────────────────────────────────
+  const ptr = { x: -1e4, y: -1e4, vx: 0, vy: 0, t: 0, in: false };
+  let over = null, focus = null;
+
+  function push(fx, x, y, reach, gain) {
+    for (const l of leaves) {
+      const [sx, sy, k] = proj(l.P);
+      const d = Math.hypot(sx - x, sy - y), R = l.r * k + reach;
+      if (d > R) continue;
+      const f = (1 - d / R) * gain;
+      for (let a = l.arm; a; a = a.up) {
+        // torque about the arm's own wire: dz * Fx
+        a.om += ((l.P[2] - a.P[2]) || (a === l.arm ? (l.end === a.E[0] ? -1 : 1) * 4 : 0)) * fx * f / (a.Ir * 9000);
+      }
+    }
+  }
+
+  function step(dt, t) {
+    for (const a of arms) {
+      const rest = still ? a.rest : a.rest + Math.sin(t * 0.00007 + a.drift) * 1.4 + Math.sin(t * 0.00019 + a.drift * 3) * 0.4;
+      a.om += (-(a.th - rest) * 0.00000055 / a.Ir) * dt;
+      a.om *= Math.pow(still ? 0.97 : 0.9993, dt);
+      a.om = Math.max(-0.006, Math.min(0.006, a.om));
+      a.th += a.om * dt;
+    }
+  }
+
+  // ── the sound a shape makes, since it can't say its name ──
+  let ac = null;
+  const SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22];
+  function wake() { if (!ac) { try { ac = new AudioContext(); } catch (e) {} } else if (ac.state === 'suspended') ac.resume(); }
+  function ring(leaf) {
+    if (!ac || ac.state !== 'running') return;
+    const f0 = 110 * Math.pow(2, SCALE[leaf.leaf.rank] / 12);
+    const now = ac.currentTime, out = ac.createGain();
+    out.gain.setValueAtTime(0, now);
+    out.gain.linearRampToValueAtTime(0.05, now + 0.01);
+    out.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+    out.connect(ac.destination);
+    for (const [m, v] of [[1, 1], [2.76, 0.35], [5.4, 0.12]]) {
+      const o = ac.createOscillator(), gv = ac.createGain();
+      o.frequency.value = f0 * m; gv.gain.value = v;
+      o.connect(gv).connect(out); o.start(now); o.stop(now + 2.7);
+    }
+  }
+
+  function hit(x, y) {
+    let best = null, bz = Infinity;
+    for (const l of leaves) {
+      const [sx, sy, k] = proj(l.P);
+      const rx = Math.max(10, l.r * k * Math.abs(Math.cos(l.phi))) + 4, ry = l.r * k * 1.05 + 4;
+      const dx = (x - sx) / rx, dy = (y - sy) / ry;
+      if (dx * dx + dy * dy <= 1 && l.P[2] < bz) { best = l; bz = l.P[2]; }
+    }
+    return best;
+  }
+
+  cv.addEventListener('pointermove', (e) => {
+    const now = performance.now(), dt = Math.max(8, now - ptr.t);
+    if (ptr.in) { ptr.vx = (e.clientX - ptr.x) / dt; ptr.vy = (e.clientY - ptr.y) / dt; push(ptr.vx, e.clientX, e.clientY, 70, 1); }
+    ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now; ptr.in = true;
+    const h = hit(ptr.x, ptr.y);
+    if (h !== over) { over = h; cv.classList.toggle('over', !!h); if (h) ring(h); }
+  });
+  cv.addEventListener('pointerleave', () => { ptr.in = false; over = null; cv.classList.remove('over'); });
+  cv.addEventListener('pointerdown', (e) => {
+    wake();
+    const h = hit(e.clientX, e.clientY);
+    if (h) {
+      ring(h);
+      const a = document.querySelector(`nav a[data-id="${h.leaf.id}"]`);
+      setTimeout(() => { location.href = a.href; }, 260);
+      return;
+    }
+    // a breath into the room
+    const dir = e.clientX < W / 2 ? 1 : -1;
+    push(dir * 1.6, e.clientX, e.clientY, Math.max(W, H), 0.6);
+  });
+
+  const names = document.getElementById('names');
+  names.addEventListener('focusin', (e) => {
+    wake();
+    focus = leaves.find((l) => l.leaf.id === e.target.dataset.id) || null;
+    if (focus) { ring(focus); focus.arm.om += 0.0015; }
+  });
+  names.addEventListener('focusout', () => { focus = null; });
+
+  // ── drawing ───────────────────────────────────────────────
+  function shade(hex, f) {
+    const n = parseInt(hex.slice(1), 16);
+    const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v * f));
+    return `rgb(${c})`;
+  }
+
+  function plate(l, dx, dy, shadow) {
+    const [sx, sy, k] = proj(l.P);
+    const c = Math.cos(l.phi), r = l.r * k;
+    const wx = Math.max(0.035, Math.abs(c));
+    g.beginPath();
+    l.leaf.shape.forEach(([x, y], i) => {
+      const px = sx + dx + x * r * wx, py = sy + dy + y * r;
+      i ? g.lineTo(px, py) : g.moveTo(px, py);
+    });
+    g.closePath();
+    if (shadow) { g.fill(); return; }
+    // turning edge-on, it catches less light
+    g.fillStyle = shade(l.leaf.color, 0.72 + 0.28 * wx + (c < 0 ? -0.06 : 0));
+    g.fill();
+    if (l.leaf.color === '#F4F1EA') { g.strokeStyle = 'rgba(22,20,18,0.25)'; g.lineWidth = 0.8; g.stroke(); }
+    if (l === focus || l === over) {
+      g.strokeStyle = l.leaf.color === '#161412' ? '#C8281E' : '#161412';
+      g.lineWidth = 1.5; g.setLineDash([3, 4]); g.stroke(); g.setLineDash([]);
+    }
+  }
+
+  function wires(dx, dy, shadow) {
+    g.beginPath();
+    const line = (a, b) => { const p = proj(a), q = proj(b); g.moveTo(p[0] + dx, p[1] + dy); g.lineTo(q[0] + dx, q[1] + dy); };
+    line([W / 2, -10, 0], root.P);
+    for (const a of arms) {
+      line(a.E[0], a.E[1]);
+      a.kids.forEach((k, i) => line(a.E[i], k.leaf ? [k.P[0], k.P[1] - k.r * 0.9, k.P[2]] : k.P));
+    }
+    g.strokeStyle = shadow ? 'rgba(60,48,32,0.16)' : '#1d1a17';
+    g.lineWidth = shadow ? 1 : 1.15;
+    g.stroke();
+    if (shadow) return;
+    for (const a of arms) {
+      const p = proj(a.P);
+      g.beginPath(); g.arc(p[0], p[1] - 2.5, 2.5, Math.PI * 0.2, Math.PI * 1.9); g.stroke();
+    }
+  }
+
+  function draw() {
+    g.clearRect(0, 0, W, H);
+    // the shadow on the wall, from a lamp up and to the left
+    g.save();
+    g.filter = 'blur(5px)';
+    wires(sh, sh * 0.74, true);
+    g.fillStyle = 'rgba(70,56,38,0.13)';
+    for (const l of leaves) plate(l, sh + l.P[2] * 0.05, sh * 0.74, true);
+    g.restore();
+    wires(0, 0, false);
+    [...leaves].sort((a, b) => b.P[2] - a.P[2]).forEach((l) => plate(l, 0, 0, false));
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    let dt = Math.min(64, now - last); last = now;
+    while (dt > 0) { const h = Math.min(16, dt); step(h, now); dt -= h; }
+    place(); draw();
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', () => { layout(); place(); });
+  layout(); place();
+  // the door opening is the first air the room gets
+  if (!still) for (const a of arms) a.om += (Math.random() - 0.5) * 0.002;
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
