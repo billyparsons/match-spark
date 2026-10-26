@@ -1,0 +1,89 @@
+/* the rooms are hung (session 105).
+   the wall is the wall "/" is on, lit from the same lamp up and to the left.
+   the room is a panel on it, not the space around you. */
+
+html[data-hung] {
+  --gut: clamp(16px, 6vw, 104px);
+  --top: clamp(64px, 11vh, 120px);
+  --foot: clamp(72px, 14vh, 160px);
+  background:
+    radial-gradient(ellipse 90% 70% at 22% 8%, #F3F0E8 0%, transparent 60%),
+    radial-gradient(ellipse 120% 80% at 80% 110%, rgba(120,104,80,0.16) 0%, transparent 60%),
+    #E4DED2 !important;
+  background-attachment: fixed !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+html[data-hung] > body {
+  position: relative !important;
+  margin: var(--top) var(--gut) var(--foot) !important;
+  min-height: calc(100vh - var(--top) - var(--foot)) !important;
+  transform-origin: 50% 0 !important;
+  transform: rotate(var(--tilt, 0deg)) !important;
+  will-change: transform;
+  /* a painted edge in the plate's colour, and the panel's shadow on the
+     plaster, falling down and right, away from the lamp */
+  box-shadow:
+    calc(3px + var(--lean, 0px)) 4px 0 0 var(--paint, #161412),
+    calc(18px + var(--lean, 0px) * 3) 26px 34px -6px rgba(60, 48, 32, 0.30),
+    calc(4px + var(--lean, 0px)) 8px 10px rgba(60, 48, 32, 0.18) !important;
+}
+
+/* outside was a whole sky. hung, it's a painting of one */
+html[data-hung="outside"] > body {
+  height: calc(100vh - var(--top) - var(--foot)) !important;
+  overflow: hidden !important;
+}
+html[data-hung="outside"] { overflow-y: hidden !important; }
+
+/* the wire up to "/" and the plate it hangs from, seen from underneath */
+.hang-wire {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--wire, 1.2px);
+  height: var(--top);
+  margin-left: calc(var(--wire, 1.2px) / -2);
+  background: #1d1a17;
+  z-index: 2147483000;
+  pointer-events: none;
+}
+.hang-wire::after {
+  /* where it bites the panel */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: #1d1a17;
+}
+.hang-hook {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 44px;
+  height: calc(var(--top) - 6px);
+  margin-left: -22px;
+  z-index: 2147483001;
+  cursor: n-resize;
+}
+.hang-hook:focus-visible {
+  outline: 1px dashed #1d1a17;
+  outline-offset: 2px;
+}
+.hang-label {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* leaving: the wire takes it up */
+html[data-hung].hang-lift > body {
+  transition: transform 0.55s cubic-bezier(.5, 0, .8, .3), opacity 0.55s ease-in !important;
+  transform: translateY(-110vh) rotate(var(--tilt, 0deg)) !important;
+  opacity: 0.0;
+}

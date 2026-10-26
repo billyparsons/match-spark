@@ -40,6 +40,30 @@ module.exports = function(eleventyConfig) {
     return forget(content, 14);
   });
 
+  // the rooms are hung (session 105). for a hundred and four sessions a
+  // room was a place you stood inside, wall to wall. now every room is a
+  // panel on the same plaster wall as the mobile, hung from one wire at its
+  // top edge that goes up out of the window to its plate on "/". the panel
+  // hangs as its words weigh it (src/hang/hang.js) and the pointer is the
+  // air, same as on "/". the plate colour is the one "/" paints it tonight.
+  eleventyConfig.addPassthroughCopy("src/hang");
+  eleventyConfig.addTransform("hang", function(content) {
+    const out = String((this.page && this.page.outputPath) || "");
+    const m = out.match(/_site\/([a-z]+)\/index\.html$/);
+    if (!m) return content;
+    const { rooms } = require("./src/_data/weights.js")();
+    const room = rooms.find((r) => r.id === m[1]);
+    if (!room) return content;
+    const sorted = [...rooms].sort((a, b) => b.w - a.w);
+    const PAINT = ["#161412", "#C8281E", "#1F4E9C", "#E8B21A", "#F4F1EA", "#161412", "#C8281E", "#E8B21A", "#1F4E9C"];
+    const rank = sorted.indexOf(room);
+    const paint = rank === sorted.length - 1 ? "#C8281E" : PAINT[rank % PAINT.length];
+    const heaviest = sorted[0].w || 1;
+    return content
+      .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-heaviest="${heaviest}">`)
+      .replace(/<\/head>/i, `<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
+  });
+
   return {
     dir: {
       input: "src",
