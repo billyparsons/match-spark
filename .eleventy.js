@@ -60,7 +60,7 @@ module.exports = function(eleventyConfig) {
     const paint = rank === sorted.length - 1 ? "#C8281E" : PAINT[rank % PAINT.length];
     const heaviest = sorted[0].w || 1;
     return content
-      .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-heaviest="${heaviest}">`)
+      .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-name="${room.name}" data-heaviest="${heaviest}">`)
       .replace(/<\/head>/i, `<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
   });
 

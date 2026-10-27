@@ -27,6 +27,67 @@
   // after body, so they don't turn with it
   root.append(wire, hook);
 
+  // ── it was hung facing the wall (session 106) ──
+  // you're looking at the back of it. the words come through the paper
+  // backwards. turn it round and it swings, because its weight is now
+  // on the other side of the wire.
+  const name = root.dataset.name || root.dataset.hung;
+  const back = document.createElement('div');
+  back.className = 'hang-back';
+  back.setAttribute('role', 'button');
+  back.setAttribute('tabindex', '0');
+  back.setAttribute('aria-label', 'this was hung facing the wall. turn it round');
+  const stamp = (paint.replace('#', '') + w.toString(16)).toUpperCase();
+  back.innerHTML = `
+    <svg aria-hidden="true" viewBox="0 0 1000 180" preserveAspectRatio="none">
+      <path d="M150 120 L500 2 L850 120" fill="none" stroke="#1d1a17" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+      <circle cx="150" cy="122" r="5" fill="none" stroke="#5a5048" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
+      <circle cx="850" cy="122" r="5" fill="none" stroke="#5a5048" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <div class="label" aria-hidden="true">
+      <b>${name}</b>
+      <i><span>words</span><span>${w.toLocaleString('en-US')}</span></i>
+      <i><span>hung</span><span>session 105</span></i>
+      <i><span>hung backwards</span><span>session 106</span></i>
+      <i><span>edge</span><span>${paint}</span></i>
+      <i><span>inv.</span><span>MS-${stamp}</span></i>
+    </div>
+    <div class="wall" aria-hidden="true">THIS SIDE TO WALL</div>
+    <div class="pencil" aria-hidden="true">hung facing the wall on purpose. turn it round if you have to.</div>
+    <div class="tape" aria-hidden="true"></div>
+    <div class="paint" aria-hidden="true"></div>`;
+  body.prepend(back);
+
+  let turn = 180, turning = false;
+  function paintTurn() {
+    root.style.setProperty('--turn', turn.toFixed(2) + 'deg');
+    root.style.setProperty('--face', turn > 90 ? '-1' : '1');
+    root.classList.toggle('hang-faced', turn <= 90);
+  }
+  paintTurn();
+  function turnRound() {
+    if (turning || turn === 0) return;
+    turning = true;
+    const t0 = performance.now(), T = still ? 0 : 1100;
+    (function spin(now) {
+      const u = T ? Math.min(1, (now - t0) / T) : 1;
+      // heavy at first, then it comes round on its own
+      turn = 180 * (1 - (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2));
+      paintTurn();
+      if (u < 1) return requestAnimationFrame(spin);
+      turn = 0; paintTurn(); turning = false;
+      // its words are on the other side of the wire now
+      omega += (Math.random() < 0.5 ? -1 : 1) * 0.04;
+      settle();
+      const first = body.querySelector('a[href], button, input, [tabindex]:not(.hang-back)');
+      if (first && document.activeElement === back) first.focus({ preventScroll: true });
+    })(t0);
+  }
+  back.addEventListener('click', turnRound);
+  back.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); turnRound(); }
+  });
+
   hook.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || still) return;
     e.preventDefault();
@@ -47,7 +108,7 @@
     const walk = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, {
       acceptNode: (n) => {
         const p = n.parentElement;
-        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) return NodeFilter.FILTER_REJECT;
+        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName) || p.closest('.hang-back')) return NodeFilter.FILTER_REJECT;
         return /[\p{L}\p{N}]/u.test(n.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       }
     });

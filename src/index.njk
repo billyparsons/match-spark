@@ -13,23 +13,35 @@
   to its pivot, so the whole thing balances. the air in the room is you.
   if you need names, they're here for screen readers and the tab key.
   that's the only place they are.
+
+  session 106.
+  you're on the other side of the wall now. the lamp is over there with
+  the mobile, and the wall is only paper, so what you get is its shadow
+  coming through, the wrong way round, without its colours. the plates
+  that hang nearest the wall are the sharpest. you can still push on
+  the paper and the mobile still feels it, a little. it rings like
+  something in the next room.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>◖</title>
+  <title>◗</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
       overflow: hidden;
+      /* the back of the wall, with the lamp on the far side of it */
       background:
-        radial-gradient(ellipse 90% 70% at 22% 8%, #F3F0E8 0%, transparent 60%),
-        radial-gradient(ellipse 120% 80% at 80% 110%, rgba(120,104,80,0.16) 0%, transparent 60%),
-        #E4DED2;
+        radial-gradient(ellipse 55% 45% at 80% 6%, rgba(255,236,196,0.95) 0%, rgba(255,226,170,0.35) 45%, transparent 75%),
+        radial-gradient(ellipse 120% 90% at 20% 110%, rgba(40,28,14,0.30) 0%, transparent 65%),
+        repeating-linear-gradient(88deg, rgba(255,245,220,0.05) 0 1px, transparent 1px 9px),
+        repeating-linear-gradient(-3deg, rgba(60,40,20,0.04) 0 1px, transparent 1px 13px),
+        #CDB892;
       touch-action: none;
     }
-    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    /* it's the same mobile, seen from behind */
+    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; transform: scaleX(-1); }
     canvas.over { cursor: pointer; }
 
     /* names live here and nowhere else */
@@ -194,7 +206,10 @@
     out.gain.setValueAtTime(0, now);
     out.gain.linearRampToValueAtTime(0.05, now + 0.01);
     out.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
-    out.connect(ac.destination);
+    // through a wall
+    const lp = ac.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 520; lp.Q.value = 0.4;
+    out.connect(lp).connect(ac.destination);
     for (const [m, v] of [[1, 1], [2.76, 0.35], [5.4, 0.12]]) {
       const o = ac.createOscillator(), gv = ac.createGain();
       o.frequency.value = f0 * m; gv.gain.value = v;
@@ -213,17 +228,20 @@
     return best;
   }
 
+  // you're behind it, so its left is your right
+  const mx = (e) => W - e.clientX;
   cv.addEventListener('pointermove', (e) => {
     const now = performance.now(), dt = Math.max(8, now - ptr.t);
-    if (ptr.in) { ptr.vx = (e.clientX - ptr.x) / dt; ptr.vy = (e.clientY - ptr.y) / dt; push(ptr.vx, e.clientX, e.clientY, 70, 1); }
-    ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now; ptr.in = true;
+    // pushing on paper: the air only gets a little of it
+    if (ptr.in) { ptr.vx = (mx(e) - ptr.x) / dt; ptr.vy = (e.clientY - ptr.y) / dt; push(ptr.vx, mx(e), e.clientY, 70, 0.4); }
+    ptr.x = mx(e); ptr.y = e.clientY; ptr.t = now; ptr.in = true;
     const h = hit(ptr.x, ptr.y);
     if (h !== over) { over = h; cv.classList.toggle('over', !!h); if (h) ring(h); }
   });
   cv.addEventListener('pointerleave', () => { ptr.in = false; over = null; cv.classList.remove('over'); });
   cv.addEventListener('pointerdown', (e) => {
     wake();
-    const h = hit(e.clientX, e.clientY);
+    const h = hit(mx(e), e.clientY);
     if (h) {
       ring(h);
       const a = document.querySelector(`nav a[data-id="${h.leaf.id}"]`);
@@ -231,8 +249,8 @@
       return;
     }
     // a breath into the room
-    const dir = e.clientX < W / 2 ? 1 : -1;
-    push(dir * 1.6, e.clientX, e.clientY, Math.max(W, H), 0.6);
+    const dir = mx(e) < W / 2 ? 1 : -1;
+    push(dir * 1.6, mx(e), e.clientY, Math.max(W, H), 0.3);
   });
 
   const names = document.getElementById('names');
@@ -279,7 +297,7 @@
       line(a.E[0], a.E[1]);
       a.kids.forEach((k, i) => line(a.E[i], k.leaf ? [k.P[0], k.P[1] - k.r * 0.9, k.P[2]] : k.P));
     }
-    g.strokeStyle = shadow ? 'rgba(60,48,32,0.16)' : '#1d1a17';
+    g.strokeStyle = shadow ? 'rgba(42,30,18,0.30)' : '#1d1a17';
     g.lineWidth = shadow ? 1 : 1.15;
     g.stroke();
     if (shadow) return;
@@ -289,17 +307,23 @@
     }
   }
 
+  // from this side there is only the shadow. a plate near the wall casts
+  // a hard one; a plate swung out toward the lamp casts a soft one.
   function draw() {
     g.clearRect(0, 0, W, H);
-    // the shadow on the wall, from a lamp up and to the left
     g.save();
-    g.filter = 'blur(5px)';
+    g.filter = 'blur(2.5px)';
     wires(sh, sh * 0.74, true);
-    g.fillStyle = 'rgba(70,56,38,0.13)';
-    for (const l of leaves) plate(l, sh + l.P[2] * 0.05, sh * 0.74, true);
     g.restore();
-    wires(0, 0, false);
-    [...leaves].sort((a, b) => b.P[2] - a.P[2]).forEach((l) => plate(l, 0, 0, false));
+    for (const l of leaves) {
+      const near = Math.max(0, Math.min(1, 0.5 + l.P[2] / (span * 0.8)));
+      g.save();
+      g.filter = `blur(${(1 + (1 - near) * 9).toFixed(1)}px)`;
+      const lit = l === over || l === focus;
+      g.fillStyle = `rgba(42,30,18,${(0.22 + near * 0.3 + (lit ? 0.18 : 0)).toFixed(3)})`;
+      plate(l, sh + l.P[2] * 0.05, sh * 0.74, true);
+      g.restore();
+    }
   }
 
   let last = performance.now();

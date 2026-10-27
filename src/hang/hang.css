@@ -21,14 +21,17 @@ html[data-hung] > body {
   margin: var(--top) var(--gut) var(--foot) !important;
   min-height: calc(100vh - var(--top) - var(--foot)) !important;
   transform-origin: 50% 0 !important;
-  transform: rotate(var(--tilt, 0deg)) !important;
+  /* session 106: it was hung facing the wall. --turn is 180deg until you
+     turn it round, and --face is -1 while you're looking at its back, so
+     the shadow still falls away from the lamp */
+  transform: perspective(2400px) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
   will-change: transform;
   /* a painted edge in the plate's colour, and the panel's shadow on the
      plaster, falling down and right, away from the lamp */
   box-shadow:
-    calc(3px + var(--lean, 0px)) 4px 0 0 var(--paint, #161412),
-    calc(18px + var(--lean, 0px) * 3) 26px 34px -6px rgba(60, 48, 32, 0.30),
-    calc(4px + var(--lean, 0px)) 8px 10px rgba(60, 48, 32, 0.18) !important;
+    calc((3px + var(--lean, 0px)) * var(--face, 1)) 4px 0 0 var(--paint, #161412),
+    calc((18px + var(--lean, 0px) * 3) * var(--face, 1)) 26px 34px -6px rgba(60, 48, 32, 0.30),
+    calc((4px + var(--lean, 0px)) * var(--face, 1)) 8px 10px rgba(60, 48, 32, 0.18) !important;
 }
 
 /* outside was a whole sky. hung, it's a painting of one */
@@ -84,6 +87,82 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
 /* leaving: the wire takes it up */
 html[data-hung].hang-lift > body {
   transition: transform 0.55s cubic-bezier(.5, 0, .8, .3), opacity 0.55s ease-in !important;
-  transform: translateY(-110vh) rotate(var(--tilt, 0deg)) !important;
+  transform: translateY(-110vh) perspective(2400px) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
   opacity: 0.0;
+}
+
+/* ── the back (session 106) ──────────────────────────────────
+   every room was hung the wrong way round. what faces you is the
+   back of the panel: brown paper over the stretcher, the screw eyes
+   and the picture wire, the framer's stickers. the paper is thin, and
+   the lamp is on the other side now, so the words come through it
+   backwards. it's inside the body, so it is mirrored with the room;
+   the things written on it are mirrored again so they read. */
+.hang-back {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2147482000 !important;
+  display: block !important;
+  margin: 0 !important; padding: 0 !important;
+  cursor: grab;
+  overflow: hidden;
+  color: #2a2118;
+  font: 13px/1.35 "Courier New", Courier, monospace;
+  text-align: left;
+  background:
+    /* the stretcher, felt through the paper */
+    linear-gradient(90deg, rgba(70,48,24,0.22) 0 26px, transparent 26px calc(100% - 26px), rgba(70,48,24,0.22) calc(100% - 26px)),
+    linear-gradient(180deg, rgba(70,48,24,0.22) 0 26px, transparent 26px calc(100% - 26px), rgba(70,48,24,0.22) calc(100% - 26px)),
+    linear-gradient(90deg, transparent calc(50% - 13px), rgba(70,48,24,0.16) calc(50% - 13px) calc(50% + 13px), transparent calc(50% + 13px)),
+    /* fibres */
+    repeating-linear-gradient(83deg, rgba(255,240,210,0.05) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-7deg, rgba(60,40,20,0.05) 0 1px, transparent 1px 11px),
+    rgba(176, 140, 96, 0.88);
+  box-shadow: inset 0 0 0 3px rgba(60,40,20,0.35), inset 0 0 60px rgba(60,40,20,0.25);
+  transition: opacity 0.12s linear;
+}
+html[data-hung].hang-faced .hang-back { opacity: 0; pointer-events: none; visibility: hidden; }
+.hang-back:focus-visible { outline: 2px dashed #1d1a17; outline-offset: -8px; }
+.hang-back > * { position: absolute; transform: scaleX(-1); }
+
+.hang-back svg { left: 0; top: 0; width: 100%; height: 180px; transform: none; overflow: visible; }
+
+.hang-back .label {
+  /* the framer's label, top left as you look at it */
+  top: 64px; right: 48px;
+  width: min(300px, 70%);
+  padding: 12px 14px 10px;
+  background: #F2ECDD;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  transform: scaleX(-1) rotate(-1.4deg);
+}
+.hang-back .label b { display: block; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid #2a2118; margin-bottom: 6px; padding-bottom: 4px; }
+.hang-back .label i { font-style: normal; display: flex; justify-content: space-between; gap: 1em; border-bottom: 1px dotted rgba(42,33,24,0.4); }
+.hang-back .label i span:last-child { text-align: right; }
+
+.hang-back .wall {
+  top: 200px; left: 56px;
+  padding: 6px 12px;
+  background: #C8281E; color: #F4F1EA;
+  font: bold 12px/1.2 Arial, Helvetica, sans-serif; letter-spacing: 0.14em;
+  transform: scaleX(-1) rotate(2.2deg);
+}
+.hang-back .pencil {
+  top: 280px; right: 22%;
+  max-width: 260px;
+  color: rgba(40,30,20,0.72);
+  font: 20px/1.25 "Bradley Hand", "Segoe Print", "Comic Neue", "Chalkboard SE", cursive;
+  transform: scaleX(-1) rotate(-3deg);
+}
+.hang-back .tape {
+  bottom: 18%; left: 30%;
+  width: 120px; height: 28px;
+  background: rgba(230, 216, 170, 0.6);
+  transform: scaleX(-1) rotate(-34deg);
+}
+.hang-back .paint {
+  bottom: 40px; right: 40px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--paint, #161412);
+  box-shadow: 0 0 0 2px rgba(42,33,24,0.25);
 }
