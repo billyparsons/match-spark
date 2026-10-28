@@ -5,6 +5,12 @@
 // under the wire. a long room is a long pendulum and swings slowly. the
 // pointer is the air. the wire goes up out of the window to "/", and
 // pulling on it takes you there.
+//
+// struck (session 107). the show is coming down. the wire's been cut at
+// the ceiling and the panel is leaning against the wall, still facing it,
+// the way art waits to be crated. it doesn't swing any more. it leans the
+// way its words weigh it, and that's all. the cut end of the wire curls
+// over the top, and pulling on it takes you back to the floor.
 (() => {
   const root = document.documentElement;
   const body = document.body;
@@ -23,7 +29,7 @@
   const hook = document.createElement('a');
   hook.className = 'hang-hook';
   hook.href = '/';
-  hook.innerHTML = '<span class="hang-label">up the wire, to the mobile</span>';
+  hook.innerHTML = '<span class="hang-label">the cut wire, back to the floor</span>';
   // after body, so they don't turn with it
   root.append(wire, hook);
 
@@ -49,11 +55,12 @@
       <i><span>words</span><span>${w.toLocaleString('en-US')}</span></i>
       <i><span>hung</span><span>session 105</span></i>
       <i><span>hung backwards</span><span>session 106</span></i>
+      <i><span>struck</span><span>session 107</span></i>
       <i><span>edge</span><span>${paint}</span></i>
       <i><span>inv.</span><span>MS-${stamp}</span></i>
     </div>
     <div class="wall" aria-hidden="true">THIS SIDE TO WALL</div>
-    <div class="pencil" aria-hidden="true">hung facing the wall on purpose. turn it round if you have to.</div>
+    <div class="pencil" aria-hidden="true">coming down. leave it facing the wall. crate no. ${(w % 9) + 1}</div>
     <div class="tape" aria-hidden="true"></div>
     <div class="paint" aria-hidden="true"></div>`;
   body.prepend(back);
@@ -76,8 +83,7 @@
       paintTurn();
       if (u < 1) return requestAnimationFrame(spin);
       turn = 0; paintTurn(); turning = false;
-      // its words are on the other side of the wire now
-      omega += (Math.random() < 0.5 ? -1 : 1) * 0.04;
+      // its words are on the other side now, so it leans the other way
       settle();
       const first = body.querySelector('a[href], button, input, [tabindex]:not(.hang-back)');
       if (first && document.activeElement === back) first.focus({ preventScroll: true });
@@ -92,12 +98,12 @@
     if (e.metaKey || e.ctrlKey || e.shiftKey || still) return;
     e.preventDefault();
     root.classList.add('hang-lift');
-    setTimeout(() => { location.href = '/'; }, 520);
+    setTimeout(() => { location.href = '/'; }, 420);
   });
   addEventListener('pageshow', (e) => { if (e.persisted) root.classList.remove('hang-lift'); });
 
   const DEG = Math.PI / 180;
-  let theta = 0, omega = 0, rest = 0, limit = 2 * DEG, H = 1, running = false, last = 0;
+  let theta = 0, rest = 0, limit = 2 * DEG, H = 1;
 
   // where the words are
   function weigh() {
@@ -132,53 +138,19 @@
     rest = Math.max(-limit, Math.min(limit, wanted));
   }
 
-  // a stiff panel on a pin at its top edge: omega^2 = 3g / 2L.
-  // 96px to the inch, so the log, which is metres long, takes seconds.
-  const G = 9.81 * 3779.5;
-  function step(now) {
-    const dt = Math.min(0.033, (now - last) / 1000 || 0.016);
-    last = now;
-    const k = (3 * G) / (2 * H);
-    omega += (-k * Math.sin(theta - rest) - 0.9 * omega) * dt;
-    theta += omega * dt;
-    const hard = limit * 1.4;
-    if (theta > rest + hard) { theta = rest + hard; omega *= -0.3; }
-    if (theta < rest - hard) { theta = rest - hard; omega *= -0.3; }
-    paintTilt();
-    if (Math.abs(omega) < 0.00004 && Math.abs(theta - rest) < 0.00004) {
-      theta = rest; paintTilt(); running = false; return;
-    }
-    requestAnimationFrame(step);
-  }
   function paintTilt() {
     root.style.setProperty('--tilt', (theta / DEG).toFixed(4) + 'deg');
     // the shadow slides the way the bottom swings
     root.style.setProperty('--lean', (-Math.sin(theta) * Math.min(H, innerHeight) * 0.06).toFixed(2) + 'px');
   }
-  function go() {
-    if (still) { theta = rest; paintTilt(); return; }
-    if (!running) { running = true; last = performance.now(); requestAnimationFrame(step); }
-  }
+  // leaning on a wall, nothing swings. it goes where its words put it
+  function go() { theta = rest; paintTilt(); }
 
-  // the air: a pointer moving past pushes the panel where it is
-  let px = null, pt = 0;
-  addEventListener('pointermove', (e) => {
-    const now = performance.now();
-    if (px !== null && now - pt < 80) {
-      const vx = (e.clientX - px) / Math.max(now - pt, 1);
-      const arm = Math.max(0, e.clientY - (body.offsetTop - scrollY)) / H;
-      omega += vx * arm * 0.007 * (1 - 0.8 * Math.sqrt(w / heaviest));
-      go();
-    }
-    px = e.clientX; pt = now;
-  }, { passive: true });
+  // there used to be air here (session 105). nothing hangs in it now.
 
   function settle() { weigh(); go(); }
 
-  // it arrives just hung: someone let go of it a moment ago
   weigh();
-  theta = still ? rest : rest + (Math.random() < 0.5 ? -1 : 1) * limit * 1.3;
-  paintTilt();
   go();
   addEventListener('load', settle);
   let t;

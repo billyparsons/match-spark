@@ -21,28 +21,62 @@
   that hang nearest the wall are the sharpest. you can still push on
   the paper and the mobile still feels it, a little. it rings like
   something in the next room.
+
+  session 107.
+  the show is coming down. someone has taken the mobile off its wire
+  and laid it out on a moving blanket under the work lights, and you're
+  standing over it. the arms are in a bundle with their loops, the
+  plates are lying where they were put, some of them face down, each
+  with a bit of masking tape and a number in marker. you can slide
+  them about. there's a crate in the corner. whatever you put in it
+  stays in it the next time you come, and when it's full the lid goes
+  on. it was never finished when you arrived. it was always on its way
+  up or on its way down.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>◗</title>
+  <title>⧈</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
       overflow: hidden;
-      /* the back of the wall, with the lamp on the far side of it */
-      background:
-        radial-gradient(ellipse 55% 45% at 80% 6%, rgba(255,236,196,0.95) 0%, rgba(255,226,170,0.35) 45%, transparent 75%),
-        radial-gradient(ellipse 120% 90% at 20% 110%, rgba(40,28,14,0.30) 0%, transparent 65%),
-        repeating-linear-gradient(88deg, rgba(255,245,220,0.05) 0 1px, transparent 1px 9px),
-        repeating-linear-gradient(-3deg, rgba(60,40,20,0.04) 0 1px, transparent 1px 13px),
-        #CDB892;
       touch-action: none;
+      /* the gallery floor, sealed concrete, with the show off the walls */
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,255,255,0.05) 0 1px, transparent 1.5px) 0 0 / 7px 7px,
+        radial-gradient(circle at 70% 70%, rgba(0,0,0,0.06) 0 1px, transparent 1.5px) 0 0 / 11px 11px,
+        linear-gradient(115deg, #8E8C88, #7D7B78 60%, #8A8884);
     }
-    /* it's the same mobile, seen from behind */
-    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; transform: scaleX(-1); }
-    canvas.over { cursor: pointer; }
+    /* a moving blanket, quilted in diamonds, thrown down not quite square */
+    .blanket {
+      position: fixed; inset: 5vmin 4vmin 6vmin 3vmin;
+      transform: rotate(-1.2deg);
+      border-radius: 6px;
+      background:
+        repeating-linear-gradient(45deg, transparent 0 33px, rgba(200,210,230,0.16) 33px 34px),
+        repeating-linear-gradient(-45deg, transparent 0 33px, rgba(200,210,230,0.16) 33px 34px),
+        radial-gradient(ellipse 30% 20% at 70% 35%, rgba(0,0,0,0.12), transparent 70%),
+        radial-gradient(ellipse 25% 30% at 25% 75%, rgba(255,255,255,0.05), transparent 70%),
+        #2A3550;
+      /* the binding round the edge, and the blanket lying on the floor */
+      box-shadow: inset 0 0 0 7px #1C2438, inset 0 0 0 8px rgba(200,210,230,0.18), 0 2px 4px rgba(0,0,0,0.35);
+    }
+    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    canvas.over { cursor: grab; }
+    canvas.held { cursor: grabbing; }
+    /* the work lights: two fluorescent tubes, too high, too white */
+    .lights {
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 38% 18%, rgba(235,245,255,0.22), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 66% 30%, rgba(235,245,255,0.16), transparent 70%),
+        radial-gradient(ellipse 120% 100% at 50% 30%, transparent 55%, rgba(10,14,22,0.45) 100%);
+      mix-blend-mode: screen;
+    }
+    .lights.dip { opacity: 0.25; }
+    .lights + .lights { mix-blend-mode: normal; background: radial-gradient(ellipse 120% 100% at 50% 30%, transparent 50%, rgba(8,10,16,0.5) 100%); }
 
     /* names live here and nowhere else */
     nav { position: fixed; left: 0; top: 0; }
@@ -51,12 +85,15 @@
       clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
     }
 
-    noscript ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2rem; padding: 4rem; align-items: center; }
+    noscript ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2rem; padding: 4rem; align-items: center; position: relative; }
     noscript a { display: block; border-radius: 50%; background: #161412; font-size: 0; }
   </style>
 </head>
 <body>
+  <div class="blanket" aria-hidden="true"></div>
   <canvas id="c" aria-hidden="true"></canvas>
+  <div class="lights" id="lights" aria-hidden="true"></div>
+  <div class="lights" aria-hidden="true"></div>
   <nav id="names" aria-label="rooms">
     {% for r in weights.rooms %}<a href="{{ r.href }}" data-id="{{ r.id }}">{{ r.name }}</a>
     {% endfor %}
@@ -70,17 +107,15 @@
   const g = cv.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // a seeded hand, so each room is cut the same way every night
+  // the same seeded hand that cut them in session 104
   const hash = (s) => { let h = 2166136261; for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; };
   const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) ^ Math.imul(seed ^ (seed >>> 13), 3266489909)) >>> 0) / 4294967296;
 
-  // calder's colours. the heaviest is black. the lightest is red.
   const sorted = [...ROOMS].sort((a, b) => b.w - a.w);
   const PAINT = ['#161412', '#C8281E', '#1F4E9C', '#E8B21A', '#F4F1EA', '#161412', '#C8281E', '#E8B21A', '#1F4E9C'];
   sorted.forEach((r, i) => { r.color = PAINT[i % PAINT.length]; r.rank = i; });
   sorted[sorted.length - 1].color = '#C8281E';
 
-  // the plate: a paddle, rounded, a little wrong
   for (const r of ROOMS) {
     const rand = rng(hash(r.id));
     const n = 40, lobes = 2 + Math.floor(rand() * 3), ph = rand() * 6.28, amp = 0.08 + rand() * 0.16;
@@ -89,255 +124,447 @@
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
       const k = 1 + amp * Math.sin(a * lobes + ph) + 0.05 * Math.sin(a * 5 + ph * 2);
-      let x = Math.cos(a) * k * squash, y = Math.sin(a) * k / squash;
+      const x = Math.cos(a) * k * squash, y = Math.sin(a) * k / squash;
       r.shape.push([x + y * tip * 0.3, y]);
     }
-    r.off = (rand() - 0.5) * 1.6;           // how the plate is set on its wire
+    rand();
+    // tonight's hand: how it was put down
+    const t = rng(hash(r.id + ':strike'));
+    r.down = t() < 0.34;                 // face down: you get the bare metal
+    r.sx = t(); r.sy = t(); r.sa = (t() - 0.5) * 6.28;
+    r.tape = (t() - 0.5) * 0.9;
+    r.coil = t() * 6.28;
   }
 
-  // hang them. the two lightest share an arm, again and again, until one
-  // wire holds everything. each arm is balanced: w1 * l1 = w2 * l2.
+  // the arms, as they were balanced, now just rods
   let pool = ROOMS.map((r) => ({ leaf: r, w: r.w }));
   while (pool.length > 1) {
     pool.sort((a, b) => a.w - b.w);
     const a = pool.shift(), b = pool.shift();
     const rand = rng(hash((a.leaf ? a.leaf.id : 'n' + a.w) + (b.leaf ? b.leaf.id : 'n' + b.w)));
-    pool.push({ kids: rand() < 0.5 ? [a, b] : [b, a], w: a.w + b.w,
-      th: (rand() - 0.5) * 2.4, om: 0, rest: (rand() - 0.5) * 2, drift: rand() * 100 });
+    pool.push({ kids: rand() < 0.5 ? [a, b] : [b, a], w: a.w + b.w });
   }
-  const root = pool[0];
-  const arms = [], leaves = [];
-  (function walk(n, d, up) {
-    n.depth = d; n.up = up;
-    if (n.leaf) { leaves.push(n); return; }
-    arms.push(n);
-    n.kids.forEach((k) => walk(k, d + 1, n));
-  })(root, 0, null);
-  const maxW = sorted[0].w;
+  const rods = [];
+  (function walk(n, d) {
+    if (n.leaf) { n.leaf.depth = d; return; }
+    n.depth = d; rods.push(n);
+    n.kids.forEach((k) => walk(k, d + 1));
+  })(pool[0], 0);
+  rods.sort((a, b) => a.depth - b.depth);
 
-  let W, H, S, top, gap, span, sh;
-  function layout() {
+  // ── where things are. the strike remembers you ──
+  const KEY = 'match-spark:strike';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
+  const plates = ROOMS.map((r) => {
+    const s = saved[r.id];
+    return { r, x: 0, y: 0, vx: 0, vy: 0, a: s ? s.a : r.sa, va: 0,
+      packed: s ? !!s.p : false, order: s && s.o ? s.o : 0, nx: s ? s.x : null, ny: s ? s.y : null };
+  });
+  let lid = !!saved._lid;
+
+  let W, H, S, rMax, crate, bundle;
+  function layout(first) {
     const dpr = Math.min(2, devicePixelRatio || 1);
+    const oW = W, oH = H;
     W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr;
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     S = Math.min(W, H * 1.15);
-    top = H * 0.07;
-    const rMax = S * 0.12;
-    for (const l of leaves) { l.r = Math.max(4, rMax * Math.sqrt(l.w / maxW)); l.wire = 10 + l.r * 0.25; }
-    // how far down the deepest thing hangs, per unit of gap
-    let need = 1, fixed = 0;
-    for (const l of leaves) {
-      const f = l.wire + l.r * 2.1;
-      need = Math.max(need, l.depth);
-      fixed = Math.max(fixed, f);
+    rMax = S * (W < 700 ? 0.1 : 0.12);
+    for (const p of plates) p.R = Math.max(5, rMax * Math.sqrt(p.r.w / sorted[0].w));
+    const c = Math.min(W, H) * (W < 700 ? 0.42 : 0.34);
+    crate = { x: W - c - Math.max(24, W * 0.06), y: H - c * 0.92 - Math.max(28, H * 0.08), w: c, h: c * 0.92 };
+    bundle = { x: Math.max(30, W * 0.08), y: Math.max(34, H * 0.1), L: Math.min(W * 0.34, S * 0.42) };
+    if (first) {
+      // put down wherever there was room, biggest first
+      const down = [];
+      for (const p of plates) if (p.nx != null) { p.x = p.nx * W; p.y = p.ny * H; if (!p.packed) down.push(p); }
+      for (const p of [...plates].filter((q) => q.nx == null).sort((a, b) => b.R - a.R)) {
+        const rand = rng(hash(p.r.id + ':floor'));
+        let best = null, bs = -Infinity;
+        for (let k = 0; k < 80; k++) {
+          const x = W * 0.08 + p.R + rand() * Math.max(1, W * 0.84 - 2 * p.R);
+          const y = bundle.y + rods.length * 13 + 16 + p.R + rand() * Math.max(1, H * 0.86 - bundle.y - rods.length * 13 - 16 - 2 * p.R);
+          if (x + p.R > crate.x - 16 && y + p.R > crate.y - 16) continue;
+          // the most room it can find
+          const room = Math.min(1e4, ...down.map((q) => Math.hypot(q.x - x, q.y - y) - q.R - p.R));
+          if (room > bs) { bs = room; best = [x, y]; }
+          if (room > 30) break;
+        }
+        if (best) { p.x = best[0]; p.y = best[1]; }
+        down.push(p);
+      }
+      for (let i = 0; i < 120; i++) collide(false);
+    } else if (oW) {
+      for (const p of plates) { p.x *= W / oW; p.y *= H / oH; }
     }
-    gap = Math.max(26, (H * 0.9 - top - fixed) / Math.max(1, need - 1 + 0.3));
-    span = Math.min(W * 0.36, S * 0.5);
-    sh = Math.max(14, S * 0.05);
-    for (const a of arms) {
-      const L = span * Math.pow(0.7, a.depth) + 30;
-      const [p, q] = a.kids;
-      a.lA = L * q.w / a.w;      // the heavy side is the short side
-      a.lB = L * p.w / a.w;
-      a.I = (p.w * a.lA * a.lA + q.w * a.lB * a.lB) / a.w;
-    }
-    // it turns, so anything can swing out to its full reach: keep it in the room
-    const reach = (n) => n.leaf ? n.r : Math.max(n.lA + reach(n.kids[0]), n.lB + reach(n.kids[1]));
-    const fit = Math.min(1, (W * 0.47) / reach(root));
-    for (const a of arms) { a.lA *= fit; a.lB *= fit; a.I *= fit * fit; }
-    const Im = arms.reduce((s, a) => s + a.I, 0) / arms.length;
-    for (const a of arms) a.Ir = Math.max(0.35, Math.sqrt(a.I / Im));
   }
 
-  // where everything is in the room right now
-  function place() {
-    root.P = [W / 2, top + gap * 0.3, 0];
-    (function go(n) {
-      if (n.leaf) return;
-      const [x, y, z] = n.P, c = Math.cos(n.th), s = Math.sin(n.th);
-      n.E = [[x - n.lA * c, y, z - n.lA * s], [x + n.lB * c, y, z + n.lB * s]];
-      n.kids.forEach((k, i) => {
-        const e = n.E[i];
-        if (k.leaf) { k.end = e; k.arm = n; k.P = [e[0], e[1] + k.wire + k.r, e[2]]; k.phi = n.th + k.leaf.off; }
-        else { k.P = [e[0], e[1] + gap, e[2]]; go(k); }
-      });
-    })(root);
+  const inCrate = (x, y) => x > crate.x + 10 && x < crate.x + crate.w - 10 && y > crate.y + 10 && y < crate.y + crate.h - 10;
+  const inBundle = (p) => p.x - p.R < bundle.x + bundle.L + 20 && p.y - p.R < bundle.y + rods.length * 13 + 20;
+
+  function save() {
+    const o = { _lid: lid };
+    for (const p of plates) o[p.r.id] = { x: +(p.x / W).toFixed(4), y: +(p.y / H).toFixed(4), a: +p.a.toFixed(3), p: p.packed ? 1 : 0, o: p.order };
+    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
   }
 
-  const F = 1600;
-  const proj = ([x, y, z]) => { const k = F / (F + z); return [W / 2 + (x - W / 2) * k, top + (y - top) * k, k]; };
+  // where a packed plate sits: between sheets of foam, smaller from up here
+  function packedSpot(p) {
+    const rand = rng(hash(p.r.id + ':crate'));
+    const k = Math.min(0.55, (crate.w * 0.3) / p.R), m = p.R * k + 18;
+    return [crate.x + m + rand() * Math.max(0, crate.w - 2 * m), crate.y + m + rand() * Math.max(0, crate.h - 2 * m), k];
+  }
 
-  // ── the air ────────────────────────────────────────────────
-  const ptr = { x: -1e4, y: -1e4, vx: 0, vy: 0, t: 0, in: false };
-  let over = null, focus = null;
+  // ── sound: metal on a blanket. no ring, it can't ring lying down ──
+  let ac = null;
+  const SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22];
+  function wake() { if (!ac) { try { ac = new AudioContext(); } catch (e) {} } else if (ac.state === 'suspended') ac.resume(); }
+  function clack(p, v) {
+    if (!ac || ac.state !== 'running') return;
+    const now = ac.currentTime, out = ac.createGain();
+    const f0 = 220 * Math.pow(2, SCALE[p.r.rank] / 12);
+    out.gain.setValueAtTime(0, now);
+    out.gain.linearRampToValueAtTime(Math.min(0.08, 0.02 + v * 0.05), now + 0.003);
+    out.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+    out.connect(ac.destination);
+    for (const [m, a] of [[1, 1], [2.76, 0.5], [5.4, 0.3]]) {
+      const o = ac.createOscillator(), gv = ac.createGain();
+      o.frequency.value = f0 * m; gv.gain.value = a;
+      o.connect(gv).connect(out); o.start(now); o.stop(now + 0.13);
+    }
+  }
+  function thud(big) {
+    if (!ac || ac.state !== 'running') return;
+    const now = ac.currentTime, o = ac.createOscillator(), gv = ac.createGain();
+    o.frequency.setValueAtTime(big ? 90 : 140, now);
+    o.frequency.exponentialRampToValueAtTime(big ? 40 : 70, now + 0.18);
+    gv.gain.setValueAtTime(big ? 0.22 : 0.09, now);
+    gv.gain.exponentialRampToValueAtTime(0.0001, now + (big ? 0.4 : 0.2));
+    o.connect(gv).connect(ac.destination); o.start(now); o.stop(now + 0.45);
+  }
 
-  function push(fx, x, y, reach, gain) {
-    for (const l of leaves) {
-      const [sx, sy, k] = proj(l.P);
-      const d = Math.hypot(sx - x, sy - y), R = l.r * k + reach;
-      if (d > R) continue;
-      const f = (1 - d / R) * gain;
-      for (let a = l.arm; a; a = a.up) {
-        // torque about the arm's own wire: dz * Fx
-        a.om += ((l.P[2] - a.P[2]) || (a === l.arm ? (l.end === a.E[0] ? -1 : 1) * 4 : 0)) * fx * f / (a.Ir * 9000);
+  // ── the floor ──
+  let held = null, grab = null, moved = 0, over = null, focus = null, lastClack = 0;
+
+  function collide(audible) {
+    const loose = plates.filter((p) => !p.packed);
+    for (let i = 0; i < loose.length; i++) {
+      const p = loose[i];
+      for (let j = i + 1; j < loose.length; j++) {
+        const q = loose[j];
+        const dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 0.01, m = (p.R + q.R) * 0.82;
+        if (d >= m) continue;
+        const ux = dx / d, uy = dy / d, o = (m - d);
+        const ip = p === held ? 0 : q === held ? 1 : p.R * p.R / (p.R * p.R + q.R * q.R);
+        // the light one moves
+        p.x -= ux * o * (1 - ip); p.y -= uy * o * (1 - ip);
+        q.x += ux * o * ip; q.y += uy * o * ip;
+        const rv = (q.vx - p.vx) * ux + (q.vy - p.vy) * uy;
+        if (rv < 0) {
+          p.vx += ux * rv * (1 - ip); p.vy += uy * rv * (1 - ip);
+          q.vx -= ux * rv * ip; q.vy -= uy * rv * ip;
+          p.va += rv * 0.002; q.va -= rv * 0.002;
+          const now = performance.now();
+          if (audible && -rv > 0.08 && now - lastClack > 50) { clack(-rv > 0.5 ? q : p, -rv); lastClack = now; }
+        }
+      }
+      // the blanket's edge, and the rods: things get pushed off them
+      const m = 30;
+      if (p.x < m) { p.x = m; p.vx = Math.abs(p.vx) * 0.3; }
+      if (p.x > W - m) { p.x = W - m; p.vx = -Math.abs(p.vx) * 0.3; }
+      if (p.y < m) { p.y = m; p.vy = Math.abs(p.vy) * 0.3; }
+      if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.3; }
+      if (p !== held && inBundle(p)) { p.x += 0.6; p.y += 0.6; }
+      // something slid into the open crate and stopped there: it's packed
+      if (p !== held) {
+        const v = Math.hypot(p.vx, p.vy);
+        if (v > 0.05) p.slid = true;
+        else if (v < 0.03 && p.slid) { p.slid = false; if (!lid && inCrate(p.x, p.y)) pack(p); }
       }
     }
   }
 
-  function step(dt, t) {
-    for (const a of arms) {
-      const rest = still ? a.rest : a.rest + Math.sin(t * 0.00007 + a.drift) * 1.4 + Math.sin(t * 0.00019 + a.drift * 3) * 0.4;
-      a.om += (-(a.th - rest) * 0.00000055 / a.Ir) * dt;
-      a.om *= Math.pow(still ? 0.97 : 0.9993, dt);
-      a.om = Math.max(-0.006, Math.min(0.006, a.om));
-      a.th += a.om * dt;
-    }
+  function pack(p) {
+    p.packed = true; p.vx = p.vy = p.va = 0;
+    p.order = 1 + Math.max(0, ...plates.map((q) => q.order || 0));
+    thud(false);
+    if (plates.every((q) => q.packed)) setTimeout(() => { lid = true; thud(true); save(); }, 700);
+    save();
   }
 
-  // ── the sound a shape makes, since it can't say its name ──
-  let ac = null;
-  const SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22];
-  function wake() { if (!ac) { try { ac = new AudioContext(); } catch (e) {} } else if (ac.state === 'suspended') ac.resume(); }
-  function ring(leaf) {
-    if (!ac || ac.state !== 'running') return;
-    const f0 = 110 * Math.pow(2, SCALE[leaf.leaf.rank] / 12);
-    const now = ac.currentTime, out = ac.createGain();
-    out.gain.setValueAtTime(0, now);
-    out.gain.linearRampToValueAtTime(0.05, now + 0.01);
-    out.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
-    // through a wall
-    const lp = ac.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 520; lp.Q.value = 0.4;
-    out.connect(lp).connect(ac.destination);
-    for (const [m, v] of [[1, 1], [2.76, 0.35], [5.4, 0.12]]) {
-      const o = ac.createOscillator(), gv = ac.createGain();
-      o.frequency.value = f0 * m; gv.gain.value = v;
-      o.connect(gv).connect(out); o.start(now); o.stop(now + 2.7);
+  function step(dt) {
+    for (const p of plates) {
+      if (p.packed || p === held) continue;
+      // a blanket is all friction
+      const f = Math.pow(0.986, dt);
+      p.vx *= f; p.vy *= f; p.va *= Math.pow(0.97, dt);
+      p.x += p.vx * dt; p.y += p.vy * dt; p.a += p.va * dt;
     }
+    collide(true);
   }
 
   function hit(x, y) {
-    let best = null, bz = Infinity;
-    for (const l of leaves) {
-      const [sx, sy, k] = proj(l.P);
-      const rx = Math.max(10, l.r * k * Math.abs(Math.cos(l.phi))) + 4, ry = l.r * k * 1.05 + 4;
-      const dx = (x - sx) / rx, dy = (y - sy) / ry;
-      if (dx * dx + dy * dy <= 1 && l.P[2] < bz) { best = l; bz = l.P[2]; }
-    }
-    return best;
+    if (lid && x > crate.x && x < crate.x + crate.w && y > crate.y && y < crate.y + crate.h) return 'lid';
+    const loose = plates.filter((p) => !p.packed);
+    for (const p of [held, ...loose.reverse()]) if (p && Math.hypot(x - p.x, y - p.y) < p.R * 1.02 + 4) return p;
+    if (lid) return null;
+    const packed = plates.filter((p) => p.packed).sort((a, b) => b.order - a.order);
+    for (const p of packed) { const [sx, sy, k] = packedSpot(p); if (Math.hypot(x - sx, y - sy) < p.R * k + 6) return p; }
+    return null;
   }
 
-  // you're behind it, so its left is your right
-  const mx = (e) => W - e.clientX;
-  cv.addEventListener('pointermove', (e) => {
-    const now = performance.now(), dt = Math.max(8, now - ptr.t);
-    // pushing on paper: the air only gets a little of it
-    if (ptr.in) { ptr.vx = (mx(e) - ptr.x) / dt; ptr.vy = (e.clientY - ptr.y) / dt; push(ptr.vx, mx(e), e.clientY, 70, 0.4); }
-    ptr.x = mx(e); ptr.y = e.clientY; ptr.t = now; ptr.in = true;
-    const h = hit(ptr.x, ptr.y);
-    if (h !== over) { over = h; cv.classList.toggle('over', !!h); if (h) ring(h); }
-  });
-  cv.addEventListener('pointerleave', () => { ptr.in = false; over = null; cv.classList.remove('over'); });
+  function enter(p) {
+    const a = document.querySelector(`nav a[data-id="${p.r.id}"]`);
+    clack(p, 0.6);
+    save();
+    setTimeout(() => { location.href = a.href; }, 200);
+  }
+
+  function unlid() {
+    lid = false; thud(true);
+    // the lid comes off and they come out, the way packed things do
+    for (const p of plates) {
+      if (!p.packed) continue;
+      p.packed = false; p.order = 0; p.slid = false;
+      p.x = crate.x - p.R - Math.random() * crate.w * 0.5;
+      p.y = crate.y + Math.random() * crate.h - crate.h * 0.3;
+      const v = still ? 0 : 0.3 + Math.random() * 0.4;
+      p.vx = -v; p.vy = (Math.random() - 0.6) * v; p.va = still ? 0 : (Math.random() - 0.5) * 0.004;
+    }
+    save();
+  }
+
   cv.addEventListener('pointerdown', (e) => {
     wake();
-    const h = hit(mx(e), e.clientY);
-    if (h) {
-      ring(h);
-      const a = document.querySelector(`nav a[data-id="${h.leaf.id}"]`);
-      setTimeout(() => { location.href = a.href; }, 260);
+    const h = hit(e.clientX, e.clientY);
+    if (h === 'lid') { unlid(); return; }
+    if (!h) return;
+    held = h; moved = 0;
+    if (h.packed) {
+      const [sx, sy] = packedSpot(h);
+      h.packed = false; h.order = 0; h.x = sx; h.y = sy; h.wasPacked = true;
+    }
+    grab = { dx: e.clientX - h.x, dy: e.clientY - h.y, t: performance.now(), x: e.clientX, y: e.clientY };
+    cv.setPointerCapture(e.pointerId);
+    cv.classList.add('held');
+  });
+  cv.addEventListener('pointermove', (e) => {
+    if (held) {
+      const now = performance.now(), dt = Math.max(8, now - grab.t);
+      const nx = e.clientX - grab.dx, ny = e.clientY - grab.dy;
+      held.vx = (nx - held.x) / dt; held.vy = (ny - held.y) / dt;
+      // held off-centre, it turns as it's dragged
+      held.a += (grab.dx * (ny - held.y) - grab.dy * (nx - held.x)) / Math.max(1, held.R * held.R) * 0.25;
+      moved += Math.hypot(nx - held.x, ny - held.y);
+      held.x = nx; held.y = ny; grab.t = now;
       return;
     }
-    // a breath into the room
-    const dir = mx(e) < W / 2 ? 1 : -1;
-    push(dir * 1.6, mx(e), e.clientY, Math.max(W, H), 0.3);
+    const h = hit(e.clientX, e.clientY);
+    if (h !== over) { over = h; cv.classList.toggle('over', !!h); }
   });
+  function drop(e) {
+    if (!held) return;
+    const p = held; held = null;
+    cv.classList.remove('held');
+    if (moved < 5) {
+      if (p.wasPacked) { p.wasPacked = false; pack(p); }
+      enter(p); return;
+    }
+    p.wasPacked = false;
+    if (!lid && inCrate(p.x, p.y)) pack(p);
+    else save();
+  }
+  cv.addEventListener('pointerup', drop);
+  cv.addEventListener('pointercancel', drop);
+  cv.addEventListener('pointerleave', () => { if (!held) { over = null; cv.classList.remove('over'); } });
 
   const names = document.getElementById('names');
   names.addEventListener('focusin', (e) => {
     wake();
-    focus = leaves.find((l) => l.leaf.id === e.target.dataset.id) || null;
-    if (focus) { ring(focus); focus.arm.om += 0.0015; }
+    focus = plates.find((p) => p.r.id === e.target.dataset.id) || null;
+    if (focus && !focus.packed) { focus.va += 0.004; clack(focus, 0.3); }
   });
   names.addEventListener('focusout', () => { focus = null; });
 
-  // ── drawing ───────────────────────────────────────────────
+  // ── drawing, from straight above, under the tubes ──
   function shade(hex, f) {
     const n = parseInt(hex.slice(1), 16);
-    const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v * f));
+    const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(Math.min(255, v * f)));
     return `rgb(${c})`;
   }
 
-  function plate(l, dx, dy, shadow) {
-    const [sx, sy, k] = proj(l.P);
-    const c = Math.cos(l.phi), r = l.r * k;
-    const wx = Math.max(0.035, Math.abs(c));
+  function outline(p, x, y, k) {
+    const ca = Math.cos(p.a), sa = Math.sin(p.a), r = p.R * k;
     g.beginPath();
-    l.leaf.shape.forEach(([x, y], i) => {
-      const px = sx + dx + x * r * wx, py = sy + dy + y * r;
+    p.r.shape.forEach(([sx, sy], i) => {
+      const px = x + (sx * ca - sy * sa) * r, py = y + (sx * sa + sy * ca) * r;
       i ? g.lineTo(px, py) : g.moveTo(px, py);
     });
     g.closePath();
-    if (shadow) { g.fill(); return; }
-    // turning edge-on, it catches less light
-    g.fillStyle = shade(l.leaf.color, 0.72 + 0.28 * wx + (c < 0 ? -0.06 : 0));
-    g.fill();
-    if (l.leaf.color === '#F4F1EA') { g.strokeStyle = 'rgba(22,20,18,0.25)'; g.lineWidth = 0.8; g.stroke(); }
-    if (l === focus || l === over) {
-      g.strokeStyle = l.leaf.color === '#161412' ? '#C8281E' : '#161412';
-      g.lineWidth = 1.5; g.setLineDash([3, 4]); g.stroke(); g.setLineDash([]);
-    }
   }
 
-  function wires(dx, dy, shadow) {
-    g.beginPath();
-    const line = (a, b) => { const p = proj(a), q = proj(b); g.moveTo(p[0] + dx, p[1] + dy); g.lineTo(q[0] + dx, q[1] + dy); };
-    line([W / 2, -10, 0], root.P);
-    for (const a of arms) {
-      line(a.E[0], a.E[1]);
-      a.kids.forEach((k, i) => line(a.E[i], k.leaf ? [k.P[0], k.P[1] - k.r * 0.9, k.P[2]] : k.P));
-    }
-    g.strokeStyle = shadow ? 'rgba(42,30,18,0.30)' : '#1d1a17';
-    g.lineWidth = shadow ? 1 : 1.15;
-    g.stroke();
-    if (shadow) return;
-    for (const a of arms) {
-      const p = proj(a.P);
-      g.beginPath(); g.arc(p[0], p[1] - 2.5, 2.5, Math.PI * 0.2, Math.PI * 1.9); g.stroke();
-    }
-  }
-
-  // from this side there is only the shadow. a plate near the wall casts
-  // a hard one; a plate swung out toward the lamp casts a soft one.
-  function draw() {
-    g.clearRect(0, 0, W, H);
+  function plate(p, x, y, k, lifted) {
+    const r = p.R * k;
+    // overhead light: the shadow is tight and just under it
     g.save();
-    g.filter = 'blur(2.5px)';
-    wires(sh, sh * 0.74, true);
+    g.fillStyle = 'rgba(6,8,14,0.5)';
+    g.filter = `blur(${lifted ? 8 : 1.5}px)`;
+    outline(p, x + (lifted ? 10 : 1.5), y + (lifted ? 14 : 2), k);
+    g.fill();
     g.restore();
-    for (const l of leaves) {
-      const near = Math.max(0, Math.min(1, 0.5 + l.P[2] / (span * 0.8)));
-      g.save();
-      g.filter = `blur(${(1 + (1 - near) * 9).toFixed(1)}px)`;
-      const lit = l === over || l === focus;
-      g.fillStyle = `rgba(42,30,18,${(0.22 + near * 0.3 + (lit ? 0.18 : 0)).toFixed(3)})`;
-      plate(l, sh + l.P[2] * 0.05, sh * 0.74, true);
+    outline(p, x, y, k);
+    if (p.r.down) {
+      // the back of a plate is bare aluminium with a smear of primer
+      const gr = g.createLinearGradient(x - r, y - r, x + r, y + r);
+      gr.addColorStop(0, '#B9BDC2'); gr.addColorStop(0.5, '#9EA3A9'); gr.addColorStop(1, '#C4C7CB');
+      g.fillStyle = gr; g.fill();
+      g.save(); g.clip();
+      g.fillStyle = 'rgba(160,150,140,0.35)';
+      g.beginPath(); g.ellipse(x + r * 0.2, y - r * 0.1, r * 0.5, r * 0.25, p.a + 0.6, 0, 6.28); g.fill();
+      g.restore();
+    } else {
+      g.fillStyle = shade(p.r.color, 1.04);
+      g.fill();
+      // the tubes make a cold streak across the paint
+      g.save(); g.clip();
+      const gr = g.createLinearGradient(x - r, y - r, x + r, y + r);
+      gr.addColorStop(0.35, 'rgba(230,240,255,0)'); gr.addColorStop(0.45, 'rgba(230,240,255,0.22)'); gr.addColorStop(0.55, 'rgba(230,240,255,0)');
+      g.fillStyle = gr; g.fillRect(x - r * 1.5, y - r * 1.5, r * 3, r * 3);
       g.restore();
     }
+    if (p.r.color === '#F4F1EA' && !p.r.down) { g.strokeStyle = 'rgba(22,20,18,0.3)'; g.lineWidth = 0.8; outline(p, x, y, k); g.stroke(); }
+    // the hole the wire went through
+    const hx = x + Math.sin(p.a) * r * 0.82, hy = y - Math.cos(p.a) * r * 0.82;
+    if (r > 9) { g.fillStyle = '#1C2438'; g.beginPath(); g.arc(hx, hy, Math.max(1.2, r * 0.03), 0, 6.28); g.fill(); }
+    // masking tape, and its number in marker
+    if (r > 12) {
+      const tw = Math.min(54, r * 0.7), th = Math.min(18, r * 0.24);
+      g.save();
+      g.translate(x + Math.cos(p.a + 1.2) * r * 0.25, y + Math.sin(p.a + 1.2) * r * 0.25);
+      g.rotate(p.a * 0.3 + p.r.tape);
+      g.fillStyle = 'rgba(232,220,180,0.9)';
+      g.beginPath(); g.moveTo(-tw / 2, -th / 2); g.lineTo(tw / 2, -th / 2 + 1); g.lineTo(tw / 2 - 2, th / 2); g.lineTo(-tw / 2 + 1, th / 2 - 1); g.closePath(); g.fill();
+      g.fillStyle = '#1a1a22';
+      g.font = `bold ${Math.round(th * 0.82)}px "Marker Felt", "Arial Black", Impact, sans-serif`;
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(`${p.r.rank + 1}/${plates.length}`, 0, 1);
+      g.restore();
+    }
+    if (p === over || p === focus) {
+      g.strokeStyle = 'rgba(235,245,255,0.85)';
+      g.lineWidth = 1.5; g.setLineDash([3, 4]); outline(p, x, y, k); g.stroke(); g.setLineDash([]);
+    }
+  }
+
+  // the wire each one hung from, coiled and left beside it
+  function coil(p) {
+    if (p.packed || p === held || p.R < 10) return;
+    const cx = p.x + Math.cos(p.r.coil) * p.R * 1.25, cy = p.y + Math.sin(p.r.coil) * p.R * 1.25;
+    g.strokeStyle = 'rgba(20,20,24,0.85)'; g.lineWidth = 1;
+    g.beginPath();
+    for (let i = 0; i <= 3; i++) g.ellipse(cx + i * 1.4, cy + i * 0.8, 9 + i, 7 + i * 0.6, p.r.coil, 0, 6.28);
+    g.stroke();
+  }
+
+  function rodsDraw() {
+    g.save();
+    g.translate(bundle.x, bundle.y);
+    g.rotate(0.05);
+    rods.forEach((a, i) => {
+      const L = bundle.L * Math.pow(0.78, a.depth) + 24, y = i * 13;
+      const [p, q] = a.kids, pivot = L * q.w / a.w;
+      g.strokeStyle = 'rgba(4,6,12,0.45)'; g.lineWidth = 2.4;
+      g.beginPath(); g.moveTo(2, y + 2); g.lineTo(L + 2, y + 2); g.stroke();
+      g.strokeStyle = '#141416'; g.lineWidth = 1.8;
+      g.beginPath(); g.moveTo(0, y); g.lineTo(L, y); g.stroke();
+      g.lineWidth = 1.1;
+      for (const lx of [0, L]) { g.beginPath(); g.arc(lx, y - 2.5, 2.5, 0, 6.28); g.stroke(); }
+      // the balance point, where it was hung, and a bit of tape to say so
+      g.beginPath(); g.arc(pivot, y - 3, 2.5, Math.PI * 0.2, Math.PI * 1.9); g.stroke();
+      g.fillStyle = 'rgba(232,220,180,0.85)';
+      g.fillRect(pivot - 5, y - 2, 10, 5);
+    });
+    g.restore();
+  }
+
+  function crateDraw() {
+    const { x, y, w, h } = crate;
+    // plywood box, open, seen from above: rim, then the inside going down
+    g.fillStyle = 'rgba(4,6,12,0.45)'; g.fillRect(x + 6, y + 8, w, h);
+    g.fillStyle = '#B99A6B'; g.fillRect(x, y, w, h);
+    g.fillStyle = '#6E5638'; g.fillRect(x + 12, y + 12, w - 24, h - 24);
+    // foam on the floor of it
+    g.fillStyle = '#4A5160'; g.fillRect(x + 16, y + 16, w - 32, h - 32);
+    g.fillStyle = 'rgba(255,255,255,0.05)';
+    for (let i = 0; i < 40; i++) { const rr = rng(i * 7919)(); g.fillRect(x + 16 + ((i * 37) % (w - 36)), y + 16 + ((i * 53) % (h - 36)), 2 + rr * 2, 2); }
+    const packed = plates.filter((p) => p.packed && p !== held).sort((a, b) => a.order - b.order);
+    for (const p of packed) {
+      const [sx, sy, k] = packedSpot(p);
+      plate(p, sx, sy, k, false);
+      // another sheet of foam over it
+      g.fillStyle = 'rgba(200,205,215,0.22)';
+      g.fillRect(x + 16, y + 16, w - 32, h - 32);
+    }
+    // the top edge of the rim, catching the tubes
+    g.strokeStyle = '#D8C29A'; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    g.strokeStyle = 'rgba(50,35,20,0.6)'; g.lineWidth = 1; g.strokeRect(x + 12, y + 12, w - 24, h - 24);
+    if (!lid) return;
+    // the lid, screwed down, with the arrows every crate has
+    g.fillStyle = '#C4A574'; g.fillRect(x - 4, y - 4, w + 8, h + 8);
+    g.strokeStyle = 'rgba(80,60,35,0.35)'; g.lineWidth = 1;
+    for (let i = 1; i < 6; i++) { g.beginPath(); g.moveTo(x - 4, y - 4 + (h + 8) * i / 6 + Math.sin(i) * 3); g.lineTo(x + w + 4, y - 4 + (h + 8) * i / 6 - Math.sin(i) * 2); g.stroke(); }
+    g.fillStyle = '#3A3530';
+    for (const [sx, sy] of [[10, 10], [w - 10, 10], [10, h - 10], [w - 10, h - 10], [w / 2, 10], [w / 2, h - 10]]) { g.beginPath(); g.arc(x + sx, y + sy, 2.4, 0, 6.28); g.fill(); }
+    g.fillStyle = 'rgba(30,26,22,0.8)';
+    for (const ax of [0.32, 0.68]) {
+      const cx = x + w * ax, cy = y + h * 0.5, s = w * 0.09;
+      g.beginPath(); g.moveTo(cx, cy - s * 1.6); g.lineTo(cx + s, cy - s * 0.4); g.lineTo(cx + s * 0.4, cy - s * 0.4); g.lineTo(cx + s * 0.4, cy + s * 1.4);
+      g.lineTo(cx - s * 0.4, cy + s * 1.4); g.lineTo(cx - s * 0.4, cy - s * 0.4); g.lineTo(cx - s, cy - s * 0.4); g.closePath(); g.fill();
+    }
+    // and the stencilled glass
+    const gx = x + w * 0.5, gy = y + h * 0.78, s = w * 0.06;
+    g.strokeStyle = '#B4221A'; g.lineWidth = Math.max(2, s * 0.25);
+    g.beginPath(); g.moveTo(gx - s, gy - s); g.quadraticCurveTo(gx, gy + s * 1.2, gx + s, gy - s); g.moveTo(gx, gy + s * 0.2); g.lineTo(gx, gy + s * 1.2); g.moveTo(gx - s * 0.6, gy + s * 1.2); g.lineTo(gx + s * 0.6, gy + s * 1.2); g.stroke();
+    if (over === 'lid') { g.strokeStyle = 'rgba(235,245,255,0.85)'; g.setLineDash([3, 4]); g.lineWidth = 1.5; g.strokeRect(x - 2, y - 2, w + 4, h + 4); g.setLineDash([]); }
+  }
+
+  function draw() {
+    g.clearRect(0, 0, W, H);
+    rodsDraw();
+    crateDraw();
+    for (const p of plates) coil(p);
+    for (const p of plates) if (!p.packed && p !== held) plate(p, p.x, p.y, 1, false);
+    if (held) plate(held, held.x, held.y, 1, true);
+  }
+
+  // one of the tubes is going
+  const lights = document.getElementById('lights');
+  function flicker() {
+    if (still) return;
+    setTimeout(() => {
+      const n = 1 + Math.floor(Math.random() * 3);
+      let i = 0;
+      (function blink() {
+        lights.classList.add('dip');
+        setTimeout(() => { lights.classList.remove('dip'); if (++i < n) setTimeout(blink, 60 + Math.random() * 90); else flicker(); }, 40 + Math.random() * 70);
+      })();
+    }, 9000 + Math.random() * 30000);
   }
 
   let last = performance.now();
   function frame(now) {
     let dt = Math.min(64, now - last); last = now;
-    while (dt > 0) { const h = Math.min(16, dt); step(h, now); dt -= h; }
-    place(); draw();
+    while (dt > 0) { const h = Math.min(16, dt); step(h); dt -= h; }
+    draw();
     requestAnimationFrame(frame);
   }
 
-  addEventListener('resize', () => { layout(); place(); });
-  layout(); place();
-  // the door opening is the first air the room gets
-  if (!still) for (const a of arms) a.om += (Math.random() - 0.5) * 0.002;
+  addEventListener('resize', () => layout(false));
+  addEventListener('pagehide', save);
+  layout(true);
+  flicker();
   requestAnimationFrame(frame);
 })();
 </script>
