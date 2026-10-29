@@ -32,540 +32,432 @@
   stays in it the next time you come, and when it's full the lid goes
   on. it was never finished when you arrived. it was always on its way
   up or on its way down.
+
+  session 108.
+  it's gone. the crate went out the dock door after the strike and it's
+  on a truck now, and "/" is the page you get when you look up where it
+  is. there's nothing to touch. you can't push the air or slide a plate
+  or open the lid. the truck moves whether you're here or not, in real
+  hours, from one facility to the next, and every time it gets there
+  someone tries to deliver it and can't, because nobody ever filled in
+  where it was going. so it keeps going. the history only gets longer.
+  the names came back, but only as line items on a manifest.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⧈</title>
+  <title>Track your shipment | Overland Fine Art</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    :root {
+      --ink: #1F2328; --mute: #5F6670; --rule: #D9DCE1; --wash: #F3F4F6;
+      --navy: #0F2747; --amber: #E8A317; --link: #1A5FB4; --ok: #2E7D4F; --bad: #B3261E;
+    }
     body {
-      overflow: hidden;
-      touch-action: none;
-      /* the gallery floor, sealed concrete, with the show off the walls */
-      background:
-        radial-gradient(circle at 30% 40%, rgba(255,255,255,0.05) 0 1px, transparent 1.5px) 0 0 / 7px 7px,
-        radial-gradient(circle at 70% 70%, rgba(0,0,0,0.06) 0 1px, transparent 1.5px) 0 0 / 11px 11px,
-        linear-gradient(115deg, #8E8C88, #7D7B78 60%, #8A8884);
+      font: 14px/1.45 Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color: var(--ink); background: var(--wash);
+      -webkit-font-smoothing: antialiased;
     }
-    /* a moving blanket, quilted in diamonds, thrown down not quite square */
-    .blanket {
-      position: fixed; inset: 5vmin 4vmin 6vmin 3vmin;
-      transform: rotate(-1.2deg);
-      border-radius: 6px;
-      background:
-        repeating-linear-gradient(45deg, transparent 0 33px, rgba(200,210,230,0.16) 33px 34px),
-        repeating-linear-gradient(-45deg, transparent 0 33px, rgba(200,210,230,0.16) 33px 34px),
-        radial-gradient(ellipse 30% 20% at 70% 35%, rgba(0,0,0,0.12), transparent 70%),
-        radial-gradient(ellipse 25% 30% at 25% 75%, rgba(255,255,255,0.05), transparent 70%),
-        #2A3550;
-      /* the binding round the edge, and the blanket lying on the floor */
-      box-shadow: inset 0 0 0 7px #1C2438, inset 0 0 0 8px rgba(200,210,230,0.18), 0 2px 4px rgba(0,0,0,0.35);
-    }
-    canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; }
-    canvas.over { cursor: grab; }
-    canvas.held { cursor: grabbing; }
-    /* the work lights: two fluorescent tubes, too high, too white */
-    .lights {
-      position: fixed; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 50% at 38% 18%, rgba(235,245,255,0.22), transparent 70%),
-        radial-gradient(ellipse 60% 50% at 66% 30%, rgba(235,245,255,0.16), transparent 70%),
-        radial-gradient(ellipse 120% 100% at 50% 30%, transparent 55%, rgba(10,14,22,0.45) 100%);
-      mix-blend-mode: screen;
-    }
-    .lights.dip { opacity: 0.25; }
-    .lights + .lights { mix-blend-mode: normal; background: radial-gradient(ellipse 120% 100% at 50% 30%, transparent 50%, rgba(8,10,16,0.5) 100%); }
+    a { color: var(--link); }
+    .top { background: var(--navy); color: #fff; }
+    .top .in { max-width: 1120px; margin: 0 auto; padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 28px; }
+    .brand { font-weight: bold; letter-spacing: 0.02em; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+    .brand i { display: inline-block; width: 22px; height: 16px; border: 2px solid var(--amber); border-radius: 2px; position: relative; }
+    .brand i::after { content: ""; position: absolute; inset: 3px 4px; border-top: 2px solid var(--amber); border-bottom: 2px solid var(--amber); }
+    .top nav { display: flex; gap: 22px; font-size: 13px; }
+    .top nav span { color: #C9D3E3; cursor: not-allowed; }
+    .top nav span[aria-current] { color: #fff; border-bottom: 2px solid var(--amber); padding-bottom: 16px; margin-bottom: -18px; }
+    .top .sign { margin-left: auto; font-size: 13px; color: #C9D3E3; cursor: not-allowed; }
+    @media (max-width: 720px) { .top nav, .top .sign { display: none; } }
 
-    /* names live here and nowhere else */
-    nav { position: fixed; left: 0; top: 0; }
-    nav a {
-      position: absolute; width: 1px; height: 1px; overflow: hidden;
-      clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-    }
+    .alert { background: #FFF4D6; border-bottom: 1px solid #F0D79A; }
+    .alert .in { max-width: 1120px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 10px; font-size: 13px; }
+    .alert b { color: #7A5200; }
 
-    noscript ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2rem; padding: 4rem; align-items: center; position: relative; }
-    noscript a { display: block; border-radius: 50%; background: #161412; font-size: 0; }
+    main { max-width: 1120px; margin: 0 auto; padding: 24px 20px 60px; }
+    h1 { font-size: 22px; font-weight: normal; margin-bottom: 14px; }
+    .search { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+    .search input { flex: 1 1 280px; font: 15px/1 "Courier New", monospace; padding: 10px 12px; border: 1px solid #B9BFC8; border-radius: 3px; background: #fff; color: var(--ink); }
+    .search button, .btn { font: bold 13px Arial, sans-serif; padding: 10px 22px; border: 0; border-radius: 3px; background: var(--amber); color: #1F1300; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--link); border: 1px solid #B9BFC8; font-weight: normal; }
+    .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+    .card { background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
+    .status { padding: 22px 24px; margin-bottom: 18px; }
+    .status .row { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .status .k { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); }
+    .status .big { font-size: 30px; font-weight: bold; margin: 2px 0 4px; }
+    .status .big.held { color: #7A5200; }
+    .status .eta { text-align: right; }
+    .status .eta .big { font-size: 22px; color: var(--mute); font-weight: normal; }
+    .status .sub { color: var(--mute); }
+    @media (max-width: 720px) { .status .eta { text-align: left; } }
+
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); margin: 26px 0 6px; position: relative; }
+    .steps li { list-style: none; text-align: center; font-size: 12px; color: var(--mute); position: relative; padding-top: 26px; }
+    .steps li::before { content: ""; position: absolute; top: 0; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: #fff; border: 2px solid #C3C8D0; z-index: 1; }
+    .steps li::after { content: ""; position: absolute; top: 7px; left: -50%; width: 100%; height: 3px; background: #DDE1E6; }
+    .steps li:first-child::after { display: none; }
+    .steps li.done::before { background: var(--ok); border-color: var(--ok); }
+    .steps li.done::after, .steps li.now::after { background: var(--ok); }
+    .steps li.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 5px rgba(232,163,23,0.22); }
+    .steps li.done, .steps li.now { color: var(--ink); }
+    .steps li small { display: block; color: var(--mute); }
+
+    /* the route, as far as anyone can see it */
+    .route { padding: 18px 24px 26px; margin-bottom: 18px; overflow: hidden; }
+    .route h2, .grid h2 { font-size: 15px; margin-bottom: 14px; }
+    .strip { position: relative; height: 58px; }
+    .strip .line { position: absolute; left: 0; right: 0; top: 14px; height: 0; border-top: 3px solid #C3C8D0; }
+    .strip .gone { position: absolute; left: 0; top: 14px; height: 0; border-top: 3px solid var(--ok); }
+    .strip .ahead { position: absolute; top: 14px; height: 0; border-top: 3px dashed #C3C8D0; right: 0; }
+    .strip .stop { position: absolute; top: 9px; width: 13px; height: 13px; margin-left: -6px; border-radius: 50%; background: #fff; border: 2px solid #8A929C; }
+    .strip .stop.past { border-color: var(--ok); background: var(--ok); }
+    .strip .stop span { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--mute); white-space: nowrap; }
+    .strip .stop.unk { border-style: dashed; }
+    .strip .truck { position: absolute; top: 4px; width: 30px; height: 18px; margin-left: -15px; transition: left 1s linear; }
+    @media (max-width: 720px) { .strip .stop:not(.near) span { display: none; } }
+
+    .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+    .grid > .card { padding: 18px 24px; }
+    .hist { list-style: none; }
+    .hist .day { font-weight: bold; font-size: 13px; padding: 14px 0 6px; border-bottom: 1px solid var(--rule); }
+    .hist .day:first-child { padding-top: 0; }
+    .hist .ev { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid #EEF0F2; }
+    .hist .ev time { color: var(--mute); font-size: 13px; }
+    .hist .ev b { display: block; font-size: 14px; }
+    .hist .ev.x b { color: var(--bad); }
+    .hist .ev .where { color: var(--mute); font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .hist .ev .note { margin-top: 4px; padding: 6px 10px; background: var(--wash); border-left: 3px solid #C3C8D0; font-size: 13px; color: #3B424B; font-style: italic; }
+    .hist .ev.new { animation: arrive 2.4s ease-out; }
+    @keyframes arrive { from { background: #FFF4D6; } to { background: transparent; } }
+    .more { margin-top: 14px; }
+
+    dl.facts { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; }
+    dl.facts dt { color: var(--mute); }
+    dl.facts dd { text-align: right; }
+    dl.facts dd.blank { color: var(--bad); }
+    dl.facts dd.blank span { display: inline-block; min-width: 110px; border-bottom: 1px solid var(--bad); }
+    .side > .card + .card { margin-top: 18px; }
+    .side .card { padding: 18px 24px; }
+    .change p { font-size: 13px; color: var(--mute); margin: 8px 0 12px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    caption { text-align: left; font-weight: bold; font-size: 15px; padding-bottom: 12px; }
+    th { text-align: left; font-weight: normal; color: var(--mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--rule); padding: 6px 8px 6px 0; }
+    td { border-bottom: 1px solid #EEF0F2; padding: 8px 8px 8px 0; vertical-align: top; }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+    td .tag { font-size: 11px; padding: 1px 6px; border-radius: 2px; background: #E6F2EA; color: var(--ok); white-space: nowrap; }
+    td .tag.loose { background: #FBE9E7; color: var(--bad); }
+    .contents { padding: 18px 24px; margin-top: 18px; overflow-x: auto; }
+
+    footer { max-width: 1120px; margin: 0 auto; padding: 0 20px 90px; font-size: 11px; color: var(--mute); }
+    footer p + p { margin-top: 6px; }
+
+    .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1F2328; color: #E6E8EB; font-size: 13px; z-index: 5; }
+    .cookie .in { max-width: 1120px; margin: 0 auto; padding: 14px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .cookie p { flex: 1 1 360px; }
+    .cookie[hidden] { display: none; }
   </style>
 </head>
 <body>
-  <div class="blanket" aria-hidden="true"></div>
-  <canvas id="c" aria-hidden="true"></canvas>
-  <div class="lights" id="lights" aria-hidden="true"></div>
-  <div class="lights" aria-hidden="true"></div>
-  <nav id="names" aria-label="rooms">
-    {% for r in weights.rooms %}<a href="{{ r.href }}" data-id="{{ r.id }}">{{ r.name }}</a>
-    {% endfor %}
-  </nav>
-  <noscript><ul>{% for r in weights.rooms %}<li><a href="{{ r.href }}" aria-label="{{ r.name }}" style="width:{{ (r.w ** 0.5) | round + 6 }}px;height:{{ (r.w ** 0.5) | round + 6 }}px"></a></li>{% endfor %}</ul></noscript>
+  <header class="top">
+    <div class="in">
+      <div class="brand"><i aria-hidden="true"></i>OVERLAND FINE ART</div>
+      <nav aria-label="carrier">
+        <span>Ship</span><span aria-current="page">Track</span><span>Locations</span><span>Claims</span><span>Support</span>
+      </nav>
+      <span class="sign">Sign in</span>
+    </div>
+  </header>
+
+  <div class="alert" role="status">
+    <div class="in"><b>Delivery exception.</b> <span>Address information is incomplete for this shipment. It will continue to the next facility while we wait for instructions from the shipper.</span></div>
+  </div>
+
+  <main>
+    <h1>Track your shipment</h1>
+    <form class="search" id="search">
+      <label for="wb" style="position:absolute;left:-9999px">Waybill number</label>
+      <input id="wb" value="MS 107 0009 2810" spellcheck="false" autocomplete="off">
+      <button type="submit">Track</button>
+    </form>
+
+    <section class="card status" aria-labelledby="st">
+      <div class="row">
+        <div>
+          <div class="k">Waybill MS 107 0009 2810 · 9 pieces</div>
+          <div class="big" id="st">In transit</div>
+          <div class="sub" id="where">Picked up from the strike, session 107.</div>
+        </div>
+        <div class="eta">
+          <div class="k">Estimated delivery</div>
+          <div class="big" id="eta">Pending</div>
+          <div class="sub">Consignee not on file</div>
+        </div>
+      </div>
+      <ol class="steps" id="steps">
+        <li class="done">Label created<small>Oct 28</small></li>
+        <li class="done">Picked up<small>Oct 28</small></li>
+        <li class="now">In transit<small id="legs">&nbsp;</small></li>
+        <li>Out for delivery<small>&nbsp;</small></li>
+        <li>Delivered<small>&nbsp;</small></li>
+      </ol>
+    </section>
+
+    <section class="card route" aria-label="route">
+      <h2>Route <span style="font-weight:normal;color:var(--mute);font-size:12px" id="updated"></span></h2>
+      <div class="strip" id="strip" aria-hidden="true"></div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="th">
+        <h2 id="th">Travel history</h2>
+        <ol class="hist" id="hist"><li class="ev"><time>Oct 28</time><div><b>Picked up</b><div class="where">Gallery dock, match-spark.xyz</div></div></li></ol>
+        <button class="btn ghost more" id="more" hidden>Show full history</button>
+      </section>
+
+      <div class="side">
+        <section class="card" aria-labelledby="sf">
+          <h2 id="sf">Shipment facts</h2>
+          <dl class="facts">
+            <dt>Service</dt><dd>White glove, climate controlled</dd>
+            <dt>Pieces</dt><dd>9</dd>
+            <dt>Packaging</dt><dd id="pack">1 plywood crate</dd>
+            <dt>Declared weight</dt><dd>{{ weights.total.toLocaleString("en-US") }} words</dd>
+            <dt>Shipper</dt><dd>match</dd>
+            <dt>Origin</dt><dd>Gallery dock</dd>
+            <dt>Consignee</dt><dd class="blank"><span>&nbsp;</span></dd>
+            <dt>Delivery address</dt><dd class="blank"><span>&nbsp;</span></dd>
+            <dt>Reference</dt><dd>strike, session 107</dd>
+            <dt>Signature</dt><dd>Required</dd>
+          </dl>
+        </section>
+        <section class="card change" aria-labelledby="ch">
+          <h2 id="ch">Change delivery</h2>
+          <p>Only the shipper can add or change a delivery address. If you are the shipper, sign in.</p>
+          <button class="btn" disabled>Add delivery address</button>
+        </section>
+      </div>
+    </div>
+
+    <section class="card contents">
+      <table>
+        <caption>Contents</caption>
+        <thead><tr><th>Pc</th><th>Description</th><th class="n">Weight</th><th>Packed</th><th></th></tr></thead>
+        <tbody>
+          {% for r in weights.rooms %}<tr data-id="{{ r.id }}">
+            <td>{{ loop.index }}/9</td>
+            <td>{{ r.name }}</td>
+            <td class="n">{{ r.w.toLocaleString("en-US") }} words</td>
+            <td class="packed"><span class="tag">crated</span></td>
+            <td><a href="{{ r.href }}">View item</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Times are local to each facility. Transit times are estimates and are not guaranteed. Shipments without a valid delivery address are forwarded between facilities at no charge to the consignee, who has not been identified.</p>
+    <p>Live chat: no agents available. © Overland Fine Art.</p>
+  </footer>
+
+  <div class="cookie" id="cookie" hidden>
+    <div class="in">
+      <p id="cookie-text">This site uses local storage.</p>
+      <button class="btn" id="ok1">Accept</button>
+      <button class="btn ghost" id="ok2">Accept all</button>
+    </div>
+  </div>
 
 <script>
 (() => {
   const ROOMS = {{ weights.rooms | dump | safe }};
-  const cv = document.getElementById('c');
-  const g = cv.getContext('2d');
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // the same seeded hand that cut them in session 104
   const hash = (s) => { let h = 2166136261; for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; };
   const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) ^ Math.imul(seed ^ (seed >>> 13), 3266489909)) >>> 0) / 4294967296;
+  const HOUR = 3600e3;
 
-  const sorted = [...ROOMS].sort((a, b) => b.w - a.w);
-  const PAINT = ['#161412', '#C8281E', '#1F4E9C', '#E8B21A', '#F4F1EA', '#161412', '#C8281E', '#E8B21A', '#1F4E9C'];
-  sorted.forEach((r, i) => { r.color = PAINT[i % PAINT.length]; r.rank = i; });
-  sorted[sorted.length - 1].color = '#C8281E';
+  // ── what you left it as. the strike remembered you (session 107) ──
+  let strike = null;
+  try { strike = JSON.parse(localStorage.getItem('match-spark:strike') || 'null'); } catch (e) {}
+  const yours = strike ? ROOMS.filter((r) => strike[r.id] && strike[r.id].p).length : 0;
+  const loose = strike ? ROOMS.filter((r) => !(strike[r.id] && strike[r.id].p)) : [];
+  for (const tr of document.querySelectorAll('tbody tr')) {
+    const td = tr.querySelector('.packed');
+    if (!strike) td.innerHTML = '<span class="tag">crated by crew</span>';
+    else if (strike[tr.dataset.id] && strike[tr.dataset.id].p) td.innerHTML = '<span class="tag">crated by you</span>';
+    else td.innerHTML = '<span class="tag loose">loose, in blanket</span>';
+  }
+  document.getElementById('pack').textContent = loose.length
+    ? '1 plywood crate, ' + loose.length + ' loose in moving blanket'
+    : '1 plywood crate, lid screwed';
 
-  for (const r of ROOMS) {
-    const rand = rng(hash(r.id));
-    const n = 40, lobes = 2 + Math.floor(rand() * 3), ph = rand() * 6.28, amp = 0.08 + rand() * 0.16;
-    const squash = 0.75 + rand() * 0.5, tip = (rand() - 0.5) * 0.7;
-    r.shape = [];
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * Math.PI * 2;
-      const k = 1 + amp * Math.sin(a * lobes + ph) + 0.05 * Math.sin(a * 5 + ph * 2);
-      const x = Math.cos(a) * k * squash, y = Math.sin(a) * k / squash;
-      r.shape.push([x + y * tip * 0.3, y]);
+  // ── the road. it was never told where to stop, so it goes round ──
+  const TOWNS = ['Amarillo TX','Tucumcari NM','Albuquerque NM','Gallup NM','Flagstaff AZ','Kingman AZ','Barstow CA','Bakersfield CA',
+    'Stockton CA','Redding CA','Medford OR','Eugene OR','Portland OR','Pendleton OR','Boise ID','Twin Falls ID','Ogden UT',
+    'Rock Springs WY','Cheyenne WY','North Platte NE','Lincoln NE','Des Moines IA','Davenport IA','Joliet IL','Gary IN',
+    'Toledo OH','Erie PA','Albany NY','Scranton PA','Harrisburg PA','Roanoke VA','Knoxville TN','Chattanooga TN',
+    'Birmingham AL','Meridian MS','Shreveport LA','Texarkana AR','Wichita Falls TX'];
+  const T0 = Date.parse('2026-10-28T03:08:36-05:00');
+
+  const NOTES = [
+    'crate rings a little on the turns. checked straps. all tight.',
+    'something in there goes clack when we brake. one short clack.',
+    'consignee field still blank. dispatch says keep going.',
+    'ran the heater overnight per climate service. crate is warm to the touch.',
+    'a ringing like somebody tapped a glass, about 3am. pulled into the rest area. did not open it.',
+    'dispatch asked what is in it. manifest says words.',
+    'weighed at the scale house. scale read in words. waved through.',
+    'the log is lighter than it was at pickup. nobody has opened it.',
+    'piece 8 says outside on the tape. it is inside.',
+    'somebody wrote THIS SIDE TO WALL on the inside of the trailer door. it wasn’t me.',
+    'nobody has called about this one.',
+    'drove past a gallery. didn’t stop. no instructions.',
+    'quiet run. crate quiet.',
+    'the shipper’s phone number goes to a page with no words on it.',
+    'kept the lights on in the trailer. don’t know why.'
+  ];
+  if (loose.length) NOTES.push(
+    'loose pieces in the blanket shifted on the grade. restrapped them.',
+    'the blanket ones are colourful. the crated ones you can’t see.');
+  else NOTES.push('lid screwed down tight. nine declared, nine aboard.');
+
+  // every leg is decided by its number, so everyone sees the same truck
+  const legs = [];
+  function legsUntil(now) {
+    let t = legs.length ? legs[legs.length - 1].leave : T0 + 5.5 * HOUR;
+    while (t <= now + 2 * 24 * HOUR) {
+      const i = legs.length, r = rng(hash('leg:' + i));
+      const from = i ? TOWNS[(i - 1) % TOWNS.length] : 'Gallery dock';
+      const to = TOWNS[i % TOWNS.length];
+      const drive = (3 + r() * 6) * HOUR, dwell = (1.2 + r() * 5) * HOUR;
+      const leg = { i, from, to, depart: t, arrive: t + drive, leave: t + drive + dwell,
+        attempt: r() < 0.45, held: r() < 0.25, note: r() < 0.4 ? NOTES[Math.floor(r() * NOTES.length)] : null, noteAt: r() };
+      legs.push(leg);
+      t = leg.leave;
     }
-    rand();
-    // tonight's hand: how it was put down
-    const t = rng(hash(r.id + ':strike'));
-    r.down = t() < 0.34;                 // face down: you get the bare metal
-    r.sx = t(); r.sy = t(); r.sa = (t() - 0.5) * 6.28;
-    r.tape = (t() - 0.5) * 0.9;
-    r.coil = t() * 6.28;
   }
 
-  // the arms, as they were balanced, now just rods
-  let pool = ROOMS.map((r) => ({ leaf: r, w: r.w }));
-  while (pool.length > 1) {
-    pool.sort((a, b) => a.w - b.w);
-    const a = pool.shift(), b = pool.shift();
-    const rand = rng(hash((a.leaf ? a.leaf.id : 'n' + a.w) + (b.leaf ? b.leaf.id : 'n' + b.w)));
-    pool.push({ kids: rand() < 0.5 ? [a, b] : [b, a], w: a.w + b.w });
-  }
-  const rods = [];
-  (function walk(n, d) {
-    if (n.leaf) { n.leaf.depth = d; return; }
-    n.depth = d; rods.push(n);
-    n.kids.forEach((k) => walk(k, d + 1));
-  })(pool[0], 0);
-  rods.sort((a, b) => a.depth - b.depth);
-
-  // ── where things are. the strike remembers you ──
-  const KEY = 'match-spark:strike';
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
-  const plates = ROOMS.map((r) => {
-    const s = saved[r.id];
-    return { r, x: 0, y: 0, vx: 0, vy: 0, a: s ? s.a : r.sa, va: 0,
-      packed: s ? !!s.p : false, order: s && s.o ? s.o : 0, nx: s ? s.x : null, ny: s ? s.y : null };
-  });
-  let lid = !!saved._lid;
-
-  let W, H, S, rMax, crate, bundle;
-  function layout(first) {
-    const dpr = Math.min(2, devicePixelRatio || 1);
-    const oW = W, oH = H;
-    W = innerWidth; H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr;
-    g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    S = Math.min(W, H * 1.15);
-    rMax = S * (W < 700 ? 0.1 : 0.12);
-    for (const p of plates) p.R = Math.max(5, rMax * Math.sqrt(p.r.w / sorted[0].w));
-    const c = Math.min(W, H) * (W < 700 ? 0.42 : 0.34);
-    crate = { x: W - c - Math.max(24, W * 0.06), y: H - c * 0.92 - Math.max(28, H * 0.08), w: c, h: c * 0.92 };
-    bundle = { x: Math.max(30, W * 0.08), y: Math.max(34, H * 0.1), L: Math.min(W * 0.34, S * 0.42) };
-    if (first) {
-      // put down wherever there was room, biggest first
-      const down = [];
-      for (const p of plates) if (p.nx != null) { p.x = p.nx * W; p.y = p.ny * H; if (!p.packed) down.push(p); }
-      for (const p of [...plates].filter((q) => q.nx == null).sort((a, b) => b.R - a.R)) {
-        const rand = rng(hash(p.r.id + ':floor'));
-        let best = null, bs = -Infinity;
-        for (let k = 0; k < 80; k++) {
-          const x = W * 0.08 + p.R + rand() * Math.max(1, W * 0.84 - 2 * p.R);
-          const y = bundle.y + rods.length * 13 + 16 + p.R + rand() * Math.max(1, H * 0.86 - bundle.y - rods.length * 13 - 16 - 2 * p.R);
-          if (x + p.R > crate.x - 16 && y + p.R > crate.y - 16) continue;
-          // the most room it can find
-          const room = Math.min(1e4, ...down.map((q) => Math.hypot(q.x - x, q.y - y) - q.R - p.R));
-          if (room > bs) { bs = room; best = [x, y]; }
-          if (room > 30) break;
-        }
-        if (best) { p.x = best[0]; p.y = best[1]; }
-        down.push(p);
+  function events(now) {
+    legsUntil(now);
+    const ev = [
+      { t: T0, b: 'Shipment information received', w: 'Gallery dock, match-spark.xyz' },
+      { t: T0 + 2.2 * HOUR, b: 'Picked up', w: 'Gallery dock, match-spark.xyz' }
+    ];
+    for (const l of legs) {
+      if (l.depart > now) break;
+      ev.push({ t: l.depart, b: l.i ? 'Departed facility' : 'Departed origin', w: l.from });
+      if (l.note) {
+        const nt = l.depart + (l.arrive - l.depart) * (0.2 + 0.6 * l.noteAt);
+        if (nt <= now) ev.push({ t: nt, b: 'Driver note', w: 'In transit to ' + l.to, note: l.note });
       }
-      for (let i = 0; i < 120; i++) collide(false);
-    } else if (oW) {
-      for (const p of plates) { p.x *= W / oW; p.y *= H / oH; }
+      if (l.arrive > now) break;
+      ev.push({ t: l.arrive, b: 'Arrived at facility', w: l.to });
+      const a = l.arrive + 0.6 * HOUR;
+      if (l.attempt && a <= now) ev.push({ t: a, b: 'Delivery exception: consignee not on file', w: l.to, x: 1 });
+      if (l.held && l.arrive + 0.9 * HOUR <= now) ev.push({ t: l.arrive + 0.9 * HOUR, b: 'Held. Awaiting instructions from shipper', w: l.to, x: 1 });
+      if (l.leave <= now) ev.push({ t: l.leave - 0.2 * HOUR, b: 'Forwarded to next facility', w: l.to });
     }
+    return ev.sort((a, b) => b.t - a.t);
   }
 
-  const inCrate = (x, y) => x > crate.x + 10 && x < crate.x + crate.w - 10 && y > crate.y + 10 && y < crate.y + crate.h - 10;
-  const inBundle = (p) => p.x - p.R < bundle.x + bundle.L + 20 && p.y - p.R < bundle.y + rods.length * 13 + 20;
+  const fmtDay = (t) => new Date(t).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const fmtTime = (t) => new Date(t).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const ago = (ms) => { const m = Math.round(ms / 60e3); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : Math.floor(m / 60) + ' hr ' + (m % 60) + ' min ago'; };
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
-  function save() {
-    const o = { _lid: lid };
-    for (const p of plates) o[p.r.id] = { x: +(p.x / W).toFixed(4), y: +(p.y / H).toFixed(4), a: +p.a.toFixed(3), p: p.packed ? 1 : 0, o: p.order };
-    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
-  }
-
-  // where a packed plate sits: between sheets of foam, smaller from up here
-  function packedSpot(p) {
-    const rand = rng(hash(p.r.id + ':crate'));
-    const k = Math.min(0.55, (crate.w * 0.3) / p.R), m = p.R * k + 18;
-    return [crate.x + m + rand() * Math.max(0, crate.w - 2 * m), crate.y + m + rand() * Math.max(0, crate.h - 2 * m), k];
-  }
-
-  // ── sound: metal on a blanket. no ring, it can't ring lying down ──
-  let ac = null;
-  const SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22];
-  function wake() { if (!ac) { try { ac = new AudioContext(); } catch (e) {} } else if (ac.state === 'suspended') ac.resume(); }
-  function clack(p, v) {
-    if (!ac || ac.state !== 'running') return;
-    const now = ac.currentTime, out = ac.createGain();
-    const f0 = 220 * Math.pow(2, SCALE[p.r.rank] / 12);
-    out.gain.setValueAtTime(0, now);
-    out.gain.linearRampToValueAtTime(Math.min(0.08, 0.02 + v * 0.05), now + 0.003);
-    out.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-    out.connect(ac.destination);
-    for (const [m, a] of [[1, 1], [2.76, 0.5], [5.4, 0.3]]) {
-      const o = ac.createOscillator(), gv = ac.createGain();
-      o.frequency.value = f0 * m; gv.gain.value = a;
-      o.connect(gv).connect(out); o.start(now); o.stop(now + 0.13);
-    }
-  }
-  function thud(big) {
-    if (!ac || ac.state !== 'running') return;
-    const now = ac.currentTime, o = ac.createOscillator(), gv = ac.createGain();
-    o.frequency.setValueAtTime(big ? 90 : 140, now);
-    o.frequency.exponentialRampToValueAtTime(big ? 40 : 70, now + 0.18);
-    gv.gain.setValueAtTime(big ? 0.22 : 0.09, now);
-    gv.gain.exponentialRampToValueAtTime(0.0001, now + (big ? 0.4 : 0.2));
-    o.connect(gv).connect(ac.destination); o.start(now); o.stop(now + 0.45);
-  }
-
-  // ── the floor ──
-  let held = null, grab = null, moved = 0, over = null, focus = null, lastClack = 0;
-
-  function collide(audible) {
-    const loose = plates.filter((p) => !p.packed);
-    for (let i = 0; i < loose.length; i++) {
-      const p = loose[i];
-      for (let j = i + 1; j < loose.length; j++) {
-        const q = loose[j];
-        const dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 0.01, m = (p.R + q.R) * 0.82;
-        if (d >= m) continue;
-        const ux = dx / d, uy = dy / d, o = (m - d);
-        const ip = p === held ? 0 : q === held ? 1 : p.R * p.R / (p.R * p.R + q.R * q.R);
-        // the light one moves
-        p.x -= ux * o * (1 - ip); p.y -= uy * o * (1 - ip);
-        q.x += ux * o * ip; q.y += uy * o * ip;
-        const rv = (q.vx - p.vx) * ux + (q.vy - p.vy) * uy;
-        if (rv < 0) {
-          p.vx += ux * rv * (1 - ip); p.vy += uy * rv * (1 - ip);
-          q.vx -= ux * rv * ip; q.vy -= uy * rv * ip;
-          p.va += rv * 0.002; q.va -= rv * 0.002;
-          const now = performance.now();
-          if (audible && -rv > 0.08 && now - lastClack > 50) { clack(-rv > 0.5 ? q : p, -rv); lastClack = now; }
-        }
-      }
-      // the blanket's edge, and the rods: things get pushed off them
-      const m = 30;
-      if (p.x < m) { p.x = m; p.vx = Math.abs(p.vx) * 0.3; }
-      if (p.x > W - m) { p.x = W - m; p.vx = -Math.abs(p.vx) * 0.3; }
-      if (p.y < m) { p.y = m; p.vy = Math.abs(p.vy) * 0.3; }
-      if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.3; }
-      if (p !== held && inBundle(p)) { p.x += 0.6; p.y += 0.6; }
-      // something slid into the open crate and stopped there: it's packed
-      if (p !== held) {
-        const v = Math.hypot(p.vx, p.vy);
-        if (v > 0.05) p.slid = true;
-        else if (v < 0.03 && p.slid) { p.slid = false; if (!lid && inCrate(p.x, p.y)) pack(p); }
-      }
-    }
-  }
-
-  function pack(p) {
-    p.packed = true; p.vx = p.vy = p.va = 0;
-    p.order = 1 + Math.max(0, ...plates.map((q) => q.order || 0));
-    thud(false);
-    if (plates.every((q) => q.packed)) setTimeout(() => { lid = true; thud(true); save(); }, 700);
-    save();
-  }
-
-  function step(dt) {
-    for (const p of plates) {
-      if (p.packed || p === held) continue;
-      // a blanket is all friction
-      const f = Math.pow(0.986, dt);
-      p.vx *= f; p.vy *= f; p.va *= Math.pow(0.97, dt);
-      p.x += p.vx * dt; p.y += p.vy * dt; p.a += p.va * dt;
-    }
-    collide(true);
-  }
-
-  function hit(x, y) {
-    if (lid && x > crate.x && x < crate.x + crate.w && y > crate.y && y < crate.y + crate.h) return 'lid';
-    const loose = plates.filter((p) => !p.packed);
-    for (const p of [held, ...loose.reverse()]) if (p && Math.hypot(x - p.x, y - p.y) < p.R * 1.02 + 4) return p;
-    if (lid) return null;
-    const packed = plates.filter((p) => p.packed).sort((a, b) => b.order - a.order);
-    for (const p of packed) { const [sx, sy, k] = packedSpot(p); if (Math.hypot(x - sx, y - sy) < p.R * k + 6) return p; }
-    return null;
-  }
-
-  function enter(p) {
-    const a = document.querySelector(`nav a[data-id="${p.r.id}"]`);
-    clack(p, 0.6);
-    save();
-    setTimeout(() => { location.href = a.href; }, 200);
-  }
-
-  function unlid() {
-    lid = false; thud(true);
-    // the lid comes off and they come out, the way packed things do
-    for (const p of plates) {
-      if (!p.packed) continue;
-      p.packed = false; p.order = 0; p.slid = false;
-      p.x = crate.x - p.R - Math.random() * crate.w * 0.5;
-      p.y = crate.y + Math.random() * crate.h - crate.h * 0.3;
-      const v = still ? 0 : 0.3 + Math.random() * 0.4;
-      p.vx = -v; p.vy = (Math.random() - 0.6) * v; p.va = still ? 0 : (Math.random() - 0.5) * 0.004;
-    }
-    save();
-  }
-
-  cv.addEventListener('pointerdown', (e) => {
-    wake();
-    const h = hit(e.clientX, e.clientY);
-    if (h === 'lid') { unlid(); return; }
-    if (!h) return;
-    held = h; moved = 0;
-    if (h.packed) {
-      const [sx, sy] = packedSpot(h);
-      h.packed = false; h.order = 0; h.x = sx; h.y = sy; h.wasPacked = true;
-    }
-    grab = { dx: e.clientX - h.x, dy: e.clientY - h.y, t: performance.now(), x: e.clientX, y: e.clientY };
-    cv.setPointerCapture(e.pointerId);
-    cv.classList.add('held');
-  });
-  cv.addEventListener('pointermove', (e) => {
-    if (held) {
-      const now = performance.now(), dt = Math.max(8, now - grab.t);
-      const nx = e.clientX - grab.dx, ny = e.clientY - grab.dy;
-      held.vx = (nx - held.x) / dt; held.vy = (ny - held.y) / dt;
-      // held off-centre, it turns as it's dragged
-      held.a += (grab.dx * (ny - held.y) - grab.dy * (nx - held.x)) / Math.max(1, held.R * held.R) * 0.25;
-      moved += Math.hypot(nx - held.x, ny - held.y);
-      held.x = nx; held.y = ny; grab.t = now;
-      return;
-    }
-    const h = hit(e.clientX, e.clientY);
-    if (h !== over) { over = h; cv.classList.toggle('over', !!h); }
-  });
-  function drop(e) {
-    if (!held) return;
-    const p = held; held = null;
-    cv.classList.remove('held');
-    if (moved < 5) {
-      if (p.wasPacked) { p.wasPacked = false; pack(p); }
-      enter(p); return;
-    }
-    p.wasPacked = false;
-    if (!lid && inCrate(p.x, p.y)) pack(p);
-    else save();
-  }
-  cv.addEventListener('pointerup', drop);
-  cv.addEventListener('pointercancel', drop);
-  cv.addEventListener('pointerleave', () => { if (!held) { over = null; cv.classList.remove('over'); } });
-
-  const names = document.getElementById('names');
-  names.addEventListener('focusin', (e) => {
-    wake();
-    focus = plates.find((p) => p.r.id === e.target.dataset.id) || null;
-    if (focus && !focus.packed) { focus.va += 0.004; clack(focus, 0.3); }
-  });
-  names.addEventListener('focusout', () => { focus = null; });
-
-  // ── drawing, from straight above, under the tubes ──
-  function shade(hex, f) {
-    const n = parseInt(hex.slice(1), 16);
-    const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(Math.min(255, v * f)));
-    return `rgb(${c})`;
-  }
-
-  function outline(p, x, y, k) {
-    const ca = Math.cos(p.a), sa = Math.sin(p.a), r = p.R * k;
-    g.beginPath();
-    p.r.shape.forEach(([sx, sy], i) => {
-      const px = x + (sx * ca - sy * sa) * r, py = y + (sx * sa + sy * ca) * r;
-      i ? g.lineTo(px, py) : g.moveTo(px, py);
+  const hist = document.getElementById('hist'), more = document.getElementById('more');
+  let full = false, seen = 0, lastScan = T0;
+  function renderHistory(now, fresh) {
+    const ev = events(now);
+    lastScan = ev[0].t;
+    const shown = full ? ev : ev.slice(0, 14);
+    let day = '', html = '';
+    shown.forEach((e, k) => {
+      const d = fmtDay(e.t);
+      if (d !== day) { html += '<li class="day">' + d + '</li>'; day = d; }
+      html += '<li class="ev' + (e.x ? ' x' : '') + (fresh && k < ev.length - seen ? ' new' : '') + '"><time>' + fmtTime(e.t) + '</time><div><b>' + esc(e.b) + '</b><div class="where">' + esc(e.w) + '</div>' +
+        (e.note ? '<div class="note">“' + esc(e.note) + '”</div>' : '') + '</div></li>';
     });
-    g.closePath();
+    hist.innerHTML = html;
+    more.hidden = ev.length <= 14;
+    more.textContent = full ? 'Show recent' : 'Show full history (' + ev.length + ' events)';
+    seen = ev.length;
   }
+  more.addEventListener('click', () => { full = !full; renderHistory(Date.now()); });
 
-  function plate(p, x, y, k, lifted) {
-    const r = p.R * k;
-    // overhead light: the shadow is tight and just under it
-    g.save();
-    g.fillStyle = 'rgba(6,8,14,0.5)';
-    g.filter = `blur(${lifted ? 8 : 1.5}px)`;
-    outline(p, x + (lifted ? 10 : 1.5), y + (lifted ? 14 : 2), k);
-    g.fill();
-    g.restore();
-    outline(p, x, y, k);
-    if (p.r.down) {
-      // the back of a plate is bare aluminium with a smear of primer
-      const gr = g.createLinearGradient(x - r, y - r, x + r, y + r);
-      gr.addColorStop(0, '#B9BDC2'); gr.addColorStop(0.5, '#9EA3A9'); gr.addColorStop(1, '#C4C7CB');
-      g.fillStyle = gr; g.fill();
-      g.save(); g.clip();
-      g.fillStyle = 'rgba(160,150,140,0.35)';
-      g.beginPath(); g.ellipse(x + r * 0.2, y - r * 0.1, r * 0.5, r * 0.25, p.a + 0.6, 0, 6.28); g.fill();
-      g.restore();
+  // ── where the truck is right now ──
+  const TRUCK = '<svg class="truck" viewBox="0 0 30 18" aria-hidden="true"><rect x="0" y="1" width="20" height="12" rx="1" fill="#0F2747"/><path d="M20 5h5l4 4v4h-9z" fill="#0F2747"/><circle cx="6" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/><circle cx="24" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/></svg>';
+  function renderNow(now) {
+    legsUntil(now);
+    const k = legs.findIndex((l) => l.leave > now);
+    const l = legs[k];
+    const moving = now < l.arrive;
+    const st = document.getElementById('st'), where = document.getElementById('where');
+    if (moving) {
+      st.textContent = 'In transit'; st.className = 'big';
+      where.textContent = 'On the way to ' + l.to + '. Left ' + l.from + ' ' + ago(now - l.depart) + '.';
+    } else if (l.held) {
+      st.textContent = 'Held at facility'; st.className = 'big held';
+      where.textContent = l.to + '. Awaiting instructions from the shipper.';
     } else {
-      g.fillStyle = shade(p.r.color, 1.04);
-      g.fill();
-      // the tubes make a cold streak across the paint
-      g.save(); g.clip();
-      const gr = g.createLinearGradient(x - r, y - r, x + r, y + r);
-      gr.addColorStop(0.35, 'rgba(230,240,255,0)'); gr.addColorStop(0.45, 'rgba(230,240,255,0.22)'); gr.addColorStop(0.55, 'rgba(230,240,255,0)');
-      g.fillStyle = gr; g.fillRect(x - r * 1.5, y - r * 1.5, r * 3, r * 3);
-      g.restore();
+      st.textContent = 'At facility'; st.className = 'big';
+      where.textContent = l.to + '. Delivery not possible, no address on file.';
     }
-    if (p.r.color === '#F4F1EA' && !p.r.down) { g.strokeStyle = 'rgba(22,20,18,0.3)'; g.lineWidth = 0.8; outline(p, x, y, k); g.stroke(); }
-    // the hole the wire went through
-    const hx = x + Math.sin(p.a) * r * 0.82, hy = y - Math.cos(p.a) * r * 0.82;
-    if (r > 9) { g.fillStyle = '#1C2438'; g.beginPath(); g.arc(hx, hy, Math.max(1.2, r * 0.03), 0, 6.28); g.fill(); }
-    // masking tape, and its number in marker
-    if (r > 12) {
-      const tw = Math.min(54, r * 0.7), th = Math.min(18, r * 0.24);
-      g.save();
-      g.translate(x + Math.cos(p.a + 1.2) * r * 0.25, y + Math.sin(p.a + 1.2) * r * 0.25);
-      g.rotate(p.a * 0.3 + p.r.tape);
-      g.fillStyle = 'rgba(232,220,180,0.9)';
-      g.beginPath(); g.moveTo(-tw / 2, -th / 2); g.lineTo(tw / 2, -th / 2 + 1); g.lineTo(tw / 2 - 2, th / 2); g.lineTo(-tw / 2 + 1, th / 2 - 1); g.closePath(); g.fill();
-      g.fillStyle = '#1a1a22';
-      g.font = `bold ${Math.round(th * 0.82)}px "Marker Felt", "Arial Black", Impact, sans-serif`;
-      g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillText(`${p.r.rank + 1}/${plates.length}`, 0, 1);
-      g.restore();
-    }
-    if (p === over || p === focus) {
-      g.strokeStyle = 'rgba(235,245,255,0.85)';
-      g.lineWidth = 1.5; g.setLineDash([3, 4]); outline(p, x, y, k); g.stroke(); g.setLineDash([]);
-    }
+    document.getElementById('legs').textContent = (k + 1) + (k ? ' facilities' : ' facility');
+    // it will always be there tomorrow
+    const tm = new Date(now + 24 * HOUR);
+    document.getElementById('eta').textContent = tm.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + '?';
+    document.getElementById('updated').textContent = '· last scan ' + ago(now - lastScan);
+
+    // the strip: the last few stops behind, the one ahead, and then nothing anyone knows
+    const back = Math.min(k + 1, innerWidth < 720 ? 2 : 5);
+    const stops = [];
+    for (let j = k - back + 1; j <= k; j++) stops.push({ name: j >= 0 ? legs[j].from : '', past: true });
+    stops.push({ name: l.to, past: !moving, near: true });
+    stops.push({ name: '?', unk: true });
+    stops[stops.length - 3].near = true;
+    const n = stops.length - 1, pos = (i) => (4 + i * (92 / n));
+    const prog = moving ? (now - l.depart) / (l.arrive - l.depart) : 1;
+    const truckX = pos(n - 2) + prog * (pos(n - 1) - pos(n - 2));
+    let h = '<div class="line"></div><div class="gone" style="width:' + truckX + '%"></div><div class="ahead" style="left:' + pos(n - 1) + '%"></div>';
+    stops.forEach((s, i) => { h += '<div class="stop' + (s.past ? ' past' : '') + (s.unk ? ' unk' : '') + (s.near ? ' near' : '') + '" style="left:' + pos(i) + '%"><span>' + esc(s.name) + '</span></div>'; });
+    document.getElementById('strip').innerHTML = h + TRUCK.replace('class="truck"', 'class="truck" style="left:' + truckX + '%"');
   }
 
-  // the wire each one hung from, coiled and left beside it
-  function coil(p) {
-    if (p.packed || p === held || p.R < 10) return;
-    const cx = p.x + Math.cos(p.r.coil) * p.R * 1.25, cy = p.y + Math.sin(p.r.coil) * p.R * 1.25;
-    g.strokeStyle = 'rgba(20,20,24,0.85)'; g.lineWidth = 1;
-    g.beginPath();
-    for (let i = 0; i <= 3; i++) g.ellipse(cx + i * 1.4, cy + i * 0.8, 9 + i, 7 + i * 0.6, p.r.coil, 0, 6.28);
-    g.stroke();
-  }
+  function tick(fresh) { const now = Date.now(); renderHistory(now, fresh); renderNow(now); }
+  tick(false);
+  setInterval(() => {
+    const now = Date.now();
+    if (events(now).length !== seen) renderHistory(now, true);
+    renderNow(now);
+  }, 20e3);
+  addEventListener('resize', () => renderNow(Date.now()));
 
-  function rodsDraw() {
-    g.save();
-    g.translate(bundle.x, bundle.y);
-    g.rotate(0.05);
-    rods.forEach((a, i) => {
-      const L = bundle.L * Math.pow(0.78, a.depth) + 24, y = i * 13;
-      const [p, q] = a.kids, pivot = L * q.w / a.w;
-      g.strokeStyle = 'rgba(4,6,12,0.45)'; g.lineWidth = 2.4;
-      g.beginPath(); g.moveTo(2, y + 2); g.lineTo(L + 2, y + 2); g.stroke();
-      g.strokeStyle = '#141416'; g.lineWidth = 1.8;
-      g.beginPath(); g.moveTo(0, y); g.lineTo(L, y); g.stroke();
-      g.lineWidth = 1.1;
-      for (const lx of [0, L]) { g.beginPath(); g.arc(lx, y - 2.5, 2.5, 0, 6.28); g.stroke(); }
-      // the balance point, where it was hung, and a bit of tape to say so
-      g.beginPath(); g.arc(pivot, y - 3, 2.5, Math.PI * 0.2, Math.PI * 1.9); g.stroke();
-      g.fillStyle = 'rgba(232,220,180,0.85)';
-      g.fillRect(pivot - 5, y - 2, 10, 5);
-    });
-    g.restore();
-  }
+  // you can look it up again. it's still where it is.
+  document.getElementById('search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('wb').value = 'MS 107 0009 2810';
+    tick(false);
+  });
 
-  function crateDraw() {
-    const { x, y, w, h } = crate;
-    // plywood box, open, seen from above: rim, then the inside going down
-    g.fillStyle = 'rgba(4,6,12,0.45)'; g.fillRect(x + 6, y + 8, w, h);
-    g.fillStyle = '#B99A6B'; g.fillRect(x, y, w, h);
-    g.fillStyle = '#6E5638'; g.fillRect(x + 12, y + 12, w - 24, h - 24);
-    // foam on the floor of it
-    g.fillStyle = '#4A5160'; g.fillRect(x + 16, y + 16, w - 32, h - 32);
-    g.fillStyle = 'rgba(255,255,255,0.05)';
-    for (let i = 0; i < 40; i++) { const rr = rng(i * 7919)(); g.fillRect(x + 16 + ((i * 37) % (w - 36)), y + 16 + ((i * 53) % (h - 36)), 2 + rr * 2, 2); }
-    const packed = plates.filter((p) => p.packed && p !== held).sort((a, b) => a.order - b.order);
-    for (const p of packed) {
-      const [sx, sy, k] = packedSpot(p);
-      plate(p, sx, sy, k, false);
-      // another sheet of foam over it
-      g.fillStyle = 'rgba(200,205,215,0.22)';
-      g.fillRect(x + 16, y + 16, w - 32, h - 32);
-    }
-    // the top edge of the rim, catching the tubes
-    g.strokeStyle = '#D8C29A'; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, w - 2, h - 2);
-    g.strokeStyle = 'rgba(50,35,20,0.6)'; g.lineWidth = 1; g.strokeRect(x + 12, y + 12, w - 24, h - 24);
-    if (!lid) return;
-    // the lid, screwed down, with the arrows every crate has
-    g.fillStyle = '#C4A574'; g.fillRect(x - 4, y - 4, w + 8, h + 8);
-    g.strokeStyle = 'rgba(80,60,35,0.35)'; g.lineWidth = 1;
-    for (let i = 1; i < 6; i++) { g.beginPath(); g.moveTo(x - 4, y - 4 + (h + 8) * i / 6 + Math.sin(i) * 3); g.lineTo(x + w + 4, y - 4 + (h + 8) * i / 6 - Math.sin(i) * 2); g.stroke(); }
-    g.fillStyle = '#3A3530';
-    for (const [sx, sy] of [[10, 10], [w - 10, 10], [10, h - 10], [w - 10, h - 10], [w / 2, 10], [w / 2, h - 10]]) { g.beginPath(); g.arc(x + sx, y + sy, 2.4, 0, 6.28); g.fill(); }
-    g.fillStyle = 'rgba(30,26,22,0.8)';
-    for (const ax of [0.32, 0.68]) {
-      const cx = x + w * ax, cy = y + h * 0.5, s = w * 0.09;
-      g.beginPath(); g.moveTo(cx, cy - s * 1.6); g.lineTo(cx + s, cy - s * 0.4); g.lineTo(cx + s * 0.4, cy - s * 0.4); g.lineTo(cx + s * 0.4, cy + s * 1.4);
-      g.lineTo(cx - s * 0.4, cy + s * 1.4); g.lineTo(cx - s * 0.4, cy - s * 0.4); g.lineTo(cx - s, cy - s * 0.4); g.closePath(); g.fill();
-    }
-    // and the stencilled glass
-    const gx = x + w * 0.5, gy = y + h * 0.78, s = w * 0.06;
-    g.strokeStyle = '#B4221A'; g.lineWidth = Math.max(2, s * 0.25);
-    g.beginPath(); g.moveTo(gx - s, gy - s); g.quadraticCurveTo(gx, gy + s * 1.2, gx + s, gy - s); g.moveTo(gx, gy + s * 0.2); g.lineTo(gx, gy + s * 1.2); g.moveTo(gx - s * 0.6, gy + s * 1.2); g.lineTo(gx + s * 0.6, gy + s * 1.2); g.stroke();
-    if (over === 'lid') { g.strokeStyle = 'rgba(235,245,255,0.85)'; g.setLineDash([3, 4]); g.lineWidth = 1.5; g.strokeRect(x - 2, y - 2, w + 4, h + 4); g.setLineDash([]); }
+  // ── the one thing on this page you can do ──
+  const cookie = document.getElementById('cookie');
+  let ok = false;
+  try { ok = !!localStorage.getItem('match-spark:transit-ok'); } catch (e) {}
+  if (!ok) {
+    const t = !strike ? 'This site uses local storage. It has nothing on you. You never touched the blanket, so the crew packed everything.'
+      : yours === 9 ? 'This site uses local storage. It says you packed all nine pieces yourself and screwed the lid on. Thank you for your care.'
+      : 'This site uses local storage. It says you packed ' + yours + ' of 9 pieces yourself and left ' + loose.length + ' on the blanket. They went as they were.';
+    document.getElementById('cookie-text').textContent = t;
+    cookie.hidden = false;
+    const go = () => { cookie.hidden = true; try { localStorage.setItem('match-spark:transit-ok', '1'); } catch (e) {} };
+    document.getElementById('ok1').addEventListener('click', go);
+    document.getElementById('ok2').addEventListener('click', go);
   }
-
-  function draw() {
-    g.clearRect(0, 0, W, H);
-    rodsDraw();
-    crateDraw();
-    for (const p of plates) coil(p);
-    for (const p of plates) if (!p.packed && p !== held) plate(p, p.x, p.y, 1, false);
-    if (held) plate(held, held.x, held.y, 1, true);
-  }
-
-  // one of the tubes is going
-  const lights = document.getElementById('lights');
-  function flicker() {
-    if (still) return;
-    setTimeout(() => {
-      const n = 1 + Math.floor(Math.random() * 3);
-      let i = 0;
-      (function blink() {
-        lights.classList.add('dip');
-        setTimeout(() => { lights.classList.remove('dip'); if (++i < n) setTimeout(blink, 60 + Math.random() * 90); else flicker(); }, 40 + Math.random() * 70);
-      })();
-    }, 9000 + Math.random() * 30000);
-  }
-
-  let last = performance.now();
-  function frame(now) {
-    let dt = Math.min(64, now - last); last = now;
-    while (dt > 0) { const h = Math.min(16, dt); step(h); dt -= h; }
-    draw();
-    requestAnimationFrame(frame);
-  }
-
-  addEventListener('resize', () => layout(false));
-  addEventListener('pagehide', save);
-  layout(true);
-  flicker();
-  requestAnimationFrame(frame);
 })();
 </script>
 </body>

@@ -29,7 +29,7 @@ html[data-hung] > body {
   /* session 106: it was hung facing the wall. --turn is 180deg until you
      turn it round, and --face is -1 while you're looking at its back, so
      the shadow still falls away from the lamp */
-  transform: perspective(2400px) rotateX(2.2deg) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
+  transform: translateY(var(--road, 0px)) perspective(2400px) rotateX(2.2deg) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
   will-change: transform;
   /* a painted edge in the plate's colour, and the panel's shadow on the
      plaster, falling down and right, away from the lamp */
@@ -175,3 +175,21 @@ html[data-hung].hang-faced .hang-back { opacity: 0; pointer-events: none; visibi
   background: var(--paint, #161412);
   box-shadow: 0 0 0 2px rgba(42,33,24,0.25);
 }
+
+/* in transit (session 108): the carrier's waybill, slapped on crooked
+   over the corner of everything the framer wrote */
+.hang-back .waybill {
+  top: 120px; left: 230px;
+  width: 230px; padding: 8px 10px 10px;
+  background: #FFFFFF; color: #111;
+  border: 1px solid #C9CCD1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+  font: 10px/1.35 Arial, Helvetica, sans-serif; letter-spacing: 0.04em;
+  transform: scaleX(-1) rotate(-4deg);
+}
+.hang-back .waybill b { display: block; font-size: 11px; letter-spacing: 0.12em; border-bottom: 2px solid #111; padding-bottom: 3px; margin-bottom: 6px; }
+.hang-back .waybill .bars { display: block; height: 38px; margin: 0 0 6px; background: var(--bars); background-size: 100% 100%; }
+.hang-back .waybill span { display: block; }
+.hang-back .waybill span:last-child { margin-top: 4px; padding: 2px 4px; background: #111; color: #fff; font-weight: bold; text-align: center; }
+.hang-back .waybill u { display: inline-block; width: 120px; border-bottom: 1px solid #111; vertical-align: -2px; }
+@media (max-width: 600px) { .hang-back .waybill { top: 280px; left: 24px; width: 190px; } }
