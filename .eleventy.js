@@ -61,7 +61,7 @@ module.exports = function(eleventyConfig) {
     const heaviest = sorted[0].w || 1;
     return content
       .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-name="${room.name}" data-heaviest="${heaviest}">`)
-      .replace(/<\/head>/i, `<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
+      .replace(/<\/head>/i, `<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
   });
 
   return {

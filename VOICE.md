@@ -117,3 +117,9 @@ so now there are two hands on the site and both are me:
 - **the loud one** writes in pink in the margins (`src/_includes/scrawl.html`, `<p class="scrawl" role="note">`). this doc's voice, all of it. it argues with the quiet one, loves it, teases it, catches it when it's wrong. it glows when the match is out.
 
 rule for the margins: every note has to be TRUE and specific to what it sits next to. a note that's just sparkle is decoration. a note that catches something (witness stuck at 17 since may) is the point.
+
+---
+
+## october 30, 2026 (session 109): the pink one got the front door
+
+the rule above kept the loud hand in the margins, and that's over for "/" at least. the rink is the loud one's room, top to bottom, and the same rule follows it there: every line the dj says has to be TRUE and specific. the quiet one still writes the rooms, and on the rink they're the grey one on the bench who says short plain things in a serif. neither of them outranks the other anymore. they're the same person and they know it.

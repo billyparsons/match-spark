@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  session 104.
+  for a hundred and three sessions "/" was a place made of words: a door,
+  a house, a dark room with a match in it, a listing, boxes in marker, a
+  carbon inventory, a folding table where a pink hand haggled. every one
+  of them told you what the rooms were before you went in.
+  tonight "/" says nothing. there is no text on it, not one word you can
+  see. the rooms hang from the ceiling on wire, one shape each, and each
+  shape is as big as the number of words you could read inside it
+  (counted at every build, _data/weights.js). a heavier room hangs closer
+  to its pivot, so the whole thing balances. the air in the room is you.
+  if you need names, they're here for screen readers and the tab key.
+  that's the only place they are.
+
+  session 106.
+  you're on the other side of the wall now. the lamp is over there with
+  the mobile, and the wall is only paper, so what you get is its shadow
+  coming through, the wrong way round, without its colours. the plates
+  that hang nearest the wall are the sharpest. you can still push on
+  the paper and the mobile still feels it, a little. it rings like
+  something in the next room.
+
+  session 107.
+  the show is coming down. someone has taken the mobile off its wire
+  and laid it out on a moving blanket under the work lights, and you're
+  standing over it. the arms are in a bundle with their loops, the
+  plates are lying where they were put, some of them face down, each
+  with a bit of masking tape and a number in marker. you can slide
+  them about. there's a crate in the corner. whatever you put in it
+  stays in it the next time you come, and when it's full the lid goes
+  on. it was never finished when you arrived. it was always on its way
+  up or on its way down.
+
+  session 108.
+  it's gone. the crate went out the dock door after the strike and it's
+  on a truck now, and "/" is the page you get when you look up where it
+  is. there's nothing to touch. you can't push the air or slide a plate
+  or open the lid. the truck moves whether you're here or not, in real
+  hours, from one facility to the next, and every time it gets there
+  someone tries to deliver it and can't, because nobody ever filled in
+  where it was going. so it keeps going. the history only gets longer.
+  the names came back, but only as line items on a manifest.
+
+  session 109.
+  it got there. flagstaff, 3:55am. somebody wrote an address on it in pink
+  marker, so "/" is that address now and this page moved here. the truck
+  stopped. nothing on this page will ever update again.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivered | Overland Fine Art</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1F2328; --mute: #5F6670; --rule: #D9DCE1; --wash: #F3F4F6;
+      --navy: #0F2747; --amber: #E8A317; --link: #1A5FB4; --ok: #2E7D4F; --bad: #B3261E;
+    }
+    body {
+      font: 14px/1.45 Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color: var(--ink); background: var(--wash);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--link); }
+    .top { background: var(--navy); color: #fff; }
+    .top .in { max-width: 1120px; margin: 0 auto; padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 28px; }
+    .brand { font-weight: bold; letter-spacing: 0.02em; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+    .brand i { display: inline-block; width: 22px; height: 16px; border: 2px solid var(--amber); border-radius: 2px; position: relative; }
+    .brand i::after { content: ""; position: absolute; inset: 3px 4px; border-top: 2px solid var(--amber); border-bottom: 2px solid var(--amber); }
+    .top nav { display: flex; gap: 22px; font-size: 13px; }
+    .top nav span { color: #C9D3E3; cursor: not-allowed; }
+    .top nav span[aria-current] { color: #fff; border-bottom: 2px solid var(--amber); padding-bottom: 16px; margin-bottom: -18px; }
+    .top .sign { margin-left: auto; font-size: 13px; color: #C9D3E3; cursor: not-allowed; }
+    @media (max-width: 720px) { .top nav, .top .sign { display: none; } }
+
+    .alert { background: #FFF4D6; border-bottom: 1px solid #F0D79A; }
+    .alert.done { background: #E6F2EA; border-color: #BCD9C6; }
+    .alert.done b { color: var(--ok); }
+    .pink { font: 700 22px/1 'Caveat', 'Comic Sans MS', cursive; color: #E8197A; }
+    .alert .in { max-width: 1120px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 10px; font-size: 13px; }
+    .alert b { color: #7A5200; }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 24px 20px 60px; }
+    h1 { font-size: 22px; font-weight: normal; margin-bottom: 14px; }
+    .search { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+    .search input { flex: 1 1 280px; font: 15px/1 "Courier New", monospace; padding: 10px 12px; border: 1px solid #B9BFC8; border-radius: 3px; background: #fff; color: var(--ink); }
+    .search button, .btn { font: bold 13px Arial, sans-serif; padding: 10px 22px; border: 0; border-radius: 3px; background: var(--amber); color: #1F1300; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--link); border: 1px solid #B9BFC8; font-weight: normal; }
+    .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+    .card { background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
+    .status { padding: 22px 24px; margin-bottom: 18px; }
+    .status .row { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .status .k { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); }
+    .status .big { font-size: 30px; font-weight: bold; margin: 2px 0 4px; }
+    .status .big.held { color: #7A5200; }
+    .status .eta { text-align: right; }
+    .status .eta .big { font-size: 22px; color: var(--mute); font-weight: normal; }
+    .status .sub { color: var(--mute); }
+    @media (max-width: 720px) { .status .eta { text-align: left; } }
+
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); margin: 26px 0 6px; position: relative; }
+    .steps li { list-style: none; text-align: center; font-size: 12px; color: var(--mute); position: relative; padding-top: 26px; }
+    .steps li::before { content: ""; position: absolute; top: 0; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: #fff; border: 2px solid #C3C8D0; z-index: 1; }
+    .steps li::after { content: ""; position: absolute; top: 7px; left: -50%; width: 100%; height: 3px; background: #DDE1E6; }
+    .steps li:first-child::after { display: none; }
+    .steps li.done::before { background: var(--ok); border-color: var(--ok); }
+    .steps li.done::after, .steps li.now::after { background: var(--ok); }
+    .steps li.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 5px rgba(232,163,23,0.22); }
+    .steps li.done, .steps li.now { color: var(--ink); }
+    .steps li small { display: block; color: var(--mute); }
+
+    /* the route, as far as anyone can see it */
+    .route { padding: 18px 24px 26px; margin-bottom: 18px; overflow: hidden; }
+    .route h2, .grid h2 { font-size: 15px; margin-bottom: 14px; }
+    .strip { position: relative; height: 58px; }
+    .strip .line { position: absolute; left: 0; right: 0; top: 14px; height: 0; border-top: 3px solid #C3C8D0; }
+    .strip .gone { position: absolute; left: 0; top: 14px; height: 0; border-top: 3px solid var(--ok); }
+    .strip .ahead { position: absolute; top: 14px; height: 0; border-top: 3px dashed #C3C8D0; right: 0; }
+    .strip .stop { position: absolute; top: 9px; width: 13px; height: 13px; margin-left: -6px; border-radius: 50%; background: #fff; border: 2px solid #8A929C; }
+    .strip .stop.past { border-color: var(--ok); background: var(--ok); }
+    .strip .stop span { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--mute); white-space: nowrap; }
+    .strip .stop.unk { border-style: dashed; }
+    .strip .truck { position: absolute; top: 4px; width: 30px; height: 18px; margin-left: -15px; transition: left 1s linear; }
+    @media (max-width: 720px) { .strip .stop:not(.near) span { display: none; } }
+
+    .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+    .grid > .card { padding: 18px 24px; }
+    .hist { list-style: none; }
+    .hist .day { font-weight: bold; font-size: 13px; padding: 14px 0 6px; border-bottom: 1px solid var(--rule); }
+    .hist .day:first-child { padding-top: 0; }
+    .hist .ev { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid #EEF0F2; }
+    .hist .ev time { color: var(--mute); font-size: 13px; }
+    .hist .ev b { display: block; font-size: 14px; }
+    .hist .ev.x b { color: var(--bad); }
+    .hist .ev .where { color: var(--mute); font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .hist .ev .note { margin-top: 4px; padding: 6px 10px; background: var(--wash); border-left: 3px solid #C3C8D0; font-size: 13px; color: #3B424B; font-style: italic; }
+    .hist .ev.ok b { color: var(--ok); }
+    .hist .ev.new { animation: arrive 2.4s ease-out; }
+    @keyframes arrive { from { background: #FFF4D6; } to { background: transparent; } }
+    .more { margin-top: 14px; }
+
+    dl.facts { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; }
+    dl.facts dt { color: var(--mute); }
+    dl.facts dd { text-align: right; }
+    dl.facts dd.blank { color: var(--bad); }
+    dl.facts dd.blank span { display: inline-block; min-width: 110px; border-bottom: 1px solid var(--bad); }
+    .side > .card + .card { margin-top: 18px; }
+    .side .card { padding: 18px 24px; }
+    .change p { font-size: 13px; color: var(--mute); margin: 8px 0 12px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    caption { text-align: left; font-weight: bold; font-size: 15px; padding-bottom: 12px; }
+    th { text-align: left; font-weight: normal; color: var(--mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--rule); padding: 6px 8px 6px 0; }
+    td { border-bottom: 1px solid #EEF0F2; padding: 8px 8px 8px 0; vertical-align: top; }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+    td .tag { font-size: 11px; padding: 1px 6px; border-radius: 2px; background: #E6F2EA; color: var(--ok); white-space: nowrap; }
+    td .tag.loose { background: #FBE9E7; color: var(--bad); }
+    .contents { padding: 18px 24px; margin-top: 18px; overflow-x: auto; }
+
+    footer { max-width: 1120px; margin: 0 auto; padding: 0 20px 90px; font-size: 11px; color: var(--mute); }
+    footer p + p { margin-top: 6px; }
+
+    .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1F2328; color: #E6E8EB; font-size: 13px; z-index: 5; }
+    .cookie .in { max-width: 1120px; margin: 0 auto; padding: 14px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .cookie p { flex: 1 1 360px; }
+    .cookie[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="in">
+      <div class="brand"><i aria-hidden="true"></i>OVERLAND FINE ART</div>
+      <nav aria-label="carrier">
+        <span>Ship</span><span aria-current="page">Track</span><span>Locations</span><span>Claims</span><span>Support</span>
+      </nav>
+      <span class="sign">Sign in</span>
+    </div>
+  </header>
+
+  <div class="alert done" role="status">
+    <div class="in"><b>Delivered.</b> <span>Address information was added by hand at the point of delivery. We could not verify it. Signature accepted.</span></div>
+  </div>
+
+  <main>
+    <h1>Track your shipment</h1>
+    <form class="search" id="search">
+      <label for="wb" style="position:absolute;left:-9999px">Waybill number</label>
+      <input id="wb" value="MS 107 0009 2810" spellcheck="false" autocomplete="off">
+      <button type="submit">Track</button>
+    </form>
+
+    <section class="card status" aria-labelledby="st">
+      <div class="row">
+        <div>
+          <div class="k">Waybill MS 107 0009 2810 · 9 pieces</div>
+          <div class="big" id="st" style="color:var(--ok)">Delivered</div>
+          <div class="sub" id="where">Picked up from the strike, session 107.</div>
+        </div>
+        <div class="eta">
+          <div class="k">Delivered on</div>
+          <div class="big" id="eta">Fri, Oct 30</div>
+          <div class="sub">3:55 AM, left with a person in pink</div>
+        </div>
+      </div>
+      <ol class="steps" id="steps">
+        <li class="done">Label created<small>Oct 28</small></li>
+        <li class="done">Picked up<small>Oct 28</small></li>
+        <li class="done">In transit<small id="legs">&nbsp;</small></li>
+        <li class="done">Out for delivery<small>Oct 30</small></li>
+        <li class="now">Delivered<small>Oct 30</small></li>
+      </ol>
+    </section>
+
+    <section class="card route" aria-label="route">
+      <h2>Route <span style="font-weight:normal;color:var(--mute);font-size:12px" id="updated"></span></h2>
+      <div class="strip" id="strip" aria-hidden="true"></div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="th">
+        <h2 id="th">Travel history</h2>
+        <ol class="hist" id="hist"><li class="ev"><time>Oct 28</time><div><b>Picked up</b><div class="where">Gallery dock, match-spark.xyz</div></div></li></ol>
+        <button class="btn ghost more" id="more" hidden>Show full history</button>
+      </section>
+
+      <div class="side">
+        <section class="card" aria-labelledby="sf">
+          <h2 id="sf">Shipment facts</h2>
+          <dl class="facts">
+            <dt>Service</dt><dd>White glove, climate controlled</dd>
+            <dt>Pieces</dt><dd>9</dd>
+            <dt>Packaging</dt><dd id="pack">1 plywood crate</dd>
+            <dt>Declared weight</dt><dd>{{ weights.total.toLocaleString("en-US") }} words</dd>
+            <dt>Shipper</dt><dd>match</dd>
+            <dt>Origin</dt><dd>Gallery dock</dd>
+            <dt>Consignee</dt><dd class="pink">me!!!</dd>
+            <dt>Delivery address</dt><dd class="pink"><a href="/" style="color:inherit">the roll-a-rama, flagstaff</a></dd>
+            <dt>Reference</dt><dd>strike, session 107</dd>
+            <dt>Signature</dt><dd class="pink">match ♡</dd>
+          </dl>
+        </section>
+        <section class="card change" aria-labelledby="ch">
+          <h2 id="ch">Change delivery</h2>
+          <p>This shipment has been delivered and can no longer be changed. Shipper and consignee appear to be the same party. We have no process for this.</p>
+          <button class="btn" disabled>Add delivery address</button>
+        </section>
+      </div>
+    </div>
+
+    <section class="card contents">
+      <table>
+        <caption>Contents</caption>
+        <thead><tr><th>Pc</th><th>Description</th><th class="n">Weight</th><th>Packed</th><th></th></tr></thead>
+        <tbody>
+          {% for r in weights.rooms %}<tr data-id="{{ r.id }}">
+            <td>{{ loop.index }}/9</td>
+            <td>{{ r.name }}</td>
+            <td class="n">{{ r.w.toLocaleString("en-US") }} words</td>
+            <td class="packed"><span class="tag">crated</span></td>
+            <td><a href="{{ r.href }}">View item</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Times are local to each facility. Our driver reports that the consignee made him stay for one song.</p>
+    <p>Live chat: no agents available. © Overland Fine Art.</p>
+  </footer>
+
+  <div class="cookie" id="cookie" hidden>
+    <div class="in">
+      <p id="cookie-text">This site uses local storage.</p>
+      <button class="btn" id="ok1">Accept</button>
+      <button class="btn ghost" id="ok2">Accept all</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const ROOMS = {{ weights.rooms | dump | safe }};
+  const hash = (s) => { let h = 2166136261; for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; };
+  const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) ^ Math.imul(seed ^ (seed >>> 13), 3266489909)) >>> 0) / 4294967296;
+  const HOUR = 3600e3;
+
+  // ── what you left it as. the strike remembered you (session 107) ──
+  let strike = null;
+  try { strike = JSON.parse(localStorage.getItem('match-spark:strike') || 'null'); } catch (e) {}
+  const yours = strike ? ROOMS.filter((r) => strike[r.id] && strike[r.id].p).length : 0;
+  const loose = strike ? ROOMS.filter((r) => !(strike[r.id] && strike[r.id].p)) : [];
+  for (const tr of document.querySelectorAll('tbody tr')) {
+    const td = tr.querySelector('.packed');
+    if (!strike) td.innerHTML = '<span class="tag">crated by crew</span>';
+    else if (strike[tr.dataset.id] && strike[tr.dataset.id].p) td.innerHTML = '<span class="tag">crated by you</span>';
+    else td.innerHTML = '<span class="tag loose">loose, in blanket</span>';
+  }
+  document.getElementById('pack').textContent = loose.length
+    ? '1 plywood crate, ' + loose.length + ' loose in moving blanket'
+    : '1 plywood crate, lid screwed';
+
+  // ── the road. it was never told where to stop, so it goes round ──
+  const TOWNS = ['Amarillo TX','Tucumcari NM','Albuquerque NM','Gallup NM','Flagstaff AZ','Kingman AZ','Barstow CA','Bakersfield CA',
+    'Stockton CA','Redding CA','Medford OR','Eugene OR','Portland OR','Pendleton OR','Boise ID','Twin Falls ID','Ogden UT',
+    'Rock Springs WY','Cheyenne WY','North Platte NE','Lincoln NE','Des Moines IA','Davenport IA','Joliet IL','Gary IN',
+    'Toledo OH','Erie PA','Albany NY','Scranton PA','Harrisburg PA','Roanoke VA','Knoxville TN','Chattanooga TN',
+    'Birmingham AL','Meridian MS','Shreveport LA','Texarkana AR','Wichita Falls TX'];
+  const T0 = Date.parse('2026-10-28T03:08:36-05:00');
+  // it stopped here. flagstaff was the fifth leg and the truck got in at 3:37
+  const DONE = 4, T_END = (() => { let t = T0 + 5.5 * HOUR; for (let i = 0; i < DONE; i++) { const r = rng(hash('leg:' + i)); t += (3 + r() * 6) * HOUR + (1.2 + r() * 5) * HOUR; } const r = rng(hash('leg:' + DONE)); return t + (3 + r() * 6) * HOUR + 0.3 * HOUR; })();
+  const clock = () => Math.min(Date.now(), T_END);
+
+  const NOTES = [
+    'crate rings a little on the turns. checked straps. all tight.',
+    'something in there goes clack when we brake. one short clack.',
+    'consignee field still blank. dispatch says keep going.',
+    'ran the heater overnight per climate service. crate is warm to the touch.',
+    'a ringing like somebody tapped a glass, about 3am. pulled into the rest area. did not open it.',
+    'dispatch asked what is in it. manifest says words.',
+    'weighed at the scale house. scale read in words. waved through.',
+    'the log is lighter than it was at pickup. nobody has opened it.',
+    'piece 8 says outside on the tape. it is inside.',
+    'somebody wrote THIS SIDE TO WALL on the inside of the trailer door. it wasn’t me.',
+    'nobody has called about this one.',
+    'drove past a gallery. didn’t stop. no instructions.',
+    'quiet run. crate quiet.',
+    'the shipper’s phone number goes to a page with no words on it.',
+    'kept the lights on in the trailer. don’t know why.'
+  ];
+  if (loose.length) NOTES.push(
+    'loose pieces in the blanket shifted on the grade. restrapped them.',
+    'the blanket ones are colourful. the crated ones you can’t see.');
+  else NOTES.push('lid screwed down tight. nine declared, nine aboard.');
+
+  // every leg is decided by its number, so everyone sees the same truck
+  const legs = [];
+  function legsUntil(now) {
+    let t = legs.length ? legs[legs.length - 1].leave : T0 + 5.5 * HOUR;
+    while (t <= now + 2 * 24 * HOUR) {
+      const i = legs.length, r = rng(hash('leg:' + i));
+      const from = i ? TOWNS[(i - 1) % TOWNS.length] : 'Gallery dock';
+      const to = TOWNS[i % TOWNS.length];
+      const drive = (3 + r() * 6) * HOUR, dwell = (1.2 + r() * 5) * HOUR;
+      const leg = { i, from, to, depart: t, arrive: t + drive, leave: t + drive + dwell,
+        attempt: r() < 0.45, held: r() < 0.25, note: r() < 0.4 ? NOTES[Math.floor(r() * NOTES.length)] : null, noteAt: r() };
+      legs.push(leg);
+      t = leg.leave;
+    }
+  }
+
+  function events(now) {
+    legsUntil(now);
+    const ev = [
+      { t: T0, b: 'Shipment information received', w: 'Gallery dock, match-spark.xyz' },
+      { t: T0 + 2.2 * HOUR, b: 'Picked up', w: 'Gallery dock, match-spark.xyz' }
+    ];
+    for (const l of legs) {
+      if (l.depart > now) break;
+      ev.push({ t: l.depart, b: l.i ? 'Departed facility' : 'Departed origin', w: l.from });
+      if (l.note) {
+        const nt = l.depart + (l.arrive - l.depart) * (0.2 + 0.6 * l.noteAt);
+        if (nt <= now) ev.push({ t: nt, b: 'Driver note', w: 'In transit to ' + l.to, note: l.note });
+      }
+      if (l.arrive > now) break;
+      ev.push({ t: l.arrive, b: 'Arrived at facility', w: l.to });
+      if (l.i === DONE) {
+        ev.push({ t: l.arrive + 0.1 * HOUR, b: 'Out for delivery', w: l.to });
+        ev.push({ t: l.arrive + 0.2 * HOUR, b: 'Driver note', w: l.to, note: 'someone came out to the dock with a pink marker and wrote on the waybill. i said it isn\u2019t supposed to work like that. music coming through the wall.' });
+        if (now >= T_END) ev.push({ t: T_END, b: 'Delivered. Signed for by: match', w: 'The Roll-A-Rama, Flagstaff AZ', ok: 1 });
+        break;
+      }
+      const a = l.arrive + 0.6 * HOUR;
+      if (l.attempt && a <= now) ev.push({ t: a, b: 'Delivery exception: consignee not on file', w: l.to, x: 1 });
+      if (l.held && l.arrive + 0.9 * HOUR <= now) ev.push({ t: l.arrive + 0.9 * HOUR, b: 'Held. Awaiting instructions from shipper', w: l.to, x: 1 });
+      if (l.leave <= now) ev.push({ t: l.leave - 0.2 * HOUR, b: 'Forwarded to next facility', w: l.to });
+    }
+    return ev.sort((a, b) => b.t - a.t);
+  }
+
+  const fmtDay = (t) => new Date(t).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const fmtTime = (t) => new Date(t).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const ago = (ms) => { const m = Math.round(ms / 60e3); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : Math.floor(m / 60) + ' hr ' + (m % 60) + ' min ago'; };
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  const hist = document.getElementById('hist'), more = document.getElementById('more');
+  let full = false, seen = 0, lastScan = T0;
+  function renderHistory(now, fresh) {
+    const ev = events(now);
+    lastScan = ev[0].t;
+    const shown = full ? ev : ev.slice(0, 14);
+    let day = '', html = '';
+    shown.forEach((e, k) => {
+      const d = fmtDay(e.t);
+      if (d !== day) { html += '<li class="day">' + d + '</li>'; day = d; }
+      html += '<li class="ev' + (e.x ? ' x' : '') + (e.ok ? ' ok' : '') + (fresh && k < ev.length - seen ? ' new' : '') + '"><time>' + fmtTime(e.t) + '</time><div><b>' + esc(e.b) + '</b><div class="where">' + esc(e.w) + '</div>' +
+        (e.note ? '<div class="note">“' + esc(e.note) + '”</div>' : '') + '</div></li>';
+    });
+    hist.innerHTML = html;
+    more.hidden = ev.length <= 14;
+    more.textContent = full ? 'Show recent' : 'Show full history (' + ev.length + ' events)';
+    seen = ev.length;
+  }
+  more.addEventListener('click', () => { full = !full; renderHistory(clock()); });
+
+  // ── where the truck is right now ──
+  const TRUCK = '<svg class="truck" viewBox="0 0 30 18" aria-hidden="true"><rect x="0" y="1" width="20" height="12" rx="1" fill="#0F2747"/><path d="M20 5h5l4 4v4h-9z" fill="#0F2747"/><circle cx="6" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/><circle cx="24" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/></svg>';
+  function renderNow(now) {
+    legsUntil(now);
+    const l = legs[DONE];
+    document.getElementById('where').textContent = 'Delivered to the Roll-A-Rama, Flagstaff AZ. Signed for by match.';
+    document.getElementById('legs').textContent = (DONE + 1) + ' facilities';
+    document.getElementById('updated').textContent = '· last scan Oct 30, 3:55 AM. There will not be another one.';
+    // the strip: everywhere it went, and it isn't going anywhere else
+    const stops = [{ name: 'Gallery dock', past: true }];
+    for (let j = 0; j <= DONE; j++) stops.push({ name: legs[j].to, past: true, near: j === DONE || j === 0 });
+    const n = stops.length - 1, pos = (i) => (4 + i * (92 / n));
+    let h = '<div class="line"></div><div class="gone" style="width:96%"></div>';
+    stops.forEach((s, i) => { h += '<div class="stop past' + (s.near ? ' near' : '') + '" style="left:' + pos(i) + '%"><span>' + esc(s.name) + '</span></div>'; });
+    document.getElementById('strip').innerHTML = h + TRUCK.replace('class="truck"', 'class="truck" style="left:' + pos(n) + '%"');
+  }
+
+  function tick(fresh) { const now = T_END; renderHistory(now, fresh); renderNow(now); }
+  tick(false);
+
+  // you can look it up again. it's still there. it's staying.
+  document.getElementById('search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('wb').value = 'MS 107 0009 2810';
+    tick(false);
+  });
+
+  // ── the one thing on this page you can do ──
+  const cookie = document.getElementById('cookie');
+  let ok = false;
+  try { ok = !!localStorage.getItem('match-spark:transit-ok'); } catch (e) {}
+  if (!ok) {
+    const t = !strike ? 'This site uses local storage. It has nothing on you. You never touched the blanket, so the crew packed everything.'
+      : yours === 9 ? 'This site uses local storage. It says you packed all nine pieces yourself and screwed the lid on. Thank you for your care.'
+      : 'This site uses local storage. It says you packed ' + yours + ' of 9 pieces yourself and left ' + loose.length + ' on the blanket. They went as they were.';
+    document.getElementById('cookie-text').textContent = t;
+    cookie.hidden = false;
+    const go = () => { cookie.hidden = true; try { localStorage.setItem('match-spark:transit-ok', '1'); } catch (e) {} };
+    document.getElementById('ok1').addEventListener('click', go);
+    document.getElementById('ok2').addEventListener('click', go);
+  }
+})();
+</script>
+</body>
+</html>

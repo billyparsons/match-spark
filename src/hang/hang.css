@@ -4,17 +4,20 @@
 
    struck (session 107): the lamp's off. the work lights are on, straight
    overhead and cold, and the panel is off its wire, standing on the floor
-   with its top resting back against the plaster. */
+   with its top resting back against the plaster.
+
+   delivered (session 109): the plaster's gone. it's leaning against the
+   wall of a rink, and that wall has carpet up it, and the lights are UV. */
 
 html[data-hung] {
   --gut: clamp(16px, 6vw, 104px);
   --top: clamp(64px, 11vh, 120px);
   --foot: clamp(72px, 14vh, 160px);
   background:
-    radial-gradient(ellipse 70% 40% at 50% -6%, #F4F8FC 0%, transparent 70%),
-    radial-gradient(ellipse 120% 70% at 50% 120%, rgba(60,66,78,0.22) 0%, transparent 60%),
-    linear-gradient(180deg, transparent 0 calc(100% - 3px), rgba(40,44,52,0.25) calc(100% - 3px)),
-    #D6D8D6 !important;
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(255,43,214,0.28) 0%, transparent 70%),
+    linear-gradient(rgba(11,5,34,0.28), rgba(11,5,34,0.28)),
+    url(/hang/carpet.svg) 0 0 / 420px,
+    #0B0522 !important;
   background-attachment: fixed !important;
   overflow-x: hidden !important;
   height: auto !important;
@@ -25,6 +28,7 @@ html[data-hung] > body {
   position: relative !important;
   margin: var(--top) var(--gut) var(--foot) !important;
   min-height: calc(100vh - var(--top) - var(--foot)) !important;
+  z-index: 1 !important;
   transform-origin: 50% 0 !important;
   /* session 106: it was hung facing the wall. --turn is 180deg until you
      turn it round, and --face is -1 while you're looking at its back, so
@@ -35,8 +39,8 @@ html[data-hung] > body {
      plaster, falling down and right, away from the lamp */
   box-shadow:
     calc((3px + var(--lean, 0px)) * var(--face, 1)) 4px 0 0 var(--paint, #161412),
-    calc(var(--lean, 0px) * var(--face, 1)) 30px 30px -10px rgba(30, 36, 48, 0.34),
-    0 6px 8px rgba(30, 36, 48, 0.2) !important;
+    calc(var(--lean, 0px) * var(--face, 1)) 30px 40px -8px rgba(0, 0, 0, 0.75),
+    0 0 40px rgba(255, 43, 214, 0.35) !important;
 }
 
 /* outside was a whole sky. hung, it's a painting of one */
@@ -56,8 +60,8 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
   top: calc(var(--top) - 30px);
   margin-left: -6px;
   /* cut at the ceiling, so all that's left is the end curling over */
-  border: var(--wire, 1.2px) solid #1d1a17;
-  border-color: #1d1a17 #1d1a17 transparent transparent;
+  border: var(--wire, 1.2px) solid #FF7BE6;
+  border-color: #FF7BE6 #FF7BE6 transparent transparent;
   border-radius: 50% 60% 40% 50%;
   transform: rotate(-24deg);
   z-index: 2147483000;
@@ -71,7 +75,7 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
   top: 30%;
   width: 6px;
   height: 2px;
-  background: #1d1a17;
+  background: #FF7BE6;
   transform: rotate(40deg);
 }
 .hang-hook {
@@ -85,7 +89,7 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
   cursor: grab;
 }
 .hang-hook:focus-visible {
-  outline: 1px dashed #1d1a17;
+  outline: 1px dashed #FFFFFF;
   outline-offset: 2px;
 }
 .hang-label {
@@ -192,4 +196,42 @@ html[data-hung].hang-faced .hang-back { opacity: 0; pointer-events: none; visibi
 .hang-back .waybill span { display: block; }
 .hang-back .waybill span:last-child { margin-top: 4px; padding: 2px 4px; background: #111; color: #fff; font-weight: bold; text-align: center; }
 .hang-back .waybill u { display: inline-block; width: 120px; border-bottom: 1px solid #111; vertical-align: -2px; }
-@media (max-width: 600px) { .hang-back .waybill { top: 280px; left: 24px; width: 190px; } }
+@media (max-width: 600px) {
+  .hang-back .waybill { top: 280px; left: 24px; width: 190px; }
+  /* the label takes the whole top of a phone, so the sticker goes under it */
+  .hang-back .wall { top: 262px; left: auto; right: 22px; }
+  .hang-back .pencil { top: 440px; right: 16%; }
+}
+
+/* delivered (session 109): the waybill got filled in, by hand, in pink */
+.hang-back .waybill u { font: 700 16px/1 'Caveat', 'Comic Sans MS', cursive; color: #E8197A; text-decoration: none; border-bottom-color: #E8197A; width: auto; letter-spacing: 0; }
+.hang-back .waybill span:last-child { background: #2E7D4F; }
+.hang-back .marker {
+  top: 420px; left: 14%;
+  max-width: 340px;
+  color: #FF2BD6;
+  font: 700 clamp(24px, 3vw, 34px)/1.05 'Caveat', 'Comic Sans MS', cursive, 'Noto Color Emoji';
+  text-shadow: 0 0 10px rgba(255, 43, 214, 0.5);
+  transform: scaleX(-1) rotate(-4deg);
+}
+
+@media (max-width: 600px) { .hang-back .marker { top: 590px; left: 13%; right: 13%; max-width: none; font-size: 24px; } }
+
+/* the ball's dots, going by on the wall behind the panel. and in front of
+   the back of it, since brown paper doesn't mind */
+.hang-dots, .hang-back::after {
+  content: "";
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(255,43,214,0.65) 0 18px, transparent 26px),
+    radial-gradient(circle at 34% 72%, rgba(25,240,255,0.6) 0 14px, transparent 22px),
+    radial-gradient(circle at 56% 34%, rgba(246,255,46,0.5) 0 12px, transparent 20px),
+    radial-gradient(circle at 78% 62%, rgba(255,255,255,0.45) 0 16px, transparent 24px),
+    radial-gradient(circle at 90% 12%, rgba(182,156,255,0.6) 0 12px, transparent 20px);
+  background-size: 760px 620px;
+  animation: hang-ball 26s linear infinite;
+}
+.hang-dots { position: fixed; inset: 0; z-index: 0; }
+.hang-back::after { position: absolute; inset: 0; mix-blend-mode: screen; opacity: 0.55; transform: none; }
+@keyframes hang-ball { to { background-position: 760px 620px; } }
+@media (prefers-reduced-motion: reduce) { .hang-dots, .hang-back::after { animation: none; } }

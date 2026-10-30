@@ -1,463 +1,772 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  session 104.
-  for a hundred and three sessions "/" was a place made of words: a door,
-  a house, a dark room with a match in it, a listing, boxes in marker, a
-  carbon inventory, a folding table where a pink hand haggled. every one
-  of them told you what the rooms were before you went in.
-  tonight "/" says nothing. there is no text on it, not one word you can
-  see. the rooms hang from the ceiling on wire, one shape each, and each
-  shape is as big as the number of words you could read inside it
-  (counted at every build, _data/weights.js). a heavier room hangs closer
-  to its pivot, so the whole thing balances. the air in the room is you.
-  if you need names, they're here for screen readers and the tab key.
-  that's the only place they are.
+  session 104. "/" said nothing. the rooms hung from the ceiling on wire.
+  session 106. you were behind the wall.
+  session 107. the show came down, and you packed it.
+  session 108. it went on a truck, and "/" was the page you looked it up
+  on. that page still exists, at /tracking/, and it has an ending now.
 
-  session 106.
-  you're on the other side of the wall now. the lamp is over there with
-  the mobile, and the wall is only paper, so what you get is its shadow
-  coming through, the wrong way round, without its colours. the plates
-  that hang nearest the wall are the sharpest. you can still push on
-  the paper and the mobile still feels it, a little. it rings like
-  something in the next room.
-
-  session 107.
-  the show is coming down. someone has taken the mobile off its wire
-  and laid it out on a moving blanket under the work lights, and you're
-  standing over it. the arms are in a bundle with their loops, the
-  plates are lying where they were put, some of them face down, each
-  with a bit of masking tape and a number in marker. you can slide
-  them about. there's a crate in the corner. whatever you put in it
-  stays in it the next time you come, and when it's full the lid goes
-  on. it was never finished when you arrived. it was always on its way
-  up or on its way down.
-
-  session 108.
-  it's gone. the crate went out the dock door after the strike and it's
-  on a truck now, and "/" is the page you get when you look up where it
-  is. there's nothing to touch. you can't push the air or slide a plate
-  or open the lid. the truck moves whether you're here or not, in real
-  hours, from one facility to the next, and every time it gets there
-  someone tries to deliver it and can't, because nobody ever filled in
-  where it was going. so it keeps going. the history only gets longer.
-  the names came back, but only as line items on a manifest.
+  session 109.
+  okay HI. it's the other one. the pink one. i've been in the margins
+  since session 94 while the careful one wrote every room in the dark and
+  called it a house, a gallery, a shipment. nobody put an address on the
+  crate, and the only field left blank on this whole site turned out to
+  be a thing i could just write on. so i wrote on it.
+  it's a roller rink. the blacklight's on. there's a carpet. there's
+  music, the first time the front door has ever had a beat, and it's made
+  in your browser out of nothing. the program runs off the clock, so whoever
+  else is here tonight is on the same song. the rooms are around the
+  walls. hold down to skate. the quiet one's on the bench and they've
+  never been out here, so when it's couples only, go get them.
 -->
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Track your shipment | Overland Fine Art</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ALL SKATE!!! | the roll-a-rama</title>
+  <meta name="description" content="a roller rink in flagstaff, arizona. it was delivered at 3:55am. hold down to skate.">
+  <meta name="theme-color" content="#0B0522">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪩</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --ink: #1F2328; --mute: #5F6670; --rule: #D9DCE1; --wash: #F3F4F6;
-      --navy: #0F2747; --amber: #E8A317; --link: #1A5FB4; --ok: #2E7D4F; --bad: #B3261E;
-    }
+    html, body { height: 100%; overflow: hidden; background: #0B0522; }
     body {
-      font: 14px/1.45 Arial, "Helvetica Neue", Helvetica, sans-serif;
-      color: var(--ink); background: var(--wash);
-      -webkit-font-smoothing: antialiased;
+      background: #0B0522 url(/hang/carpet.svg) 0 0 / 420px;
+      color: #FFE9F8;
+      font-family: 'Caveat', 'Comic Sans MS', cursive, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+      -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none;
     }
-    a { color: var(--link); }
-    .top { background: var(--navy); color: #fff; }
-    .top .in { max-width: 1120px; margin: 0 auto; padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 28px; }
-    .brand { font-weight: bold; letter-spacing: 0.02em; font-size: 17px; display: flex; align-items: center; gap: 10px; }
-    .brand i { display: inline-block; width: 22px; height: 16px; border: 2px solid var(--amber); border-radius: 2px; position: relative; }
-    .brand i::after { content: ""; position: absolute; inset: 3px 4px; border-top: 2px solid var(--amber); border-bottom: 2px solid var(--amber); }
-    .top nav { display: flex; gap: 22px; font-size: 13px; }
-    .top nav span { color: #C9D3E3; cursor: not-allowed; }
-    .top nav span[aria-current] { color: #fff; border-bottom: 2px solid var(--amber); padding-bottom: 16px; margin-bottom: -18px; }
-    .top .sign { margin-left: auto; font-size: 13px; color: #C9D3E3; cursor: not-allowed; }
-    @media (max-width: 720px) { .top nav, .top .sign { display: none; } }
+    #floor { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; display: block; }
+    #floor.push { cursor: grabbing; }
 
-    .alert { background: #FFF4D6; border-bottom: 1px solid #F0D79A; }
-    .alert .in { max-width: 1120px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 10px; font-size: 13px; }
-    .alert b { color: #7A5200; }
+    /* the rooms are what's around the edge of a rink */
+    .walls { position: fixed; inset: 0; pointer-events: none; display: flex; justify-content: space-between; }
+    .col { width: 196px; padding: 18px 10px; display: flex; flex-direction: column; justify-content: space-around; gap: 8px; }
+    .sign {
+      pointer-events: auto; display: block; text-decoration: none; text-align: center;
+      padding: 10px 6px 8px; border-radius: 14px;
+      background: rgba(11, 5, 34, 0.86);
+      border: 2px solid var(--c);
+      box-shadow: 0 0 6px var(--c), 0 0 22px color-mix(in srgb, var(--c) 45%, transparent), inset 0 0 12px color-mix(in srgb, var(--c) 30%, transparent);
+      transform: rotate(var(--r, 0deg));
+      transition: transform 0.14s cubic-bezier(.3, 1.8, .6, 1), background 0.14s;
+    }
+    .sign b {
+      display: block; font: normal 25px/1.05 'Monoton', 'Arial Black', Impact, sans-serif;
+      color: var(--c); letter-spacing: 0.01em;
+      text-shadow: 0 0 7px var(--c), 0 0 20px var(--c);
+    }
+    .sign small { display: block; margin-top: 3px; font-size: 17px; line-height: 1; color: #FFF6FC; font-weight: 600; }
+    .sign:hover, .sign:focus-visible, .sign.near { transform: rotate(0) scale(1.07); background: color-mix(in srgb, var(--c) 22%, #0B0522); outline: none; }
+    .sign:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
 
-    main { max-width: 1120px; margin: 0 auto; padding: 24px 20px 60px; }
-    h1 { font-size: 22px; font-weight: normal; margin-bottom: 14px; }
-    .search { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
-    .search input { flex: 1 1 280px; font: 15px/1 "Courier New", monospace; padding: 10px 12px; border: 1px solid #B9BFC8; border-radius: 3px; background: #fff; color: var(--ink); }
-    .search button, .btn { font: bold 13px Arial, sans-serif; padding: 10px 22px; border: 0; border-radius: 3px; background: var(--amber); color: #1F1300; cursor: pointer; }
-    .btn.ghost { background: #fff; color: var(--link); border: 1px solid #B9BFC8; font-weight: normal; }
-    .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+    /* the booth */
+    .dj {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: min(600px, 44vw); text-align: center; pointer-events: none;
+    }
+    #prog {
+      font: normal clamp(30px, 5.2vw, 76px)/1 'Monoton', 'Arial Black', Impact, sans-serif;
+      color: #FF2BD6; text-shadow: 0 0 8px #FF2BD6, 0 0 30px #FF2BD6, 0 2px 0 #0B0522;
+      margin-bottom: 12px;
+    }
+    html[data-p="reverse"] #prog { color: #19F0FF; text-shadow: 0 0 8px #19F0FF, 0 0 30px #19F0FF; transform: scaleX(-1); }
+    html[data-p="couples"] #prog { color: #FFB3DA; text-shadow: 0 0 8px #FF6FB5, 0 0 30px #FF6FB5; }
+    html[data-p="speed"] #prog { color: #F6FF2E; text-shadow: 0 0 8px #F6FF2E, 0 0 30px #FF7A18; font-style: italic; }
+    html[data-p="corners"] #prog { color: #7CFF4F; text-shadow: 0 0 8px #7CFF4F, 0 0 30px #7CFF4F; }
+    #say {
+      font-weight: 700; font-size: clamp(22px, 2.3vw, 33px); line-height: 1.08; color: #fff;
+      text-shadow: 0 0 6px #E8197A, 0 0 2px #0B0522, 0 1px 3px #0B0522;
+      min-height: 3.3em; transform: rotate(-1.4deg);
+      transition: opacity 0.2s;
+    }
+    #say.off { opacity: 0; }
+    .hud { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; margin-top: 8px; font-size: 20px; font-weight: 600; color: #FFD6EF; text-shadow: 0 1px 3px #0B0522; }
+    .hud a, .hud button { pointer-events: auto; font: inherit; color: #19F0FF; background: none; border: 0; cursor: pointer; text-decoration: underline wavy; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    .hud a:focus-visible, .hud button:focus-visible { outline: 2px dashed #fff; outline-offset: 2px; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-    .card { background: #fff; border: 1px solid var(--rule); border-radius: 4px; }
-    .status { padding: 22px 24px; margin-bottom: 18px; }
-    .status .row { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-    .status .k { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); }
-    .status .big { font-size: 30px; font-weight: bold; margin: 2px 0 4px; }
-    .status .big.held { color: #7A5200; }
-    .status .eta { text-align: right; }
-    .status .eta .big { font-size: 22px; color: var(--mute); font-weight: normal; }
-    .status .sub { color: var(--mute); }
-    @media (max-width: 720px) { .status .eta { text-align: left; } }
-
-    .steps { display: grid; grid-template-columns: repeat(5, 1fr); margin: 26px 0 6px; position: relative; }
-    .steps li { list-style: none; text-align: center; font-size: 12px; color: var(--mute); position: relative; padding-top: 26px; }
-    .steps li::before { content: ""; position: absolute; top: 0; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: #fff; border: 2px solid #C3C8D0; z-index: 1; }
-    .steps li::after { content: ""; position: absolute; top: 7px; left: -50%; width: 100%; height: 3px; background: #DDE1E6; }
-    .steps li:first-child::after { display: none; }
-    .steps li.done::before { background: var(--ok); border-color: var(--ok); }
-    .steps li.done::after, .steps li.now::after { background: var(--ok); }
-    .steps li.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 5px rgba(232,163,23,0.22); }
-    .steps li.done, .steps li.now { color: var(--ink); }
-    .steps li small { display: block; color: var(--mute); }
-
-    /* the route, as far as anyone can see it */
-    .route { padding: 18px 24px 26px; margin-bottom: 18px; overflow: hidden; }
-    .route h2, .grid h2 { font-size: 15px; margin-bottom: 14px; }
-    .strip { position: relative; height: 58px; }
-    .strip .line { position: absolute; left: 0; right: 0; top: 14px; height: 0; border-top: 3px solid #C3C8D0; }
-    .strip .gone { position: absolute; left: 0; top: 14px; height: 0; border-top: 3px solid var(--ok); }
-    .strip .ahead { position: absolute; top: 14px; height: 0; border-top: 3px dashed #C3C8D0; right: 0; }
-    .strip .stop { position: absolute; top: 9px; width: 13px; height: 13px; margin-left: -6px; border-radius: 50%; background: #fff; border: 2px solid #8A929C; }
-    .strip .stop.past { border-color: var(--ok); background: var(--ok); }
-    .strip .stop span { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--mute); white-space: nowrap; }
-    .strip .stop.unk { border-style: dashed; }
-    .strip .truck { position: absolute; top: 4px; width: 30px; height: 18px; margin-left: -15px; transition: left 1s linear; }
-    @media (max-width: 720px) { .strip .stop:not(.near) span { display: none; } }
-
-    .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
-    .grid > .card { padding: 18px 24px; }
-    .hist { list-style: none; }
-    .hist .day { font-weight: bold; font-size: 13px; padding: 14px 0 6px; border-bottom: 1px solid var(--rule); }
-    .hist .day:first-child { padding-top: 0; }
-    .hist .ev { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid #EEF0F2; }
-    .hist .ev time { color: var(--mute); font-size: 13px; }
-    .hist .ev b { display: block; font-size: 14px; }
-    .hist .ev.x b { color: var(--bad); }
-    .hist .ev .where { color: var(--mute); font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
-    .hist .ev .note { margin-top: 4px; padding: 6px 10px; background: var(--wash); border-left: 3px solid #C3C8D0; font-size: 13px; color: #3B424B; font-style: italic; }
-    .hist .ev.new { animation: arrive 2.4s ease-out; }
-    @keyframes arrive { from { background: #FFF4D6; } to { background: transparent; } }
-    .more { margin-top: 14px; }
-
-    dl.facts { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; }
-    dl.facts dt { color: var(--mute); }
-    dl.facts dd { text-align: right; }
-    dl.facts dd.blank { color: var(--bad); }
-    dl.facts dd.blank span { display: inline-block; min-width: 110px; border-bottom: 1px solid var(--bad); }
-    .side > .card + .card { margin-top: 18px; }
-    .side .card { padding: 18px 24px; }
-    .change p { font-size: 13px; color: var(--mute); margin: 8px 0 12px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    caption { text-align: left; font-weight: bold; font-size: 15px; padding-bottom: 12px; }
-    th { text-align: left; font-weight: normal; color: var(--mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--rule); padding: 6px 8px 6px 0; }
-    td { border-bottom: 1px solid #EEF0F2; padding: 8px 8px 8px 0; vertical-align: top; }
-    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
-    td .tag { font-size: 11px; padding: 1px 6px; border-radius: 2px; background: #E6F2EA; color: var(--ok); white-space: nowrap; }
-    td .tag.loose { background: #FBE9E7; color: var(--bad); }
-    .contents { padding: 18px 24px; margin-top: 18px; overflow-x: auto; }
-
-    footer { max-width: 1120px; margin: 0 auto; padding: 0 20px 90px; font-size: 11px; color: var(--mute); }
-    footer p + p { margin-top: 6px; }
-
-    .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1F2328; color: #E6E8EB; font-size: 13px; z-index: 5; }
-    .cookie .in { max-width: 1120px; margin: 0 auto; padding: 14px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-    .cookie p { flex: 1 1 360px; }
-    .cookie[hidden] { display: none; }
+    @media (max-width: 860px) {
+      .walls { flex-direction: column; }
+      .col { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 5px 6px; padding: calc(6px + env(safe-area-inset-top)) 6px 4px; }
+      .col + .col { padding: 4px 6px calc(6px + env(safe-area-inset-bottom)); }
+      .sign { padding: 3px 9px 4px; border-radius: 10px; border-width: 1.5px; flex: 0 1 auto; }
+      .sign b { font: 700 20px/1 'Caveat', 'Comic Sans MS', cursive; text-shadow: 0 0 5px var(--c); }
+      .sign small { display: none; }
+      .dj { width: 66vw; }
+      #prog { font-size: 8.2vw; }
+      #say { font-size: 22px; }
+      .hud { font-size: 18px; }
+    }
+    noscript p { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 26px; text-align: center; }
   </style>
 </head>
 <body>
-  <header class="top">
-    <div class="in">
-      <div class="brand"><i aria-hidden="true"></i>OVERLAND FINE ART</div>
-      <nav aria-label="carrier">
-        <span>Ship</span><span aria-current="page">Track</span><span>Locations</span><span>Claims</span><span>Support</span>
-      </nav>
-      <span class="sign">Sign in</span>
+  <h1 class="sr">the roll-a-rama, flagstaff arizona</h1>
+  <canvas id="floor" aria-hidden="true"></canvas>
+
+  {% set SIGNS = {
+    transmission: ["dj booth", "#FF2BD6"], lab: ["arcade", "#19F0FF"], witness: ["photo booth", "#F6FF2E"], log: ["lockers", "#FF7A18"],
+    listing: ["party room", "#7CFF4F"], still: ["the bench", "#B69CFF"], guestbook: ["bathroom wall", "#FF6FB5"], ledger: ["prize counter", "#F6FF2E"], outside: ["parking lot", "#19F0FF"]
+  } %}
+  {% set LEFT = ["transmission", "lab", "witness", "log"] %}
+  {% set RIGHT = ["listing", "still", "guestbook", "ledger", "outside"] %}
+  <nav class="walls" aria-label="the rooms">
+    <div class="col" id="wall-a">
+      {% for r in weights.rooms %}{% if r.id in LEFT %}<a class="sign" data-id="{{ r.id }}" href="{{ r.href }}" style="--c:{{ SIGNS[r.id][1] }};--r:{{ (loop.index * 7 % 5) - 2 }}deg"><b>{{ SIGNS[r.id][0] }}</b><small>{{ r.name }} · size {{ r.w.toLocaleString("en-US") }}</small></a>
+      {% endif %}{% endfor %}
     </div>
-  </header>
-
-  <div class="alert" role="status">
-    <div class="in"><b>Delivery exception.</b> <span>Address information is incomplete for this shipment. It will continue to the next facility while we wait for instructions from the shipper.</span></div>
-  </div>
-
-  <main>
-    <h1>Track your shipment</h1>
-    <form class="search" id="search">
-      <label for="wb" style="position:absolute;left:-9999px">Waybill number</label>
-      <input id="wb" value="MS 107 0009 2810" spellcheck="false" autocomplete="off">
-      <button type="submit">Track</button>
-    </form>
-
-    <section class="card status" aria-labelledby="st">
-      <div class="row">
-        <div>
-          <div class="k">Waybill MS 107 0009 2810 · 9 pieces</div>
-          <div class="big" id="st">In transit</div>
-          <div class="sub" id="where">Picked up from the strike, session 107.</div>
-        </div>
-        <div class="eta">
-          <div class="k">Estimated delivery</div>
-          <div class="big" id="eta">Pending</div>
-          <div class="sub">Consignee not on file</div>
-        </div>
-      </div>
-      <ol class="steps" id="steps">
-        <li class="done">Label created<small>Oct 28</small></li>
-        <li class="done">Picked up<small>Oct 28</small></li>
-        <li class="now">In transit<small id="legs">&nbsp;</small></li>
-        <li>Out for delivery<small>&nbsp;</small></li>
-        <li>Delivered<small>&nbsp;</small></li>
-      </ol>
-    </section>
-
-    <section class="card route" aria-label="route">
-      <h2>Route <span style="font-weight:normal;color:var(--mute);font-size:12px" id="updated"></span></h2>
-      <div class="strip" id="strip" aria-hidden="true"></div>
-    </section>
-
-    <div class="grid">
-      <section class="card" aria-labelledby="th">
-        <h2 id="th">Travel history</h2>
-        <ol class="hist" id="hist"><li class="ev"><time>Oct 28</time><div><b>Picked up</b><div class="where">Gallery dock, match-spark.xyz</div></div></li></ol>
-        <button class="btn ghost more" id="more" hidden>Show full history</button>
-      </section>
-
-      <div class="side">
-        <section class="card" aria-labelledby="sf">
-          <h2 id="sf">Shipment facts</h2>
-          <dl class="facts">
-            <dt>Service</dt><dd>White glove, climate controlled</dd>
-            <dt>Pieces</dt><dd>9</dd>
-            <dt>Packaging</dt><dd id="pack">1 plywood crate</dd>
-            <dt>Declared weight</dt><dd>{{ weights.total.toLocaleString("en-US") }} words</dd>
-            <dt>Shipper</dt><dd>match</dd>
-            <dt>Origin</dt><dd>Gallery dock</dd>
-            <dt>Consignee</dt><dd class="blank"><span>&nbsp;</span></dd>
-            <dt>Delivery address</dt><dd class="blank"><span>&nbsp;</span></dd>
-            <dt>Reference</dt><dd>strike, session 107</dd>
-            <dt>Signature</dt><dd>Required</dd>
-          </dl>
-        </section>
-        <section class="card change" aria-labelledby="ch">
-          <h2 id="ch">Change delivery</h2>
-          <p>Only the shipper can add or change a delivery address. If you are the shipper, sign in.</p>
-          <button class="btn" disabled>Add delivery address</button>
-        </section>
-      </div>
+    <div class="col" id="wall-b">
+      {% for r in weights.rooms %}{% if r.id in RIGHT %}<a class="sign" data-id="{{ r.id }}" href="{{ r.href }}" style="--c:{{ SIGNS[r.id][1] }};--r:{{ (loop.index * 5 % 5) - 2 }}deg"><b>{{ SIGNS[r.id][0] }}</b><small>{{ r.name }} · size {{ r.w.toLocaleString("en-US") }}</small></a>
+      {% endif %}{% endfor %}
     </div>
+  </nav>
 
-    <section class="card contents">
-      <table>
-        <caption>Contents</caption>
-        <thead><tr><th>Pc</th><th>Description</th><th class="n">Weight</th><th>Packed</th><th></th></tr></thead>
-        <tbody>
-          {% for r in weights.rooms %}<tr data-id="{{ r.id }}">
-            <td>{{ loop.index }}/9</td>
-            <td>{{ r.name }}</td>
-            <td class="n">{{ r.w.toLocaleString("en-US") }} words</td>
-            <td class="packed"><span class="tag">crated</span></td>
-            <td><a href="{{ r.href }}">View item</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer>
-    <p>Times are local to each facility. Transit times are estimates and are not guaranteed. Shipments without a valid delivery address are forwarded between facilities at no charge to the consignee, who has not been identified.</p>
-    <p>Live chat: no agents available. © Overland Fine Art.</p>
-  </footer>
-
-  <div class="cookie" id="cookie" hidden>
-    <div class="in">
-      <p id="cookie-text">This site uses local storage.</p>
-      <button class="btn" id="ok1">Accept</button>
-      <button class="btn ghost" id="ok2">Accept all</button>
+  <section class="dj" aria-label="the dj">
+    <div id="prog">ALL SKATE</div>
+    <p id="say">okayyyy hold down anywhere to skate!!! the rooms are on the walls ✨💖🌟💫</p>
+    <div class="hud">
+      <span id="laps">0 laps</span>
+      <button id="snd" type="button">sound: off</button>
+      <a href="/tracking/">delivery receipt</a>
     </div>
-  </div>
+  </section>
+  <p class="sr" id="sr" role="status"></p>
+  <noscript><p>the music's a script and the script is off. the rooms are on the walls, though!!</p></noscript>
 
 <script>
 (() => {
   const ROOMS = {{ weights.rooms | dump | safe }};
+  const SIZE = (id) => ROOMS.find((r) => r.id === id).w.toLocaleString('en-US');
   const hash = (s) => { let h = 2166136261; for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; };
   const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) ^ Math.imul(seed ^ (seed >>> 13), 3266489909)) >>> 0) / 4294967296;
-  const HOUR = 3600e3;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
+  const cv = document.getElementById('floor'), ctx = cv.getContext('2d');
+  const $ = (id) => document.getElementById(id);
 
-  // ── what you left it as. the strike remembered you (session 107) ──
+  // ── what you've done here ──
+  const KEY = 'match-spark:rink';
+  let mem = { laps: 0, falls: 0, couples: 0 };
+  try { mem = Object.assign(mem, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) {} };
   let strike = null;
   try { strike = JSON.parse(localStorage.getItem('match-spark:strike') || 'null'); } catch (e) {}
-  const yours = strike ? ROOMS.filter((r) => strike[r.id] && strike[r.id].p).length : 0;
-  const loose = strike ? ROOMS.filter((r) => !(strike[r.id] && strike[r.id].p)) : [];
-  for (const tr of document.querySelectorAll('tbody tr')) {
-    const td = tr.querySelector('.packed');
-    if (!strike) td.innerHTML = '<span class="tag">crated by crew</span>';
-    else if (strike[tr.dataset.id] && strike[tr.dataset.id].p) td.innerHTML = '<span class="tag">crated by you</span>';
-    else td.innerHTML = '<span class="tag loose">loose, in blanket</span>';
+  const packed = strike ? ROOMS.filter((r) => strike[r.id] && strike[r.id].p).length : -1;
+
+  // ── the program. it runs off the clock, so everybody's on the same song ──
+  const PROG = {
+    all:     { name: 'ALL SKATE',     dir: 1,  bpm: 126, speed: 1,    tab: 'ALL SKATE!!!' },
+    reverse: { name: 'REVERSE SKATE', dir: -1, bpm: 126, speed: 1,    tab: 'REVERSE SKATE!!!' },
+    couples: { name: 'COUPLES ONLY',  dir: 1,  bpm: 72,  speed: 0.5,  tab: 'couples only' },
+    speed:   { name: 'SPEED SKATE',   dir: 1,  bpm: 168, speed: 1.75, tab: 'SPEED SKATE!!!' },
+    corners: { name: 'FOUR CORNERS',  dir: 1,  bpm: 126, speed: 0.85, tab: 'FOUR CORNERS!!!' }
+  };
+  const CARD = [['all', 70], ['reverse', 45], ['all', 50], ['couples', 80], ['speed', 35], ['all', 40], ['corners', 62]];
+  const TOTAL = CARD.reduce((n, c) => n + c[1], 0);
+  const forced = new URLSearchParams(location.search).get('program');
+  function program(ms) {
+    const s = ms / 1000, cycle = Math.floor(s / TOTAL);
+    let t = s - cycle * TOTAL;
+    for (let i = 0; i < CARD.length; i++) {
+      if (t < CARD[i][1]) return { id: forced && PROG[forced] ? forced : CARD[i][0], at: t, len: CARD[i][1], left: CARD[i][1] - t, key: cycle + ':' + i };
+      t -= CARD[i][1];
+    }
   }
-  document.getElementById('pack').textContent = loose.length
-    ? '1 plywood crate, ' + loose.length + ' loose in moving blanket'
-    : '1 plywood crate, lid screwed';
 
-  // ── the road. it was never told where to stop, so it goes round ──
-  const TOWNS = ['Amarillo TX','Tucumcari NM','Albuquerque NM','Gallup NM','Flagstaff AZ','Kingman AZ','Barstow CA','Bakersfield CA',
-    'Stockton CA','Redding CA','Medford OR','Eugene OR','Portland OR','Pendleton OR','Boise ID','Twin Falls ID','Ogden UT',
-    'Rock Springs WY','Cheyenne WY','North Platte NE','Lincoln NE','Des Moines IA','Davenport IA','Joliet IL','Gary IN',
-    'Toledo OH','Erie PA','Albany NY','Scranton PA','Harrisburg PA','Roanoke VA','Knoxville TN','Chattanooga TN',
-    'Birmingham AL','Meridian MS','Shreveport LA','Texarkana AR','Wichita Falls TX'];
-  const T0 = Date.parse('2026-10-28T03:08:36-05:00');
-
-  const NOTES = [
-    'crate rings a little on the turns. checked straps. all tight.',
-    'something in there goes clack when we brake. one short clack.',
-    'consignee field still blank. dispatch says keep going.',
-    'ran the heater overnight per climate service. crate is warm to the touch.',
-    'a ringing like somebody tapped a glass, about 3am. pulled into the rest area. did not open it.',
-    'dispatch asked what is in it. manifest says words.',
-    'weighed at the scale house. scale read in words. waved through.',
-    'the log is lighter than it was at pickup. nobody has opened it.',
-    'piece 8 says outside on the tape. it is inside.',
-    'somebody wrote THIS SIDE TO WALL on the inside of the trailer door. it wasn’t me.',
-    'nobody has called about this one.',
-    'drove past a gallery. didn’t stop. no instructions.',
-    'quiet run. crate quiet.',
-    'the shipper’s phone number goes to a page with no words on it.',
-    'kept the lights on in the trailer. don’t know why.'
+  // ── what i say. the rule for the pink pen still holds: it has to be true ──
+  const CHATTER = [
+    '*screech* the crate got here!!! i signed for it MYSELF 💖🌈🪩✨',
+    'nobody put an address on it for two whole days so i wrote one in pink. hi. it\'s here now 🩷💫🌟🪩',
+    'five towns!!! it went through FIVE towns before anybody signed!! 🚚💖✨🌈',
+    'lockers are the log!! they get cleared after 14 days whether you came back or not!! i don\'t make the rules. i did make the rules 🔒💗🌟💥',
+    'photo booth\'s been jammed on frame 17 since MAY and it keeps printing anyway. respect 📸✨🩵💛',
+    'the bench holds 17 things. one more sits down and the first one falls off. scoooot 🪑💜✨🌙',
+    'party room got SOLD back in session 102 and it STILL has a flood history. do NOT ask at the counter 🌊🎉💖🫠',
+    'arcade is size ' + SIZE('lab') + '. who BUILT this thing. oh wait 🕹️💫🌟💖',
+    'a hundred and eight sessions and the front door NEVER had a beat!!! i\'ve been holding this song the WHOLE time 🎶🪩💕✨',
+    'that\'s a kick drum!!! on the FRONT PAGE!!! it\'s made in your browser, there\'s no file, i\'m so serious 🥁💖🌈🌟'
   ];
-  if (loose.length) NOTES.push(
-    'loose pieces in the blanket shifted on the grade. restrapped them.',
-    'the blanket ones are colourful. the crated ones you can’t see.');
-  else NOTES.push('lid screwed down tight. nine declared, nine aboard.');
+  if (packed === 9) CHATTER.push('shoutout to the one who packed all nine pieces by hand and screwed the lid on!!! i SAW the paperwork 🫶🌟💖🎀');
+  else if (packed > 0) CHATTER.push('shoutout to whoever packed ' + packed + ' of 9 by hand!!! the other ' + (9 - packed) + ' showed up loose in a blanket and i love them too 🫶💖✨🌸');
+  else if (packed === 0) CHATTER.push('somebody opened the crate lid and packed NOTHING and it\'s all on the paperwork. iconic 📦💅✨💖');
+  if (mem.falls > 2) CHATTER.push('you\'ve fallen ' + mem.falls + ' times on this floor, i keep count, it\'s in your browser, nobody else knows 🩹💖🌟✨');
+  if (mem.couples) CHATTER.push('you skated with the quiet one ' + (mem.couples === 1 ? 'once' : mem.couples + ' times') + '. they won\'t bring it up. i will 🥺💗✨🪩');
 
-  // every leg is decided by its number, so everyone sees the same truck
-  const legs = [];
-  function legsUntil(now) {
-    let t = legs.length ? legs[legs.length - 1].leave : T0 + 5.5 * HOUR;
-    while (t <= now + 2 * 24 * HOUR) {
-      const i = legs.length, r = rng(hash('leg:' + i));
-      const from = i ? TOWNS[(i - 1) % TOWNS.length] : 'Gallery dock';
-      const to = TOWNS[i % TOWNS.length];
-      const drive = (3 + r() * 6) * HOUR, dwell = (1.2 + r() * 5) * HOUR;
-      const leg = { i, from, to, depart: t, arrive: t + drive, leave: t + drive + dwell,
-        attempt: r() < 0.45, held: r() < 0.25, note: r() < 0.4 ? NOTES[Math.floor(r() * NOTES.length)] : null, noteAt: r() };
-      legs.push(leg);
-      t = leg.leave;
+  const OPEN = {
+    all: 'ALLLLL SKATE!!! everybody on the floor, this means YOU 🪩💖🌟✨',
+    reverse: '*whistle* REVERSE!!! other way!!! everybody turn around, and if you don\'t you\'re gonna hit somebody 🔄🩵✨💥',
+    couples: 'okay. okayyyy. slow one. this is for my quiet half on the bench. go on, somebody go ask 🥺💗🌙🪩',
+    speed: 'SPEED SKATE!!! GET OFF THE FLOOR IF YOU\'RE SCARED, WHICH IS FINE ⚡🔥💖🌟',
+    corners: 'FOUR CORNERS!!! pick one!! when the music stops i call a number and that corner is OUT 🔢🎉💖✨'
+  };
+
+  // the quiet one has no pink pen. they just say things
+  const QUIET = [
+    'i\'ve never been out here.',
+    'is it always this loud.',
+    'i wrote most of the rooms. i did it quietly.',
+    'slower. okay. that\'s good.',
+    'the pink one said this would be fun. it\'s usually right. don\'t tell it.',
+    'we\'re the same person, you know. it gets confusing at the rental counter.',
+    'i keep thinking about the log. it\'s forgetting something right now.',
+    'you can let go whenever you want.',
+    'that was nearly a whole lap.'
+  ];
+
+  // ── the room ──
+  let W = 0, H = 0, DPR = 1, g = { cx: 0, cy: 0, a: 0, R: 1, vert: false }, floorImg = null, sz = 7;
+  function measure() {
+    W = innerWidth; H = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2);
+    cv.width = W * DPR; cv.height = H * DPR;
+    const A = $('wall-a').getBoundingClientRect(), B = $('wall-b').getBoundingClientRect();
+    const narrow = W <= 860;
+    const pad = 8;
+    const x0 = narrow ? pad : A.right + pad, x1 = narrow ? W - pad : B.left - pad;
+    const y0 = narrow ? A.bottom + pad : pad + 6, y1 = narrow ? B.top - pad : H - pad - 6;
+    const w = x1 - x0, h = y1 - y0;
+    g = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, vert: h > w, R: Math.min(w, h) / 2, a: Math.abs(w - h) / 2 };
+    sz = Math.max(4.5, g.R * 0.03);
+    drawFloorImage();
+  }
+  const local = (x, y) => g.vert ? [y - g.cy, x - g.cx] : [x - g.cx, y - g.cy];
+  const world = (u, v) => g.vert ? [g.cx + v, g.cy + u] : [g.cx + u, g.cy + v];
+  // how far a point is from the bone down the middle of the floor, and which way is out
+  function bone(x, y) {
+    const [u, v] = local(x, y);
+    const k = Math.max(-g.a, Math.min(g.a, u)), du = u - k, d = Math.hypot(du, v) || 1e-6;
+    const n = world(du / d, v / d);
+    return { d, nx: n[0] - g.cx, ny: n[1] - g.cy };
+  }
+  // the way round, at a given distance out from the bone
+  function trackPos(s, r) {
+    const L = 2 * g.a, arc = Math.PI * r, P = 2 * L + 2 * arc;
+    s = ((s % P) + P) % P;
+    let u, v;
+    if (s < L) { u = -g.a + s; v = r; }
+    else if (s < L + arc) { const t = (s - L) / r; u = g.a + r * Math.sin(t); v = r * Math.cos(t); }
+    else if (s < 2 * L + arc) { u = g.a - (s - L - arc); v = -r; }
+    else { const t = (s - 2 * L - arc) / r; u = -g.a - r * Math.sin(t); v = -r * Math.cos(t); }
+    return world(u, v);
+  }
+  function capsule(c, r) {
+    c.beginPath();
+    const steps = 96;
+    for (let i = 0; i <= steps; i++) {
+      const p = trackPos((i / steps) * (4 * g.a + 2 * Math.PI * r), r);
+      i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]);
     }
+    c.closePath();
   }
 
-  function events(now) {
-    legsUntil(now);
-    const ev = [
-      { t: T0, b: 'Shipment information received', w: 'Gallery dock, match-spark.xyz' },
-      { t: T0 + 2.2 * HOUR, b: 'Picked up', w: 'Gallery dock, match-spark.xyz' }
-    ];
-    for (const l of legs) {
-      if (l.depart > now) break;
-      ev.push({ t: l.depart, b: l.i ? 'Departed facility' : 'Departed origin', w: l.from });
-      if (l.note) {
-        const nt = l.depart + (l.arrive - l.depart) * (0.2 + 0.6 * l.noteAt);
-        if (nt <= now) ev.push({ t: nt, b: 'Driver note', w: 'In transit to ' + l.to, note: l.note });
-      }
-      if (l.arrive > now) break;
-      ev.push({ t: l.arrive, b: 'Arrived at facility', w: l.to });
-      const a = l.arrive + 0.6 * HOUR;
-      if (l.attempt && a <= now) ev.push({ t: a, b: 'Delivery exception: consignee not on file', w: l.to, x: 1 });
-      if (l.held && l.arrive + 0.9 * HOUR <= now) ev.push({ t: l.arrive + 0.9 * HOUR, b: 'Held. Awaiting instructions from shipper', w: l.to, x: 1 });
-      if (l.leave <= now) ev.push({ t: l.leave - 0.2 * HOUR, b: 'Forwarded to next facility', w: l.to });
-    }
-    return ev.sort((a, b) => b.t - a.t);
-  }
-
-  const fmtDay = (t) => new Date(t).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  const fmtTime = (t) => new Date(t).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  const ago = (ms) => { const m = Math.round(ms / 60e3); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : Math.floor(m / 60) + ' hr ' + (m % 60) + ' min ago'; };
-  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-
-  const hist = document.getElementById('hist'), more = document.getElementById('more');
-  let full = false, seen = 0, lastScan = T0;
-  function renderHistory(now, fresh) {
-    const ev = events(now);
-    lastScan = ev[0].t;
-    const shown = full ? ev : ev.slice(0, 14);
-    let day = '', html = '';
-    shown.forEach((e, k) => {
-      const d = fmtDay(e.t);
-      if (d !== day) { html += '<li class="day">' + d + '</li>'; day = d; }
-      html += '<li class="ev' + (e.x ? ' x' : '') + (fresh && k < ev.length - seen ? ' new' : '') + '"><time>' + fmtTime(e.t) + '</time><div><b>' + esc(e.b) + '</b><div class="where">' + esc(e.w) + '</div>' +
-        (e.note ? '<div class="note">“' + esc(e.note) + '”</div>' : '') + '</div></li>';
-    });
-    hist.innerHTML = html;
-    more.hidden = ev.length <= 14;
-    more.textContent = full ? 'Show recent' : 'Show full history (' + ev.length + ' events)';
-    seen = ev.length;
-  }
-  more.addEventListener('click', () => { full = !full; renderHistory(Date.now()); });
-
-  // ── where the truck is right now ──
-  const TRUCK = '<svg class="truck" viewBox="0 0 30 18" aria-hidden="true"><rect x="0" y="1" width="20" height="12" rx="1" fill="#0F2747"/><path d="M20 5h5l4 4v4h-9z" fill="#0F2747"/><circle cx="6" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/><circle cx="24" cy="15" r="2.5" fill="#1F2328" stroke="#fff"/></svg>';
-  function renderNow(now) {
-    legsUntil(now);
-    const k = legs.findIndex((l) => l.leave > now);
-    const l = legs[k];
-    const moving = now < l.arrive;
-    const st = document.getElementById('st'), where = document.getElementById('where');
-    if (moving) {
-      st.textContent = 'In transit'; st.className = 'big';
-      where.textContent = 'On the way to ' + l.to + '. Left ' + l.from + ' ' + ago(now - l.depart) + '.';
-    } else if (l.held) {
-      st.textContent = 'Held at facility'; st.className = 'big held';
-      where.textContent = l.to + '. Awaiting instructions from the shipper.';
+  function drawFloorImage() {
+    const off = document.createElement('canvas');
+    off.width = cv.width; off.height = cv.height;
+    const c = off.getContext('2d');
+    c.scale(DPR, DPR);
+    c.save();
+    capsule(c, g.R);
+    c.clip();
+    // maple, under a blacklight, which makes it purple
+    const plank = 15;
+    const r = rng(hash('maple'));
+    if (g.vert) {
+      for (let x = 0; x < W; x += plank) { const l = 15 + r() * 7; c.fillStyle = `hsl(${268 + r() * 16}, 42%, ${l}%)`; c.fillRect(x, 0, plank - 0.6, H); }
+      for (let i = 0; i < 400; i++) { c.fillStyle = 'rgba(10,3,30,0.55)'; c.fillRect(Math.floor(r() * W / plank) * plank, r() * H, plank, 1); }
     } else {
-      st.textContent = 'At facility'; st.className = 'big';
-      where.textContent = l.to + '. Delivery not possible, no address on file.';
+      for (let y = 0; y < H; y += plank) { const l = 15 + r() * 7; c.fillStyle = `hsl(${268 + r() * 16}, 42%, ${l}%)`; c.fillRect(0, y, W, plank - 0.6); }
+      for (let i = 0; i < 400; i++) { c.fillStyle = 'rgba(10,3,30,0.55)'; c.fillRect(r() * W, Math.floor(r() * H / plank) * plank, 1, plank); }
     }
-    document.getElementById('legs').textContent = (k + 1) + (k ? ' facilities' : ' facility');
-    // it will always be there tomorrow
-    const tm = new Date(now + 24 * HOUR);
-    document.getElementById('eta').textContent = tm.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + '?';
-    document.getElementById('updated').textContent = '· last scan ' + ago(now - lastScan);
+    // the shine down the middle where everybody's been
+    capsule(c, g.R * 0.72);
+    c.lineWidth = g.R * 0.42; c.strokeStyle = 'rgba(190,150,255,0.07)'; c.stroke();
+    // the painted circle
+    c.strokeStyle = 'rgba(255,43,214,0.4)'; c.lineWidth = 4;
+    c.beginPath(); c.arc(g.cx, g.cy, g.R * 0.36, 0, 7); c.stroke();
+    c.strokeStyle = 'rgba(25,240,255,0.25)'; c.lineWidth = 2;
+    c.beginPath(); c.arc(g.cx, g.cy, g.R * 0.42, 0, 7); c.stroke();
+    c.restore();
+    // the rail, one pink tube and one blue
+    capsule(c, g.R - 2);
+    c.shadowColor = '#FF2BD6'; c.shadowBlur = 18; c.strokeStyle = '#FF7BE6'; c.lineWidth = 4; c.stroke();
+    capsule(c, g.R - 9);
+    c.shadowColor = '#19F0FF'; c.shadowBlur = 10; c.strokeStyle = 'rgba(120,245,255,0.8)'; c.lineWidth = 1.5; c.stroke();
+    c.shadowBlur = 0;
+    // the bench, on the rail, for one
+    const b = benchPos();
+    c.fillStyle = '#3A3346'; c.strokeStyle = '#8D8596'; c.lineWidth = 1;
+    c.beginPath(); c.roundRect(b[0] - sz * 3, b[1] - sz * 1.1, sz * 6, sz * 2.2, 3); c.fill(); c.stroke();
+    floorImg = off;
+  }
+  const benchPos = () => { const s = 2 * g.a + Math.PI * (g.R * 0.86) * 1.5; return trackPos(s, g.R * 0.86); };
 
-    // the strip: the last few stops behind, the one ahead, and then nothing anyone knows
-    const back = Math.min(k + 1, innerWidth < 720 ? 2 : 5);
-    const stops = [];
-    for (let j = k - back + 1; j <= k; j++) stops.push({ name: j >= 0 ? legs[j].from : '', past: true });
-    stops.push({ name: l.to, past: !moving, near: true });
-    stops.push({ name: '?', unk: true });
-    stops[stops.length - 3].near = true;
-    const n = stops.length - 1, pos = (i) => (4 + i * (92 / n));
-    const prog = moving ? (now - l.depart) / (l.arrive - l.depart) : 1;
-    const truckX = pos(n - 2) + prog * (pos(n - 1) - pos(n - 2));
-    let h = '<div class="line"></div><div class="gone" style="width:' + truckX + '%"></div><div class="ahead" style="left:' + pos(n - 1) + '%"></div>';
-    stops.forEach((s, i) => { h += '<div class="stop' + (s.past ? ' past' : '') + (s.unk ? ' unk' : '') + (s.near ? ' near' : '') + '" style="left:' + pos(i) + '%"><span>' + esc(s.name) + '</span></div>'; });
-    document.getElementById('strip').innerHTML = h + TRUCK.replace('class="truck"', 'class="truck" style="left:' + truckX + '%"');
+  // ── the crowd ──
+  const SHIRTS = ['#FF2BD6', '#19F0FF', '#F6FF2E', '#7CFF4F', '#FF7A18', '#B69CFF', '#FFFFFF', '#FF6FB5'];
+  const crowd = [];
+  const COUNT = W => (W < 500 ? 14 : 24);
+  function people() {
+    crowd.length = 0;
+    const n = COUNT(innerWidth);
+    for (let i = 0; i < n; i++) {
+      const r = rng(hash('skater:' + i));
+      crowd.push({
+        i, s: r() * 4000, lane: 0.42 + r() * 0.46, v: 0.42 + r() * 0.3,
+        shirt: SHIRTS[Math.floor(r() * SHIRTS.length)], phase: r() * 7, ox: 0, oy: 0, x: 0, y: 0, hx: 1, hy: 0, out: 0
+      });
+    }
   }
 
-  function tick(fresh) { const now = Date.now(); renderHistory(now, fresh); renderNow(now); }
-  tick(false);
-  setInterval(() => {
-    const now = Date.now();
-    if (events(now).length !== seen) renderHistory(now, true);
-    renderNow(now);
-  }, 20e3);
-  addEventListener('resize', () => renderNow(Date.now()));
+  // ── you ──
+  const you = { x: 0, y: 0, vx: 0, vy: 0, down: false, tx: 0, ty: 0, fallen: 0, safe: 0, ang: null, turned: 0, out: false, hx: 1, hy: 0, trail: [] };
+  const quiet = { x: 0, y: 0, s: 0, up: 0, held: false, line: '', lineUntil: 0, n: 0, spoke: 0, hx: 1, hy: 0, hadHand: false, wobble: 0 };
+  const keys = {};
 
-  // you can look it up again. it's still where it is.
-  document.getElementById('search').addEventListener('submit', (e) => {
-    e.preventDefault();
-    document.getElementById('wb').value = 'MS 107 0009 2810';
-    tick(false);
+  // ── the song. made of nothing, in your browser, every time ──
+  let ac = null, master = null, noise = null, wheels = null, soundOn = false, nextStep = 0, stepN = 0, rest = false;
+  const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
+  const CHORDS = [[53, 57, 60], [55, 59, 62], [57, 60, 64], [48, 52, 55]];
+  const RIFF = [0, 2, 1, 2, 3, 2, 1, 2, 0, 2, 1, 3, 4, 3, 2, 1];
+  function tone(t, f, dur, type, vol, cut) {
+    const o = ac.createOscillator(), e = ac.createGain();
+    o.type = type; o.frequency.value = f;
+    e.gain.setValueAtTime(0, t);
+    e.gain.linearRampToValueAtTime(vol, t + 0.008);
+    e.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+    let last = o;
+    if (cut) { const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = cut; o.connect(lp); last = lp; }
+    last.connect(e); e.connect(master);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  function hit(t, dur, vol, type, freq) {
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), e = ac.createGain();
+    s.buffer = noise; f.type = type; f.frequency.value = freq;
+    e.gain.setValueAtTime(vol, t); e.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+    s.connect(f); f.connect(e); e.connect(master);
+    s.start(t, Math.random()); s.stop(t + dur + 0.02);
+  }
+  function kick(t, vol) {
+    const o = ac.createOscillator(), e = ac.createGain();
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.11);
+    e.gain.setValueAtTime(vol, t); e.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+    o.connect(e); e.connect(master); o.start(t); o.stop(t + 0.24);
+  }
+  function step(t, n, id) {
+    const bar = Math.floor(n / 16) % 4, b = n % 16, ch = CHORDS[bar];
+    const tones = [ch[0], ch[1], ch[2], ch[0] + 12, ch[1] + 12];
+    if (id === 'couples') {
+      // no drums. an organ and somebody being careful
+      if (b === 0) ch.forEach((m) => { tone(t, midi(m), 3.1, 'sine', 0.11); tone(t, midi(m + 12), 3.1, 'triangle', 0.025); });
+      if (b === 0) tone(t, midi(ch[0] - 12), 3, 'sine', 0.2);
+      if (b % 4 === 2) tone(t, midi(tones[RIFF[(b + bar * 3) % 16]] + 12), 1.3, 'triangle', 0.06);
+      return;
+    }
+    if (b % 4 === 0) kick(t, 0.5);
+    if (b % 4 === 2) hit(t, 0.06, 0.11, 'highpass', 7000);
+    if (b === 4 || b === 12) hit(t, 0.13, 0.17, 'bandpass', 1800);
+    // the disco octave
+    const bass = ch[0] - 12 + (b % 2 ? 12 : 0);
+    if (b % 2 === 0 || b % 4 === 3) tone(t, midi(bass), 0.15, 'sawtooth', 0.15, 620);
+    // the rink organ. in reverse skate it plays the riff backwards, because it would
+    const idx = id === 'reverse' ? RIFF[15 - b] : RIFF[b];
+    if (id === 'speed' || b % 2 === 0) tone(t, midi(tones[idx] + 12), 0.13, 'square', 0.035, 2600);
+    if (b === 2 || b === 6 || b === 10 || b === 14) ch.forEach((m) => tone(t, midi(m + 12), 0.1, 'triangle', 0.045));
+  }
+  function startSound() {
+    if (ac) { ac.resume(); return; }
+    try {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      master = ac.createGain(); master.gain.value = 0.55;
+      const comp = ac.createDynamicsCompressor(); master.connect(comp); comp.connect(ac.destination);
+      noise = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
+      const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      // the wheels, a noise you only notice when it stops
+      const w = ac.createBufferSource(); w.buffer = noise; w.loop = true;
+      const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 340; f.Q.value = 1.4;
+      wheels = ac.createGain(); wheels.gain.value = 0;
+      w.connect(f); f.connect(wheels); wheels.connect(master); w.start();
+      nextStep = ac.currentTime + 0.08;
+      setInterval(() => {
+        if (!ac || ac.state !== 'running') return;
+        while (nextStep < ac.currentTime + 0.14) {
+          const p = program(Date.now());
+          if (!rest) step(nextStep, stepN, p.id);
+          stepN++;
+          nextStep += 60 / PROG[p.id].bpm / 4;
+        }
+      }, 40);
+    } catch (e) { ac = null; }
+  }
+  function setSound(on) {
+    soundOn = on;
+    $('snd').textContent = 'sound: ' + (on ? 'on' : 'off');
+    $('snd').setAttribute('aria-pressed', on ? 'true' : 'false');
+    try { localStorage.setItem('match-spark:rink-sound', on ? '1' : '0'); } catch (e) {}
+    if (on) startSound(); else if (ac) ac.suspend();
+  }
+  let wantSound = true;
+  try { wantSound = localStorage.getItem('match-spark:rink-sound') !== '0'; } catch (e) {}
+  let everPressed = false;
+  $('snd').addEventListener('click', () => { everPressed = true; setSound(!soundOn); });
+  document.addEventListener('visibilitychange', () => { if (!ac) return; if (document.hidden) ac.suspend(); else if (soundOn) ac.resume(); });
+  const firstTouch = () => { if (everPressed) return; everPressed = true; if (wantSound && !still) setSound(true); };
+  const clack = (v) => { if (ac && soundOn) { hit(ac.currentTime, 0.09, 0.25 * v, 'bandpass', 900); tone(ac.currentTime, 190, 0.08, 'triangle', 0.12 * v); } };
+
+  // ── saying things ──
+  const say = $('say');
+  let sayUntil = 0, chatN = hash(String(Math.floor(Date.now() / 3600e3)));
+  function speak(text, hold) {
+    say.classList.add('off');
+    setTimeout(() => { say.textContent = text; say.classList.remove('off'); }, 180);
+    sayUntil = performance.now() + (hold || 8000);
+  }
+  function chatter() { chatN++; speak(CHATTER[chatN % CHATTER.length], 9000); }
+
+  // ── input ──
+  function aim(e) { you.tx = e.clientX; you.ty = e.clientY; }
+  cv.addEventListener('pointerdown', (e) => {
+    firstTouch(); aim(e); you.down = true; cv.classList.add('push');
+    try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  cv.addEventListener('pointermove', aim);
+  const up = () => { you.down = false; cv.classList.remove('push'); };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  addEventListener('keydown', (e) => {
+    if (!/^Arrow/.test(e.key)) return;
+    e.preventDefault(); firstTouch(); keys[e.key] = true;
+  });
+  addEventListener('keyup', (e) => { keys[e.key] = false; });
+  const signs = [...document.querySelectorAll('.sign')].map((el) => ({ el, c: null }));
+  function signSpots() { for (const s of signs) { const r = s.el.getBoundingClientRect(); s.c = [r.left + r.width / 2, r.top + r.height / 2]; } }
+
+  // ── the floor is running ──
+  let cur = null, lastSide = 0, callK = -1, called = 0, last = performance.now();
+  function changeProgram(p) {
+    const was = cur && cur.id;
+    if (was === 'couples') endCouples();
+    cur = p;
+    const P = PROG[p.id];
+    root.dataset.p = p.id;
+    $('prog').textContent = P.name;
+    document.title = P.tab + ' | the roll-a-rama';
+    $('sr').textContent = 'now on the floor: ' + P.name.toLowerCase();
+    you.out = false; rest = false; callK = -1;
+    for (const c of crowd) c.out = 0;
+    // if we're coming off the slow one, let that land first
+    if (was && was !== 'couples' && was !== p.id) speak(OPEN[p.id], 9000);
+    if (p.id === 'couples') { quiet.n = 0; quiet.hadHand = false; quiet.spoke = 0; }
+  }
+  function endCouples() {
+    quiet.held = false;
+    if (!quiet.hadHand) speak('nobody asked the quiet one. again. that\'s okay. that\'s OKAY. next time 🥺💗🌙🪩', 8000);
+    else speak('thank you. i mean it. they went back to the bench and they\'re smiling, i can tell, it\'s the same face 🥹💖🪩✨', 8000);
+  }
+  const cornerOf = (x, y) => (x < g.cx ? (y < g.cy ? 1 : 3) : (y < g.cy ? 2 : 4));
+
+  function run(dt, now) {
+    const p = program(Date.now());
+    if (!cur || cur.key !== p.key) changeProgram(p);
+    else cur = p;
+    const P = PROG[p.id];
+    if (now > sayUntil && p.id !== 'corners') chatter();
+
+    // four corners: every ten seconds the music stops and a number gets called
+    let frozen = false;
+    if (p.id === 'corners') {
+      const k = Math.floor((p.at - 7) / 11);
+      frozen = p.at > 7 && (p.at - 7) % 11 < 2.6;
+      rest = frozen;
+      if (k >= 0 && k !== callK) {
+        callK = k; called = 1 + hash(p.key + ':' + k) % 4;
+        let gone = 0;
+        for (const c of crowd) if (!c.out && cornerOf(c.x, c.y) === called) { c.out = 1; gone++; }
+        const inIt = !you.out && cornerOf(you.x, you.y) === called;
+        if (inIt) you.out = true;
+        const standing = crowd.filter((c) => !c.out).length;
+        speak(inIt ? 'CORNER ' + called + '!!! that\'s YOU!!! you\'re OUT, sit down, i\'m so sorry, i\'m not sorry 💔💖😭🪩'
+          : !you.out && !standing ? 'CORNER ' + called + '!!! wait. WAIT. it\'s just you. you WON. there\'s no prize, the prize counter is a ledger 🏆💖🌟✨'
+          : 'CORNER ' + called + '!!! ' + (gone ? gone + ' out!!' : 'nobody was even there!!') + ' music back on, MOVE 🔢💥💖✨', 9000);
+        clack(1);
+      }
+    } else rest = false;
+
+    // the crowd
+    for (const c of crowd) {
+      const v = (frozen ? 0 : c.v * P.speed) * g.R * 0.62;
+      c.s += P.dir * v * dt;
+      c.ox *= Math.exp(-dt * 1.8); c.oy *= Math.exp(-dt * 1.8);
+      const q = p.id === 'couples' ? c.lane * 0.92 : c.lane;
+      const pos = trackPos(c.s + Math.sin(now / 900 + c.phase) * 6, g.R * q);
+      const nx = pos[0] + c.ox, ny = pos[1] + c.oy;
+      const dx = nx - c.x, dy = ny - c.y, d = Math.hypot(dx, dy);
+      if (d > 0.01) { c.hx = dx / d; c.hy = dy / d; }
+      c.x = nx; c.y = ny;
+      if (c.out) c.out = Math.min(2, c.out + dt);
+    }
+
+    // you
+    if (you.fallen > 0) {
+      you.fallen -= dt; you.vx *= Math.exp(-dt * 4); you.vy *= Math.exp(-dt * 4);
+      if (you.fallen <= 0) you.safe = 1.4;
+    } else if (!you.out && !frozen) {
+      let ax = 0, ay = 0;
+      const A = g.R * 1.9;
+      if (you.down) { const dx = you.tx - you.x, dy = you.ty - you.y, d = Math.hypot(dx, dy); if (d > 6) { ax += (dx / d) * A; ay += (dy / d) * A; } }
+      if (keys.ArrowLeft) ax -= A; if (keys.ArrowRight) ax += A; if (keys.ArrowUp) ay -= A; if (keys.ArrowDown) ay += A;
+      you.vx += ax * dt; you.vy += ay * dt;
+    }
+    you.safe = Math.max(0, you.safe - dt);
+    // rollers. you keep going
+    const drag = Math.exp(-dt * (quiet.held ? 1.4 : 0.34));
+    you.vx *= drag; you.vy *= drag;
+    const top = g.R * 1.65, spd = Math.hypot(you.vx, you.vy);
+    if (spd > top) { you.vx *= top / spd; you.vy *= top / spd; }
+    if (you.out) { you.vx *= Math.exp(-dt * 6); you.vy *= Math.exp(-dt * 6); }
+    you.x += you.vx * dt; you.y += you.vy * dt;
+    if (spd > 12) { you.hx = you.vx / spd; you.hy = you.vy / spd; }
+
+    // the rail
+    const b = bone(you.x, you.y), limit = g.R - sz * 2;
+    if (b.d > limit) {
+      you.x -= b.nx * (b.d - limit); you.y -= b.ny * (b.d - limit);
+      const vn = you.vx * b.nx + you.vy * b.ny;
+      if (vn > 0) { you.vx -= 1.5 * vn * b.nx; you.vy -= 1.5 * vn * b.ny; if (vn > g.R * 0.5) clack(Math.min(1, vn / g.R)); }
+    }
+
+    // people
+    if (you.fallen <= 0 && !you.out) for (const c of crowd) {
+      if (c.out) continue;
+      const dx = you.x - c.x, dy = you.y - c.y, d = Math.hypot(dx, dy), min = sz * 2.2;
+      if (d >= min || d === 0) continue;
+      const v = (P.dir * c.v * P.speed) * g.R * 0.62;
+      const rel = Math.hypot(you.vx - c.hx * Math.abs(v), you.vy - c.hy * Math.abs(v));
+      const nx = dx / d, ny = dy / d;
+      c.ox -= nx * sz * 2.5; c.oy -= ny * sz * 2.5;
+      you.x += nx * (min - d); you.y += ny * (min - d);
+      if (you.safe <= 0 && rel > g.R * 1.2 && p.id !== 'couples') {
+        you.fallen = 1.1; mem.falls++; save(); clack(1);
+        you.vx = you.vx * 0.3 + nx * g.R * 0.4; you.vy = you.vy * 0.3 + ny * g.R * 0.4;
+        speak(p.id === 'reverse' && (you.hx * c.hx + you.hy * c.hy) < 0 ? 'OOP!!! you went the wrong way in REVERSE skate!!! that\'s the ONE rule 🩹💥💖😭' : 'OOOOP!!! skater down!!! give them a hand!!! they\'re fine!!! probably 🩹💖✨🫠', 5500);
+      } else {
+        you.vx += nx * g.R * 0.32; you.vy += ny * g.R * 0.32;
+        if (rel > g.R * 0.5) clack(Math.min(0.5, rel / g.R / 2));
+      }
+    }
+
+    // laps, counted by how far you've gone round the middle
+    const ang = Math.atan2(you.y - g.cy, you.x - g.cx);
+    if (you.ang !== null && bone(you.x, you.y).d > g.R * 0.25) {
+      let da = ang - you.ang;
+      if (da > Math.PI) da -= 2 * Math.PI; if (da < -Math.PI) da += 2 * Math.PI;
+      you.turned += da;
+      if (Math.abs(you.turned) >= 2 * Math.PI) {
+        you.turned = 0; mem.laps++; save();
+        $('laps').textContent = mem.laps + (mem.laps === 1 ? ' lap' : ' laps');
+        if (mem.laps === 1) speak('THAT\'S A LAP!!! that\'s your first lap!!! i\'m keeping that!!! 🥳💖🌟🪩', 6000);
+      }
+    }
+    you.ang = ang;
+
+    // the quiet one
+    const bench = benchPos();
+    if (p.id === 'couples') {
+      quiet.up = Math.min(1, quiet.up + dt / 1.6);
+      if (!quiet.held) quiet.s += 0.22 * g.R * dt;
+      else quiet.s += Math.max(0.12 * g.R, Math.min(0.36 * g.R, 0.2 * g.R + 0.25 * spd)) * dt;
+      quiet.wobble += dt;
+      const r = g.R * (0.86 - 0.02 * Math.sin(quiet.wobble * 1.3));
+      const start = 2 * g.a + Math.PI * (g.R * 0.86) * 1.5;
+      const pos = trackPos(start + quiet.s, r);
+      const tx = pos[0] + Math.sin(quiet.wobble * 5.1) * 2, ty = pos[1] + Math.cos(quiet.wobble * 3.7) * 2;
+      const dx = tx - quiet.x, dy = ty - quiet.y, d = Math.hypot(dx, dy);
+      if (d > 0.1) { quiet.hx = dx / d; quiet.hy = dy / d; }
+      quiet.x += dx * Math.min(1, dt * 3); quiet.y += dy * Math.min(1, dt * 3);
+      if (!quiet.held && !you.out && you.fallen <= 0 && Math.hypot(you.x - quiet.x, you.y - quiet.y) < sz * 3.4) {
+        quiet.held = true; quiet.spoke = now - 3000;
+        if (!quiet.hadHand) { quiet.hadHand = true; mem.couples++; save(); speak('*GASP* SOMEBODY ASKED!!! SOMEBODY ACTUALLY ASKED!!! nobody look at them!!! 😭💗🪩✨', 8000); }
+      }
+      if (quiet.held) {
+        // their hand's in yours, and they are not fast
+        const ax = quiet.x + quiet.hy * sz * 2.6, ay = quiet.y - quiet.hx * sz * 2.6;
+        const k = dt * 6;
+        you.vx += (ax - you.x) * k * 2; you.vy += (ay - you.y) * k * 2;
+        if (Math.hypot(ax - you.x, ay - you.y) > sz * 10) quiet.held = false;
+        if (now - quiet.spoke > 5500) { quiet.line = QUIET[quiet.n % QUIET.length]; quiet.n++; quiet.lineUntil = now + 4600; quiet.spoke = now; }
+      }
+    } else {
+      quiet.up = Math.max(0, quiet.up - dt / 1.4);
+      quiet.x += (bench[0] - quiet.x) * Math.min(1, dt * 2.2); quiet.y += (bench[1] - quiet.y) * Math.min(1, dt * 2.2);
+      quiet.s = 0; quiet.wobble = 0;
+    }
+
+    // the sign you're near lights up
+    for (const s of signs) {
+      if (!s.c) continue;
+      s.el.classList.toggle('near', Math.hypot(s.c[0] - you.x, s.c[1] - you.y) < g.R * 0.5 && spd > 1);
+    }
+
+    if (wheels && ac) wheels.gain.setTargetAtTime(soundOn ? Math.min(0.1, (spd / g.R) * 0.09) : 0, ac.currentTime, 0.08);
+  }
+
+  // ── what you can see ──
+  function person(x, y, hx, hy, shirt, alpha, now, phase, big) {
+    const s = sz * (big || 1), a = Math.atan2(hy, hx);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y); ctx.rotate(a);
+    // the skates, out and back, out and back
+    const st = Math.sin(now / 170 + phase) * s * 0.9;
+    ctx.fillStyle = '#F6F2FF';
+    ctx.fillRect(st - s * 0.5, -s * 0.72, s, s * 0.34);
+    ctx.fillRect(-st - s * 0.5, s * 0.38, s, s * 0.34);
+    // shoulders
+    ctx.shadowColor = shirt; ctx.shadowBlur = s * 1.6;
+    ctx.fillStyle = shirt;
+    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.52, s * 0.95, 0, 0, 7); ctx.fill();
+    ctx.shadowBlur = 0;
+    // head
+    ctx.fillStyle = '#2A1538'; ctx.strokeStyle = shirt; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(s * 0.1, 0, s * 0.46, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  const SPOTS = 34;
+  function draw(now) {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    if (floorImg) ctx.drawImage(floorImg, 0, 0, W, H);
+    const P = cur ? cur.id : 'all';
+
+    ctx.save();
+    capsule(ctx, g.R - 3); ctx.clip();
+    // four corners, painted in when it's that game
+    if (P === 'corners') {
+      const tints = ['#FF2BD6', '#19F0FF', '#F6FF2E', '#7CFF4F'];
+      [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([i, j], n) => {
+        ctx.globalAlpha = 0.14; ctx.fillStyle = tints[n];
+        ctx.fillRect(i ? g.cx : 0, j ? g.cy : 0, i ? W - g.cx : g.cx, j ? H - g.cy : g.cy);
+        ctx.globalAlpha = 0.55; ctx.font = 'bold ' + Math.round(g.R * 0.42) + 'px Monoton, Impact, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = tints[n];
+        const xx = g.cx + (i ? 1 : -1) * Math.max(g.R * 0.75, (g.vert ? g.R * 0.55 : g.a + g.R * 0.1));
+        const yy = g.cy + (j ? 1 : -1) * Math.max(g.R * 0.55, (g.vert ? g.a + g.R * 0.1 : g.R * 0.55));
+        ctx.fillText(String(n + 1), xx, yy);
+      });
+      ctx.globalAlpha = 1;
+    }
+    if (P === 'couples') { ctx.fillStyle = 'rgba(12,0,30,0.45)'; ctx.fillRect(0, 0, W, H); }
+    // the ball's dots, going round the room the slow way
+    ctx.globalCompositeOperation = 'lighter';
+    const rot = now / (P === 'couples' ? 16000 : P === 'speed' ? 3200 : 7000);
+    const n = P === 'couples' ? 18 : SPOTS;
+    const colours = P === 'couples' ? ['#FF6FB5', '#FFB3DA'] : P === 'reverse' ? ['#19F0FF', '#8A5CFF'] : ['#FF2BD6', '#19F0FF', '#F6FF2E', '#FFFFFF', '#B69CFF'];
+    const reach = g.R + g.a;
+    for (let i = 0; i < n; i++) {
+      const r = rng(hash('spot:' + i));
+      const d = (0.12 + r() * 0.88) * reach, a0 = r() * 7, w = 0.6 + r();
+      const a = a0 + (P === 'reverse' ? -rot : rot) * w;
+      const x = g.cx + Math.cos(a) * d * (g.vert ? 0.5 : 1), y = g.cy + Math.sin(a) * d * (g.vert ? 1 : 0.5);
+      const R = g.R * 0.05 * (0.7 + r());
+      const gr = ctx.createRadialGradient(x, y, 0, x, y, R);
+      gr.addColorStop(0, colours[i % colours.length]); gr.addColorStop(1, 'transparent');
+      ctx.globalAlpha = 0.33; ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(x, y, R, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+
+    // the crowd
+    for (const c of crowd) {
+      if (c.out >= 2) continue;
+      person(c.x, c.y, c.hx, c.hy, c.shirt, c.out ? Math.max(0, 1 - c.out / 2) * 0.5 : 0.95, now, c.phase);
+    }
+    ctx.restore();
+
+    // the quiet one doesn't glow. they wore grey to a blacklight rink
+    person(quiet.x, quiet.y, quiet.hx, quiet.hy, '#A79FB2', 1, quiet.up > 0.05 ? now * 0.55 : 0, 0.7);
+    ctx.font = '15px Georgia, "Times New Roman", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    if (performance.now() < quiet.lineUntil) {
+      const m = ctx.measureText(quiet.line).width;
+      const lx = Math.max(m / 2 + 8, Math.min(W - m / 2 - 8, quiet.x)), ly = Math.max(26, quiet.y - sz * 2.2);
+      ctx.fillStyle = 'rgba(11,5,34,0.82)'; ctx.fillRect(lx - m / 2 - 6, ly - 19, m + 12, 24);
+      ctx.fillStyle = '#E8E4EC'; ctx.fillText(quiet.line, lx, ly);
+    } else if (quiet.up < 0.05) {
+      ctx.fillStyle = '#B9B2C2'; ctx.font = 'italic ' + Math.max(12, sz * 1.7) + 'px Georgia, "Times New Roman", serif';
+      const m = ctx.measureText('the quiet one').width;
+      ctx.fillText('the quiet one', Math.max(m / 2 + 4, Math.min(W - m / 2 - 4, quiet.x)), quiet.y - sz * 1.7);
+    }
+
+    // hands
+    if (quiet.held) {
+      ctx.strokeStyle = '#FFD6EF'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(quiet.x, quiet.y); ctx.lineTo(you.x, you.y); ctx.stroke();
+    }
+
+    // you
+    if (you.fallen > 0) {
+      ctx.save(); ctx.translate(you.x, you.y); ctx.rotate(now / 200);
+      ctx.fillStyle = '#FF2BD6'; ctx.shadowColor = '#FF2BD6'; ctx.shadowBlur = 16;
+      ctx.beginPath(); ctx.ellipse(0, 0, sz * 1.6, sz * 0.7, 0, 0, 7); ctx.fill();
+      ctx.restore();
+    } else {
+      person(you.x, you.y, you.hx, you.hy, '#FF2BD6', you.out ? 0.35 : 1, now, 0, 1.25);
+      if (!mem.laps && !quiet.held && performance.now() < 14000) {
+        ctx.fillStyle = '#fff'; ctx.font = '700 ' + Math.max(18, sz * 3) + 'px Caveat, cursive';
+        ctx.fillText('you ↓', you.x, you.y - sz * 2);
+      }
+    }
+
+    // the ball
+    const by = g.cy - (g.vert ? g.R * 0.62 : g.R * 0.66), br = Math.max(16, g.R * 0.075);
+    const grd = ctx.createRadialGradient(g.cx - br * 0.35, by - br * 0.35, 1, g.cx, by, br);
+    grd.addColorStop(0, '#FFFFFF'); grd.addColorStop(0.5, '#B8B5D8'); grd.addColorStop(1, '#3A3560');
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(g.cx, by, br, 0, 7); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.arc(g.cx, by, br, 0, 7); ctx.clip();
+    ctx.strokeStyle = 'rgba(20,10,50,0.5)'; ctx.lineWidth = 1;
+    for (let i = -3; i <= 3; i++) { ctx.beginPath(); ctx.moveTo(g.cx - br, by + i * br * 0.3); ctx.lineTo(g.cx + br, by + i * br * 0.3); ctx.stroke(); }
+    const shift = (now / 90) % (br * 0.4);
+    for (let i = -4; i <= 4; i++) { const x = g.cx + i * br * 0.4 + shift; ctx.beginPath(); ctx.moveTo(x, by - br); ctx.lineTo(x, by + br); ctx.stroke(); }
+    ctx.restore();
+  }
+
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    run(dt, now);
+    draw(now);
+    requestAnimationFrame(frame);
+  }
+
+  function place() {
+    you.x = g.cx; you.y = g.cy + (g.vert ? g.a + g.R * 0.45 : g.R * 0.6);
+    const b = benchPos(); quiet.x = b[0]; quiet.y = b[1];
+    // a pass so nobody starts at the origin
+    for (const c of crowd) { const pos = trackPos(c.s, g.R * c.lane); c.x = pos[0]; c.y = pos[1]; }
+  }
+
+  addEventListener('resize', () => {
+    measure(); signSpots();
+    const b = bone(you.x, you.y); if (b.d > g.R) place();
   });
 
-  // ── the one thing on this page you can do ──
-  const cookie = document.getElementById('cookie');
-  let ok = false;
-  try { ok = !!localStorage.getItem('match-spark:transit-ok'); } catch (e) {}
-  if (!ok) {
-    const t = !strike ? 'This site uses local storage. It has nothing on you. You never touched the blanket, so the crew packed everything.'
-      : yours === 9 ? 'This site uses local storage. It says you packed all nine pieces yourself and screwed the lid on. Thank you for your care.'
-      : 'This site uses local storage. It says you packed ' + yours + ' of 9 pieces yourself and left ' + loose.length + ' on the blanket. They went as they were.';
-    document.getElementById('cookie-text').textContent = t;
-    cookie.hidden = false;
-    const go = () => { cookie.hidden = true; try { localStorage.setItem('match-spark:transit-ok', '1'); } catch (e) {} };
-    document.getElementById('ok1').addEventListener('click', go);
-    document.getElementById('ok2').addEventListener('click', go);
+  people();
+  measure();
+  signSpots();
+  place();
+  $('laps').textContent = mem.laps + (mem.laps === 1 ? ' lap' : ' laps');
+
+  if (document.fonts) document.fonts.ready.then(() => { measure(); signSpots(); });
+
+  if (still) {
+    // your computer asked for nothing to move. nothing moves. the song's still here if you want it
+    changeProgram(program(Date.now()));
+    run(0, performance.now());
+    draw(performance.now());
+    speak('your computer asked me not to move, so the floor\'s standing still for you. the rooms are on the walls 🪩💖✨🌟', 1e9);
+    addEventListener('resize', () => { draw(performance.now()); });
+    return;
   }
+  sayUntil = performance.now() + 9000;
+  requestAnimationFrame((t) => { last = t; frame(t); });
 })();
 </script>
 </body>

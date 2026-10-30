@@ -15,6 +15,12 @@
 // in transit (session 108). it's in the truck now. the waybill went on
 // over the framer's label, the wire goes back to the tracking page, and
 // every so often the road comes up through the floor.
+//
+// delivered (session 109). it got there. they took the panels out of the
+// crate and stood them against the wall of a roller rink, on the carpet,
+// because nobody knew where else they went. the waybill's got an address
+// on it now, in pink. the blacklight's on it. the road stopped, and the
+// floor still moves, but that's the kick drum coming through the wall.
 (() => {
   const root = document.documentElement;
   const body = document.body;
@@ -33,7 +39,7 @@
   const hook = document.createElement('a');
   hook.className = 'hang-hook';
   hook.href = '/';
-  hook.innerHTML = '<span class="hang-label">the cut wire, back to tracking</span>';
+  hook.innerHTML = '<span class="hang-label">the cut wire, back on the floor</span>';
   // after body, so they don't turn with it
   root.append(wire, hook);
 
@@ -74,19 +80,21 @@
       <i><span>hung backwards</span><span>session 106</span></i>
       <i><span>struck</span><span>session 107</span></i>
       <i><span>shipped</span><span>session 108</span></i>
+      <i><span>delivered</span><span>session 109</span></i>
       <i><span>edge</span><span>${paint}</span></i>
       <i><span>inv.</span><span>MS-${stamp}</span></i>
     </div>
     <div class="wall" aria-hidden="true">THIS SIDE TO WALL</div>
     <div class="pencil" aria-hidden="true">coming down. leave it facing the wall. crate no. ${(w % 9) + 1}</div>
+    <div class="marker" aria-hidden="true">${{ log: 'this one\u2019s the LOCKERS!! careful, it forgets', listing: 'party room!!! sold!!! still damp!!', still: 'the BENCH!! holds 17, scooch', witness: 'photo booth!!! stuck on 17 since may!!', transmission: 'dj booth!!! that\u2019s my STUFF', ledger: 'prize counter!! nobody\u2019s ever won', guestbook: 'bathroom wall!!! write something', outside: 'parking lot!!! it\u2019s a whole SKY out there', lab: 'ARCADE!!! size ' + w.toLocaleString('en-US') + '!!' }[root.dataset.hung] || 'put this one by the wall!!'} ✨💖</div>
     <div class="tape" aria-hidden="true"></div>
     <div class="waybill" aria-hidden="true">
       <b>OVERLAND FINE ART</b>
       <i class="bars" style="--bars:${bars}"></i>
       <span>MS 107 0009 2810</span>
       <span>PC ${piece} OF 9 · ${w.toLocaleString('en-US')} WORDS</span>
-      <span>SHIP TO: <u></u></span>
-      <span>HOLD · NO ADDRESS ON FILE</span>
+      <span>SHIP TO: <u>the roll-a-rama!!</u></span>
+      <span>DELIVERED · SIGNED: match ♡</span>
     </div>
     <div class="paint" aria-hidden="true"></div>`;
   body.prepend(back);
@@ -174,20 +182,24 @@
 
   // there used to be air here (session 105). nothing hangs in it now.
 
-  // the road (session 108). nothing hangs, but the floor isn't still.
-  // every few seconds a seam in the road comes up through the trailer:
-  // a jolt, a little bounce, and then it settles again.
+  // the road (session 108) stopped. what comes through the floor now is
+  // the song next door (session 109): four on the floor at the rink's
+  // tempo, off the same clock everyone's on, a little thump and gone.
   if (!still) {
-    let bump = 0, t0 = 0, amp = 0;
-    const road = (now) => {
-      if (now > bump) { t0 = now; amp = 1 + Math.random() * 2.2; bump = now + 1800 + Math.random() * 6500; }
-      const u = (now - t0) / 1000;
-      const y = u < 1.2 ? -amp * Math.exp(-u * 5) * Math.sin(u * 38) : 0;
-      root.style.setProperty('--road', y.toFixed(2) + 'px');
-      requestAnimationFrame(road);
+    const beat = 60000 / 126;
+    const thump = () => {
+      const u = (Date.now() % beat) / beat;
+      root.style.setProperty('--road', (-1.4 * Math.exp(-u * 7) * Math.cos(u * 18)).toFixed(2) + 'px');
+      requestAnimationFrame(thump);
     };
-    requestAnimationFrame(road);
+    requestAnimationFrame(thump);
   }
+
+  // the ball's dots come round the wall too
+  const dots = document.createElement('div');
+  dots.className = 'hang-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  root.append(dots);
 
   function settle() { weigh(); go(); }
 
