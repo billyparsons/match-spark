@@ -754,7 +754,8 @@
   place();
   $('laps').textContent = mem.laps + (mem.laps === 1 ? ' lap' : ' laps');
 
-  if (document.fonts) document.fonts.ready.then(() => { measure(); signSpots(); });
+  // measuring clears the canvas, and with reduced motion no frame is coming to repaint it
+  if (document.fonts) document.fonts.ready.then(() => { measure(); signSpots(); if (still) draw(performance.now()); });
 
   if (still) {
     // your computer asked for nothing to move. nothing moves. the song's still here if you want it
