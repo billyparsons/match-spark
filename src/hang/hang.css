@@ -1,23 +1,18 @@
-/* the rooms are hung (session 105).
-   the wall is the wall "/" is on, lit from the same lamp up and to the left.
-   the room is a panel on it, not the space around you.
+/* the rooms are hung (session 105). then struck, shipped, and stood on a
+   rink carpet. all that's over.
 
-   struck (session 107): the lamp's off. the work lights are on, straight
-   overhead and cold, and the panel is off its wire, standing on the floor
-   with its top resting back against the plaster.
-
-   delivered (session 109): the plaster's gone. it's leaning against the
-   wall of a rink, and that wall has carpet up it, and the lights are UV. */
+   out (session 110): the room's a panel left out on the porch at night,
+   against the side of your house, under one yellow bug bulb. it's got its
+   costume on until you take it off. */
 
 html[data-hung] {
   --gut: clamp(16px, 6vw, 104px);
   --top: clamp(64px, 11vh, 120px);
   --foot: clamp(72px, 14vh, 160px);
   background:
-    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(255,43,214,0.28) 0%, transparent 70%),
-    linear-gradient(rgba(11,5,34,0.28), rgba(11,5,34,0.28)),
-    url(/hang/carpet.svg) 0 0 / 420px,
-    #0B0522 !important;
+    radial-gradient(ellipse 70vw 62vh at 50% -6vh, rgba(255, 196, 92, 0.46), transparent 74%),
+    repeating-linear-gradient(180deg, rgba(0,0,0,0.4) 0 2px, transparent 2px 46px),
+    #1E2017 !important;
   background-attachment: fixed !important;
   overflow-x: hidden !important;
   height: auto !important;
@@ -30,208 +25,103 @@ html[data-hung] > body {
   min-height: calc(100vh - var(--top) - var(--foot)) !important;
   z-index: 1 !important;
   transform-origin: 50% 0 !important;
-  /* session 106: it was hung facing the wall. --turn is 180deg until you
-     turn it round, and --face is -1 while you're looking at its back, so
-     the shadow still falls away from the lamp */
-  transform: translateY(var(--road, 0px)) perspective(2400px) rotateX(2.2deg) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
+  transform: perspective(2400px) rotateX(2.2deg) rotate(var(--tilt, 0deg)) !important;
   will-change: transform;
-  /* a painted edge in the plate's colour, and the panel's shadow on the
-     plaster, falling down and right, away from the lamp */
   box-shadow:
-    calc((3px + var(--lean, 0px)) * var(--face, 1)) 4px 0 0 var(--paint, #161412),
-    calc(var(--lean, 0px) * var(--face, 1)) 30px 40px -8px rgba(0, 0, 0, 0.75),
-    0 0 40px rgba(255, 43, 214, 0.35) !important;
+    3px 4px 0 0 var(--paint, #161412),
+    0 30px 40px -8px rgba(0, 0, 0, 0.8) !important;
 }
 
-/* outside was a whole sky. hung, it's a painting of one */
+/* outside was a whole sky. out here, it's a painting of one */
 html[data-hung="outside"] > body {
   height: calc(100vh - var(--top) - var(--foot)) !important;
   overflow: hidden !important;
 }
 html[data-hung="outside"] { overflow-y: hidden !important; }
 
-/* the wire up to "/" and the plate it hangs from, seen from underneath */
-.hang-wire {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 46px;
-  height: 46px;
-  top: calc(var(--top) - 30px);
-  margin-left: -6px;
-  /* cut at the ceiling, so all that's left is the end curling over */
-  border: var(--wire, 1.2px) solid #FF7BE6;
-  border-color: #FF7BE6 #FF7BE6 transparent transparent;
-  border-radius: 50% 60% 40% 50%;
-  transform: rotate(-24deg);
-  z-index: 2147483000;
-  pointer-events: none;
-}
-.hang-wire::after {
-  /* the cut end, frayed */
-  content: "";
-  position: absolute;
-  left: -3px;
-  top: 30%;
-  width: 6px;
-  height: 2px;
-  background: #FF7BE6;
-  transform: rotate(40deg);
-}
 .hang-hook {
   position: absolute;
   left: 50%;
-  top: calc(var(--top) - 52px);
-  width: 64px;
-  height: 56px;
-  margin-left: -16px;
+  top: calc(var(--top) - 46px);
+  transform: translateX(-50%) rotate(-1.4deg);
   z-index: 2147483001;
-  cursor: grab;
+  padding: 3px 12px;
+  font: 400 16px/1.2 Caprasimo, 'Cooper Black', Georgia, serif;
+  color: #2A1708 !important;
+  background: #F5E8C8;
+  box-shadow: 2px 3px 0 #2A1708;
+  text-decoration: none !important;
+  white-space: nowrap;
 }
-.hang-hook:focus-visible {
-  outline: 1px dashed #FFFFFF;
-  outline-offset: 2px;
-}
-.hang-label {
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-}
+.hang-hook:hover { background: #FFE27A; }
+.hang-hook:focus-visible { outline: 3px solid #FF5DB8; outline-offset: 2px; }
 
-/* leaving: it's tipped forward off the wall and carried off */
-html[data-hung].hang-lift > body {
-  transition: transform 0.45s cubic-bezier(.5, 0, .8, .3), opacity 0.45s ease-in !important;
-  transform: translateY(6vh) perspective(2400px) rotateX(-14deg) rotate(var(--tilt, 0deg)) rotateY(var(--turn, 0deg)) !important;
-  opacity: 0.0;
-}
-
-/* ── the back (session 106) ──────────────────────────────────
-   every room was hung the wrong way round. what faces you is the
-   back of the panel: brown paper over the stretcher, the screw eyes
-   and the picture wire, the framer's stickers. the paper is thin, and
-   the lamp is on the other side now, so the words come through it
-   backwards. it's inside the body, so it is mirrored with the room;
-   the things written on it are mirrored again so they read. */
-.hang-back {
+/* ── the costume ─────────────────────────────────────────────
+   the drugstore kind. a vinyl front, a printed picture, the name of what
+   you are in case anyone asks, and it ties at the back of the neck. it goes
+   over the whole panel, however long the panel is, so it's held at the top
+   of the window and the rest of it is just more vinyl. */
+.smock {
   position: absolute !important;
   inset: 0 !important;
   z-index: 2147482000 !important;
   display: block !important;
   margin: 0 !important; padding: 0 !important;
-  cursor: grab;
-  overflow: hidden;
-  color: #2a2118;
-  font: 13px/1.35 "Courier New", Courier, monospace;
-  text-align: left;
+  cursor: pointer;
+  /* clip, not hidden: hidden would be a scroller, and the print has to stick */
+  overflow: clip;
+  text-align: center;
+  color: var(--ink) !important;
+  font-family: Caprasimo, 'Cooper Black', Georgia, serif !important;
   background:
-    /* the stretcher, felt through the paper */
-    linear-gradient(90deg, rgba(70,48,24,0.22) 0 26px, transparent 26px calc(100% - 26px), rgba(70,48,24,0.22) calc(100% - 26px)),
-    linear-gradient(180deg, rgba(70,48,24,0.22) 0 26px, transparent 26px calc(100% - 26px), rgba(70,48,24,0.22) calc(100% - 26px)),
-    linear-gradient(90deg, transparent calc(50% - 13px), rgba(70,48,24,0.16) calc(50% - 13px) calc(50% + 13px), transparent calc(50% + 13px)),
-    /* fibres */
-    repeating-linear-gradient(83deg, rgba(255,240,210,0.05) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(-7deg, rgba(60,40,20,0.05) 0 1px, transparent 1px 11px),
-    rgba(176, 140, 96, 0.88);
-  box-shadow: inset 0 0 0 3px rgba(60,40,20,0.35), inset 0 0 60px rgba(60,40,20,0.25);
-  transition: opacity 0.12s linear;
+    linear-gradient(112deg, transparent 22%, rgba(255,255,255,0.28) 28%, transparent 36%, transparent 58%, rgba(255,255,255,0.16) 63%, transparent 70%),
+    repeating-linear-gradient(92deg, rgba(0,0,0,0.08) 0 2px, transparent 2px 90px),
+    var(--vinyl) !important;
+  transition: transform 0.6s cubic-bezier(.5, 0, .7, .4), opacity 0.45s ease-in 0.14s;
+  transform-origin: 50% 0;
 }
-html[data-hung].hang-faced .hang-back { opacity: 0; pointer-events: none; visibility: hidden; }
-.hang-back:focus-visible { outline: 2px dashed #1d1a17; outline-offset: -8px; }
-.hang-back > * { position: absolute; transform: scaleX(-1); }
+.smock.off { transform: translateY(-60vh) scaleY(0.28) rotate(3deg); opacity: 0; pointer-events: none; }
+.smock:focus-visible { outline: 3px dashed var(--ink); outline-offset: -10px; }
+.smock-ties { position: absolute; left: 50%; top: 0; width: 180px; height: 40px; margin-left: -90px; background: linear-gradient(var(--ink), var(--ink)) 50% 0 / 4px 34px no-repeat; }
+.smock-ties::before { content: ""; position: absolute; left: 50%; top: -3px; width: 150px; height: 26px; margin-left: -75px; border: solid var(--ink); border-width: 0 0 4px; border-radius: 0 0 50% 50%; }
+.smock-face {
+  position: sticky !important;
+  top: var(--top);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 36px 16px 30px;
+  max-height: calc(100vh - var(--top) - 20px);
+}
+.smock-face b {
+  font: 400 clamp(40px, 9vh, 84px)/0.98 Caprasimo, 'Cooper Black', Georgia, serif;
+  /* one colour plate slipped a little, the way they did */
+  text-shadow: 3px 3px 0 color-mix(in srgb, var(--vinyl) 62%, #000);
+}
+.smock-face svg { flex: 1 1 auto; min-height: 0; height: min(54vh, 480px); width: auto; max-width: 92%; margin: 8px 0; filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.25)); }
+.smock-face em { font: 400 clamp(18px, 3vh, 26px)/1.1 Caprasimo, 'Cooper Black', Georgia, serif; font-style: normal; }
+.smock-face small { font: 700 21px/1 Caveat, 'Comic Sans MS', cursive; margin-top: 8px; opacity: 0.85; text-decoration: underline wavy 1px; text-underline-offset: 3px; }
 
-.hang-back svg { left: 0; top: 0; width: 100%; height: 180px; transform: none; overflow: visible; }
+/* ── you sent them away with nothing ─────────────────────────
+   on the glass, so it stays where it is while the room scrolls under it */
+.egged { position: fixed; inset: 0; z-index: 2147483000; pointer-events: none; overflow: hidden; }
+.egged .yolk { position: absolute; top: 0; height: auto; }
+.egged .yolk.a { left: 6vw; width: clamp(90px, 13vw, 180px); }
+.egged .yolk.b { right: 10vw; top: 22vh; width: clamp(70px, 9vw, 130px); }
+.egged .tp {
+  position: absolute; top: -8px; width: clamp(16px, 2.6vw, 34px);
+  background: repeating-linear-gradient(180deg, #F7F4EA 0 26px, #C9C4B3 26px 27px);
+  box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
+  transform-origin: 50% 0;
+  animation: hang-sway 4.2s ease-in-out infinite alternate;
+}
+.egged .tp.one { left: 1.5vw; height: 46vh; transform: rotate(2deg); }
+.egged .tp.two { right: 34%; height: 16vh; transform: rotate(-3deg); animation-delay: -1.3s; }
+.egged .tp.three { right: 4%; height: 70vh; transform: rotate(1deg); animation-delay: -2.4s; }
+@keyframes hang-sway { from { rotate: -1.4deg; } to { rotate: 1.4deg; } }
+.egged b, .wrapper b { position: absolute; font: 700 20px/1 Caveat, 'Comic Sans MS', cursive; }
+.egged b { right: 14px; bottom: 10px; color: #FFD76A; text-shadow: 1px 1px 0 #000; }
 
-.hang-back .label {
-  /* the framer's label, top left as you look at it */
-  top: 64px; right: 48px;
-  width: min(300px, 70%);
-  padding: 12px 14px 10px;
-  background: #F2ECDD;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
-  transform: scaleX(-1) rotate(-1.4deg);
-}
-.hang-back .label b { display: block; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid #2a2118; margin-bottom: 6px; padding-bottom: 4px; }
-.hang-back .label i { font-style: normal; display: flex; justify-content: space-between; gap: 1em; border-bottom: 1px dotted rgba(42,33,24,0.4); }
-.hang-back .label i span:last-child { text-align: right; }
+.wrapper { position: fixed; right: 14px; bottom: 10px; z-index: 2147483000; pointer-events: none; text-align: right; rotate: -4deg; }
+.wrapper svg { width: 64px; display: block; margin-left: auto; }
+.wrapper b { position: static; display: block; color: #FFD76A; text-shadow: 1px 1px 0 #000; }
 
-.hang-back .wall {
-  top: 200px; left: 56px;
-  padding: 6px 12px;
-  background: #C8281E; color: #F4F1EA;
-  font: bold 12px/1.2 Arial, Helvetica, sans-serif; letter-spacing: 0.14em;
-  transform: scaleX(-1) rotate(2.2deg);
-}
-.hang-back .pencil {
-  top: 280px; right: 22%;
-  max-width: 260px;
-  color: rgba(40,30,20,0.72);
-  font: 20px/1.25 "Bradley Hand", "Segoe Print", "Comic Neue", "Chalkboard SE", cursive;
-  transform: scaleX(-1) rotate(-3deg);
-}
-.hang-back .tape {
-  bottom: 18%; left: 30%;
-  width: 120px; height: 28px;
-  background: rgba(230, 216, 170, 0.6);
-  transform: scaleX(-1) rotate(-34deg);
-}
-.hang-back .paint {
-  bottom: 40px; right: 40px;
-  width: 26px; height: 26px; border-radius: 50%;
-  background: var(--paint, #161412);
-  box-shadow: 0 0 0 2px rgba(42,33,24,0.25);
-}
-
-/* in transit (session 108): the carrier's waybill, slapped on crooked
-   over the corner of everything the framer wrote */
-.hang-back .waybill {
-  top: 120px; left: 230px;
-  width: 230px; padding: 8px 10px 10px;
-  background: #FFFFFF; color: #111;
-  border: 1px solid #C9CCD1;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
-  font: 10px/1.35 Arial, Helvetica, sans-serif; letter-spacing: 0.04em;
-  transform: scaleX(-1) rotate(-4deg);
-}
-.hang-back .waybill b { display: block; font-size: 11px; letter-spacing: 0.12em; border-bottom: 2px solid #111; padding-bottom: 3px; margin-bottom: 6px; }
-.hang-back .waybill .bars { display: block; height: 38px; margin: 0 0 6px; background: var(--bars); background-size: 100% 100%; }
-.hang-back .waybill span { display: block; }
-.hang-back .waybill span:last-child { margin-top: 4px; padding: 2px 4px; background: #111; color: #fff; font-weight: bold; text-align: center; }
-.hang-back .waybill u { display: inline-block; width: 120px; border-bottom: 1px solid #111; vertical-align: -2px; }
-@media (max-width: 600px) {
-  .hang-back .waybill { top: 280px; left: 24px; width: 190px; }
-  /* the label takes the whole top of a phone, so the sticker goes under it */
-  .hang-back .wall { top: 262px; left: auto; right: 22px; }
-  .hang-back .pencil { top: 440px; right: 16%; }
-}
-
-/* delivered (session 109): the waybill got filled in, by hand, in pink */
-.hang-back .waybill u { font: 700 16px/1 'Caveat', 'Comic Sans MS', cursive; color: #E8197A; text-decoration: none; border-bottom-color: #E8197A; width: auto; letter-spacing: 0; }
-.hang-back .waybill span:last-child { background: #2E7D4F; }
-.hang-back .marker {
-  top: 420px; left: 14%;
-  max-width: 340px;
-  color: #FF2BD6;
-  font: 700 clamp(24px, 3vw, 34px)/1.05 'Caveat', 'Comic Sans MS', cursive, 'Noto Color Emoji';
-  text-shadow: 0 0 10px rgba(255, 43, 214, 0.5);
-  transform: scaleX(-1) rotate(-4deg);
-}
-
-@media (max-width: 600px) { .hang-back .marker { top: 590px; left: 13%; right: 13%; max-width: none; font-size: 24px; } }
-
-/* the ball's dots, going by on the wall behind the panel. and in front of
-   the back of it, since brown paper doesn't mind */
-.hang-dots, .hang-back::after {
-  content: "";
-  pointer-events: none;
-  background-image:
-    radial-gradient(circle at 12% 20%, rgba(255,43,214,0.65) 0 18px, transparent 26px),
-    radial-gradient(circle at 34% 72%, rgba(25,240,255,0.6) 0 14px, transparent 22px),
-    radial-gradient(circle at 56% 34%, rgba(246,255,46,0.5) 0 12px, transparent 20px),
-    radial-gradient(circle at 78% 62%, rgba(255,255,255,0.45) 0 16px, transparent 24px),
-    radial-gradient(circle at 90% 12%, rgba(182,156,255,0.6) 0 12px, transparent 20px);
-  background-size: 760px 620px;
-  animation: hang-ball 26s linear infinite;
-}
-.hang-dots { position: fixed; inset: 0; z-index: 0; }
-.hang-back::after { position: absolute; inset: 0; mix-blend-mode: screen; opacity: 0.55; transform: none; }
-@keyframes hang-ball { to { background-position: 760px 620px; } }
-@media (prefers-reduced-motion: reduce) { .hang-dots, .hang-back::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .egged .tp { animation: none; } .smock { transition: none; } }

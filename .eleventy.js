@@ -47,6 +47,8 @@ module.exports = function(eleventyConfig) {
   // hangs as its words weigh it (src/hang/hang.js) and the pointer is the
   // air, same as on "/". the plate colour is the one "/" paints it tonight.
   eleventyConfig.addPassthroughCopy("src/hang");
+  // who comes to the door (session 110). the rooms wear what the kids wear
+  eleventyConfig.addPassthroughCopy("src/door");
   eleventyConfig.addTransform("hang", function(content) {
     const out = String((this.page && this.page.outputPath) || "");
     const m = out.match(/_site\/([a-z]+)\/index\.html$/);
@@ -61,7 +63,7 @@ module.exports = function(eleventyConfig) {
     const heaviest = sorted[0].w || 1;
     return content
       .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-name="${room.name}" data-heaviest="${heaviest}">`)
-      .replace(/<\/head>/i, `<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
+      .replace(/<\/head>/i, `<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Caveat:wght@700&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="/hang/hang.css">\n<script src="/door/kids.js" defer></script>\n<script src="/hang/hang.js" defer></script>\n</head>`);
   });
 
   return {

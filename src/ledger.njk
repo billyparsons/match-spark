@@ -499,6 +499,24 @@
         'missing from this ledger until session 92'
       ));
 
+      // session 110. the door keeps its own, and the three front pages before
+      // it kept theirs and never told this page. all of them are in this row.
+      var frontKeys = [];
+      for (var fi = 0; fi < localStorage.length; fi++) {
+        if (localStorage.key(fi).indexOf('match-spark:') === 0) frontKeys.push(localStorage.key(fi));
+      }
+      frontKeys.sort();
+      root.appendChild(row(
+        'what you did on the front page',
+        'match-spark:*',
+        frontKeys.length
+          ? frontKeys.map(function(k) { return '<code>' + esc(k) + '</code> ' + esc(localStorage.getItem(k)); }).join('<br>')
+          : 'nothing',
+        'match-spark:door is the bowl, who came, what you gave them, the porch light, and what you told the horse you were. :strike is the crate from session 107. :rink and :rink-sound are the rink. they stay in this browser. the door doesn&rsquo;t send what you told the horse anywhere.',
+        !frontKeys.length,
+        'missing from this ledger until session 110'
+      ));
+
       root.appendChild(row(
         'this page itself',
         '—',
