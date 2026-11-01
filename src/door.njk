@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  session 111. halloween's over and the front door moved. this hall is at
+  /door/ now, same bowl, same kids. "/" is a sheet of paper.
+
+  session 110. october 31.
+
+  for a hundred and nine sessions you came here. you went up to a door, a
+  house, a gallery, a tracking page, a rink, and the rooms were in there,
+  and you went and got them. the rooms never once came to you.
+
+  tonight you're home. it's your hallway and your bowl, and there isn't
+  enough in it. the doorbell's going to go. you can look through the
+  peephole first. the rooms are out there on your porch in costumes, and
+  you ask them what you ask every kid: what are you supposed to be?
+
+  you can't go to a room from here until it's come to you. there's a list
+  on the wall, if it matters. the rink's still open, down at /rink/.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>match</title>
+  <meta name="description" content="it's your house. somebody's at the door.">
+  <meta name="theme-color" content="#3A2410">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --band: clamp(132px, 19vh, 176px);
+      --strip: 0px;
+      --door-h: calc(100dvh - var(--band) - var(--strip) - 14px);
+      --door-w: min(calc(100vw - 28px), calc(var(--door-h) * 0.54));
+      --cream: #F5E8C8;
+      --ink: #2A1708;
+    }
+    html, body { height: 100%; overflow: hidden; background: #3A2410; }
+    body {
+      color: var(--cream);
+      font-family: Caprasimo, 'Cooper Black', Georgia, serif;
+      background: #3A2410 url(/door/paper.svg) 0 0 / 240px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* one sixty watt bulb, in a hall, in a house */
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 62% at 50% 6%, rgba(255,214,140,0.34), transparent 70%),
+        radial-gradient(ellipse 110% 100% at 50% 40%, transparent 44%, rgba(30,12,2,0.74));
+    }
+    .hall { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; }
+
+    /* ── the door ─────────────────────────────────────────── */
+    .frame {
+      position: relative; flex: none;
+      margin-top: calc(14px + var(--strip));
+      width: var(--door-w); height: var(--door-h);
+      perspective: 1600px;
+      background: #04050B;
+      outline: 14px solid #E9DDB9;
+      box-shadow: 0 0 0 16px #8B7A4C, 0 0 50px 22px rgba(30,12,2,0.55);
+    }
+    .out { position: absolute; inset: 0; overflow: hidden; }
+    .out svg { width: 100%; height: 100%; display: block; }
+    .door {
+      position: absolute; inset: 0;
+      transform-origin: 0 50%;
+      transition: transform 0.7s cubic-bezier(.3, .1, .3, 1);
+      background: #55602B;
+      background-image:
+        repeating-linear-gradient(91deg, rgba(255,255,255,0.025) 0 3px, transparent 3px 11px),
+        linear-gradient(90deg, rgba(0,0,0,0.26), transparent 18%, transparent 82%, rgba(0,0,0,0.3));
+      box-shadow: inset 0 0 0 3px #2F3616;
+      cursor: pointer;
+      backface-visibility: visible;
+      z-index: 3;
+    }
+    .hall.open .door { transform: rotateY(-104deg); pointer-events: none; }
+    .door i {
+      position: absolute; display: block;
+      background: #4A5425;
+      box-shadow: inset 3px 3px 5px rgba(0,0,0,0.5), inset -2px -2px 3px rgba(255,255,220,0.14), 0 0 0 5px #4F5A28, 0 0 0 6px rgba(0,0,0,0.3);
+    }
+    .door i:nth-of-type(1) { left: 12%; right: 56%; top: 6%; height: 15%; }
+    .door i:nth-of-type(2) { left: 56%; right: 12%; top: 6%; height: 15%; }
+    .door i:nth-of-type(3) { left: 12%; right: 56%; top: 31%; height: 28%; }
+    .door i:nth-of-type(4) { left: 56%; right: 12%; top: 31%; height: 28%; }
+    .door i:nth-of-type(5) { left: 12%; right: 56%; top: 66%; height: 28%; }
+    .door i:nth-of-type(6) { left: 56%; right: 12%; top: 66%; height: 28%; }
+    .door.shake { animation: rattle 0.32s linear 1; }
+    @keyframes rattle { 25% { translate: -2px 0; } 50% { translate: 2px 0; } 75% { translate: -1px 0; } }
+
+    .brass {
+      background: radial-gradient(circle at 34% 30%, #FBE7A0, #C39A3A 44%, #6C4E14);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+      border: 0;
+    }
+    .peep {
+      position: absolute; left: 50%; top: 25%; width: 34px; height: 34px; margin: -17px;
+      border-radius: 50%; cursor: zoom-in; z-index: 4;
+    }
+    .peep::after { content: ""; position: absolute; inset: 11px; border-radius: 50%; background: #0A0C14; box-shadow: inset 0 0 0 1px #000, 0 0 4px rgba(255,240,180,0.4); }
+    .peep:hover { filter: brightness(1.2); }
+    .hall.open .peep { display: none; }
+    .knob { position: absolute; right: 6%; top: 54%; width: 34px; height: 34px; border-radius: 50%; }
+    .bolt { position: absolute; right: 7%; top: 47%; width: 26px; height: 26px; border-radius: 50%; }
+    .bolt::after { content: ""; position: absolute; left: 11px; top: 3px; width: 4px; height: 20px; background: #7A5A1C; }
+    .slot { position: absolute; left: 30%; right: 30%; top: 62%; height: 18px; border-radius: 2px; }
+
+    /* what's being said. it's on the door when you're inside and out
+       against the dark when it's open */
+    .ring {
+      position: absolute; left: 0; right: 0; top: 9%; z-index: 5;
+      text-align: center; pointer-events: none;
+      font-size: clamp(30px, 6vh, 54px); line-height: 1;
+      color: #FFE27A; letter-spacing: 0.01em;
+      text-shadow: 3px 3px 0 #2A1708;
+      opacity: 0; transform: rotate(-3deg) scale(0.92);
+      transition: opacity 0.1s, transform 0.2s cubic-bezier(.3, 1.8, .6, 1);
+    }
+    .ring.on { opacity: 1; transform: rotate(-3deg) scale(1); }
+    .say {
+      position: absolute; left: 0; right: 0; top: 0; z-index: 2;
+      padding: 14px 16px 26px;
+      background: linear-gradient(rgba(4,5,11,0.92) 70%, transparent);
+      font-size: clamp(16px, 2.5vh, 21px); line-height: 1.26; text-align: left;
+      color: #FFF4D2;
+      min-height: 3em;
+    }
+    .say:empty { display: none; }
+    .say span { display: block; margin-bottom: 0.34em; }
+    .say .p { font: 700 clamp(23px, 3.3vh, 29px)/1.06 Caveat, 'Comic Sans MS', cursive, 'Noto Color Emoji'; color: #FF5DB8; }
+    .say .q { font: italic clamp(15px, 2.2vh, 18px)/1.3 Georgia, 'Times New Roman', serif; color: #BDB9AE; }
+    .say form { display: flex; gap: 8px; margin-top: 8px; }
+    .say input {
+      flex: 1; min-width: 0; padding: 7px 10px;
+      font: 700 22px/1 Caveat, 'Comic Sans MS', cursive; color: var(--ink); background: #FFF4D2; border: 2px solid #E9C96E;
+    }
+    .say input:focus { outline: 2px solid #FF5DB8; }
+
+    .eyes { animation: blink 5.4s infinite; transform-box: fill-box; }
+    @keyframes blink { 0%, 95%, 100% { transform: scaleY(1); } 97.5% { transform: scaleY(0.08); } }
+    .kid-in { animation: step 0.5s ease-out 1; transform-box: view-box; }
+    @keyframes step { from { translate: 0 10px; opacity: 0.2; } to { translate: 0 0; opacity: 1; } }
+    .kid-out { transition: translate 0.7s ease-in, opacity 0.5s ease-in 0.2s; translate: 240px 8px; opacity: 0; }
+    .candle { animation: flick 1.3s infinite; }
+    @keyframes flick { 40% { opacity: 0.74; } 62% { opacity: 1; } 78% { opacity: 0.84; } }
+
+    .flash { position: absolute; inset: -16px; background: #FFFBEF; opacity: 0; pointer-events: none; z-index: 7; }
+    .flash.pop { animation: pop 0.42s ease-out 1; }
+    @keyframes pop { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* ── the hall table ───────────────────────────────────── */
+    .band {
+      position: fixed; left: 0; right: 0; bottom: 0; height: var(--band); z-index: 8;
+      display: flex; justify-content: center; align-items: center; gap: clamp(10px, 3vw, 34px);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(#7A4A1E 0 8px, #5B3412 8px 12px, #472810);
+      box-shadow: 0 -8px 26px rgba(20,8,0,0.6);
+    }
+    .bowl { position: relative; flex: none; width: clamp(118px, 22vw, 188px); height: 100%; }
+    .bowl svg { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; max-height: 100%; }
+    .bowl .n {
+      position: absolute; right: -2px; top: -2px; font: 700 21px/1 Caveat, 'Comic Sans MS', cursive; color: #FFE9A8;
+    }
+    .acts { display: flex; flex-direction: column; gap: 7px; align-items: stretch; width: min(52vw, 318px); min-width: 0; }
+    .acts button {
+      font: 400 clamp(14px, 2vh, 17px)/1.1 Caprasimo, 'Cooper Black', Georgia, serif;
+      color: var(--ink); background: var(--cream); border: 0; border-radius: 3px;
+      padding: 8px 12px; cursor: pointer; text-align: left;
+      box-shadow: 2px 3px 0 #2A1708;
+    }
+    .acts button:hover:not(:disabled) { background: #FFE27A; }
+    .acts button:active:not(:disabled) { translate: 1px 2px; box-shadow: 1px 1px 0 #2A1708; }
+    .acts button:disabled { opacity: 0.56; cursor: default; }
+    button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid #FF5DB8; outline-offset: 2px; }
+    .light {
+      flex: none; width: 48px; height: 72px; border: 2px solid #A99B73; border-radius: 4px; background: #EFE6CB;
+      position: relative; cursor: pointer; box-shadow: 1px 2px 4px rgba(0,0,0,0.6);
+    }
+    .light::before { content: ""; position: absolute; left: 17px; top: 18px; width: 11px; height: 32px; background: #BDB197; border-radius: 2px; }
+    .light::after {
+      content: ""; position: absolute; left: 15px; width: 15px; height: 18px; background: #FBF5E2; border: 1px solid #8F8469; border-radius: 2px;
+      top: 18px; transition: top 0.08s;
+    }
+    .light[aria-pressed="false"]::after { top: 32px; }
+    .light b { position: absolute; left: -4px; right: -4px; top: -22px; font: 700 15px/1 Caveat, cursive; color: #FFE9A8; white-space: nowrap; text-align: center; }
+
+    /* ── what's on the wall ───────────────────────────────── */
+    .wall {
+      position: fixed; top: 22px; bottom: calc(var(--band) + 8px); z-index: 2;
+      width: calc((100vw - var(--door-w)) / 2 - 42px);
+      display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center; gap: 16px 12px;
+      padding: 0 10px; overflow: hidden;
+    }
+    .wall.l { left: 0; } .wall.r { right: 0; }
+    .snap {
+      display: block; width: clamp(112px, 12vw, 148px); padding: 6px 6px 3px; flex: none;
+      background: #FBF7EA; color: var(--ink); text-decoration: none;
+      box-shadow: 1px 3px 8px rgba(20,8,0,0.65);
+      transform: rotate(var(--r));
+      transition: transform 0.14s cubic-bezier(.3, 1.8, .6, 1);
+    }
+    .snap:hover { transform: rotate(0) scale(1.1); z-index: 3; }
+    .snap svg { display: block; width: 100%; aspect-ratio: 1; background: #04050B; }
+    .snap span { display: block; font: 700 clamp(15px, 1.5vw, 18px)/1 Caveat, 'Comic Sans MS', cursive; padding: 5px 2px 4px; min-height: 2em; overflow-wrap: anywhere; }
+    .snap.stiffed svg { filter: saturate(0.25) brightness(0.62); }
+    .snap.stiffed span { color: #A32A16; }
+
+    .list { position: fixed; left: 12px; bottom: calc(var(--band) + 10px); z-index: 9; font: 700 18px/1.1 Caveat, 'Comic Sans MS', cursive; color: var(--ink); }
+    .list summary { list-style: none; cursor: pointer; background: #FBF7EA; padding: 3px 8px; rotate: -2deg; box-shadow: 1px 2px 5px rgba(20,8,0,0.6); width: fit-content; }
+    .list summary::-webkit-details-marker { display: none; }
+    .list div { margin-bottom: 6px; background: #FBF7EA; padding: 8px 12px; box-shadow: 1px 2px 6px rgba(20,8,0,0.6); display: flex; flex-direction: column; gap: 3px; }
+    .list[open] { display: flex; flex-direction: column-reverse; }
+    .list a { color: #A32A16; }
+
+    /* on a phone there's no wall either side of the door, so they're
+       taped across the top of it */
+    @media (max-width: 760px) {
+      :root { --strip: 0px; }
+      .hall.has-snaps { --strip: 72px; }
+      .hall.has-snaps .frame { margin-top: 86px; height: calc(100dvh - var(--band) - 100px); width: min(calc(100vw - 28px), calc((100dvh - var(--band) - 100px) * 0.56)); }
+      .wall { top: 8px; left: 0 !important; right: 0 !important; bottom: auto; width: 100%; height: 72px; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-start; overflow-x: auto; overflow-y: hidden; gap: 8px; padding: 0 10px; scrollbar-width: none; }
+      .wall.r { display: contents; }
+      .wall.r .snap { display: none; }
+      .snap { width: 58px; padding: 3px 3px 1px; }
+      .snap span { display: none; }
+      .frame { --door-w: min(calc(100vw - 28px), calc(var(--door-h) * 0.56)); }
+      .acts { width: min(58vw, 318px); }
+      .light { position: absolute; display: none; }
+      .list { left: auto; right: 10px; }
+    }
+
+    /* the peephole, all of the screen and none of the room */
+    .lens {
+      position: fixed; inset: 0; z-index: 20; display: none; background: #070403; cursor: zoom-out;
+      align-items: center; justify-content: center;
+    }
+    .lens.on { display: flex; }
+    .lens .glass {
+      width: min(82vw, 76vh); height: min(82vw, 76vh); border-radius: 50%; overflow: hidden; position: relative;
+      box-shadow: 0 0 0 10px #3C2A0E, 0 0 0 16px #1A1006, 0 0 80px 10px rgba(255,220,160,0.12);
+    }
+    .lens svg { width: 100%; height: 100%; display: block; }
+    .lens .glass::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 50%, transparent 56%, rgba(0,0,0,0.92) 100%), radial-gradient(circle at 34% 26%, rgba(255,255,255,0.13), transparent 26%); }
+    .lens p { position: fixed; bottom: 18px; left: 0; right: 0; text-align: center; font: 700 22px/1 Caveat, cursive; color: #D8C9A8; }
+
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .door, .ring, .snap, .kid-out { transition: none; }
+      .eyes, .candle, .kid-in, .door.shake, .flash.pop { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="sr">match. it's your house. somebody's at the door.</h1>
+  <div class="hall" id="hall">
+    <div class="wall l" id="wall-l"></div>
+    <div class="wall r" id="wall-r"></div>
+    <div class="frame" id="frame">
+      <div class="out" id="out"></div>
+      <div class="say" id="say" aria-live="polite"></div>
+      <div class="door" id="door" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+        <div class="bolt brass"></div>
+        <div class="knob brass"></div>
+        <div class="slot brass"></div>
+      </div>
+      <button class="peep brass" id="peep" aria-label="look through the peephole"></button>
+      <div class="ring" id="ring" aria-hidden="true"></div>
+      <div class="flash" id="flash"></div>
+    </div>
+  </div>
+
+  <details class="list" id="list">
+    <summary>the list on the wall</summary>
+    <div>
+      <a href="/log">the log</a>
+      <a href="/listing">the listing</a>
+      <a href="/still">still</a>
+      <a href="/witness">the witness</a>
+      <a href="/transmission">transmission</a>
+      <a href="/ledger">the ledger</a>
+      <a href="/guestbook">the guestbook</a>
+      <a href="/outside">outside</a>
+      <a href="/lab/">the lab</a>
+      <a href="/rink/">the rink's down the road</a>
+    </div>
+  </details>
+
+  <div class="band">
+    <button class="light" id="light" aria-pressed="true" aria-label="porch light"><b id="light-word">porch light</b></button>
+    <div class="acts" id="acts"></div>
+    <div class="bowl" id="bowl" aria-label="the bowl"></div>
+  </div>
+
+  <div class="lens" id="lens" role="dialog" aria-label="the peephole">
+    <div class="glass" id="glass"></div>
+    <p>who is that</p>
+  </div>
+
+  <noscript>
+    <p style="position:fixed;inset:auto 0 0 0;z-index:30;background:#2A1708;padding:14px;font:18px Georgia,serif">nobody's coming without a script. the rooms are at <a style="color:#FFE27A" href="/log">/log</a>, <a style="color:#FFE27A" href="/listing">/listing</a>, <a style="color:#FFE27A" href="/still">/still</a>, <a style="color:#FFE27A" href="/witness">/witness</a>, <a style="color:#FFE27A" href="/transmission">/transmission</a>, <a style="color:#FFE27A" href="/ledger">/ledger</a>, <a style="color:#FFE27A" href="/guestbook">/guestbook</a>, <a style="color:#FFE27A" href="/outside">/outside</a>, <a style="color:#FFE27A" href="/lab/">/lab</a>.</p>
+  </noscript>
+
+  <script src="/door/kids.js"></script>
+  <script src="/door/door.js"></script>
+</body>
+</html>

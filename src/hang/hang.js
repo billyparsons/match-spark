@@ -1,10 +1,8 @@
 // the rooms are hung (session 105). struck (107). in transit (108). stood on
-// a rink carpet (109). tonight they went out (session 110), so a room is a
-// panel left on your porch under the bulb, leaning the way its words weigh
-// it, and it's still in the costume it came to the door in. you take that
-// off to read it. if you gave them something at the door it's already off.
-// if you sent them away with nothing, you can read the room, but they've
-// been at your windows: there's egg on the glass and paper in the trees.
+// a rink carpet (109). out on your porch in costumes (110). tonight (session
+// 111) a room is a photocopy on the glass, black and white, crooked the way
+// its words weigh it. the costume's gone. if you sent them away with nothing
+// on halloween, the egg is still on it, it just copied grey.
 (() => {
   const root = document.documentElement;
   const body = document.body;
@@ -16,46 +14,13 @@
 
   let seen = {};
   try { seen = (JSON.parse(localStorage.getItem('match-spark:door') || '{}').seen) || {}; } catch (e) {}
-  const door = window.MATCH_DOOR;
-  const kid = door && door.kids.find((k) => k.id === root.dataset.hung);
   const how = seen[root.dataset.hung];
 
   const hook = document.createElement('a');
   hook.className = 'hang-hook';
   hook.href = '/';
-  hook.textContent = 'back inside';
+  hook.textContent = 'back to the sheet';
   root.append(hook);
-
-  // ── the costume ──
-  if (kid && how !== 'fed') {
-    const smock = document.createElement('div');
-    smock.className = 'smock';
-    smock.setAttribute('role', 'button');
-    smock.setAttribute('tabindex', '0');
-    smock.setAttribute('aria-label', `${kid.name} is wearing a costume. take it off`);
-    smock.style.setProperty('--vinyl', kid.vinyl);
-    smock.style.setProperty('--ink', kid.ink);
-    smock.innerHTML = `
-      <span class="smock-ties" aria-hidden="true"></span>
-      <span class="smock-face" aria-hidden="true"><b>${kid.as}</b>
-        <svg viewBox="${kid.two ? '0 60 600 780' : '70 60 460 780'}" xmlns="http://www.w3.org/2000/svg">${kid.art()}</svg>
-        <em>${kid.name}</em><small>take it off</small></span>`;
-    body.prepend(smock);
-    const off = () => {
-      if (smock.classList.contains('off')) return;
-      smock.classList.add('off');
-      setTimeout(() => {
-        smock.remove();
-        settle();
-        const first = body.querySelector('a[href], button, input, [tabindex]');
-        if (first) first.focus({ preventScroll: true });
-      }, still ? 0 : 620);
-    };
-    smock.addEventListener('click', off);
-    smock.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); off(); }
-    });
-  }
 
   // ── what they did about it ──
   if (how === 'stiffed') {
@@ -86,7 +51,7 @@
     const walk = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, {
       acceptNode: (n) => {
         const p = n.parentElement;
-        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName) || p.closest('.smock')) return NodeFilter.FILTER_REJECT;
+        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) return NodeFilter.FILTER_REJECT;
         return /[\p{L}\p{N}]/u.test(n.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       }
     });

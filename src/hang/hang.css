@@ -1,19 +1,16 @@
-/* the rooms are hung (session 105). then struck, shipped, and stood on a
-   rink carpet. all that's over.
+/* the rooms are hung (session 105). then struck, shipped, stood on a rink
+   carpet, left on a porch. all that's over.
 
-   out (session 110): the room's a panel left out on the porch at night,
-   against the side of your house, under one yellow bug bulb. it's got its
-   costume on until you take it off. */
+   copied (session 111): the room's a photocopy lying on the copier glass.
+   no colour, because a copier doesn't do colour. the room's own interior
+   is still under there, one toner darker. */
 
 html[data-hung] {
-  --gut: clamp(16px, 6vw, 104px);
-  --top: clamp(64px, 11vh, 120px);
-  --foot: clamp(72px, 14vh, 160px);
-  background:
-    radial-gradient(ellipse 70vw 62vh at 50% -6vh, rgba(255, 196, 92, 0.46), transparent 74%),
-    repeating-linear-gradient(180deg, rgba(0,0,0,0.4) 0 2px, transparent 2px 46px),
-    #1E2017 !important;
-  background-attachment: fixed !important;
+  --gut: clamp(12px, 5vw, 88px);
+  --top: clamp(56px, 9vh, 96px);
+  --foot: clamp(56px, 10vh, 120px);
+  background: #000 !important;
+  filter: grayscale(1) contrast(1.18);
   overflow-x: hidden !important;
   height: auto !important;
   min-height: 100% !important;
@@ -25,14 +22,11 @@ html[data-hung] > body {
   min-height: calc(100vh - var(--top) - var(--foot)) !important;
   z-index: 1 !important;
   transform-origin: 50% 0 !important;
-  transform: perspective(2400px) rotateX(2.2deg) rotate(var(--tilt, 0deg)) !important;
-  will-change: transform;
-  box-shadow:
-    3px 4px 0 0 var(--paint, #161412),
-    0 30px 40px -8px rgba(0, 0, 0, 0.8) !important;
+  transform: rotate(var(--tilt, 0deg)) !important;
+  box-shadow: 0 0 0 1px #fff !important;
 }
 
-/* outside was a whole sky. out here, it's a painting of one */
+/* outside was a whole sky. on the glass, it's a copy of one */
 html[data-hung="outside"] > body {
   height: calc(100vh - var(--top) - var(--foot)) !important;
   overflow: hidden !important;
@@ -42,63 +36,18 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
 .hang-hook {
   position: absolute;
   left: 50%;
-  top: calc(var(--top) - 46px);
+  top: calc(var(--top) - 40px);
   transform: translateX(-50%) rotate(-1.4deg);
   z-index: 2147483001;
   padding: 3px 12px;
-  font: 400 16px/1.2 Caprasimo, 'Cooper Black', Georgia, serif;
-  color: #2A1708 !important;
-  background: #F5E8C8;
-  box-shadow: 2px 3px 0 #2A1708;
+  font: 400 15px/1.3 'Special Elite', 'Courier New', monospace;
+  color: #000 !important;
+  background: #fff;
   text-decoration: none !important;
   white-space: nowrap;
 }
-.hang-hook:hover { background: #FFE27A; }
-.hang-hook:focus-visible { outline: 3px solid #FF5DB8; outline-offset: 2px; }
-
-/* ── the costume ─────────────────────────────────────────────
-   the drugstore kind. a vinyl front, a printed picture, the name of what
-   you are in case anyone asks, and it ties at the back of the neck. it goes
-   over the whole panel, however long the panel is, so it's held at the top
-   of the window and the rest of it is just more vinyl. */
-.smock {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 2147482000 !important;
-  display: block !important;
-  margin: 0 !important; padding: 0 !important;
-  cursor: pointer;
-  /* clip, not hidden: hidden would be a scroller, and the print has to stick */
-  overflow: clip;
-  text-align: center;
-  color: var(--ink) !important;
-  font-family: Caprasimo, 'Cooper Black', Georgia, serif !important;
-  background:
-    linear-gradient(112deg, transparent 22%, rgba(255,255,255,0.28) 28%, transparent 36%, transparent 58%, rgba(255,255,255,0.16) 63%, transparent 70%),
-    repeating-linear-gradient(92deg, rgba(0,0,0,0.08) 0 2px, transparent 2px 90px),
-    var(--vinyl) !important;
-  transition: transform 0.6s cubic-bezier(.5, 0, .7, .4), opacity 0.45s ease-in 0.14s;
-  transform-origin: 50% 0;
-}
-.smock.off { transform: translateY(-60vh) scaleY(0.28) rotate(3deg); opacity: 0; pointer-events: none; }
-.smock:focus-visible { outline: 3px dashed var(--ink); outline-offset: -10px; }
-.smock-ties { position: absolute; left: 50%; top: 0; width: 180px; height: 40px; margin-left: -90px; background: linear-gradient(var(--ink), var(--ink)) 50% 0 / 4px 34px no-repeat; }
-.smock-ties::before { content: ""; position: absolute; left: 50%; top: -3px; width: 150px; height: 26px; margin-left: -75px; border: solid var(--ink); border-width: 0 0 4px; border-radius: 0 0 50% 50%; }
-.smock-face {
-  position: sticky !important;
-  top: var(--top);
-  display: flex; flex-direction: column; align-items: center;
-  padding: 36px 16px 30px;
-  max-height: calc(100vh - var(--top) - 20px);
-}
-.smock-face b {
-  font: 400 clamp(40px, 9vh, 84px)/0.98 Caprasimo, 'Cooper Black', Georgia, serif;
-  /* one colour plate slipped a little, the way they did */
-  text-shadow: 3px 3px 0 color-mix(in srgb, var(--vinyl) 62%, #000);
-}
-.smock-face svg { flex: 1 1 auto; min-height: 0; height: min(54vh, 480px); width: auto; max-width: 92%; margin: 8px 0; filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.25)); }
-.smock-face em { font: 400 clamp(18px, 3vh, 26px)/1.1 Caprasimo, 'Cooper Black', Georgia, serif; font-style: normal; }
-.smock-face small { font: 700 21px/1 Caveat, 'Comic Sans MS', cursive; margin-top: 8px; opacity: 0.85; text-decoration: underline wavy 1px; text-underline-offset: 3px; }
+.hang-hook:hover { background: #000; color: #fff !important; outline: 1px solid #fff; }
+.hang-hook:focus-visible { outline: 3px dashed #fff; outline-offset: 2px; }
 
 /* ── you sent them away with nothing ─────────────────────────
    on the glass, so it stays where it is while the room scrolls under it */
@@ -117,11 +66,18 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
 .egged .tp.two { right: 34%; height: 16vh; transform: rotate(-3deg); animation-delay: -1.3s; }
 .egged .tp.three { right: 4%; height: 70vh; transform: rotate(1deg); animation-delay: -2.4s; }
 @keyframes hang-sway { from { rotate: -1.4deg; } to { rotate: 1.4deg; } }
-.egged b, .wrapper b { position: absolute; font: 700 20px/1 Caveat, 'Comic Sans MS', cursive; }
+.egged b, .wrapper b { position: absolute; font: 400 17px/1 'Permanent Marker', 'Comic Sans MS', cursive; }
 .egged b { right: 14px; bottom: 10px; color: #FFD76A; text-shadow: 1px 1px 0 #000; }
 
 .wrapper { position: fixed; right: 14px; bottom: 10px; z-index: 2147483000; pointer-events: none; text-align: right; rotate: -4deg; }
 .wrapper svg { width: 64px; display: block; margin-left: auto; }
 .wrapper b { position: static; display: block; color: #FFD76A; text-shadow: 1px 1px 0 #000; }
 
-@media (prefers-reduced-motion: reduce) { .egged .tp { animation: none; } .smock { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .egged .tp { animation: none; } }
+
+/* a room can come off the glass too */
+@media print {
+  html[data-hung] { background: #fff !important; }
+  html[data-hung] > body { margin: 0 !important; transform: none !important; box-shadow: none !important; }
+  .hang-hook, .egged, .wrapper { display: none !important; }
+}
