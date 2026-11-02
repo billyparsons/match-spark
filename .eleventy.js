@@ -51,21 +51,20 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/door");
   // the plates for the sheet on "/" (session 111)
   eleventyConfig.addPassthroughCopy("src/zine");
-  eleventyConfig.addTransform("hang", function(content) {
+  // the colour of the whole site (session 112). one number, and anyone can
+  // add one to it
+  eleventyConfig.addPassthroughCopy("src/coat");
+  eleventyConfig.addTransform("hang", async function(content) {
     const out = String((this.page && this.page.outputPath) || "");
     const m = out.match(/_site\/([a-z]+)\/index\.html$/);
     if (!m) return content;
     const { rooms } = require("./src/_data/weights.js")();
     const room = rooms.find((r) => r.id === m[1]);
     if (!room) return content;
-    const sorted = [...rooms].sort((a, b) => b.w - a.w);
-    const PAINT = ["#161412", "#C8281E", "#1F4E9C", "#E8B21A", "#F4F1EA", "#161412", "#C8281E", "#E8B21A", "#1F4E9C"];
-    const rank = sorted.indexOf(room);
-    const paint = rank === sorted.length - 1 ? "#C8281E" : PAINT[rank % PAINT.length];
-    const heaviest = sorted[0].w || 1;
+    const coat = await require("./src/_data/coat.js")();
     return content
-      .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-paint="${paint}" data-w="${room.w}" data-name="${room.name}" data-heaviest="${heaviest}">`)
-      .replace(/<\/head>/i, `<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Permanent+Marker&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="/hang/hang.css">\n<script src="/hang/hang.js" defer></script>\n</head>`);
+      .replace(/<html([^>]*)>/i, `<html$1 data-hung="${room.id}" data-coat="${coat.n === null ? "" : coat.n}" style="--coat:${coat.hex};--ink:${coat.ink}">`)
+      .replace(/<\/head>/i, `<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Permanent+Marker&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="/hang/hang.css">\n<script src="/coat/coat.js" defer></script>\n<script src="/hang/hang.js" defer></script>\n</head>`);
   });
 
   return {

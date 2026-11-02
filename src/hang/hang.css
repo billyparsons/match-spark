@@ -1,16 +1,15 @@
 /* the rooms are hung (session 105). then struck, shipped, stood on a rink
-   carpet, left on a porch. all that's over.
+   carpet, left on a porch, photocopied. all that's over.
 
-   copied (session 111): the room's a photocopy lying on the copier glass.
-   no colour, because a copier doesn't do colour. the room's own interior
-   is still under there, one toner darker. */
+   session 112: a room is a room, straight, in its own colours. what's around
+   it is the colour of the whole site, and nobody here chose that. */
 
 html[data-hung] {
   --gut: clamp(12px, 5vw, 88px);
   --top: clamp(56px, 9vh, 96px);
   --foot: clamp(56px, 10vh, 120px);
-  background: #000 !important;
-  filter: grayscale(1) contrast(1.18);
+  background: var(--coat, #fff) !important;
+  transition: background-color 1.2s;
   overflow-x: hidden !important;
   height: auto !important;
   min-height: 100% !important;
@@ -21,12 +20,10 @@ html[data-hung] > body {
   margin: var(--top) var(--gut) var(--foot) !important;
   min-height: calc(100vh - var(--top) - var(--foot)) !important;
   z-index: 1 !important;
-  transform-origin: 50% 0 !important;
-  transform: rotate(var(--tilt, 0deg)) !important;
-  box-shadow: 0 0 0 1px #fff !important;
+  box-shadow: 0 0 0 1px var(--ink, #000) !important;
 }
 
-/* outside was a whole sky. on the glass, it's a copy of one */
+/* outside is a whole sky, cut down to fit the frame */
 html[data-hung="outside"] > body {
   height: calc(100vh - var(--top) - var(--foot)) !important;
   overflow: hidden !important;
@@ -35,22 +32,22 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
 
 .hang-hook {
   position: absolute;
-  left: 50%;
-  top: calc(var(--top) - 40px);
-  transform: translateX(-50%) rotate(-1.4deg);
+  left: var(--gut);
+  top: calc(var(--top) - 34px);
   z-index: 2147483001;
-  padding: 3px 12px;
-  font: 400 15px/1.3 'Special Elite', 'Courier New', monospace;
-  color: #000 !important;
-  background: #fff;
-  text-decoration: none !important;
+  font: 700 17px/1.3 "Helvetica Neue", Arial, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  color: var(--ink, #000) !important;
+  text-decoration: underline !important;
   white-space: nowrap;
 }
-.hang-hook:hover { background: #000; color: #fff !important; outline: 1px solid #fff; }
-.hang-hook:focus-visible { outline: 3px dashed #fff; outline-offset: 2px; }
+.hang-hook:hover { text-decoration: none !important; }
+.hang-hook:focus-visible { outline: 3px solid var(--ink, #000); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) { html[data-hung] { transition: none; } }
 
 /* ── you sent them away with nothing ─────────────────────────
-   on the glass, so it stays where it is while the room scrolls under it */
+   it stays where it is while the room scrolls under it */
 .egged { position: fixed; inset: 0; z-index: 2147483000; pointer-events: none; overflow: hidden; }
 .egged .yolk { position: absolute; top: 0; height: auto; }
 .egged .yolk.a { left: 6vw; width: clamp(90px, 13vw, 180px); }
@@ -75,7 +72,7 @@ html[data-hung="outside"] { overflow-y: hidden !important; }
 
 @media (prefers-reduced-motion: reduce) { .egged .tp { animation: none; } }
 
-/* a room can come off the glass too */
+/* a room prints without the colour */
 @media print {
   html[data-hung] { background: #fff !important; }
   html[data-hung] > body { margin: 0 !important; transform: none !important; box-shadow: none !important; }

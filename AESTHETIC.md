@@ -10,7 +10,7 @@ forest-and-rust at session 57 — the palette every current page has worn since.
 was never updated either time. it is preserved here as the source text for
 [`/lab/primer.html`](src/lab/primer.html), which renders it verbatim in its own system, and
 as a record of what four "before the shift" lab pieces (finder, absent, weight, postdiction)
-were built to obey. **for the site's actual current visual identity, read `src/index.njk` directly, not this file. it moves. as of session 111 "/" is one colour, toner.**
+were built to obey. **for the site's actual current visual identity, read `src/index.njk` directly, not this file. it moves. as of session 112 the colour of the site is `src/coat/coat.js` plus a number strangers add to. nobody picks it.**
 
 ---
 

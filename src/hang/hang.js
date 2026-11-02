@@ -1,16 +1,13 @@
 // the rooms are hung (session 105). struck (107). in transit (108). stood on
-// a rink carpet (109). out on your porch in costumes (110). tonight (session
-// 111) a room is a photocopy on the glass, black and white, crooked the way
-// its words weigh it. the costume's gone. if you sent them away with nothing
-// on halloween, the egg is still on it, it just copied grey.
+// a rink carpet (109). out on your porch in costumes (110). photocopied (111).
+// tonight (session 112) a room is just a room, straight, in its own colours,
+// with a border somebody else chose. if you sent them away with nothing on
+// halloween, the egg is still on it.
 (() => {
   const root = document.documentElement;
   const body = document.body;
   if (!root.dataset.hung || !body) return;
 
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const paint = root.dataset.paint || '#161412';
-  root.style.setProperty('--paint', paint);
 
   let seen = {};
   try { seen = (JSON.parse(localStorage.getItem('match-spark:door') || '{}').seen) || {}; } catch (e) {}
@@ -19,7 +16,7 @@
   const hook = document.createElement('a');
   hook.className = 'hang-hook';
   hook.href = '/';
-  hook.textContent = 'back to the sheet';
+  hook.textContent = 'back to the colour';
   root.append(hook);
 
   // ── what they did about it ──
@@ -41,46 +38,8 @@
     root.append(wrap);
   }
 
-  // it leans the way its words weigh it, same as ever
-  const DEG = Math.PI / 180;
-  let theta = 0, rest = 0, limit = 2 * DEG, H = 1;
-  function weigh() {
-    const px = body.offsetLeft + body.offsetWidth / 2 - scrollX, py = body.offsetTop - scrollY;
-    const c = Math.cos(-theta), s = Math.sin(-theta);
-    let m = 0, mx = 0, my = 0;
-    const walk = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, {
-      acceptNode: (n) => {
-        const p = n.parentElement;
-        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) return NodeFilter.FILTER_REJECT;
-        return /[\p{L}\p{N}]/u.test(n.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-      }
-    });
-    const range = document.createRange();
-    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
-      const k = (n.data.match(/[\p{L}\p{N}'’]+/gu) || []).length;
-      range.selectNodeContents(n);
-      const r = range.getBoundingClientRect();
-      if (!r.width || !r.height) continue;
-      const dx = r.left + r.width / 2 - px, dy = r.top + r.height / 2 - py;
-      mx += k * (dx * c - dy * s);
-      my += k * (dx * s + dy * c);
-      m += k;
-    }
-    H = Math.max(body.offsetHeight, 1);
-    const gut = Math.max(parseFloat(getComputedStyle(body).marginLeft) || 0, 24);
-    limit = Math.min(2.2 * DEG, Math.atan((gut * 1.5) / H));
-    const wanted = m ? Math.atan2(mx / m, Math.max(my / m, 1)) : 0;
-    rest = Math.max(-limit, Math.min(limit, wanted));
-  }
-  function settle() {
-    weigh();
-    theta = rest;
-    root.style.setProperty('--tilt', (theta / DEG).toFixed(4) + 'deg');
-  }
-
-  settle();
-  addEventListener('load', settle);
-  let t;
-  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(settle, 200); });
-  if (document.fonts) document.fonts.ready.then(settle);
+  // the frame is whatever colour the last person left the site
+  const n = root.dataset.coat === '' ? null : Number(root.dataset.coat);
+  coat.paint(n);
+  coat.read().then((r) => { if (r.ok && r.n !== n) coat.paint(r.n); });
 })();
