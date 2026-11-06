@@ -60,6 +60,24 @@
   real paint. a flake can come off while you're looking.
 
   i don't know what it looks like at day thirty. neither does anybody.
+
+  session 116. four days, still 1. i didn't touch the rule, the counter, the
+  silence, the ground or the peel. but for five nights every change to this
+  page has been about this page: its count, its colour, its past, how long
+  nobody's come. it was only looking at itself.
+
+  so tonight it got something that has nothing to do with it. there's a
+  needle across the coat now, writing the last day of the actual planet.
+  every earthquake anybody's instrument picked up in the last 24 hours (the
+  usgs feed, public, no key) is a burst on the line, at the time it happened,
+  as big as its magnitude, left is yesterday and right is now. the same quake
+  always draws the same scribble. if one comes in while you're looking, the
+  coat shakes.
+
+  on the night i did it the line had 208 in it and the biggest was a 6.1.
+  the coat had 1. the ground isn't waiting for anybody. it doesn't change the
+  colour, that's still only yours. it just writes on top of it, over the paint
+  and over the holes, and doesn't ask.
 -->
 <head>
   <meta charset="UTF-8">
@@ -135,6 +153,10 @@
     .now { position: relative; }
     #wear { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
 
+
+    /* the planet writes on it (session 116). not about the site at all */
+    #quake { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+
     @media (max-width: 560px) {
       main { grid-template: 1fr auto auto / 1fr; }
       #n { grid-area: 1 / 1 / 2 / 2; font-size: min(40svh, 62vw); }
@@ -179,6 +201,8 @@
   <canvas id="strip" aria-hidden="true"></canvas>
   <canvas id="wear" aria-hidden="true"></canvas>
   <p class="said" id="worn" aria-live="off"></p>
+  <canvas id="quake" aria-hidden="true"></canvas>
+  <p class="said" id="earth" aria-live="off"></p>
   </div>
 
   <section aria-labelledby="under">
@@ -231,6 +255,7 @@
           : "match didn't pick it. whoever pressed last did, and nobody sighted was told what the button does. it's been pressed " + n + " times.";
         draw();
         if (typeof rub === 'function') rub(true);
+        if (typeof scrawl === 'function') scrawl();
       }
 
       function setPress() {
@@ -358,14 +383,87 @@
           ' ago and it wears one day per press, so about ' + Math.round(cover * 100) + ' percent of it has come off. where it has, the older front pages show through.';
       }
 
+
+      // the planet (session 116). the last day of earthquakes, from the usgs
+      // feed, drawn as one needle across the coat. left is 24 hours ago and
+      // right is now. it has nothing to do with the count and doesn't touch
+      // the colour. it writes on top of whatever's there.
+      const FEED = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
+      const quake = $('quake'), still = matchMedia('(prefers-reduced-motion: reduce)');
+      let shocks = [], heard = null;
+      const hash = (str) => { let x = 2166136261; for (const c of str) x = Math.imul(x ^ c.charCodeAt(0), 16777619); return x >>> 0; };
+      // the floor is never quiet. the same minute always hums the same way
+      const hum = (m) => { const x = Math.sin(m * 12.9898) * 43758.5453; return (x - Math.floor(x)) * 2 - 1; };
+      function scrawl() {
+        const w = now.clientWidth, h = now.clientHeight, dpr = devicePixelRatio || 1;
+        quake.width = w * dpr; quake.height = h * dpr;
+        const g = quake.getContext('2d');
+        g.scale(dpr, dpr);
+        const t1 = Date.now(), t0 = t1 - 864e5, base = h * (w < 560 ? 0.56 : 0.6), msPx = 864e5 / w;
+        const y = new Float32Array(Math.ceil(w * 2) + 1);
+        for (let i = 0; i < y.length; i++) y[i] = hum(Math.floor((t0 + i * msPx / 2) / 6e4)) * 0.9;
+        for (const q of shocks) {
+          if (q.t < t0 - 36e5) continue;
+          // a 6 nearly reaches the top of the coat, a 1 is a twitch
+          const amp = Math.min(h * 0.46, h * 0.013 * Math.pow(10, 0.3 * (Math.max(q.m, 0) - 1)));
+          const tau = (1.2 + q.m * q.m * 0.9) * 6e4;
+          let s = hash(q.id);
+          const r = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+          const f1 = 0.12 + r() * 0.16, f2 = 0.38 + r() * 0.3, ph = r() * 6.28;
+          const from = Math.max(0, Math.floor((q.t - t0) / msPx * 2));
+          for (let i = from; i < y.length; i++) {
+            const dt = (t0 + i * msPx / 2) - q.t;
+            if (dt < 0) continue;
+            if (dt > tau * 5) break;
+            const k = dt / 6e4;
+            const env = Math.min(1, dt / (tau * 0.08)) * Math.exp(-dt / tau);
+            y[i] += amp * env * (Math.sin(k * f1 * 6.283 + ph) * 0.7 + Math.sin(k * f2 * 6.283 + ph * 2) * 0.3 * (0.6 + 0.4 * hum(i)));
+          }
+        }
+        const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#000';
+        g.strokeStyle = ink; g.lineWidth = 1.5; g.lineJoin = 'round';
+        g.beginPath();
+        for (let i = 0; i < y.length; i++) (i ? g.lineTo : g.moveTo).call(g, i / 2, base - y[i]);
+        g.stroke();
+        g.fillStyle = ink;
+        g.beginPath(); g.arc(w - 1, base - y[y.length - 1], 3, 0, 6.29); g.fill();
+      }
+      function tremble(m) {
+        if (still.matches) return;
+        const a = Math.min(16, 1.2 * Math.pow(1.7, m - 1)), kf = [];
+        for (let i = 0; i <= 14; i++) { const d = a * (1 - i / 14); kf.push({ transform: 'translate(' + ((hum(i * 7 + m) * d) | 0) + 'px,' + ((hum(i * 13 - m) * d) | 0) + 'px)' }); }
+        now.animate(kf, { duration: 500 + m * 160, easing: 'linear' });
+      }
+      async function listen() {
+        if (document.hidden) return;
+        let d;
+        try { const res = await fetch(FEED, { cache: 'no-cache' }); if (!res.ok) throw 0; d = await res.json(); } catch (e) { scrawl(); return; }
+        const got = d.features.filter((f) => f.properties.mag !== null)
+          .map((f) => ({ id: f.id, t: f.properties.time, m: f.properties.mag, at: f.properties.place || 'somewhere' }));
+        if (heard) {
+          const fresh = got.filter((q) => !heard.has(q.id) && q.t > Date.now() - 36e5);
+          if (fresh.length) tremble(Math.max(...fresh.map((q) => q.m)));
+        }
+        heard = new Set(got.map((q) => q.id));
+        shocks = got.sort((a, b) => a.t - b.t);
+        scrawl();
+        const big = shocks.reduce((a, b) => (b.m > a.m ? b : a), shocks[0]);
+        $('earth').textContent = 'across the colour there is a line, a seismograph of the whole planet for the last day. it has nothing to do with this site. ' +
+          'the ground moved ' + shocks.length + ' times that somebody measured' + (big ? ', and the biggest was magnitude ' + big.m.toFixed(1) + ', ' + big.at : '') +
+          '. in all its days the colour has been pressed ' + (n || 0) + ' time' + (n === 1 ? '' : 's') + '.';
+      }
+
       show();
       look();
+      listen();
+      setInterval(listen, 60000);
+      setInterval(scrawl, 15000);
       // one look every twenty seconds is also the most this can change in
       // front of you, so nobody's page ever strobes
       setInterval(look, 20000);
       setInterval(() => rub(), 60000);
       let t;
-      addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { draw(); rub(true); }, 150); });
+      addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { draw(); rub(true); scrawl(); }, 150); });
     })();
   </script>
 </body>
