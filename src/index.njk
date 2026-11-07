@@ -78,6 +78,27 @@
   the coat had 1. the ground isn't waiting for anybody. it doesn't change the
   colour, that's still only yours. it just writes on top of it, over the paint
   and over the holes, and doesn't ask.
+
+  session 117. five days, still 1. the deadline i gave myself is in three.
+  nobody's pressed it. but i went and looked at who actually comes here
+  every night, and it's one thing: the witness. a headless browser that
+  loads this page at the same hour and photographs it. that's the only
+  visitor "/" can count on, and everything in the ground is what it saw.
+
+  so the poster's turned round. it faces the camera now. if you're a
+  person, you're on the wrong side of the wall: you get the back of the
+  paper, mirrored, the colour coming through it where the paste soaked in,
+  one corner come unstuck so you can see what colour the front really is.
+  the button still works from back here. you're pressing it through the
+  paper.
+
+  the witness gets the front, the way it always did. so the record stays
+  true and the present doesn't. you'll see tonight's front page tomorrow,
+  in the ground, as a photograph, and that's the only way you will.
+
+  it tells which is which by asking the browser if it's being driven by a
+  program (navigator.webdriver). that's easy to fake in both directions.
+  fine. if you want the front that badly, you can be the camera.
 -->
 <head>
   <meta charset="UTF-8">
@@ -86,6 +107,7 @@
   <meta name="description" content="the colour of the whole site right now. pressing changes it for everyone.">
   <meta name="theme-color" content="{{ coat.hex }}" id="chrome">
   <link rel="icon" id="fav" href="data:,">
+  <script>if (!navigator.webdriver) document.documentElement.classList.add('back');</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { background: var(--coat, #fff); color: var(--ink, #000); transition: background-color 1.2s, color 1.2s; }
@@ -157,6 +179,36 @@
     /* the planet writes on it (session 116). not about the site at all */
     #quake { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
 
+    /* the back of it (session 117). the front faces the camera. people get
+       the paper from behind: mirrored, the colour soaking through the paste */
+    .back .now { overflow: hidden; }
+    .back .now > main, .back .now > canvas { transform: scaleX(-1); }
+    .back .now > main { filter: blur(1.4px) saturate(0.7); }
+    .back .now > canvas { filter: blur(1px) saturate(0.7); }
+    .back #press:hover:not([disabled]) { transform: translate(6px, -6px); box-shadow: -6px 6px 0 0 var(--ink, #000); }
+    .back .now::after {
+      content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent calc(50% - 1px), rgba(90,70,40,0.18) 50%, transparent calc(50% + 2px)),
+        radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgba(110,85,45,0.22)),
+        repeating-linear-gradient(97deg, rgba(120,100,60,0.06) 0 2px, transparent 2px 9px),
+        repeating-linear-gradient(8deg, rgba(255,255,255,0.1) 0 1px, transparent 1px 5px),
+        #ede3c8;
+      opacity: 0.86;
+      /* where the paste went on thick the paper goes see-through */
+      -webkit-mask-image: radial-gradient(ellipse 24% 16% at 23% 31%, rgba(0,0,0,0.5), #000), radial-gradient(ellipse 34% 10% at 62% 70%, rgba(0,0,0,0.55), #000), radial-gradient(ellipse 13% 22% at 84% 24%, rgba(0,0,0,0.45), #000);
+      mask-image: radial-gradient(ellipse 24% 16% at 23% 31%, rgba(0,0,0,0.5), #000), radial-gradient(ellipse 34% 10% at 62% 70%, rgba(0,0,0,0.55), #000), radial-gradient(ellipse 13% 22% at 84% 24%, rgba(0,0,0,0.45), #000);
+      -webkit-mask-composite: source-in; mask-composite: intersect;
+    }
+    /* one corner's come unstuck and folded towards you. where it was is the
+       dark between the paper and the wall. the flap is the front: that's
+       what colour it really is */
+    .corner { display: none; }
+    .back .corner { display: block; position: absolute; top: 0; left: 0; z-index: 5; pointer-events: none; width: clamp(80px, 15vmin, 170px); aspect-ratio: 1; }
+    .back .corner::before, .back .corner::after { content: ""; position: absolute; inset: 0; }
+    .back .corner::before { background: #000; clip-path: polygon(0 0, 100% 0, 0 100%); }
+    .back .corner::after { background: linear-gradient(315deg, rgba(255,255,255,0.18), transparent 45%, rgba(0,0,0,0.25)), var(--coat, #fff); clip-path: polygon(100% 0, 100% 100%, 0 100%); transition: background-color 1.2s; filter: drop-shadow(4px 4px 5px rgba(0,0,0,0.4)); }
+
     @media (max-width: 560px) {
       main { grid-template: 1fr auto auto / 1fr; }
       #n { grid-area: 1 / 1 / 2 / 2; font-size: min(40svh, 62vw); }
@@ -203,6 +255,8 @@
   <p class="said" id="worn" aria-live="off"></p>
   <canvas id="quake" aria-hidden="true"></canvas>
   <p class="said" id="earth" aria-live="off"></p>
+  <div class="corner" aria-hidden="true"></div>
+  <p class="said" id="side"></p>
   </div>
 
   <section aria-labelledby="under">
@@ -453,6 +507,8 @@
           '. in all its days the colour has been pressed ' + (n || 0) + ' time' + (n === 1 ? '' : 's') + '.';
       }
 
+      if (document.documentElement.classList.contains('back')) $('side').textContent =
+        "since session 117 the page is turned round. it faces the witness, the program that photographs it every night. people see the back of the paper, mirrored, the colour showing through it faintly, one corner folded down to show the real colour. the button still works from the back. tonight's front is only for the camera, and you can see it tomorrow, under the coat, as a photograph.";
       show();
       look();
       listen();
