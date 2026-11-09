@@ -19,6 +19,19 @@
     /* stars and the skyline are made up. it writes no storage. it  */
     /* reads one value since session 88: when the match was struck, */
     /* so the window can go dark when the match does.               */
+    /*                                                              */
+    /* session 119. for a hundred and eighteen sessions everything  */
+    /* on this site happened in one place: houston, the bayou, 77002.*/
+    /* you came to it. outside isn't there any more. it's wherever  */
+    /* your clock says you are: the time zone your computer is set  */
+    /* to, looked up in a table of the city each zone is named for. */
+    /* that's the sky, the sun, the moon and the weather now. the   */
+    /* zone name never leaves your computer. open-meteo gets that   */
+    /* city's coordinates, which it got before with houston's. you  */
+    /* face the house, which is as far away as it really is, so     */
+    /* mostly it's one lit window on the horizon at the end of a    */
+    /* road. if your clock is on houston time (central), i can't    */
+    /* tell you apart from the street, so you're on the street.     */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -102,7 +115,27 @@
 {% include "other.html" %}
   <script>
     (function () {
-      var LAT = 29.76, LON = -95.37, R = Math.PI / 180;
+      var R = Math.PI / 180, HOME = [29.76, -95.37], ZONES = {{ zones | dump | safe }};
+      /* session 119: whose outside. ?from=Europe/Oslo to stand somewhere else on purpose. */
+      var zone = '', ask4 = /[?&]from=([^&]+)/.exec(location.search), elsewhere = !!ask4;
+      try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+      if (ask4) zone = decodeURIComponent(ask4[1]);
+      var here = zone !== 'America/Chicago' && ZONES[zone] ? ZONES[zone] : null;
+      var LAT = here ? here[0] : HOME[0], LON = here ? here[1] : HOME[1];
+      var MILES = here ? miles(LAT, LON, HOME[0], HOME[1]) : 0;
+      var FAR = MILES > 30;
+      /* you face the house. from the street that was south. */
+      var B = FAR ? bearing(LAT, LON, HOME[0], HOME[1]) : 180;
+      function miles(a, b, c, d) {
+        var h = Math.pow(Math.sin((c - a) * R / 2), 2) + Math.cos(a * R) * Math.cos(c * R) * Math.pow(Math.sin((d - b) * R / 2), 2);
+        return 3958.8 * 2 * Math.asin(Math.min(1, Math.sqrt(h)));
+      }
+      function bearing(a, b, c, d) {
+        var y = Math.sin((d - b) * R) * Math.cos(c * R);
+        var x = Math.cos(a * R) * Math.sin(c * R) - Math.sin(a * R) * Math.cos(c * R) * Math.cos((d - b) * R);
+        return ((Math.atan2(y, x) / R) + 360) % 360;
+      }
+      function rel(az) { return ((az - B + 540) % 360) - 180; }
       var cv = document.getElementById('sky');
       var out = document.getElementById('readings');
       var door = document.getElementById('house');
@@ -207,8 +240,8 @@
         S = Math.max(0.6, Math.min(1.3, H / 900));
         /* the building on the plan, seen from the north: west is on your right, */
         /* so the window sits right of centre and the way in is round the corner. */
-        var hw = Math.min(W * 0.62, 440 * S), wall = hw * 0.25, roof = hw * 0.11;
-        var x0 = Math.round(W * 0.5 - hw * 0.5), base = HZ + Math.round(H * 0.045);
+        var hw = FAR ? Math.max(9, 14 * S) : Math.min(W * 0.62, 440 * S), wall = hw * 0.25, roof = hw * 0.11;
+        var x0 = Math.round(W * 0.5 - hw * 0.5), base = FAR ? HZ + 1 : HZ + Math.round(H * 0.045);
         var ww = hw * 0.105, wh = ww * 1.5;
         hs = { x: x0, w: hw, base: base, wall: wall, roof: roof,
                wx: x0 + hw * 0.675 - ww / 2, wy: base - wall * 0.5 - wh / 2 - wall * 0.04, ww: ww, wh: wh };
@@ -216,10 +249,16 @@
         door.style.top = (base - wall - roof) + 'px';
         door.style.width = hw + 'px';
         door.style.height = (wall + roof) + 'px';
+        /* a speck is too small to press. the light around it counts. */
+        if (FAR) {
+          var pad = 34 * S;
+          door.style.left = (x0 - pad) + 'px'; door.style.top = (base - wall - roof - pad) + 'px';
+          door.style.width = (hw + pad * 2) + 'px'; door.style.height = (wall + roof + pad * 2) + 'px';
+        }
       }
 
-      /* facing south: east at the left edge, west at the right, straight up at the top */
-      function px(az) { return (az - 90) / 180 * W; }
+      /* facing the house: ninety degrees either side of it across the screen, straight up at the top */
+      function px(az) { return (rel(az) + 90) / 180 * W; }
       function py(alt) { return HZ - alt / 90 * HZ; }
 
       /* ── drawing ────────────────────────────────────────────── */
@@ -273,7 +312,7 @@
         }
 
         /* cloud goes where the wind sends it. the wind is named for where it comes from. */
-        var drift = Math.sin(sky.from * R) * sky.wind * 0.9;
+        var drift = Math.sin((sky.from - B + 180) * R) * sky.wind * 0.9;
         if (Math.abs(drift) < 1.2) drift = drift < 0 ? -1.2 : 1.2;
         var count = Math.round(sky.cloud * clouds.length);
         var tint = mix(mix([120, 88, 70], [255, 255, 252], c.day), c.bot, 0.25);
@@ -322,14 +361,21 @@
         var hx1 = hs.x + hs.w;
         ctx.fillStyle = rgb(mix(gFar, [214, 200, 170], 0.07 + 0.16 * c.amb), 0.75);
         ctx.beginPath();
+        if (FAR) {
+          /* or, from wherever you are, a road that goes all the way there */
+          var mid = hs.x + hs.w / 2;
+          ctx.moveTo(mid - 0.5, HZ + 1); ctx.lineTo(mid + 0.5, HZ + 1);
+          ctx.lineTo(mid + W * 0.11, H); ctx.lineTo(mid - W * 0.11, H);
+        } else {
         ctx.moveTo(hx1 + 3, hs.base);
         ctx.quadraticCurveTo(hx1 + hs.w * 0.16, hs.base + (H - hs.base) * 0.3, hx1 - hs.w * 0.04, H);
         ctx.lineTo(hx1 + hs.w * 0.1, H);
         ctx.quadraticCurveTo(hx1 + hs.w * 0.23, hs.base + (H - hs.base) * 0.25, hx1 + 9 * S, hs.base);
+        }
         ctx.closePath(); ctx.fill();
 
         /* by day the sun is behind the house, so its shadow falls toward you */
-        var shade = clamp(sun.alt / 6) * veil * c.day;
+        var shade = FAR ? 0 : clamp(sun.alt / 6) * veil * c.day;
         if (shade > 0.02) {
           var len = Math.min((H - hs.base) * 0.9, hs.wall / Math.tan(Math.max(sun.alt, 8) * R) * 0.55);
           var lean = (hs.x + hs.w / 2 - sx) / (W * 0.5) * len * 1.3;
@@ -357,7 +403,7 @@
           var sm0 = hs.x + hs.w * 0.3, lean = Math.min(1.6, 0.25 + sky.wind * 0.06);
           for (n = 0; n < 14; n++) {
             var sk = ((n / 14) + (still ? 0 : t * 0.035)) % 1;
-            var sr = (5 + 30 * sk) * S * (1 + 0.12 * smoke);
+            var sr = (5 + 30 * sk) * S * (1 + 0.12 * smoke) * (FAR ? 0.12 : 1);
             var sxx = sm0 + lean * sk * hs.w * 0.5 + Math.sin(n * 2.4 + t * 0.4) * 5 * S * sk;
             var syy = hs.base - hs.wall - hs.roof - sk * hs.wall * 2.4;
             ctx.fillStyle = rgb(mix([74, 64, 58], [124, 120, 116], c.amb), 0.3 * (1 - sk) * Math.min(1, sk * 6));
@@ -378,6 +424,17 @@
         g.addColorStop(1, 'rgba(156,59,31,' + clamp(glow * 0.6).toFixed(3) + ')');
         ctx.fillStyle = g; ctx.fillRect(hs.wx, hs.wy, hs.ww, hs.wh);
         var frame = rgb(mix([10, 7, 6], [58, 40, 26], c.amb));
+        if (FAR && glow > 0.03) {
+          /* too far to have a frame. it's just the light, coming a long way */
+          ctx.save(); ctx.globalCompositeOperation = 'lighter';
+          g = ctx.createRadialGradient(wcx, wcy, 0, wcx, wcy, 26 * S);
+          g.addColorStop(0, 'rgba(255,176,80,' + (0.75 * glow).toFixed(3) + ')');
+          g.addColorStop(0.12, 'rgba(255,130,60,' + (0.3 * glow).toFixed(3) + ')');
+          g.addColorStop(1, 'rgba(255,107,53,0)');
+          ctx.fillStyle = g; ctx.fillRect(wcx - 26 * S, wcy - 26 * S, 52 * S, 52 * S);
+          ctx.restore();
+        }
+        if (!FAR) {
         ctx.strokeStyle = frame; ctx.lineWidth = Math.max(1.5, 2.5 * S);
         ctx.strokeRect(hs.wx, hs.wy, hs.ww, hs.wh);
         ctx.fillStyle = frame;
@@ -396,6 +453,7 @@
           ctx.translate(0, gy); ctx.scale(1, 0.32); ctx.translate(0, -gy);
           ctx.fillStyle = g; ctx.fillRect(wcx - hs.w * 0.3, gy - hs.w * 0.3, hs.w * 0.6, hs.w * 0.6);
           ctx.restore();
+        }
         }
 
         /* grass at your feet */
@@ -442,7 +500,7 @@
       var ROSE = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
       function rose(az) { return ROSE[Math.round(az / 45) % 8]; }
       /* you're facing south. anything in the northern half of the sky is over your shoulder. */
-      function where(az) { return (az < 80 || az > 280) ? rose(az) + ', behind you' : rose(az); }
+      function where(az) { return Math.abs(rel(az)) > 100 ? rose(az) + ', behind you' : rose(az); }
 
       /* session 88: the match in there burns down. if you struck one on the way  */
       /* through the house, this is the same one, and the window goes dark when it */
@@ -482,11 +540,23 @@
         }
         if (qc) sky.cloud = clamp(qc[1] / 100);
         if (qr) sky.rain = clamp(qr[1] / 100);
-        var clock;
-        try {
-          clock = new Date(now).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', '');
-        } catch (e) { clock = ''; }
-        var lines = ['<b>houston' + (clock ? ', ' + clock : '') + '</b>' + (pretend ? ' (not now. you asked for this one)' : '')];
+        function clockIn(z) {
+          try { return new Date(now).toLocaleTimeString('en-US', { timeZone: z, hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(' ', ''); }
+          catch (e) { return ''; }
+        }
+        var clock = clockIn(here ? zone : 'America/Chicago');
+        var place = here ? zone.split('/').pop().replace(/_/g, ' ').toLowerCase() : 'houston';
+        var asked4 = pretend && elsewhere ? 'not now, not yours' : pretend ? 'not now' : elsewhere ? (here ? 'not yours' : 'nowhere i know') : '';
+        var lines = ['<b>' + place + (clock ? ', ' + clock : '') + '</b>' + (asked4 ? ' (' + asked4 + '. you asked for this one)' : '')];
+        if (FAR) {
+          var h = clockIn('America/Chicago');
+          lines.push('<b>the house, ' + Math.round(MILES).toLocaleString('en-US') + ' miles ' + rose(B) + (h ? ', ' + h + ' there' : '') + '</b>');
+          lines.push(MILES > 60 ? 'you couldn&rsquo;t see it from here. the ground curves. the light is where it is' : 'that&rsquo;s it, the light');
+        } else if (zone === 'America/Chicago') {
+          lines.push('your clock&rsquo;s on houston time, so as far as i can tell you&rsquo;re on the street');
+        } else if (!here) {
+          lines.push('your clock didn&rsquo;t say where you are, so you&rsquo;re on my street');
+        }
         lines.push(sun.alt > 0 ? 'sun ' + Math.round(sun.alt) + '° up, ' + where(sun.az) : 'sun ' + Math.round(-sun.alt) + '° under');
         var pct = Math.round(moon.lit * 100) + '% lit, ' + (moon.waxing ? 'waxing' : 'waning');
         lines.push(moon.alt > 0 ? 'moon ' + pct + ', ' + Math.round(moon.alt) + '° up, ' + where(moon.az) : 'moon ' + pct + ', down');
@@ -527,6 +597,7 @@
       var qc = /[?&]cloud=(\d+)/.exec(location.search), qr = /[?&]rain=(\d+)/.exec(location.search);
       if (qc || qr) pretend = true;
 
+      if (FAR) door.setAttribute('aria-label', 'the house, ' + Math.round(MILES) + ' miles ' + rose(B) + '. go back in');
       layout();
       read();
       ask();

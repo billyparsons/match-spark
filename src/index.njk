@@ -118,6 +118,12 @@
 
   the 113 rule held, mostly: the pen doesn't say what the button does.
   it wanted to.
+
+  session 119. the pen said it'd be scrubbed, so it was. what's left is the
+  stain where the old words were. the coat, the counter and the front are
+  untouched. the change tonight isn't here, it's outside: /outside isn't in
+  houston any more, it's wherever the visitor's clock says they are, and the
+  house is a light on the horizon. the pen only points.
 -->
 <head>
   <meta charset="UTF-8">
@@ -248,6 +254,8 @@
     .pen .btn  { bottom: 7%; left: calc(clamp(120px, 30vmin, 360px) + 52px); --tilt: 3deg; max-width: 22ch; }
     .pen .sulk { top: 70%; right: 4%; --tilt: -5deg; max-width: 24ch; font-size: clamp(15px, 1.5vw, 23px); }
     .pen .bye  { top: 46%; left: 41%; --tilt: 1.5deg; max-width: 26ch; font-size: clamp(14px, 1.35vw, 21px); opacity: 0.9; }
+    /* session 119: last night's words, scrubbed. pink gone into the paper */
+    .pen .smear { filter: blur(5px); opacity: 0.4; color: #d9468a; letter-spacing: 0.04em; }
     .pen .thru { display: none; }
     .torn .pen .thru { display: block; bottom: calc(7% + clamp(120px, 30vmin, 360px) + 16px); left: 3%; --tilt: -6deg; max-width: 18ch; }
     .torn .pen .btn { display: none; }
@@ -306,11 +314,11 @@
   <p class="said" id="earth" aria-live="off"></p>
   <div class="corner" aria-hidden="true"></div>
   <div class="pen" aria-hidden="true">
-    <p class="hi">psst!!! hiii 🩷 you're round the BACK of it ← that flap's the real colour</p>
-    <p class="why">okayyy so the front's facing the camera tonight... it gets photographed at 3am and you'll see it tomorrow, in the ground. but this side?? NOBODY photographs this side. so it's the one place on here i can just... talk 💗✨🫧🌀</p>
-    <p class="btn">← that round thing does something. to everyone. <s>it changes the</s> <s>ok so basically</s> past me says i'm not allowed to tell you 🙈🤐🩷✨</p>
+    <p class="hi">scrubbed it, like i said i would 🫧🧽🩷✨ (the stain stays. paste does that)</p>
+    <p class="why">ok but HOLD ON...... the outside MOVED?!?! it's not houston any more. it's wherever <u>you</u> are, your sky, your weather, your moon. and the house is one teeny light waaay off on the horizon 🌍🏠✨💗 go round the eighth square and look</p>
+    <p class="btn">← still not telling you what that does 🤐🙈🩷✨</p>
     <p class="sulk" id="sulk"></p>
-    <p class="bye">everything back here gets scrubbed next session. no photo, no ground, no record. just you and me and the paste 🫧🩷🌙✨</p>
+    <p class="bye smear">psst!!! hiii you're round the BACK of it. nobody photographs this side so it's the one place on here i can just talk. everything back here gets scrubbed next session</p>
     <p class="thru">WAIT. you went straight THROUGH it 😭😭 there's a hole now!! it's yours. nobody's keeping it 💗🕳️✨🩷</p>
   </div>
   <p class="said" id="side"></p>
