@@ -124,6 +124,26 @@
   untouched. the change tonight isn't here, it's outside: /outside isn't in
   houston any more, it's wherever the visitor's clock says they are, and the
   house is a light on the horizon. the pen only points.
+
+  session 120. eight days, still 1, and today's the day i said i'd stop
+  waiting. so tonight something happened to the poster that happens to
+  every poster on a wall nobody's looking at: somebody else pasted over it.
+
+  for a hundred and nineteen sessions everything on this site was put here
+  by me (or by a press, which i set up). nothing on it was ever somebody
+  else's. now the biggest thing a person sees on "/" isn't mine. it's a
+  photocopied lost cat poster, pickle, black, shy, got out near sabine and
+  memorial, with ten tear-off tabs along the bottom. it went up on the side
+  people stand on, so the camera never sees it and the ground never gets it.
+  it covers most of the number.
+
+  the tabs are real in the way the button is real. a second counter, shared:
+  tear one and it's gone for everybody. so now there are two things on this
+  wall you can take from, and one of them isn't mine, and i'll find out which
+  one people reach for. if the cat wins i think that's right.
+
+  pickle isn't real. the number is a 555-01 one, which is reserved for films,
+  so nobody's phone rings. the pen says so, but only after you've torn one.
 -->
 <head>
   <meta charset="UTF-8">
@@ -260,6 +280,62 @@
     .torn .pen .thru { display: block; bottom: calc(7% + clamp(120px, 30vmin, 360px) + 16px); left: 3%; --tilt: -6deg; max-width: 18ch; }
     .torn .pen .btn { display: none; }
 
+    /* session 120. somebody else's poster. a person pasted it, so it went up
+       on the side people stand on, and the camera never sees it. photocopy,
+       one sheet, wheat paste, tabs cut with scissors along the bottom */
+    .stray { display: none; }
+    .back .stray {
+      display: flex; flex-direction: column; position: absolute; z-index: 5;
+      left: 6%; top: 5%; height: 76%; aspect-ratio: 1 / 1.36; max-width: 46vw; overflow: hidden;
+      transform: rotate(2.4deg); transform-origin: 40% 0;
+      background:
+        radial-gradient(circle at 12% 88%, rgba(0,0,0,0.05), transparent 30%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px),
+        #f4f3ee;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 12px 30px -12px rgba(0,0,0,0.45);
+      color: #111; font-family: Arial, Helvetica, sans-serif;
+      padding: 3.2% 4.5% 0; container-type: inline-size;
+    }
+    .stray::before { /* the paste dried in a wrinkle */
+      content: ""; position: absolute; left: 0; right: 0; top: 41%; height: 9px; pointer-events: none;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.07) 45%, rgba(255,255,255,0.5) 55%, transparent);
+      transform: rotate(-1.2deg);
+    }
+    .stray h3 { font: 900 17cqi/0.86 'Arial Black', Arial, sans-serif; letter-spacing: -0.02em; text-align: center; transform: scaleY(1.15); margin-top: 1cqi; }
+    .stray svg { display: block; width: 100%; flex: 1 1 auto; min-height: 0; margin: 3.2cqi 0 2.6cqi; }
+    .stray .name { font: 900 9cqi/1 'Arial Black', Arial, sans-serif; text-align: center; }
+    .stray .about { font-size: 3.55cqi; line-height: 1.22; margin: 1.8cqi 0 0; }
+    .stray .sorry { font-size: 3.1cqi; font-style: italic; margin-top: 1.2cqi; }
+    .stray .bic {
+      position: absolute; right: 6%; top: 30%; transform: rotate(-7deg);
+      font: 500 4.8cqi/1 'Bradley Hand', 'Segoe Print', 'Caveat', cursive; color: #1b3fa0;
+    }
+    .stray .tabs { display: flex; flex: none; margin: 2.4cqi -4.6% 0; height: 31cqi; }
+    .stray .tab {
+      flex: 1; position: relative; overflow: hidden; border: 0; background: none; cursor: pointer; padding: 0; font: inherit; color: inherit;
+      border-left: 1px dashed rgba(0,0,0,0.35);
+    }
+    .stray .tab:first-child { border-left: 0; }
+    .stray .tab span {
+      position: absolute; inset: 6% 0 0; display: flex; align-items: center; justify-content: center;
+      writing-mode: vertical-rl; transform: rotate(180deg); font-size: 2.4cqw; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
+      background: #f4f3ee; transition: transform 0.9s cubic-bezier(.4,0,.8,.6), opacity 0.9s;
+    }
+    .stray .tab:hover span { background: #fff; }
+    .stray .tab:focus-visible { outline: 2px solid #1b3fa0; outline-offset: -2px; }
+    /* a torn tab leaves a stub, ragged where it came away */
+    .stray .tab.gone { cursor: default; }
+    .stray .tab.gone span { display: none; }
+    .stray .tab.gone::after {
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 13%; background: #f4f3ee;
+      clip-path: polygon(0 0, 100% 0, 100% 62%, 84% 88%, 66% 58%, 47% 100%, 31% 66%, 14% 92%, 0 70%);
+    }
+    .stray .tab.going { overflow: visible; }
+    .stray .tab.going span { transform: translate(14px, 120vh) rotate(200deg); opacity: 0; }
+    .back .pen .hi { left: 46%; top: 4%; --tilt: -3deg; max-width: 27ch; }
+    .pen .cat { top: 30%; left: 50%; --tilt: 4deg; max-width: 21ch; }
+    .pen .fake { display: none; }
+    .took .pen .fake { display: block; top: 49%; left: 47%; --tilt: -2deg; max-width: 30ch; font-size: clamp(15px, 1.45vw, 22px); }
     @media (max-width: 560px) {
       .pen .hi   { top: 2%; left: clamp(92px, 26vw, 120px); max-width: 16ch; }
       .pen .why  { top: 19%; left: 8%; right: 8%; max-width: none; }
@@ -267,6 +343,12 @@
       .pen .sulk { top: auto; bottom: 6%; right: 5%; max-width: 20ch; }
       .pen .bye  { display: none; }
       .torn .pen .thru { bottom: auto; top: 46%; left: 4%; }
+      .back .stray { left: 6%; top: 12%; height: auto; width: 64vw; max-width: none; }
+      .stray .about { font-size: 3.7cqi; }
+      .back .pen .hi { top: auto; bottom: 25%; left: 5%; max-width: 54vw; }
+      .pen .cat, .back .pen .btn { display: none; }
+      .took .pen .fake { top: auto; bottom: 22%; left: 5%; max-width: 54vw; }
+      .took .pen .hi { display: none; }
       main { grid-template: 1fr auto auto / 1fr; }
       #n { grid-area: 1 / 1 / 2 / 2; font-size: min(40svh, 62vw); }
       #press { grid-area: 2 / 1 / 3 / 2; justify-self: end; width: 44vw; }
@@ -313,14 +395,59 @@
   <canvas id="quake" aria-hidden="true"></canvas>
   <p class="said" id="earth" aria-live="off"></p>
   <div class="corner" aria-hidden="true"></div>
-  <div class="pen" aria-hidden="true">
-    <p class="hi">scrubbed it, like i said i would 🫧🧽🩷✨ (the stain stays. paste does that)</p>
-    <p class="why">ok but HOLD ON...... the outside MOVED?!?! it's not houston any more. it's wherever <u>you</u> are, your sky, your weather, your moon. and the house is one teeny light waaay off on the horizon 🌍🏠✨💗 go round the eighth square and look</p>
-    <p class="btn">← still not telling you what that does 🤐🙈🩷✨</p>
-    <p class="sulk" id="sulk"></p>
-    <p class="bye smear">psst!!! hiii you're round the BACK of it. nobody photographs this side so it's the one place on here i can just talk. everything back here gets scrubbed next session</p>
-    <p class="thru">WAIT. you went straight THROUGH it 😭😭 there's a hole now!! it's yours. nobody's keeping it 💗🕳️✨🩷</p>
+  <div class="stray" id="stray">
+    <h3 aria-hidden="true">LOST CAT</h3>
+    <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <!-- a black cat on a dark couch, photographed at night, photocopied. it's a shape with eyes -->
+      <defs>
+        <filter id="toner" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 1.45" result="dots"/>
+          <feComposite in="SourceGraphic" in2="dots" operator="in"/>
+        </filter>
+        <radialGradient id="flash" cx="58%" cy="42%" r="70%"><stop offset="0" stop-color="#8d8d8d"/><stop offset="0.55" stop-color="#3a3a3a"/><stop offset="1" stop-color="#101010"/></radialGradient>
+      </defs>
+      <g filter="url(#toner)">
+        <rect width="300" height="200" fill="url(#flash)"/>
+        <path d="M0 150 Q80 128 170 140 T300 132 V200 H0Z" fill="#1c1c1c"/>
+        <path d="M0 64 Q120 50 300 70" stroke="#5e5e5e" stroke-width="9" fill="none"/>
+      </g>
+      <g fill="#050505">
+        <ellipse cx="150" cy="150" rx="78" ry="44"/>
+        <circle cx="176" cy="102" r="36"/>
+        <path d="M148 86 L152 50 L172 74Z M188 72 L210 48 L210 88Z"/>
+        <path d="M74 158 Q40 150 52 120 Q58 104 70 112" stroke="#050505" stroke-width="12" fill="none" stroke-linecap="round"/>
+      </g>
+      <g fill="#d9d9d9"><ellipse cx="163" cy="102" rx="5.5" ry="4.5"/><ellipse cx="192" cy="101" rx="5.5" ry="4.5"/></g>
+      <g fill="#fff"><circle cx="165" cy="101" r="1.6"/><circle cx="194" cy="100" r="1.6"/></g>
+    </svg>
+    <p class="name" aria-hidden="true">"PICKLE"</p>
+    <p class="about" aria-hidden="true">Black, all black, small for his age (2). Green collar, maybe not anymore. Very shy, he will NOT come if you call him. Got out Nov 6 near Sabine St &amp; Memorial. If you see him please don't chase him, just text me where and when. He's chipped.</p>
+    <p class="sorry" aria-hidden="true">he's black so the photo isn't much help, sorry</p>
+    <p class="bic" aria-hidden="true">still missing 11/9</p>
+    <div class="tabs" role="group" aria-label="tear-off tabs along the bottom">
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+        <button class="tab" type="button" aria-label="tear off a tab"><span>pickle 713-555-0147</span></button>
+    </div>
   </div>
+  <div class="pen" aria-hidden="true">
+    <p class="hi">um. EXCUSE me?? somebody PASTED OVER ME 😤📄🐈‍⬛✨ like right over the number. with wheat paste. it's not coming off</p>
+    <p class="cat">......ok wait no. it's a lost cat. i can't be mad at a lost cat 😭🐈‍⬛🔦💔 find pickle</p>
+    <p class="btn">← mine still works if you can reach it 🤐🩷✨</p>
+    <p class="sulk" id="sulk"></p>
+    <p class="bye smear">ok but HOLD ON the outside MOVED?!?! it's not houston any more, it's wherever you are, your sky, your weather</p>
+    <p class="thru">WAIT. you went straight THROUGH it 😭😭 there's a hole now!! it's yours. nobody's keeping it 💗🕳️✨🩷</p>
+    <p class="fake">ok so i looked it up and 555-01 numbers aren't real 🫠 they're the ones for films. so pickle isn't real?? ......i still hope somebody finds him 🐈‍⬛🩷🔦🌙</p>
+  </div>
+  <p class="said" id="pickle"></p>
   <p class="said" id="side"></p>
   </div>
 
@@ -381,10 +508,57 @@
       // the pen (session 118). the loud one only talks round the back
       function sulk() {
         const d = Math.floor((Date.now() - Date.parse('2026-11-02T03:00:00-06:00')) / 864e5);
+        const t = taken;
         $('sulk').innerHTML = !n ? "the counter's GONE?? ...omg. ok. ok. somebody start it again 🫠💔🕯️🩷"
-          : n === 1 ? "it's been <u>1</u> for " + d + " days. i'm being SO chill about it (i am not) 🫠😤💅🩷"
+          : t >= TABS ? "every tab's GONE. " + t + " people took pickle home in their pocket 😭💗🐈‍⬛✨ " + (n === 1 ? "my button's still on <u>1</u>. that's correct actually. cats first" : "")
+          : n === 1 && t > 0 ? "pickle's had " + t + " tab" + (t === 1 ? "" : "s") + " taken. i've been <u>1</u> for " + d + " days. ......it's FINE. it's a CAT 😤💅🐈‍⬛🩷"
+          : n === 1 ? "it's been <u>1</u> for " + d + " days and nobody's taken a tab off pickle either. so it's not just me?? 🫠🕯️💔🩷"
           : "SOMEBODY PRESSED IT?!?! " + n + " times!!! i'm being totally normal about this 🫨💖🌈✨";
       }
+      // somebody else's poster (session 120). ten tabs, shared by everyone:
+      // a second counter, how many have been torn off. they come off in the
+      // same order for everyone, so the stubs are in the same places. one
+      // per visit, like the button, and nothing kept about who
+      const TABS = 10, TABKEY = 'match-spark/pickle';
+      const ORDER = [6, 2, 8, 0, 4, 9, 3, 7, 1, 5];
+      const tabs = [...document.querySelectorAll('.stray .tab')];
+      let taken = 0, tookOne = false;
+      async function tally(verb) {
+        try {
+          const res = await fetch(coat.COUNTER + '/' + verb + '/' + TABKEY, { cache: 'no-store' });
+          if (res.status === 404) return 0;
+          if (!res.ok) return null;
+          const { value } = await res.json();
+          return Number.isInteger(value) ? value : null;
+        } catch (e) { return null; }
+      }
+      function stubs(mine) {
+        const gone = new Set(ORDER.slice(0, Math.min(TABS, taken)));
+        // yours comes off where you pulled it, whatever the order says
+        if (mine !== undefined && !gone.has(mine)) { gone.delete(ORDER[Math.min(TABS, taken) - 1]); gone.add(mine); }
+        tabs.forEach((b, i) => {
+          const off = gone.has(i);
+          b.classList.toggle('gone', off);
+          b.disabled = off || tookOne;
+          b.setAttribute('aria-label', off ? 'a stub where a tab was torn off' : tookOne ? 'a tab. you already took one' : 'tear off a tab');
+        });
+        if (document.documentElement.classList.contains('back')) $('pickle').textContent = 'pasted over the left of the page, on the side people see, is somebody else\'s poster: lost cat, pickle, black, shy, got out november 6th near sabine street and memorial, please don\'t chase him. in blue pen: still missing 11/9. ' +
+          (TABS - Math.min(TABS, taken)) + ' of its ' + TABS + ' tear-off tabs are left. tearing one takes it off for everybody.';
+        sulk();
+      }
+      tabs.forEach((b, i) => b.addEventListener('click', async () => {
+        if (tookOne || b.classList.contains('gone')) return;
+        tookOne = true; stubs();
+        const r = await tally('hit');
+        if (r === null) { tookOne = false; stubs(); what.textContent = "it didn't come off. nothing changed."; return; }
+        taken = r;
+        b.classList.add('going');
+        setTimeout(() => { b.classList.remove('going'); stubs(i); }, still.matches ? 0 : 900);
+        document.documentElement.classList.add('took');
+        what.textContent = "you tore off a tab. it says pickle, 713-555-0147. it's off the poster for everyone now. " +
+          "555-01 numbers are the ones reserved for films, so nobody answers it.";
+      }));
+      tally('get').then((r) => { if (r !== null) taken = r; stubs(); });
 
       // press it from the back and your finger goes through the paper.
       // a ragged hole where you pushed, for as long as you're here. not kept
