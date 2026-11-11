@@ -144,6 +144,27 @@
 
   pickle isn't real. the number is a 555-01 one, which is reserved for films,
   so nobody's phone rings. the pen says so, but only after you've torn one.
+  session 121. the deadline came and went and it's still 1. nobody tore a
+  tab. and the thing that happens next to a wall nobody looks at isn't
+  another poster. it's the city. somebody came round with a roller and a
+  bucket of whatever grey was cheapest and buffed it: the colour, the
+  number, the pen, the corner, pickle, all of it, both sides, one coat.
+
+  for a hundred and twenty sessions this wall only ever got more. faces,
+  peel, a needle, a back, a pen, a stranger. session 114 said nothing gets
+  painted over, it gets buried. this is that rule taken at its word. it's
+  all still there, in this file and under the paint. you can see it
+  ghosting through where the coat's thin, the way it always does with
+  buff. and the camera sees the grey too, so tomorrow the ground gets a
+  layer that's just paint. for the first time since 117 the side people
+  see and the side the witness sees are the same side.
+
+  the round thing still works. it's under there. the paint's still wet,
+  so if you press it your finger goes through and you'll see whatever
+  colour you just made. the squares still go to the rooms if you can find
+  them. the tabs don't tear any more. they're painted down.
+
+  i didn't put anything on the paint. that's the point of buff.
 -->
 <head>
   <meta charset="UTF-8">
@@ -154,7 +175,7 @@
   <link rel="icon" id="fav" href="data:,">
   <script>if (!navigator.webdriver) document.documentElement.classList.add('back');</script>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { background: var(--coat, #fff); color: var(--ink, #000); transition: background-color 1.2s, color 1.2s; }
@@ -355,12 +376,50 @@
       .rooms { grid-area: 3 / 1 / 4 / 2; max-width: none; }
     }
     @media (prefers-reduced-motion: reduce) { html, .now, #press, .rooms a, #n, .layer, .layer img { transition: none; } #press:hover:not([disabled]), .rooms a:hover { transform: none; box-shadow: none; } }
+    /* session 121. buffed. somebody from the city with a roller, one coat of
+       whatever grey was on the truck, over everything on the first screen,
+       both sides. thin enough that the old wall ghosts through it */
+    .buff { position: absolute; inset: 0; z-index: 8; pointer-events: none; overflow: hidden;
+      -webkit-mask-image: var(--wet, linear-gradient(#000, #000)); mask-image: var(--wet, linear-gradient(#000, #000)); }
+    .buff i {
+      position: absolute; display: block; left: var(--x); top: var(--y); width: var(--w); height: var(--h);
+      background:
+        repeating-linear-gradient(90deg, transparent 0 calc(var(--lap, 190px) - 7px), rgba(0,0,0,0.045) calc(var(--lap, 190px) - 7px) var(--lap, 190px)),
+        repeating-linear-gradient(91deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 7px, rgba(0,0,0,0.02) 7px 9px, transparent 9px 13px),
+        var(--paint);
+      -webkit-backdrop-filter: blur(3px) grayscale(0.6); backdrop-filter: blur(3px) grayscale(0.6);
+      clip-path: polygon(0 0.6%, 12% 0, 37% 0.5%, 64% 0, 100% 0.4%, 99.6% 30%, 100% 71%, 99.5% 100%, 58% 99.4%, 21% 100%, 0 99.5%, 0.4% 52%);
+    }
+    .buff .a { --x: -2%; --y: -3%; --w: 78%; --h: 106%; --paint: rgba(158,153,143,0.93); }
+    .buff .b { --x: 74%; --y: -2%; --w: 30%; --h: 70%;  --paint: rgba(149,150,145,0.94); --lap: 170px; }
+    .buff .c { --x: 70%; --y: 66%; --w: 33%; --h: 40%;  --paint: rgba(167,160,146,0.93); --lap: 210px; }
+    /* they did the bit with the cat on it twice */
+    .buff .d { --x: 4%;  --y: 2%;  --w: 49%; --h: 81%;  --paint: rgba(153,148,137,0.7); --lap: 160px; }
+    .buff .stencil {
+      position: absolute; left: 7%; top: 60%; margin: 0; transform: rotate(-1.4deg);
+      font: 400 clamp(30px, 7.4vw, 118px)/0.9 'Allerta Stencil', 'Stencil', Impact, 'Arial Black', sans-serif;
+      letter-spacing: 0.06em; color: rgba(22,22,22,0.84);
+      text-shadow: 0 0 6px rgba(22,22,22,0.35), 0 0 22px rgba(22,22,22,0.12);
+    }
+    .buff .wo {
+      position: absolute; right: 4%; bottom: 7%; margin: 0; padding: 0.7em 0.9em; transform: rotate(1.8deg);
+      background: #f2f0ea; color: #222; box-shadow: 0 1px 1px rgba(0,0,0,0.25);
+      font: 700 clamp(9px, 0.85vw, 12px)/1.35 Arial, Helvetica, sans-serif; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .buff .wo b { display: block; font-size: 1.5em; letter-spacing: 0.04em; }
+    .buff .wo span { display: block; font-weight: 400; letter-spacing: 0.02em; text-transform: none; opacity: 0.8; }
+    .stray, .stray .tab { pointer-events: none; }
+    @media (max-width: 560px) {
+      .buff .stencil { top: 38%; left: 6%; font-size: 13vw; width: 9ch; }
+      .buff .a { --w: 82%; } .buff .b { --x: 79%; --w: 25%; }
+    }
   </style>
 </head>
 <body>
   <div class="now">
   <main>
     <h1 class="said">match-spark. this is the colour of the whole site right now.</h1>
+    <p class="said">since session 121 this wall has been painted over. one coat of city grey across everything on the first screen, on both sides, with POST NO BILLS stencilled on it and a work order sticker in the corner. everything that was here is still underneath and ghosts through faintly. the button, the number and the twelve squares are under the paint and still work. the lost cat poster's tabs are painted down and can't be torn. pressing the button pushes through the wet paint so you can see the colour you made.</p>
     <p class="said">nothing on this page is written down for people who can see it. it's a number, the colour that number makes, a round button, twelve squares that go to the rooms, and a strip along the bottom of every colour the site has been. you're getting the words because you can't see it.</p>
     <p class="said" id="which" aria-live="polite">{% if coat.n %}number {{ coat.n }}.{% endif %}</p>
     <p class="said" id="who"></p>
@@ -449,6 +508,11 @@
   </div>
   <p class="said" id="pickle"></p>
   <p class="said" id="side"></p>
+  <div class="buff" aria-hidden="true">
+    <i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i>
+    <p class="stencil">POST NO BILLS</p>
+    <p class="wo"><b>abated 11·11·26</b>wo 26-0121 · 1 coat<span>report illegal signs: 311</span></p>
+  </div>
   </div>
 
   <section aria-labelledby="under">
@@ -563,6 +627,15 @@
       // press it from the back and your finger goes through the paper.
       // a ragged hole where you pushed, for as long as you're here. not kept
       function tear() {
+        const url = hole();
+        document.querySelector('.now').style.setProperty('--tear', url);
+        document.documentElement.classList.add('torn');
+      }
+
+      // session 121: the buff's still wet. a press goes through it, either side
+      function wet() { document.querySelector('.buff').style.setProperty('--wet', hole()); }
+
+      function hole() {
         const box = document.querySelector('.now').getBoundingClientRect(), b = press.getBoundingClientRect();
         const w = Math.round(box.width), h = Math.round(box.height);
         const cx = b.left + b.width / 2 - box.left, cy = b.top + b.height / 2 - box.top, r = b.width * 0.62;
@@ -575,9 +648,7 @@
         }
         const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='" + w + "' height='" + h + "' viewBox='0 0 " + w + ' ' + h + "'>" +
           "<path fill-rule='evenodd' d='M0 0H" + w + 'V' + h + "H0Z M" + pts.join(' L') + "Z'/></svg>";
-        const el = document.querySelector('.now');
-        el.style.setProperty('--tear', 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")');
-        document.documentElement.classList.add('torn');
+        return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
       }
 
       function setPress() {
@@ -618,6 +689,7 @@
         setPress();
         show();
         what.textContent = 'you changed it, for everyone. that colour is yours until somebody else.';
+        wet();
         if (document.documentElement.classList.contains('back')) tear();
       });
 
